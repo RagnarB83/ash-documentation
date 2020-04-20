@@ -122,7 +122,7 @@ html_theme = 'sphinx_rtd_theme'
 #
 # html_theme_options = {}
 #LOGO
-html_logo= '/Users/bjornssonsu/ownCloud/PyQMMM-project/yggdrasill-test-for-ascii.png'
+html_logo= 'yggdrasill-logo.png'
 html_theme_options = {
     'canonical_url': '',
     'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
