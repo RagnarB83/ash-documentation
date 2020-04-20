@@ -1,0 +1,183 @@
+==========================
+Basic usage
+==========================
+
+#####################
+Input structure
+#####################
+You create a Python3 script (e.g. called system.py) and import the Yggdrasill functionality:
+
+.. code-block:: python
+
+    from yggdrasill import *
+
+For convenience you may want to initalize standard global settings (connectivity etc.):
+
+.. code-block:: python
+
+    settings_yggdrasill.init()
+
+The global settings are stored in your *yggdrasill-dir/settings_yggdrasill.py* and can be modified.
+
+From then on you have the freedom of writing a Python script in any way you prefer but taking the advantage
+of Yggdrasill functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
+See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
+
+#####################
+Example script
+#####################
+
+Here is a basic Yggdrasill Python script, e.g. named: yggtest.py
+
+.. code-block:: python
+
+    from yggdrasill import *
+    settings_yggdrasill.init()
+
+    #Create fragment
+    Ironhexacyanide = Fragment(xyzfile="fecn6.xyz")
+
+    #Defining ORCA-related variables
+    orcadir='/opt/orca_4.2.1'
+    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
+    orcablocks="%scf maxiter 200 end"
+
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
+                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+
+    #Basic Cartesian optimization with KNARR-LBFGS
+    Opt_frag = Optimizer(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
+    Opt_frag.run()
+
+
+The script above loads Yggdrasill, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
+defines variables related to the ORCA-interface (see :doc:`orca-interface`), creates an ORCA-theory object
+(see :doc:`QM-interfaces`), defines an Optimizer object and finally runs a geometry
+optimization  (see :doc:`job-types` for other options).
+
+#####################
+Running script directly
+#####################
+
+For a simple job we can just run the script directly
+
+.. code-block:: shell
+
+    python3 yggtest.py
+
+The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
+
+.. code-block:: shell
+
+    python3 yggtest.py >& yggtest.out
+
+
+#####################
+Submitting job
+#####################
+
+For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
+dealing with local scratch, copy files back when done etc.
+Here is an example SLURM jobscript:
+
+.. code-block:: shell
+
+    #!/bin/zsh
+
+    #SBATCH -N 1
+    #SBATCH --tasks-per-node=12
+    #SBATCH --time=8760:00:00
+    #SBATCH -p compute
+    #SBATCH --mem-per-cpu=3000
+    #SBATCH --job-name=Solvshelljob
+    #SBATCH --output=%x.o%j
+    #SBATCH --error=%x.o%j
+
+    export job=$SLURM_JOB_NAME
+    export job=$(echo ${job%%.*})
+
+    #Outputname
+    outputname="$job.out"
+
+    # Usage:
+    #qsub job-solvshell.sh
+    ulimit -u unlimited
+    limit stacksize unlimited
+
+    #Necessary?
+    setopt EXTENDED_GLOB
+    setopt NULL_GLOB
+    export MKL_NUM_THREADS=1
+    export OMP_NUM_THREADS=1
+    export OMP_STACKSIZE=1G
+    export OMP_MAX_ACTIVE_LEVELS=1
+
+    #Create scratch
+    if [ ! -d /scratch/$USER ]
+    then
+      mkdir -p /scratch/$USER
+    fi
+    tdir=$(mktemp -d /scratch/$USER/yggdrasilljob__$SLURM_JOB_ID-XXXX)
+    chmod +xr $tdir
+
+
+    #inputfile should be present in dir
+    cp $SLURM_SUBMIT_DIR/*.py $tdir/
+    cp $SLURM_SUBMIT_DIR/*.cif $tdir/
+    cp $SLURM_SUBMIT_DIR/*.xyz $tdir/
+    cp $SLURM_SUBMIT_DIR/*.xtl $tdir/
+    cp $SLURM_SUBMIT_DIR/*.ff $tdir/
+    cp $SLURM_SUBMIT_DIR/*.ygg $tdir/
+    cp $SLURM_SUBMIT_DIR/*.pdb $tdir/
+    cp $SLURM_SUBMIT_DIR/*.info $tdir/
+
+    # cd to scratch
+    cd $tdir
+    echo "tdir is $tdir"
+    # Copy job and node info to beginning of outputfile
+    echo "Starting job in scratch dir: $tdir" > $SLURM_SUBMIT_DIR/$outputname
+    echo "Job execution start: $(date)" >> $SLURM_SUBMIT_DIR/$outputname
+    echo "Shared library path: $LD_LIBRARY_PATH" >> $SLURM_SUBMIT_DIR/$outputname
+    echo "Slurm Job ID is: ${SLURM_JOB_ID}" >> $SLURM_SUBMIT_DIR/$outputname
+    echo "Slurm Job name is: ${SLURM_JOB_NAME}" >> $SLURM_SUBMIT_DIR/$outputname
+    echo $SLURM_NODELIST >> $SLURM_SUBMIT_DIR/$outputname
+
+    #YGGDRASILL environment
+    #conda activate p4dev
+    source activate rbdev
+
+    echo "PATH is $PATH"
+    echo "LD_LIBRARY_PATH is $LD_LIBRARY_PATH"
+    echo "Running Yggdrasill  job"
+
+    #OpenMPI path for ORCA
+    export PATH=/opt/openmpi-2.1.5/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/openmpi-2.1.5/lib:$LD_LIBRARY_PATH
+
+
+    #Start Yggdrasill job from scratch dir.  Output file is written directly to submit directory
+    export PYTHONUNBUFFERED=1
+    python-jl $job.py >>& $SLURM_SUBMIT_DIR/$outputname
+
+    # Yggdrasill has finished. Now copy important stuff back.
+    outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}
+    cp -r $tdir $outputdir
+    #mkdir $outputdir
+    #cp -r $tdir/*xyz $outputdir
+    #cp -r $tdir/*txt $outputdir
+    #cp -r $tdir/*xtl $outputdir
+    #cp -r $tdir/*charges $outputdir
+    #cp -r $tdir/orca*inp $outputdir
+    #cp -r $tdir/orca*out $outputdir
+    #cp -r $tdir/*.ygg $outputdir
+    #cp -r $tdir/*.ff $outputdir
+    #cp -r $tdir/*.info $outputdir
+
+    # Removing scratch folder
+    rm -rf $tdir
+
+
+
+
+
