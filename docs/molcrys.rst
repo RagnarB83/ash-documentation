@@ -375,6 +375,5 @@ If there are difficulties in obtaining the correct fragment identification from 
 If the atoms in the unitcell are correct then the problem is more likely to do with the default connectivity parameters
 not being general enough for the system.
 Start by playing around with the tol parameter, try values between 0 to 0.5
-The scaling parameter can also be used, though often less useful.
+The scaling parameter can also be used, though often it is less useful.
 Often, modifying the covalent radius of an element (see above example for Na+) works well.
-
