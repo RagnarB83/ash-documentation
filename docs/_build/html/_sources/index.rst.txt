@@ -12,6 +12,7 @@ These are the documentation pages of Yggdrasill.
    :maxdepth: 2
    :caption: Contents:
 
+   About
    setup
    basics
    coordinate-input
