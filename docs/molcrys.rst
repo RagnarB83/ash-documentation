@@ -4,7 +4,7 @@ MOLCRYS: Automatic QM/MM for Molecular Crystals
 The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
 in articles by Bjornsson et al.[1,2].
 
-**The basic (automatic) protocol is:**
+**The basic protocol is:**
 
 
 | 1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.
@@ -14,23 +14,26 @@ in articles by Bjornsson et al.[1,2].
 | 5. Define atomic charges of the molecular fragments from QM calculations.
 | 6. Define Lennard-Jones parameters of the molecular fragments.
 | 7. Iterate the atomic charges of the main molecular fragment in the center of the cluster until self-concistency.
-| 8. Optional: Perform QM/MM geometry optimization of the central fragment or other job types.
-| 9. Optional: Extend the QM-region around the central fragment for improved accuracy
-| 10. Optional: Perform numerical frequency calculations or molecular dynamics simulations
-| 11. Optional: Molecular property calculation in the solid-state
+| 8a. Optional: Perform QM/MM geometry optimization of the central fragment or other job types.
+| 8b. Optional: Extend the QM-region around the central fragment for improved accuracy
+| 8c. Optional: Perform numerical frequency calculations or molecular dynamics simulations
+| 8d. Optional: Molecular property calculation in the solid-state
 
 
 
-| Critical features of the implementation:
+**Critical features of the implementation:**
+
 | - Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.
 | - Improved accuracy via QM-region expansion
 | - Numerical frequencies (to be tested)
 
-| Limitations:
+**Limitations:**
+
 | - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand.
 | - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation.
 
-| Features to be implemented:
+**Features to be implemented:**
+
 | - Automatic derivation of Lennard-Jones parameters
 | - Beyond Lennard-Jones
 | - Molecular dynamics
