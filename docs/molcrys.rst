@@ -1,8 +1,21 @@
 =================================================
 MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
-The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
+The molecular crystal QM/MM method in Yggdrasill is based on the work described
 in articles by Bjornsson et al.[1,2].
+
+The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
+QM/MM approach for molecular crystals. The protocol reads a crystallographic information file (CIF) directly and proceeds
+to build up a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
+molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
+a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
+The method then allows electrostatically embedded QM/MM geometry optimization, electrostically embedded property calculations
+(e.g. NMR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
+
+Any QM-code that has an interface in Yggdrasill can in principle be used and any QM-method within that code can be used
+(analytical gradient strongly recommended for optimizations).
+
+Current limitation: Only ORCA interface is complete at this point.
 
 .. image:: figures/molcrys-intro.png
    :align: center
@@ -28,8 +41,8 @@ in articles by Bjornsson et al.[1,2].
 **Critical features of the implementation:**
 
 | - Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.
-| - Improved accuracy via QM-region expansion
-| - Numerical frequencies (to be tested)
+| - Accuracy can be controlled via QM-region expansion
+| - Numerical frequencies available (to be tested)
 
 **Limitations:**
 
@@ -38,8 +51,8 @@ in articles by Bjornsson et al.[1,2].
 
 **Features to be implemented:**
 
-| - Automatic derivation of Lennard-Jones parameters
-| - Beyond Lennard-Jones
+| - Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at right).
+| - Beyond Lennard-Jones potentials for improved QM-MM interaction
 | - Molecular dynamics
 
 | 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
@@ -48,7 +61,7 @@ in articles by Bjornsson et al.[1,2].
 ######################################################
 MOLCRYS Example: QM/MM Cluster setup from CIF-file
 ######################################################
-Here we show how to use code for an example Na[H2PO4] crystal. This molecular crystal contains 2 fragment-types:
+Here we show how to use the **MOLCRYS** code for an example Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \] crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 
 .. image:: figures/nah2po4-cell.png
@@ -69,7 +82,9 @@ The script then actually just calls one function, called **molcrys** at the bott
 This is the only function of this script but as we can see, there are a number of arguments to be provided.
 It is usually more convenient to define first the necessary variables in multiple lines above this command.
 In the full script, seen below, a number of variables are defined, following standard Python syntax.
-The variables are then passed as arguments to the  **molcrys** function at the bottom of the script.
+Yggdrasill specific functionality is the creation of the ORCAcalc object (instance of the Yggdrasill ORCATheory class),
+the creation of mainfrag and counterfrag1 objects (instances of Yggdrasill Fragmenttype class).
+The variables are then passed as keyword arguments to the  **molcrys** function at the bottom of the script.
 
 .. code-block:: python
 
@@ -140,7 +155,7 @@ This distinction between fragments means that the *mainfrag* will be at the cent
 It also means that the charge-iterations are only performed for *mainfrag*.
 For each molecular fragment, we define an object of class Fragmenttype with a name e.g. "Phosphate",
 elemental formula, e.g. "PO4H2", and define the charge and multiplicity of that fragment.
-The elemental formula is crucial as from the formula the nuclear charges is calculated which is used to identify these
+The elemental formula is crucial as from the formula the total nuclear charge is calculated which is used to identify these
 fragments in the molecular crystal. Once the fragments are defined we group them together in the following order as a list
 called fragmentobjects:     fragmentobjects=[mainfrag,counterfrag1]
 

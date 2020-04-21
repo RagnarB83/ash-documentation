@@ -174,8 +174,18 @@
             
   <div class="section" id="molcrys-automatic-qm-mm-for-molecular-crystals">
 <h1>MOLCRYS: Automatic QM/MM for Molecular Crystals<a class="headerlink" href="#molcrys-automatic-qm-mm-for-molecular-crystals" title="Permalink to this headline">¶</a></h1>
-<p>The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
+<p>The molecular crystal QM/MM method in Yggdrasill is based on the work described
 in articles by Bjornsson et al.[1,2].</p>
+<p>The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
+QM/MM approach for molecular crystals. The protocol reads a crystallographic information file (CIF) directly and proceeds
+to build up a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
+molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
+a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
+The method then allows electrostatically embedded QM/MM geometry optimization, electrostically embedded property calculations
+(e.g. NMR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.</p>
+<p>Any QM-code that has an interface in Yggdrasill can in principle be used and any QM-method within that code can be used
+(analytical gradient strongly recommended for optimizations).</p>
+<p>Current limitation: Only ORCA interface is complete at this point.</p>
 <a class="reference internal image-reference" href="_images/molcrys-intro.png"><img alt="_images/molcrys-intro.png" class="align-center" src="_images/molcrys-intro.png" style="width: 1200px;" /></a>
 <p><strong>The basic protocol is:</strong></p>
 <div class="line-block">
@@ -194,8 +204,8 @@ in articles by Bjornsson et al.[1,2].</p>
 <p><strong>Critical features of the implementation:</strong></p>
 <div class="line-block">
 <div class="line">- Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.</div>
-<div class="line">- Improved accuracy via QM-region expansion</div>
-<div class="line">- Numerical frequencies (to be tested)</div>
+<div class="line">- Accuracy can be controlled via QM-region expansion</div>
+<div class="line">- Numerical frequencies available (to be tested)</div>
 </div>
 <p><strong>Limitations:</strong></p>
 <div class="line-block">
@@ -204,8 +214,8 @@ in articles by Bjornsson et al.[1,2].</p>
 </div>
 <p><strong>Features to be implemented:</strong></p>
 <div class="line-block">
-<div class="line">- Automatic derivation of Lennard-Jones parameters</div>
-<div class="line">- Beyond Lennard-Jones</div>
+<div class="line">- Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at right).</div>
+<div class="line">- Beyond Lennard-Jones potentials for improved QM-MM interaction</div>
 <div class="line">- Molecular dynamics</div>
 </div>
 <div class="line-block">
@@ -214,7 +224,7 @@ in articles by Bjornsson et al.[1,2].</p>
 </div>
 <div class="section" id="molcrys-example-qm-mm-cluster-setup-from-cif-file">
 <h2>MOLCRYS Example: QM/MM Cluster setup from CIF-file<a class="headerlink" href="#molcrys-example-qm-mm-cluster-setup-from-cif-file" title="Permalink to this headline">¶</a></h2>
-<p>Here we show how to use code for an example Na[H2PO4] crystal. This molecular crystal contains 2 fragment-types:
+<p>Here we show how to use the <strong>MOLCRYS</strong> code for an example Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub><sup>-</sup> ] crystal. This molecular crystal contains 2 fragment-types:
 Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
 <a class="reference internal image-reference" href="_images/nah2po4-cell.png"><img alt="_images/nah2po4-cell.png" class="align-center" src="_images/nah2po4-cell.png" style="width: 600px;" /></a>
 <p>In the Python script, one has to initially <em>import Yggdrasill</em>, the molcrys module and call the <em>settings_yggdrasill.init()</em> function.</p>
@@ -226,7 +236,9 @@ Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
 <p>This is the only function of this script but as we can see, there are a number of arguments to be provided.
 It is usually more convenient to define first the necessary variables in multiple lines above this command.
 In the full script, seen below, a number of variables are defined, following standard Python syntax.
-The variables are then passed as arguments to the  <strong>molcrys</strong> function at the bottom of the script.</p>
+Yggdrasill specific functionality is the creation of the ORCAcalc object (instance of the Yggdrasill ORCATheory class),
+the creation of mainfrag and counterfrag1 objects (instances of Yggdrasill Fragmenttype class).
+The variables are then passed as keyword arguments to the  <strong>molcrys</strong> function at the bottom of the script.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">molcrys</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
@@ -289,7 +301,7 @@ This distinction between fragments means that the <em>mainfrag</em> will be at t
 It also means that the charge-iterations are only performed for <em>mainfrag</em>.
 For each molecular fragment, we define an object of class Fragmenttype with a name e.g. “Phosphate”,
 elemental formula, e.g. “PO4H2”, and define the charge and multiplicity of that fragment.
-The elemental formula is crucial as from the formula the nuclear charges is calculated which is used to identify these
+The elemental formula is crucial as from the formula the total nuclear charge is calculated which is used to identify these
 fragments in the molecular crystal. Once the fragments are defined we group them together in the following order as a list
 called fragmentobjects:     fragmentobjects=[mainfrag,counterfrag1]</p>
 <p>Finally, the script shows how the connectivity can be modified in order for the fragment identification to succeed.
