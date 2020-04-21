@@ -174,6 +174,7 @@
 <div><ul class="simple">
 <li><p>Python3 installation</p></li>
 <li><p>Numpy</p></li>
+<li><p>Julia (for faster versions of some routines)</p></li>
 <li><p>Matplotlib (for some scientific plotting options).</p></li>
 </ul>
 </div></blockquote>
@@ -214,52 +215,53 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 </ul>
 </dd>
 <dt><strong>Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.</strong></dt><dd><ul class="simple">
-<li><p>To do: PySCF</p></li>
+<li><p><strong>To do</strong>: PySCF</p></li>
 </ul>
 </dd>
-<dt><strong>Polarizable embedding via Psi4.</strong></dt><dd><ul class="simple">
-<li><p>Todo: PySCF</p></li>
+<dt><strong>Polarizable embedding via Psi4 and CPPE library</strong></dt><dd><ul class="simple">
+<li><p><strong>Todo</strong>: enable PySCF</p></li>
 </ul>
 </dd>
 <dt><strong>Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials</strong></dt><dd><ul class="simple">
 <li><p>Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.</p></li>
 <li><p>Both energy and gradient available.</p></li>
-<li><p>Slow Python version and fast Fortran version available (almost ready).</p></li>
+<li><p>Slow Python version and fast Fortran version available (requires compilation of library).</p></li>
 <li><p>Limitation: No bonded MM yet.</p></li>
 </ul>
 </dd>
 <dt><strong>Geometry optimization with multiple optimizers</strong></dt><dd><ul class="simple">
 <li><p>Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.</p></li>
-<li><p>PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints.</p></li>
-<li><p>Todo: Manual frozen-atom feature to be done.</p></li>
+<li><p>PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.</p></li>
 <li><p>geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.</p></li>
-<li><p>To do: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.</p></li>
+<li><p><strong>To do</strong>: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.</p></li>
 </ul>
 </dd>
-<dt><strong>Nonbonded QM/MM Geometry optimization:</strong></dt><dd><ul class="simple">
-<li><p>Possible with geomeTRIC optimizer only currently.</p></li>
-<li><p>Todo: Knarr-optimizer.</p></li>
-<li><p><strong>Numerical frequencies: one-point (forward difference) and two-point (central difference)</strong></p></li>
+<dt><strong>(Nonbonded) QM/MM Geometry optimization:</strong></dt><dd><ul class="simple">
+<li><p>Possible with geomeTRIC optimizer currently, only.</p></li>
+<li><p><strong>Todo</strong>: Knarr-optimizer.</p></li>
+</ul>
+</dd>
+<dt><strong>Numerical frequencies: one-point (forward difference) and two-point (central difference)</strong></dt><dd><ul class="simple">
 <li><p>Partial Hessian possible</p></li>
-<li><p>Currently only ORCA supported. Todo: xTB, Psi4 and PySCF</p></li>
-<li><p>Todo: QM/MM not yet supported.</p></li>
-<li><p>Todo: Analytical Hessian from ORCA and xTB</p></li>
+<li><p>Currently only ORCA supported. <strong>Todo:</strong> xTB, Psi4 and PySCF</p></li>
+<li><p><strong>Todo:</strong> QM/MM not yet supported.</p></li>
+<li><p><strong>Todo:</strong> Read analytical Hessian from ORCA and xTB</p></li>
 </ul>
 </dd>
 <dt><strong>Hessian analysis</strong></dt><dd><ul class="simple">
 <li><p>Diagonalization of Hessian (from Yggdrasill or ORCA). Print frequencies and normal modes.</p></li>
-<li><p>Todo: projection of translation/rotational modes</p></li>
+<li><p><strong>Todo:</strong> projection of translation/rotational modes</p></li>
 <li><p>Normal mode composition analysis in terms of individual atoms, elements and atom groups.</p></li>
 <li><p>Print vibrational densities of states files (with linebroadening)</p></li>
 <li><p>Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity</p></li>
 <li><p>Read/write ORCA-style Hessian files</p></li>
 <li><p>Print XYZ-trajectory file for individual modes</p></li>
-<li><p>Print thermochemistry. TODO: finish</p></li>
+<li><p>Thermochemistry printing. <strong>TODO:</strong> finish</p></li>
 <li><p>Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)</p></li>
 </ul>
 </dd>
 <dt><strong>Molecular dynamics</strong></dt><dd><ul class="simple">
-<li><p>To be done</p></li>
+<li><p><strong>To be done</strong></p></li>
 </ul>
 </dd>
 <dt><strong>Submodules:</strong></dt><dd><p><strong>molcrys: Automatic Molecular crystal QM/MM</strong></p>
@@ -269,11 +271,11 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>Expand unit cell.</p></li>
 <li><p>Create spherical cluster from unitcell (with only whole molecules).</p></li>
 <li><p>Near-automatic fragment indentification.</p></li>
-<li><p>Intelligent reordering of fragments (supports messy CIF-files)</p></li>
-<li><p>Automatic creation of nonbonded MM forcefield (charges and LJ potentials).</p></li>
+<li><p>Intelligent reordering of fragments (supports inconsistently ordered CIF-files)</p></li>
+<li><p>Automatic creation of nonbonded MM forcefield (charges and LJ potentials (<strong>Todo</strong>)).</p></li>
 <li><p>Self-consistent QM/MM for charge definition of cluster.</p></li>
 <li><p>QM/MM Geometry optimization of central fragment of cluster to capture solid-state geometrical effects.</p></li>
-<li><p>QM/MM Numerical frequencies of central fragment of cluster.</p></li>
+<li><p><strong>Todo:</strong> QM/MM Numerical frequencies of central fragment of cluster.</p></li>
 </ul>
 </dd>
 </dl>

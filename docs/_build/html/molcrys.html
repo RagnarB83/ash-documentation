@@ -176,7 +176,8 @@
 <h1>MOLCRYS: Automatic QM/MM for Molecular Crystals<a class="headerlink" href="#molcrys-automatic-qm-mm-for-molecular-crystals" title="Permalink to this headline">¶</a></h1>
 <p>The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
 in articles by Bjornsson et al.[1,2].</p>
-<p><strong>The basic (automatic) protocol is:</strong></p>
+<a class="reference internal image-reference" href="_images/molcrys-intro.png"><img alt="_images/molcrys-intro.png" class="align-center" src="_images/molcrys-intro.png" style="width: 1200px;" /></a>
+<p><strong>The basic protocol is:</strong></p>
 <div class="line-block">
 <div class="line">1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.</div>
 <div class="line">2. Apply symmetry operations to get coordinates for whole unit cell</div>
@@ -185,24 +186,24 @@ in articles by Bjornsson et al.[1,2].</p>
 <div class="line">5. Define atomic charges of the molecular fragments from QM calculations.</div>
 <div class="line">6. Define Lennard-Jones parameters of the molecular fragments.</div>
 <div class="line">7. Iterate the atomic charges of the main molecular fragment in the center of the cluster until self-concistency.</div>
-<div class="line">8. Optional: Perform QM/MM geometry optimization of the central fragment or other job types.</div>
-<div class="line">9. Optional: Extend the QM-region around the central fragment for improved accuracy</div>
-<div class="line">10. Optional: Perform numerical frequency calculations or molecular dynamics simulations</div>
-<div class="line">11. Optional: Molecular property calculation in the solid-state</div>
+<div class="line">8a. Optional: Perform QM/MM geometry optimization of the central fragment or other job types.</div>
+<div class="line">8b. Optional: Extend the QM-region around the central fragment for improved accuracy</div>
+<div class="line">8c. Optional: Perform numerical frequency calculations or molecular dynamics simulations</div>
+<div class="line">8d. Optional: Molecular property calculation in the solid-state</div>
 </div>
+<p><strong>Critical features of the implementation:</strong></p>
 <div class="line-block">
-<div class="line">Critical features of the implementation:</div>
 <div class="line">- Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.</div>
 <div class="line">- Improved accuracy via QM-region expansion</div>
 <div class="line">- Numerical frequencies (to be tested)</div>
 </div>
+<p><strong>Limitations:</strong></p>
 <div class="line-block">
-<div class="line">Limitations:</div>
 <div class="line">- CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand.</div>
 <div class="line">- Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation.</div>
 </div>
+<p><strong>Features to be implemented:</strong></p>
 <div class="line-block">
-<div class="line">Features to be implemented:</div>
 <div class="line">- Automatic derivation of Lennard-Jones parameters</div>
 <div class="line">- Beyond Lennard-Jones</div>
 <div class="line">- Molecular dynamics</div>
@@ -215,6 +216,7 @@ in articles by Bjornsson et al.[1,2].</p>
 <h2>MOLCRYS Example: QM/MM Cluster setup from CIF-file<a class="headerlink" href="#molcrys-example-qm-mm-cluster-setup-from-cif-file" title="Permalink to this headline">¶</a></h2>
 <p>Here we show how to use code for an example Na[H2PO4] crystal. This molecular crystal contains 2 fragment-types:
 Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
+<a class="reference internal image-reference" href="_images/nah2po4-cell.png"><img alt="_images/nah2po4-cell.png" class="align-center" src="_images/nah2po4-cell.png" style="width: 600px;" /></a>
 <p>In the Python script, one has to initially <em>import Yggdrasill</em>, the molcrys module and call the <em>settings_yggdrasill.init()</em> function.</p>
 <p>The script then actually just calls one function, called <strong>molcrys</strong> at the bottom of the script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="n">cif_file</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="n">fragmentobjects</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>

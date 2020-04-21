@@ -4,6 +4,10 @@ MOLCRYS: Automatic QM/MM for Molecular Crystals
 The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
 in articles by Bjornsson et al.[1,2].
 
+.. image:: figures/molcrys-intro.png
+   :align: center
+   :width: 1200
+
 **The basic protocol is:**
 
 
@@ -46,6 +50,11 @@ MOLCRYS Example: QM/MM Cluster setup from CIF-file
 ######################################################
 Here we show how to use code for an example Na[H2PO4] crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
+
+.. image:: figures/nah2po4-cell.png
+   :align: center
+   :width: 600
+
 
 In the Python script, one has to initially *import Yggdrasill*, the molcrys module and call the *settings_yggdrasill.init()* function.
 

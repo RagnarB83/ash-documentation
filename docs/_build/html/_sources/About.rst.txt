@@ -9,6 +9,7 @@ Requirements:
 
     - Python3 installation
     - Numpy
+    - Julia (for faster versions of some routines)
     - Matplotlib (for some scientific plotting options).
 
 Optional Python modules for specific functionality (can be installed via pip or conda):
@@ -48,46 +49,46 @@ Features
     - Todo: Numfreq parallelization.
 
 **Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
-    - To do: PySCF
+    - **To do**: PySCF
 
-**Polarizable embedding via Psi4.**
-    - Todo: PySCF
+**Polarizable embedding via Psi4 and CPPE library**
+    - **Todo**: enable PySCF
 
 **Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
     - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
     - Both energy and gradient available.
-    - Slow Python version and fast Fortran version available (almost ready).
+    - Slow Python version and fast Fortran version available (requires compilation of library).
     - Limitation: No bonded MM yet.
 
 **Geometry optimization with multiple optimizers**
     - Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
-    - PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints.
-    - Todo: Manual frozen-atom feature to be done.
+    - PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.
     - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
-    - To do: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.
+    - **To do**: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.
 
-**Nonbonded QM/MM Geometry optimization:**
-    - Possible with geomeTRIC optimizer only currently.
-    - Todo: Knarr-optimizer.
-    - **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
+**(Nonbonded) QM/MM Geometry optimization:**
+    - Possible with geomeTRIC optimizer currently, only.
+    - **Todo**: Knarr-optimizer.
+
+**Numerical frequencies: one-point (forward difference) and two-point (central difference)**
     - Partial Hessian possible
-    - Currently only ORCA supported. Todo: xTB, Psi4 and PySCF
-    - Todo: QM/MM not yet supported.
-    - Todo: Analytical Hessian from ORCA and xTB
+    - Currently only ORCA supported. **Todo:** xTB, Psi4 and PySCF
+    - **Todo:** QM/MM not yet supported.
+    - **Todo:** Read analytical Hessian from ORCA and xTB
 
 **Hessian analysis**
     - Diagonalization of Hessian (from Yggdrasill or ORCA). Print frequencies and normal modes.
-    - Todo: projection of translation/rotational modes
+    - **Todo:** projection of translation/rotational modes
     - Normal mode composition analysis in terms of individual atoms, elements and atom groups.
     - Print vibrational densities of states files (with linebroadening)
     - Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity
     - Read/write ORCA-style Hessian files
     - Print XYZ-trajectory file for individual modes
-    - Print thermochemistry. TODO: finish
+    - Thermochemistry printing. **TODO:** finish
     - Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)
 
 **Molecular dynamics**
-    - To be done
+    - **To be done**
 
 **Submodules:**
     **molcrys: Automatic Molecular crystal QM/MM**
@@ -97,11 +98,11 @@ Features
     - Expand unit cell.
     - Create spherical cluster from unitcell (with only whole molecules).
     - Near-automatic fragment indentification.
-    - Intelligent reordering of fragments (supports messy CIF-files)
-    - Automatic creation of nonbonded MM forcefield (charges and LJ potentials).
+    - Intelligent reordering of fragments (supports inconsistently ordered CIF-files)
+    - Automatic creation of nonbonded MM forcefield (charges and LJ potentials (**Todo**)).
     - Self-consistent QM/MM for charge definition of cluster.
     - QM/MM Geometry optimization of central fragment of cluster to capture solid-state geometrical effects.
-    - QM/MM Numerical frequencies of central fragment of cluster.
+    - **Todo:** QM/MM Numerical frequencies of central fragment of cluster.
 
 **solvshell: Multi-shell solvation for redox potentials**
 
