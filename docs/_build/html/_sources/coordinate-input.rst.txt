@@ -162,7 +162,7 @@ Note. The connectivity table is calculated or recalculated automatically when co
 
 
 Inspect defined fragment objects
-==============================
+=================================
 
 To inspect a defined fragment one can print out a Python dictionary of all defined attributes of the object.
 
@@ -205,6 +205,7 @@ Print number of atoms and number of connected atoms:
     print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
 
 All defined system attributed can be printed conveniently to disk:
+
 
 .. code-block:: python
 

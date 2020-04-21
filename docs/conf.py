@@ -140,6 +140,7 @@ html_theme_options = {
     'titles_only': False
 }
 
+
 #RB Added
 def setup(app):
     app.add_stylesheet('my_theme.css')

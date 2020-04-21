@@ -17,7 +17,7 @@ of the QMTheory object (instead passed to the optimizer object/function).
 ###########################
 ORCATheory
 ###########################
-Coming: ORCATheory Class definition and arguments
+To be done: ORCATheory Class definition and arguments
 
 The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
 argument when creating object. The charge, multiplicity are also necessary keyword arguments (integers).

@@ -14,4 +14,4 @@ Optional:
     - Matplotlib (for plotting functionality)
 
 We recommend Anaconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
-Contains Python3, Numpy, SciPy, Matplotlib.
+Anaconda comes with Python3, Numpy, SciPy, Matplotlib.

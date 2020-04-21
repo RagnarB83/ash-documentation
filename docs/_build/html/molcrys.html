@@ -90,6 +90,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="About.html">About Yggdrasill</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
@@ -103,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-property-calculation">MOLCRYS: Property calculation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-numerical-qm-mm-frequencies">MOLCRYS: Numerical QM/MM frequencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-molecular-dynamics">MOLCRYS: Molecular Dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molcrys-fragment-identification-connectivity-issues">MOLCRYS: Fragment identification/Connectivity issues</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
@@ -173,7 +175,7 @@
   <div class="section" id="molcrys-automatic-qm-mm-for-molecular-crystals">
 <h1>MOLCRYS: Automatic QM/MM for Molecular Crystals<a class="headerlink" href="#molcrys-automatic-qm-mm-for-molecular-crystals" title="Permalink to this headline">¶</a></h1>
 <p>The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
-in articles by Bjornsson et al.[1,2]</p>
+in articles by Bjornsson et al.[1,2].</p>
 <p><strong>The basic (automatic) protocol is:</strong></p>
 <div class="line-block">
 <div class="line">1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.</div>
@@ -466,6 +468,9 @@ Thus a simple modification to the inputfile would be required to run a property 
 <div class="section" id="molcrys-molecular-dynamics">
 <h2>MOLCRYS: Molecular Dynamics<a class="headerlink" href="#molcrys-molecular-dynamics" title="Permalink to this headline">¶</a></h2>
 <p>Not yet ready</p>
+</div>
+<div class="section" id="molcrys-fragment-identification-connectivity-issues">
+<h2>MOLCRYS: Fragment identification/Connectivity issues<a class="headerlink" href="#molcrys-fragment-identification-connectivity-issues" title="Permalink to this headline">¶</a></h2>
 <p>If there are difficulties in obtaining the correct fragment identification from the CIF file, first check that the CIF file is correct:</p>
 <div class="line-block">
 <div class="line">- Are there atoms missing? e.g. hydrogens? These would have to be added to the CIF file.</div>

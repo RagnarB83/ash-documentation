@@ -2,7 +2,7 @@
 MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
 The automatic molecular crystal QM/MM method in Yggdrasill is based on the work described
-in articles by Bjornsson et al.[1,2]
+in articles by Bjornsson et al.[1,2].
 
 **The basic (automatic) protocol is:**
 
@@ -38,9 +38,9 @@ in articles by Bjornsson et al.[1,2]
 | 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
 | 2. R. Bjornsson, manuscript in preparation
 
-###############################################
+######################################################
 MOLCRYS Example: QM/MM Cluster setup from CIF-file
-###############################################
+######################################################
 Here we show how to use code for an example Na[H2PO4] crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 
@@ -362,9 +362,9 @@ MOLCRYS: Molecular Dynamics
 Not yet ready
 
 
-#################################################
+#####################################################
 MOLCRYS: Fragment identification/Connectivity issues
-##############################################
+#####################################################
 
 If there are difficulties in obtaining the correct fragment identification from the CIF file, first check that the CIF file is correct:
 

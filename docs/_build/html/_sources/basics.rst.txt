@@ -19,7 +19,7 @@ For convenience you may want to initalize standard global settings (connectivity
 
 The global settings are stored in your *yggdrasill-dir/settings_yggdrasill.py* and can be modified.
 
-From then on you have the freedom of writing a Python script in any way you prefer but taking the advantage
+From then on you have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of Yggdrasill functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
 See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.

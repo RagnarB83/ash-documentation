@@ -53,7 +53,6 @@ While Yggdrasill will print out basic information about the run at runtime (e.g.
 By default the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
 temporary files (e.g. so they don't interfere with a future job), one can use the cleanup function.
 
-
 .. code-block:: python
 
     #Clean up
