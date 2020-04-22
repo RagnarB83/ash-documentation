@@ -181,12 +181,12 @@ QM/MM approach for molecular crystals. The protocol reads a crystallographic inf
 to build up a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
 molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
-The method then allows electrostatically embedded QM/MM geometry optimization, electrostically embedded property calculations
-(e.g. NMR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.</p>
+The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded property calculations
+(e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.</p>
 <p>Any QM-code that has an interface in Yggdrasill can in principle be used and any QM-method within that code can be used
 (analytical gradient strongly recommended for optimizations).</p>
 <p>Current limitation: Only ORCA interface is complete at this point.</p>
-<a class="reference internal image-reference" href="_images/molcrys-intro.png"><img alt="_images/molcrys-intro.png" class="align-center" src="_images/molcrys-intro.png" style="width: 1200px;" /></a>
+<a class="reference internal image-reference" href="_images/molcrys-intro-v2a.png"><img alt="_images/molcrys-intro-v2a.png" class="align-center" src="_images/molcrys-intro-v2a.png" style="width: 1200px;" /></a>
 <p><strong>The basic protocol is:</strong></p>
 <div class="line-block">
 <div class="line">1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.</div>
@@ -195,17 +195,17 @@ The method then allows electrostatically embedded QM/MM geometry optimization, e
 <div class="line">4. Extend the unit cell and cut out a spherical cluster with user-defined MM radius (typically 30-50 Å). Only whole molecules included.</div>
 <div class="line">5. Define atomic charges of the molecular fragments from QM calculations.</div>
 <div class="line">6. Define Lennard-Jones parameters of the molecular fragments.</div>
-<div class="line">7. Iterate the atomic charges of the main molecular fragment in the center of the cluster until self-concistency.</div>
+<div class="line">7. Iterate the atomic charges of the main molecular fragment in the center of the cluster (electrostatically embedded QM/MM) until self-concistency.</div>
 <div class="line">8a. Optional: Perform QM/MM geometry optimization of the central fragment or other job types.</div>
-<div class="line">8b. Optional: Extend the QM-region around the central fragment for improved accuracy</div>
-<div class="line">8c. Optional: Perform numerical frequency calculations or molecular dynamics simulations</div>
-<div class="line">8d. Optional: Molecular property calculation in the solid-state</div>
+<div class="line">8b. Optional: Extend the QM-region around the central fragment for improved accuracy.</div>
+<div class="line">8c. Optional: Perform numerical frequency calculations or molecular dynamics simulations.</div>
+<div class="line">8d. Optional: Molecular property calculation in the solid-state.</div>
 </div>
 <p><strong>Critical features of the implementation:</strong></p>
 <div class="line-block">
 <div class="line">- Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.</div>
-<div class="line">- Accuracy can be controlled via QM-region expansion</div>
-<div class="line">- Numerical frequencies available (to be tested)</div>
+<div class="line">- Accuracy can be controlled via QM-region expansion (reduces impact of approximate LJ potentials or MM charges).</div>
+<div class="line">- Numerical frequencies available (to be tested).</div>
 </div>
 <p><strong>Limitations:</strong></p>
 <div class="line-block">
@@ -214,9 +214,10 @@ The method then allows electrostatically embedded QM/MM geometry optimization, e
 </div>
 <p><strong>Features to be implemented:</strong></p>
 <div class="line-block">
-<div class="line">- Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at right).</div>
-<div class="line">- Beyond Lennard-Jones potentials for improved QM-MM interaction</div>
-<div class="line">- Molecular dynamics</div>
+<div class="line">- Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at the moment).</div>
+<div class="line">- Beyond Lennard-Jones potentials for improved QM-MM interaction.</div>
+<div class="line">- Molecular dynamics.</div>
+<div class="line">- Polarizable embedding?</div>
 </div>
 <div class="line-block">
 <div class="line">1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.</div>
@@ -227,8 +228,8 @@ The method then allows electrostatically embedded QM/MM geometry optimization, e
 <p>Here we show how to use the <strong>MOLCRYS</strong> code for an example Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub><sup>-</sup> ] crystal. This molecular crystal contains 2 fragment-types:
 Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
 <a class="reference internal image-reference" href="_images/nah2po4-cell.png"><img alt="_images/nah2po4-cell.png" class="align-center" src="_images/nah2po4-cell.png" style="width: 600px;" /></a>
-<p>In the Python script, one has to initially <em>import Yggdrasill</em>, the molcrys module and call the <em>settings_yggdrasill.init()</em> function.</p>
-<p>The script then actually just calls one function, called <strong>molcrys</strong> at the bottom of the script:</p>
+<p>A Python script should be created and then Yggdrasill  <strong>molcrys</strong> functionality should be imported.</p>
+<p>The script should then actually just call one function, called <strong>molcrys</strong> at the bottom of the script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="n">cif_file</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="n">fragmentobjects</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
     <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">clusterradius</span><span class="o">=</span><span class="n">sphereradius</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="n">chargemodel</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="n">shortrangemodel</span><span class="p">)</span>
 </pre></div>
@@ -236,7 +237,7 @@ Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
 <p>This is the only function of this script but as we can see, there are a number of arguments to be provided.
 It is usually more convenient to define first the necessary variables in multiple lines above this command.
 In the full script, seen below, a number of variables are defined, following standard Python syntax.
-Yggdrasill specific functionality is the creation of the ORCAcalc object (instance of the Yggdrasill ORCATheory class),
+Yggdrasill-specific functionality is the creation of the ORCAcalc object (instance of the Yggdrasill ORCATheory class),
 the creation of mainfrag and counterfrag1 objects (instances of Yggdrasill Fragmenttype class).
 The variables are then passed as keyword arguments to the  <strong>molcrys</strong> function at the bottom of the script.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
@@ -315,8 +316,8 @@ For the NaH<sub>2</sub> PO<sub>4</sub> crystal, however, that features strong hy
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na<sup>+</sup> ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.</p>
-<p>Unlike the other variables, the <em>settings_yggdrasill.scale</em>, <em>settings_yggdrasill.tol</em> and <em>eldict_covrad</em> are global variables
-that <strong>molcrys</strong> and <strong>Yggdrasill</strong> will have access to.</p>
+<p>Unlike the other variables, the <em>settings_yggdrasill.scale</em>, <em>settings_yggdrasill.tol</em> and <em>eldict_covrad</em> are
+global variables (already defined but can be modified) that <strong>molcrys</strong> and <strong>Yggdrasill</strong> will have access to.</p>
 <p>The other variables defined in the script have to be passed as keyword argument values to the respective keyword of
 the <strong>molcrys</strong> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="n">cif_file</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="n">fragmentobjects</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
@@ -328,16 +329,17 @@ instead of a <em>cif_file</em> argument, an <em>xtl_file</em> argument can alter
 be passed on instead. An XTL-file can be created by the Vesta software (<a class="reference external" href="http://jp-minerals.org/vesta/en/">http://jp-minerals.org/vesta/en/</a>).</p>
 <p>The purpose of the molcrys function is primarily to create an Yggdrasill cluster-fragment, here called Cluster. The Cluster fragment
 will contain the coordinates of the spherical MM cluster with charges from the self-consistent QM procedure and atom-types
-defined via the shortrange model procedure chosen. The Cluster fragment is both present in memory and also written to disk as:
-Cluster.ygg A forcefield file is also created, Cluster_forcefield.ff, that contains
+defined via the shortrange model procedure chosen. The Cluster fragment is both present in memory once defined (i.e. the molcrys function has finished)
+and is also written to disk as: Cluster.ygg. A forcefield file is also created by <strong>molcrys</strong>: Cluster_forcefield.ff, that contains
 the Lennard-Jones parameters defined for the atomtypes that have been chosen for every atom in the Cluster fragment.</p>
 <p>Typically running the <strong>molcrys</strong> function takes only a few minutes, depending on the size of the molecular fragments
 and the size of the Cluster radius but usually it is easiest to submit this to the cluster to run the QM calculations in parallel.
-If the connectivity requires modifications, however, then first running through the script directly may be easier.</p>
+If the connectivity requires modifications, however, then first running through the script directly (on a local
+computer or frontnode of the cluster) may be easier.</p>
 <p>The Cluster fragment file, Cluster.ygg, can be used directly in a single-point property job (see later).
 If using the ORCA interface, the last orca-input.inp and orca-input.pc files created by <strong>molcrys</strong>
 can also directly be used to run a single-point electrostatically-embedded property calculation with ORCA
-(note: not a geometry optimization) as they contain the QM-coordinates of the central fragment (orca-input.inp) and .
+(note: not a geometry optimization though) as they contain the QM-coordinates of the central fragment (orca-input.inp) and .
 the MM coordinates and self-consistent pointcharges (orca-input.pc).</p>
 </div>
 <div class="section" id="molcrys-qm-mm-geometry-optimization">

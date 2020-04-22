@@ -48,3 +48,14 @@ are charge and spin multiplicity.
 The object can then be run via the object function (ORCAcalc.run) which is the equivalent of a single-point energy job.
 By using Grad=True keyword argument ORCAcalc.run, a gradient is also requested and by setting the nprocs=8 argument,
 an 8-core run ORCA calculation is requested (handled via OpenMPI, requires OpenMPI variables to be set outside Python).
+
+###########################
+Psi4Theory
+###########################
+
+
+###########################
+xTBTheory
+###########################
+
+
