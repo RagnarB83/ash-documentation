@@ -11,6 +11,11 @@ You create a Python3 script (e.g. called system.py) and import the Yggdrasill fu
 
     from yggdrasill import *
 
+
+Yggdrasill functionality can only be imported if the Yggdrasill source dir is in the PYTHONPATH. Make sure you have set in the shell:
+
+export PYTHONPATH=/path/to/yggdrasill_dir:$PYTHONPATH
+
 For convenience you may want to initalize standard global settings (connectivity etc.):
 
 .. code-block:: python

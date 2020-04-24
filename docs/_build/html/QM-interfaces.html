@@ -98,7 +98,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM Interfaces</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#orcatheory">ORCATheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#psi4theory">Psi4Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#xtbtheory">xTBTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xtbtheory">xTBTheory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="orca-interface.html">ORCA Interface</a></li>
@@ -213,6 +216,45 @@ an 8-core run ORCA calculation is requested (handled via OpenMPI, requires OpenM
 </div>
 <div class="section" id="xtbtheory">
 <h2>xTBTheory<a class="headerlink" href="#xtbtheory" title="Permalink to this headline">¶</a></h2>
+<p>The xTB interface comes in two forms, a shared-library interface and a file-based interface.
+The shared-library interface is recommended as no disk I/O is required while running xTB. Yggdrasill and xTB communicate via a Python C-API.
+As no files are written to disk, this makes the interface faster than the file-based interface, useful for e.g. fast MD.
+The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by Yggdrasill.
+For regular jobs, e.g. geometry optimizations, the speed-difference between interface will probably not matter.</p>
+<p>To use either interface is quite simple, when an xTB object is created, charge and multiplicity keywords should be provided
+as well as the xtbmethod keyword argument that takes values: “GFN2”, “GFN1” for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
+An optional fragment object can also be associated with the xTB-object (makes only sense for single-point jobs).
+An optional runmode argument is also available: runmode=’library’ or runmode=’inputfile’.</p>
+<p>The runmode=’library’ option is used by default and requires the shell environment variable LD_LIBRARY_PATH to include the xtb library dir.
+e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH</p>
+<p>The runmode=’inputfile’ option requires an additional xtbdir variable to be set that points to the dir containing the xtb executable, e.g. xtbdir=/path/to/xtb_6_2_3/bin .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
+<span class="n">xTBcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">)</span>
+<span class="c1">#xTBcalc = xTBTheory(fragment=HF_frag, charge=0, mult=1, xtbmethod=&#39;GFN2&#39;, runmode=&#39;inputfile&#39;, xtbdir=&#39;/path/to/xtb_6_2_3/bin&#39;)</span>
+
+<span class="c1">#Run a single-point energy job on the fragment associated with the xtb-object</span>
+<span class="n">xTBcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="c1">#An Energy+Gradient calculation running on 8 cores</span>
+<span class="n">xTBcalc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="troubleshooting">
+<h3>Troubleshooting:<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>If the library-interface is not working, the reason is likely that something is missing from the LD_LIBRARY_PATH environment variable,  Make sure the lib64 dir of xtb is part of the LD_LIBRARY_PATH in the shell from which you are running (or in the jobscript you are submitting).</p></li>
+</ul>
+<p>e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH</p>
+<ul class="simple">
+<li><p>Fortran libraries may also be missing for xTB. Make sure to load the necessary libraries (e.g. loading a module or  sourcing the Intel compilervars.sh script)</p></li>
+<li><p>If the problem is not resolved, try to load the Yggdrasill xtb-interface directly in a script:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xtb_interface_library</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">xtb_interface_library</span><span class="o">.</span><span class="n">XTBLibrary</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That should reveal what libraries are not found.</p>
+</div>
 </div>
 </div>
 

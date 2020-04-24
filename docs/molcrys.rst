@@ -46,11 +46,13 @@ Current limitation: Only ORCA interface is complete at this point.
 
 **Limitations:**
 
-| - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand.
-| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation.
+| - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before.
+| - Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)
+| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals can be described.
 
 **Features to be implemented:**
 
+| - Activate PySCF, Psi4 and xTB interfaces
 | - Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at the moment).
 | - Beyond Lennard-Jones potentials for improved QM-MM interaction.
 | - Molecular dynamics.

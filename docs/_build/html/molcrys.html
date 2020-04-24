@@ -209,11 +209,13 @@ The method then allows one to do electrostatically embedded QM/MM geometry optim
 </div>
 <p><strong>Limitations:</strong></p>
 <div class="line-block">
-<div class="line">- CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand.</div>
-<div class="line">- Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation.</div>
+<div class="line">- CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before.</div>
+<div class="line">- Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)</div>
+<div class="line">- Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals can be described.</div>
 </div>
 <p><strong>Features to be implemented:</strong></p>
 <div class="line-block">
+<div class="line">- Activate PySCF, Psi4 and xTB interfaces</div>
 <div class="line">- Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at the moment).</div>
 <div class="line">- Beyond Lennard-Jones potentials for improved QM-MM interaction.</div>
 <div class="line">- Molecular dynamics.</div>
