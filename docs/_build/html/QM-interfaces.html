@@ -98,6 +98,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM Interfaces</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#orcatheory">ORCATheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#psi4theory">Psi4Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyscftheory">PySCFTheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#xtbtheory">xTBTheory</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting:</a></li>
 </ul>
@@ -213,6 +214,57 @@ an 8-core run ORCA calculation is requested (handled via OpenMPI, requires OpenM
 </div>
 <div class="section" id="psi4theory">
 <h2>Psi4Theory<a class="headerlink" href="#psi4theory" title="Permalink to this headline">¶</a></h2>
+<p>The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
+The library interface means that Yggdrasill will load Psi4 Python libraries that have to be part of the same Python installation.
+In the inputfile-based interface (Psithon), Yggdrasill will create a Psi4 inputfile in Psithon syntax and will then call
+a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).</p>
+<p>Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.</p>
+<p>Todo:
+- Allow to pass dictionaries for other modules
+- Enable e.g. coupled-cluster E+G calculation</p>
+<p>Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
+Set pe=True and give path to potfile to use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
+<span class="c1">#Psi4 variables defined as a dictionary:</span>
+<span class="n">psi4settings</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;scf_type&#39;</span><span class="p">:</span> <span class="s1">&#39;pk&#39;</span><span class="p">,</span> <span class="s1">&#39;soscf&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;basis&#39;</span> <span class="p">:</span> <span class="s1">&#39;def2-SVP&#39;</span> <span class="p">}</span>
+<span class="n">psi4functional</span><span class="o">=</span><span class="s1">&#39;b3lyp&#39;</span>
+
+<span class="c1">#Psi4: Input-file based interface: using psi4dir to set path</span>
+<span class="n">psi4dir</span><span class="o">=</span><span class="s1">&#39;/path/to/psi4_install/bin/psi4&#39;</span>
+<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;input&#39;</span>
+                            <span class="n">psi4dir</span><span class="o">=</span><span class="n">psi4dir</span><span class="p">,</span> <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;psi4output.dat&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;psi4input&#39;</span><span class="p">,</span>
+                             <span class="n">psi4memory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">prinsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#Psi4: Library-based interface</span>
+<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span>
+                            <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;psi4output.dat&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;psi4input&#39;</span><span class="p">,</span> <span class="n">psi4memory</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+
+<span class="c1">#Run a single-point energy job</span>
+<span class="n">Psi4calc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="c1">#An Energy+Gradient calculation</span>
+<span class="n">Psi4calc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pyscftheory">
+<h2>PySCFTheory<a class="headerlink" href="#pyscftheory" title="Permalink to this headline">¶</a></h2>
+<p>The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
+At the moment, the interface is not very flexible and only allows for simple DFT calculations with a specific basis set.</p>
+<p>Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, nprocs, outputname and printsetting.
+Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).</p>
+<p>The interface will become more flexible in the future.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
+<span class="c1">#PySCF</span>
+<span class="n">PySCFcalc</span> <span class="o">=</span> <span class="n">PySCFTheory</span><span class="p">(</span><span class="n">pyscfbasis</span><span class="o">=</span><span class="s2">&quot;def2-SVP&quot;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s2">&quot;B3LYP&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;pyscf.out&#39;</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Run a single-point energy job</span>
+<span class="n">PySCFcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="c1">#An Energy+Gradient calculation</span>
+<span class="n">PySCFcalc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="xtbtheory">
 <h2>xTBTheory<a class="headerlink" href="#xtbtheory" title="Permalink to this headline">¶</a></h2>

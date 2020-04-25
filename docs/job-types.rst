@@ -35,7 +35,7 @@ object. For the object run command to work, the fragment would have to be associ
 The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
 single-point job. Thus one can define any calculation one wants:
 DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total energy of the system, however, would be picked up by Yggdrasill.
+Only the total energy of the system would typically be picked up by Yggdrasill though.
 
 It is also possible to request a gradient calculation :
 
@@ -79,7 +79,7 @@ Geometry optimizations are easily performed in Yggdrasill due to availability of
     import sys
     settings_yggdrasill.init() #initialize
 
-    HF_frag=Fragment(xyzfiles="hf.xyz")
+    HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"

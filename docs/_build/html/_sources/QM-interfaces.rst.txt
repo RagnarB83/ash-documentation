@@ -52,6 +52,68 @@ an 8-core run ORCA calculation is requested (handled via OpenMPI, requires OpenM
 ###########################
 Psi4Theory
 ###########################
+The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
+The library interface means that Yggdrasill will load Psi4 Python libraries that have to be part of the same Python installation.
+In the inputfile-based interface (Psithon), Yggdrasill will create a Psi4 inputfile in Psithon syntax and will then call
+a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).
+
+Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.
+
+Todo:
+- Allow to pass dictionaries for other modules
+- Enable e.g. coupled-cluster E+G calculation
+
+Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
+Set pe=True and give path to potfile to use.
+
+.. code-block:: python
+
+    #Create fragment object from XYZ-file
+    HF_frag=Fragment(xyzfile='hf.xyz')
+    #Psi4 variables defined as a dictionary:
+    psi4settings={'scf_type': 'pk', 'soscf': True, 'basis' : 'def2-SVP' }
+    psi4functional='b3lyp'
+
+    #Psi4: Input-file based interface: using psi4dir to set path
+    psi4dir='/path/to/psi4_install/bin/psi4'
+    Psi4calc = Psi4Theory(fragment=HF_frag, charge=0, mult=1, psi4settings, psi4functional, runmode='input'
+                                psi4dir=psi4dir, pe=False, outputname='psi4output.dat', label='psi4input',
+                                 psi4memory=3000, prinsetting=False)
+    #Psi4: Library-based interface
+    Psi4calc = Psi4Theory(fragment=HF_frag, charge=0, mult=1, psi4settings, psi4functional, runmode='library'
+                                pe=False, outputname='psi4output.dat', label='psi4input', psi4memory=3000)
+
+    #Run a single-point energy job
+    Psi4calc.run()
+    #An Energy+Gradient calculation
+    Psi4calc.run(Grad=True)
+
+
+
+
+###########################
+PySCFTheory
+###########################
+The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
+At the moment, the interface is not very flexible and only allows for simple DFT calculations with a specific basis set.
+
+Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, nprocs, outputname and printsetting.
+Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).
+
+The interface will become more flexible in the future.
+
+.. code-block:: python
+
+    #Create fragment object from XYZ-file
+    HF_frag=Fragment(xyzfile='hf.xyz')
+    #PySCF
+    PySCFcalc = PySCFTheory(pyscfbasis="def2-SVP", pyscffunctional="B3LYP", nprocs=2
+    fragment=HF_frag, charge=0, mult=1, pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
+
+    #Run a single-point energy job
+    PySCFcalc.run()
+    #An Energy+Gradient calculation
+    PySCFcalc.run(Grad=True)
 
 
 ###########################

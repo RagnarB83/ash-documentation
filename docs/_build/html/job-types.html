@@ -200,7 +200,7 @@ object. For the object run command to work, the fragment would have to be associ
 <p>The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
 single-point job. Thus one can define any calculation one wants:
 DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total energy of the system, however, would be picked up by Yggdrasill.</p>
+Only the total energy of the system would typically be picked up by Yggdrasill though.</p>
 <p>It is also possible to request a gradient calculation :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#An Energy+Gradient calculation</span>
 <span class="n">ORCASP</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -231,7 +231,7 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
-<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfiles</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
