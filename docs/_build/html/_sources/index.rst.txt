@@ -18,7 +18,8 @@ These are the documentation pages of Yggdrasill.
    coordinate-input
    job-types
    QM-interfaces
-   orca-interface
+   MM-interfaces
+   QM-MM
    molcrys
    yggdrasill-classes
 

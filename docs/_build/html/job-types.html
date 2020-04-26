@@ -102,7 +102,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="orca-interface.html">ORCA Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
 </ul>
@@ -171,6 +172,13 @@
             
   <div class="section" id="job-types">
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline">¶</a></h1>
+<p>There are a few different job-types in Yggdrasill: single-point , geometry optimization, numerical frequencies and molecular dynamics (not ready).
+- Single-point energy/property jobs in Yggdrasill (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
+- Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
+- Numerical frequencies
+- Molecular dynamics (not ready)</p>
+<p>The job-types can be used with any theory object available, e.g. one of the QMTheories in <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> or using
+a QM/MM Theory object from <a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a></p>
 <div class="section" id="single-point-calculation">
 <h2>Single-point calculation<a class="headerlink" href="#single-point-calculation" title="Permalink to this headline">¶</a></h2>
 <p>A single-point calculation is the most basic job to perform.
@@ -181,6 +189,7 @@ Below, the ORCASP object is created from the ORCATheory class, passing various O
 (location of ORCA dir and specifying how the inputfile should look). An Yggdrasill fragment object is also passed onto the object (now alwasy required).</p>
 <p>For a single-point calculation only then simply runs the Theory object via executing the internal run function of the
 object. For the object run command to work, the fragment would have to be associated with the object (as in this example).</p>
+<p>TODO: Create SinglePointEnergy function too?</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>

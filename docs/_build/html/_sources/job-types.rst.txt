@@ -2,6 +2,15 @@
 Job Types
 ==========================
 
+There are a few different job-types in Yggdrasill: single-point , geometry optimization, numerical frequencies and molecular dynamics (not ready).
+- Single-point energy/property jobs in Yggdrasill (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
+- Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
+- Numerical frequencies
+- Molecular dynamics (not ready)
+
+The job-types can be used with any theory object available, e.g. one of the QMTheories in :doc:`QM-interfaces` or using
+a QM/MM Theory object from :doc:`QM-MM`
+
 ###########################
 Single-point calculation
 ###########################
@@ -14,6 +23,8 @@ Below, the ORCASP object is created from the ORCATheory class, passing various O
 
 For a single-point calculation only then simply runs the Theory object via executing the internal run function of the
 object. For the object run command to work, the fragment would have to be associated with the object (as in this example).
+
+TODO: Create SinglePointEnergy function too?
 
 .. code-block:: python
 
