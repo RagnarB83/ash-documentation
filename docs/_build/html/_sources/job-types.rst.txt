@@ -2,10 +2,11 @@
 Job Types
 ==========================
 
-There are a few different job-types in Yggdrasill: single-point , geometry optimization, numerical frequencies and molecular dynamics (not ready).
+There are a few different job-types in Yggdrasill: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
 - Single-point energy/property jobs in Yggdrasill (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
-- Numerical frequencies
+- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). To be finished.
+- Nudged elastic band calculations are available via an interface to an external code.
 - Molecular dynamics (not ready)
 
 The job-types can be used with any theory object available, e.g. one of the QMTheories in :doc:`QM-interfaces` or using
@@ -110,6 +111,32 @@ Geometry optimizations are easily performed in Yggdrasill due to availability of
 ###########################
 Numerical frequencies
 ###########################
+
+
+##################################
+Nudged Elastic Band Calculations
+##################################
+
+Through an interface to an external code, nudged elastic band (NEB) calculations are possible.
+Both regular NEB and CI-NEB calculations are possible.
+
+Any QM or QM/MM Hamiltonian can be used.
+
+.. code-block:: python
+
+    from yggdrasill import *
+    import sys
+    settings_yggdrasill.init() #initialize
+    import interface_knarr
+
+    Reactant=Fragment(xyzfile="react.xyz")
+    Product=Fragment(xyzfile="prod.xyz")
+
+    #Calculator object without frag
+    xtbcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2', runmode='library')
+
+    interface_knarr.NEB(reactant=Reactant, product=Product, theory=xtbcalc, images=10, CI=True)
+
 
 
 ###########################

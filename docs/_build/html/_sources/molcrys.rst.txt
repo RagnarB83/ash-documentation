@@ -11,6 +11,7 @@ molecular fragments in the crystal and division of the system into a central act
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded property calculations
 (e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
+Minimum energy paths and saddle-points ("transition states") can even be calculated via Nudged Elastic Band calculations.
 
 Any QM-code that has an interface in Yggdrasill can in principle be used and any QM-method within that code can be used
 (analytical gradient strongly recommended for optimizations).
@@ -43,12 +44,14 @@ Current limitation: Only ORCA interface is complete at this point.
 | - Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.
 | - Accuracy can be controlled via QM-region expansion (reduces impact of approximate LJ potentials or MM charges).
 | - Numerical frequencies available (to be tested).
+| - State-of-the-art geometry optimization via efficient internal coordinates (geomeTRIC interface).
+| - Nudged-elastic-band calculations for reaction-path and TS-optimizations in the solid (to be tested)
 
 **Limitations:**
 
 | - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before.
 | - Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)
-| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals can be described.
+| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals are possible.
 
 **Features to be implemented:**
 

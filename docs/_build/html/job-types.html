@@ -98,6 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#single-point-calculation">Single-point calculation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#geometry-optimization">Geometry optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#numerical-frequencies">Numerical frequencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nudged-elastic-band-calculations">Nudged Elastic Band Calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics">Molecular Dynamics</a></li>
 </ul>
 </li>
@@ -172,10 +173,11 @@
             
   <div class="section" id="job-types">
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline">¶</a></h1>
-<p>There are a few different job-types in Yggdrasill: single-point , geometry optimization, numerical frequencies and molecular dynamics (not ready).
+<p>There are a few different job-types in Yggdrasill: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
 - Single-point energy/property jobs in Yggdrasill (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
-- Numerical frequencies
+- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). To be finished.
+- Nudged elastic band calculations are available via an interface to an external code.
 - Molecular dynamics (not ready)</p>
 <p>The job-types can be used with any theory object available, e.g. one of the QMTheories in <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> or using
 a QM/MM Theory object from <a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a></p>
@@ -260,6 +262,26 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 </div>
 <div class="section" id="numerical-frequencies">
 <h2>Numerical frequencies<a class="headerlink" href="#numerical-frequencies" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="nudged-elastic-band-calculations">
+<h2>Nudged Elastic Band Calculations<a class="headerlink" href="#nudged-elastic-band-calculations" title="Permalink to this headline">¶</a></h2>
+<p>Through an interface to an external code, nudged elastic band (NEB) calculations are possible.
+Both regular NEB and CI-NEB calculations are possible.</p>
+<p>Any QM or QM/MM Hamiltonian can be used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="kn">import</span> <span class="nn">interface_knarr</span>
+
+<span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">)</span>
+<span class="n">Product</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;prod.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1">#Calculator object without frag</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">)</span>
+
+<span class="n">interface_knarr</span><span class="o">.</span><span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">Product</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">CI</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h2>
