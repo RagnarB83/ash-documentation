@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Job Types &mdash; Yggdrasill 0.1 documentation</title>
+  <title>Job Types &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -50,12 +50,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Yggdrasill
+            <a href="index.html" class="icon icon-home"> Ash
           
 
           
             
-            <img src="_static/yggdrasill-logo.png" class="logo" alt="Logo"/>
+            <img src="_static/ash-logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -89,7 +89,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="About.html">About Yggdrasill</a></li>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About Ash</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
@@ -105,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
             
@@ -120,7 +120,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Yggdrasill</a>
+          <a href="index.html">Ash</a>
         
       </nav>
 
@@ -172,8 +172,8 @@
             
   <div class="section" id="job-types">
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline">¶</a></h1>
-<p>There are a few different job-types in Yggdrasill: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
-- Single-point energy/property jobs in Yggdrasill (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
+<p>There are a few different job-types in Ash: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
+- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
 - Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). To be finished.
 - Nudged elastic band calculations are available via an interface to an external code.
@@ -183,17 +183,17 @@ a QM/MM Theory object from <a class="reference internal" href="QM-MM.html"><span
 <div class="section" id="single-point-calculation">
 <h2>Single-point calculation<a class="headerlink" href="#single-point-calculation" title="Permalink to this headline">¶</a></h2>
 <p>A single-point calculation is the most basic job to perform.
-After creating an Yggdrasill fragment, you create a Theory object, e.g. a QMTheory from: <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> an
+After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from: <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> an
 MMTheory (TODO) or a QM/MMTheory (see XX).
 The ORCATheory class is recommended for general jobs as this interface is more supported than others.
 Below, the ORCASP object is created from the ORCATheory class, passing various ORCA-specific variables to it
-(location of ORCA dir and specifying how the inputfile should look). An Yggdrasill fragment object is also passed onto the object (now alwasy required).</p>
+(location of ORCA dir and specifying how the inputfile should look). An Ash fragment object is also passed onto the object (now alwasy required).</p>
 <p>For a single-point calculation only then simply runs the Theory object via executing the internal run function of the
 object. For the object run command to work, the fragment would have to be associated with the object (as in this example).</p>
 <p>TODO: Create SinglePointEnergy function too?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfiles</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
@@ -210,13 +210,13 @@ object. For the object run command to work, the fragment would have to be associ
 <p>The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
 single-point job. Thus one can define any calculation one wants:
 DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total energy of the system would typically be picked up by Yggdrasill though.</p>
+Only the total energy of the system would typically be picked up by Ash though.</p>
 <p>It is also possible to request a gradient calculation :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#An Energy+Gradient calculation</span>
 <span class="n">ORCASP</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>While Yggdrasill will print out basic information about the run at runtime (e.g. the energy), the energy or gradient
+<p>While Ash will print out basic information about the run at runtime (e.g. the energy), the energy or gradient
 (if requested) is also stored inside the object and can be accessed once the job is completed:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ORCASP</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ORCASP</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
@@ -231,15 +231,15 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 </div>
 <div class="section" id="geometry-optimization">
 <h2>Geometry optimization<a class="headerlink" href="#geometry-optimization" title="Permalink to this headline">¶</a></h2>
-<p>Geometry optimizations are easily performed in Yggdrasill due to availability of a few different optimization codes.</p>
+<p>Geometry optimizations are easily performed in Ash due to availability of a few different optimization codes.</p>
 <ul class="simple">
 <li><p>An internal optimizer is available (called “Optimizer”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
 <li><p>An interface to the PyBerny optimization program (<a class="reference external" href="https://github.com/jhrmnn/pyberny">https://github.com/jhrmnn/pyberny</a>) is available that allows efficient optimization in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.</p></li>
-<li><p>The <strong>recommended</strong> optimizer is geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>) for which there is an Yggdrasill interface. geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms and the “ActiveRegion” feature inside Yggdrasill allows definition of an active region that aids QM/MM optimization (where most atoms are frozen).</p></li>
+<li><p>The <strong>recommended</strong> optimizer is geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>) for which there is an Ash interface. geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms and the “ActiveRegion” feature inside Ash allows definition of an active region that aids QM/MM optimization (where most atoms are frozen).</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
@@ -267,9 +267,9 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 <p>Through an interface to an external code, nudged elastic band (NEB) calculations are possible.
 Both regular NEB and CI-NEB calculations are possible.</p>
 <p>Any QM or QM/MM Hamiltonian can be used.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 <span class="kn">import</span> <span class="nn">interface_knarr</span>
 
 <span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">)</span>

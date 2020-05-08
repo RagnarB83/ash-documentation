@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>QM/MM Theory &mdash; Yggdrasill 0.1 documentation</title>
+  <title>QM/MM Theory &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -50,12 +50,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Yggdrasill
+            <a href="index.html" class="icon icon-home"> Ash
           
 
           
             
-            <img src="_static/yggdrasill-logo.png" class="logo" alt="Logo"/>
+            <img src="_static/ash-logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -89,7 +89,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="About.html">About Yggdrasill</a></li>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About Ash</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
@@ -98,7 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
             
@@ -113,7 +113,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Yggdrasill</a>
+          <a href="index.html">Ash</a>
         
       </nav>
 
@@ -165,13 +165,13 @@
             
   <div class="section" id="qm-mm-theory">
 <h1>QM/MM Theory<a class="headerlink" href="#qm-mm-theory" title="Permalink to this headline">¶</a></h1>
-<p>QM/MM in Yggdrasill is flexible. Note that currently only nonbonded QM/MM is available.</p>
+<p>QM/MM in Ash is flexible. Note that currently only nonbonded QM/MM is available.</p>
 <p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.</p>
 <p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.</p>
 <p>Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
 <span class="c1">#H2O...MeOH fragment defined</span>
 <span class="n">H2O_MeOH</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_MeOH.xyz&quot;</span><span class="p">)</span>

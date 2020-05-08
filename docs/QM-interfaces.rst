@@ -208,13 +208,11 @@ Todo: confirm that this actually works
 Troubleshooting:
 ==================
 
-- If the library-interface is not working, the reason is likely that something is missing from the LD_LIBRARY_PATH environment variable,  Make sure the lib64 dir of xtb is part of the LD_LIBRARY_PATH in the shell from which you are running (or in the jobscript you are submitting).
-e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH
-
+- If the library-interface is not working, the reason is likely that something is missing from the LD_LIBRARY_PATH environment variable,  Make sure the lib64 dir of xtb is part of the LD_LIBRARY_PATH in the shell from which you are running (or in the jobscript you are submitting). e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH
 - Fortran libraries may also be missing for xTB. Make sure to load the necessary libraries (e.g. loading a module or  sourcing the Intel compilervars.sh script)
-
-
 - If the problem is not resolved, try to load the Ash xtb-interface directly in a script:
+
+
 
 .. code-block:: python
 

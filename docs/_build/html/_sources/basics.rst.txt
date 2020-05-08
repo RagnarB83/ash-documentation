@@ -5,27 +5,27 @@ Basic usage
 #####################
 Input structure
 #####################
-You create a Python3 script (e.g. called system.py) and import the Yggdrasill functionality:
+You create a Python3 script (e.g. called system.py) and import the Ash functionality:
 
 .. code-block:: python
 
-    from yggdrasill import *
+    from ash import *
 
 
-Yggdrasill functionality can only be imported if the Yggdrasill source dir is in the PYTHONPATH. Make sure you have set in the shell:
+Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH. Make sure you have set in the shell:
 
-export PYTHONPATH=/path/to/yggdrasill_dir:$PYTHONPATH
+export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
 For convenience you may want to initalize standard global settings (connectivity etc.):
 
 .. code-block:: python
 
-    settings_yggdrasill.init()
+    settings_ash.init()
 
-The global settings are stored in your *yggdrasill-dir/settings_yggdrasill.py* and can be modified.
+The global settings are stored in your *ash-dir/settings_ash.py* and can be modified.
 
 From then on you have the freedom of writing a Python script in whatever way you prefer but taking the advantage
-of Yggdrasill functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+of Ash functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
 See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
 
@@ -33,12 +33,12 @@ See  :doc:`coordinate-input` for various ways of dealing with coordinates and fr
 Example script
 #####################
 
-Here is a basic Yggdrasill Python script, e.g. named: yggtest.py
+Here is a basic Ash Python script, e.g. named: yggtest.py
 
 .. code-block:: python
 
-    from yggdrasill import *
-    settings_yggdrasill.init()
+    from ash import *
+    settings_ash.init()
 
     #Create fragment
     Ironhexacyanide = Fragment(xyzfile="fecn6.xyz")
@@ -56,14 +56,14 @@ Here is a basic Yggdrasill Python script, e.g. named: yggtest.py
     Opt_frag.run()
 
 
-The script above loads Yggdrasill, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
-defines variables related to the ORCA-interface (see :doc:`orca-interface`), creates an ORCA-theory object
+The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
+defines variables related to the ORCA-interface , creates an ORCA-theory object
 (see :doc:`QM-interfaces`), defines an Optimizer object and finally runs a geometry
 optimization  (see :doc:`job-types` for other options).
 
-#####################
+########################
 Running script directly
-#####################
+########################
 
 For a simple job we can just run the script directly
 
@@ -123,7 +123,7 @@ Here is an example SLURM jobscript:
     then
       mkdir -p /scratch/$USER
     fi
-    tdir=$(mktemp -d /scratch/$USER/yggdrasilljob__$SLURM_JOB_ID-XXXX)
+    tdir=$(mktemp -d /scratch/$USER/ashjob__$SLURM_JOB_ID-XXXX)
     chmod +xr $tdir
 
 
@@ -154,18 +154,18 @@ Here is an example SLURM jobscript:
 
     echo "PATH is $PATH"
     echo "LD_LIBRARY_PATH is $LD_LIBRARY_PATH"
-    echo "Running Yggdrasill  job"
+    echo "Running Ash  job"
 
     #OpenMPI path for ORCA
     export PATH=/opt/openmpi-2.1.5/bin:$PATH
     export LD_LIBRARY_PATH=/opt/openmpi-2.1.5/lib:$LD_LIBRARY_PATH
 
 
-    #Start Yggdrasill job from scratch dir.  Output file is written directly to submit directory
+    #Start Ash job from scratch dir.  Output file is written directly to submit directory
     export PYTHONUNBUFFERED=1
     python-jl $job.py >>& $SLURM_SUBMIT_DIR/$outputname
 
-    # Yggdrasill has finished. Now copy important stuff back.
+    # Ash has finished. Now copy important stuff back.
     outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}
     cp -r $tdir $outputdir
     #mkdir $outputdir

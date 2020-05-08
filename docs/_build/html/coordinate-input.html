@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Coordinates and fragments &mdash; Yggdrasill 0.1 documentation</title>
+  <title>Coordinates and fragments &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -50,12 +50,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Yggdrasill
+            <a href="index.html" class="icon icon-home"> Ash
           
 
           
             
-            <img src="_static/yggdrasill-logo.png" class="logo" alt="Logo"/>
+            <img src="_static/ash-logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -89,7 +89,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="About.html">About Yggdrasill</a></li>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About Ash</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Coordinates and fragments</a><ul>
@@ -109,7 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
             
@@ -124,7 +124,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Yggdrasill</a>
+          <a href="index.html">Ash</a>
         
       </nav>
 
@@ -178,10 +178,10 @@
 <h1>Coordinates and fragments<a class="headerlink" href="#coordinates-and-fragments" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="creating-modifying-fragment-objects">
 <h2>Creating/modifying fragment objects<a class="headerlink" href="#creating-modifying-fragment-objects" title="Permalink to this headline">¶</a></h2>
-<p>Fragments in Yggdrasill are Python objects containing basic information about a molecule. You can create as many fragment objects
+<p>Fragments in Ash are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.</p>
-<p>Fragments are Python objects created from the Yggdrasill <em>Fragment</em> object class.
+<p>Fragments are Python objects created from the Ash <em>Fragment</em> object class.
 See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.</p>
 <div class="section" id="direct-creation-of-fragment-from-coordinates">
 <h3>Direct creation of fragment from coordinates<a class="headerlink" href="#direct-creation-of-fragment-from-coordinates" title="Permalink to this headline">¶</a></h3>
@@ -194,7 +194,7 @@ See XXFragment-class-page-linkXX for an overview of all Fragment class attribute
 </pre></div>
 </div>
 <p>Then define object (here called <strong>HF_frag</strong>) of class <em>Fragment</em> by passing the coordinates to <em>coordsstring</em>, using coordinates from the string “fragcoords”.
-The <em>Fragment</em> class is an Yggdrasill class.</p>
+The <em>Fragment</em> class is an Ash class.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragcoords</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -266,7 +266,7 @@ will follow.</p>
 </div>
 <div class="section" id="calculate-connectivity-of-fragment-object">
 <h3>Calculate connectivity of fragment object<a class="headerlink" href="#calculate-connectivity-of-fragment-object" title="Permalink to this headline">¶</a></h3>
-<p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Yggdrasill functionality.
+<p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
 Currently, connectivity is calculated based on a distance and radii-based criterion (to be documented later).</p>
 <p><span class="red">DOCUMENT BASIC CONNECTIVITY HERE</span></p>
 <p>To calculate the connectivity table for a molecule:</p>

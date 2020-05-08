@@ -57,13 +57,13 @@ Here is a basic Ash Python script, e.g. named: yggtest.py
 
 
 The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
-defines variables related to the ORCA-interface (see :doc:`orca-interface`), creates an ORCA-theory object
+defines variables related to the ORCA-interface , creates an ORCA-theory object
 (see :doc:`QM-interfaces`), defines an Optimizer object and finally runs a geometry
 optimization  (see :doc:`job-types` for other options).
 
-#####################
+########################
 Running script directly
-#####################
+########################
 
 For a simple job we can just run the script directly
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>MM Interfaces &mdash; Yggdrasill 0.1 documentation</title>
+  <title>MM Interfaces &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -50,12 +50,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Yggdrasill
+            <a href="index.html" class="icon icon-home"> Ash
           
 
           
             
-            <img src="_static/yggdrasill-logo.png" class="logo" alt="Logo"/>
+            <img src="_static/ash-logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -89,7 +89,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="About.html">About Yggdrasill</a></li>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About Ash</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
@@ -102,7 +102,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="yggdrasill-classes.html">Yggdrasill object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
             
@@ -117,7 +117,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Yggdrasill</a>
+          <a href="index.html">Ash</a>
         
       </nav>
 
@@ -169,7 +169,7 @@
             
   <div class="section" id="mm-interfaces">
 <h1>MM Interfaces<a class="headerlink" href="#mm-interfaces" title="Permalink to this headline">¶</a></h1>
-<p>Molecular mechanics in Yggdrasill is currently quite rudimentary.
+<p>Molecular mechanics in Ash is currently quite rudimentary.
 There is no full-fledged forcefield code available (i.e. that handles both bonded and nonbonded terms).
 There is, however, a flexible nonbonded forcefield code (see NonBondedTheory below) that allows for Coulomb and Lennard-Jones
 energy+gradient evaluations. This allows for rigid (MM atoms frozen) MM and QM/MM (<a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects that can be used in geometry optimizations
@@ -182,9 +182,9 @@ and molecular dynamics simulations (<a class="reference internal" href="job-type
 and then provides a list of atomtypes of the system as a minimum. In the forcefield we then define the Coulomb and Lennard-Jones parameters
 associated with the atomtypes.</p>
 <p>Simple way (forcefield_dict and atomtypes):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yggdrasill</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">settings_yggdrasill</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfiles</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#Defining atomtypes &#39;HT&#39; for hydrogen and atomtype &#39;FX&#39; for fluorine. These atomtypes can be named anything.</span>
