@@ -123,6 +123,7 @@ html_theme = 'sphinx_rtd_theme'
 #
 # html_theme_options = {}
 #LOGO
+
 html_logo= 'ash-logo.png'
 #html_logo= 'figures/ash-simple-logo-letterbig.png'
 html_theme_options = {
