@@ -98,14 +98,16 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
     orcablocks="%scf maxiter 200 end"
     ORCAcalc = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
                         orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    #Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object
 
     #Geometry optimization of the ORCA using geomeTRIC optimizer
-    #Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object
     geomeTRICOptimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
-    #PyBerny example: BernyOpt(ORCAcalc,HF_frag)
+
+    #PyBerny example:
+    BernyOpt(ORCAcalc,HF_frag)
+
     # Internal Cartesian-LBFGS Optimizer:
-    #Opt_frag = Optimizer(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
-    #Opt_frag.run()
+    Optimizer(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
 
 
 ###########################
