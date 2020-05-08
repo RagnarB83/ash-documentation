@@ -33,7 +33,7 @@ See  :doc:`coordinate-input` for various ways of dealing with coordinates and fr
 Example script
 #####################
 
-Here is a basic Ash Python script, e.g. named: yggtest.py
+Here is a basic Ash Python script, e.g. named: ashtest.py
 
 .. code-block:: python
 
@@ -69,13 +69,13 @@ For a simple job we can just run the script directly
 
 .. code-block:: shell
 
-    python3 yggtest.py
+    python3 ashtest.py
 
 The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
 
 .. code-block:: shell
 
-    python3 yggtest.py >& yggtest.out
+    python3 ashtest.py >& ashtest.out
 
 
 #####################
@@ -148,7 +148,7 @@ Here is an example SLURM jobscript:
     echo "Slurm Job name is: ${SLURM_JOB_NAME}" >> $SLURM_SUBMIT_DIR/$outputname
     echo $SLURM_NODELIST >> $SLURM_SUBMIT_DIR/$outputname
 
-    #YGGDRASILL environment
+    #ASH environment
     #conda activate p4dev
     source activate rbdev
 
