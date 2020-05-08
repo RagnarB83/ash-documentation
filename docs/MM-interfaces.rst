@@ -2,7 +2,7 @@
 MM Interfaces
 ==========================
 
-Molecular mechanics in Yggdrasill is currently quite rudimentary.
+Molecular mechanics in Ash is currently quite rudimentary.
 There is no full-fledged forcefield code available (i.e. that handles both bonded and nonbonded terms).
 There is, however, a flexible nonbonded forcefield code (see NonBondedTheory below) that allows for Coulomb and Lennard-Jones
 energy+gradient evaluations. This allows for rigid (MM atoms frozen) MM and QM/MM (:doc:`QM-MM`) theory objects that can be used in geometry optimizations
@@ -26,9 +26,9 @@ Simple way (forcefield_dict and atomtypes):
 
 .. code-block:: python
 
-    from yggdrasill import *
+    from ash import *
     import sys
-    settings_yggdrasill.init() #initialize
+    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfiles="hf.xyz")
     #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.

@@ -1,12 +1,12 @@
-.. Yggdrasill documentation master file, created by
+.. Ash documentation master file, created by
    sphinx-quickstart on Mon Jan 27 14:15:55 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Yggdrasill: Documentation
+Ash: Documentation
 ======================================
 
-These are the documentation pages of Yggdrasill.
+These are the documentation pages of Ash.
 
 .. toctree::
    :maxdepth: 2
@@ -21,14 +21,14 @@ These are the documentation pages of Yggdrasill.
    MM-interfaces
    QM-MM
    molcrys
-   yggdrasill-classes
+   ash-classes
 
 
 
 .. role:: underline
     :class: underline
 
-.. warning:: This is Yggdrasill version 0.1. Use at your own risk!
+.. warning:: This is Ash version 0.1. Use at your own risk!
 
 
 Indices and tables

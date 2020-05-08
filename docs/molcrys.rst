@@ -1,7 +1,7 @@
 =================================================
 MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
-The molecular crystal QM/MM method in Yggdrasill is based on the work described
+The molecular crystal QM/MM method in Ash is based on the work described
 in articles by Bjornsson et al.[1,2].
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
@@ -13,7 +13,7 @@ The method then allows one to do electrostatically embedded QM/MM geometry optim
 (e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
 Minimum energy paths and saddle-points ("transition states") can even be calculated via Nudged Elastic Band calculations.
 
-Any QM-code that has an interface in Yggdrasill can in principle be used and any QM-method within that code can be used
+Any QM-code that has an interface in Ash can in principle be used and any QM-method within that code can be used
 (analytical gradient strongly recommended for optimizations).
 
 Current limitation: Only ORCA interface is complete at this point.
@@ -75,7 +75,7 @@ Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
    :width: 600
 
 
-A Python script should be created and then Yggdrasill  **molcrys** functionality should be imported.
+A Python script should be created and then Ash  **molcrys** functionality should be imported.
 
 The script should then actually just call one function, called **molcrys** at the bottom of the script:
 
@@ -88,15 +88,15 @@ The script should then actually just call one function, called **molcrys** at th
 This is the only function of this script but as we can see, there are a number of arguments to be provided.
 It is usually more convenient to define first the necessary variables in multiple lines above this command.
 In the full script, seen below, a number of variables are defined, following standard Python syntax.
-Yggdrasill-specific functionality is the creation of the ORCAcalc object (instance of the Yggdrasill ORCATheory class),
-the creation of mainfrag and counterfrag1 objects (instances of Yggdrasill Fragmenttype class).
+Ash-specific functionality is the creation of the ORCAcalc object (instance of the Ash ORCATheory class),
+the creation of mainfrag and counterfrag1 objects (instances of Ash Fragmenttype class).
 The variables are then passed as keyword arguments to the  **molcrys** function at the bottom of the script.
 
 .. code-block:: python
 
-    from yggdrasill import *
+    from ash import *
     from molcrys import *
-    settings_yggdrasill.init()
+    settings_ash.init()
     #######################
     # MOLCRYS INPUT          #
     #######################
@@ -125,8 +125,8 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
     fragmentobjects=[mainfrag,counterfrag1]
 
     #Define global system settings (currently scale and tol keywords for connectivity)
-    settings_yggdrasill.scale=1.0
-    settings_yggdrasill.tol=0.3
+    settings_ash.scale=1.0
+    settings_ash.tol=0.3
     #settings_molcrys.tol=0.0001
     # Modified radii to assist with connectivity.
     #Setting radius of Na to almost 0. Na will then not bond
@@ -141,7 +141,7 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
 
 
 We point to the CIF file that should be read and define a sphereradius. We also define the number of cores available
-(should later match that defined in the jobscript), that both ORCA and Yggdrasill may use in their parallelization.
+(should later match that defined in the jobscript), that both ORCA and Ash may use in their parallelization.
 Next, an ORCA theory object is defined where we set the path to ORCA and define the structure of the inputfile used
 when running ORCA calculations.
 
@@ -173,14 +173,14 @@ The fragment identification works by finding what atoms are connected according 
 Thus, if the distance between atoms A and B is less than the sum of the elemental covalent radii
 (which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
 Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
-(global scale and tol parameters are defined in settings_yggdrasill file) works in many cases.
+(global scale and tol parameters are defined in settings_ash file) works in many cases.
 For the NaH\ :sub:`2` \PO\ :sub:`4` \ crystal, however, that features strong hydrogen-bonding and the ionic Na\ :sup:`+` \ fragment, however, we have to make some modifications.
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na\ :sup:`+` \ ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.
 
-Unlike the other variables, the *settings_yggdrasill.scale*, *settings_yggdrasill.tol* and *eldict_covrad* are
-global variables (already defined but can be modified) that **molcrys** and **Yggdrasill** will have access to.
+Unlike the other variables, the *settings_ash.scale*, *settings_ash.tol* and *eldict_covrad* are
+global variables (already defined but can be modified) that **molcrys** and **Ash** will have access to.
 
 The other variables defined in the script have to be passed as keyword argument values to the respective keyword of
 the **molcrys** function:
@@ -194,7 +194,7 @@ These are currently the only arguments that can be provided to the **molcrys** f
 instead of a *cif_file* argument, an *xtl_file* argument can alternatively be provided where the name of the XTL-file should
 be passed on instead. An XTL-file can be created by the Vesta software (http://jp-minerals.org/vesta/en/).
 
-The purpose of the molcrys function is primarily to create an Yggdrasill cluster-fragment, here called Cluster. The Cluster fragment
+The purpose of the molcrys function is primarily to create an Ash cluster-fragment, here called Cluster. The Cluster fragment
 will contain the coordinates of the spherical MM cluster with charges from the self-consistent QM procedure and atom-types
 defined via the shortrange model procedure chosen. The Cluster fragment is both present in memory once defined (i.e. the molcrys function has finished)
 and is also written to disk as: Cluster.ygg. A forcefield file is also created by **molcrys**: Cluster_forcefield.ff, that contains
@@ -214,7 +214,7 @@ the MM coordinates and self-consistent pointcharges (orca-input.pc).
 #########################################
 MOLCRYS: QM/MM Geometry optimization
 #########################################
-To run a QM/MM geometry optimization, this can be done separately by preparing a regular Yggdrasill QM/MM inputfile and read in
+To run a QM/MM geometry optimization, this can be done separately by preparing a regular Ash QM/MM inputfile and read in
 the Cluster fragment file and the forcefield file, Cluster_forcefield.ff.
 It is often more convenient to continue with a QM/MM geometry optimization in the same script, after the **molcrys** function.
 In that case, the code below can simply be appended to the previous script.
@@ -305,7 +305,7 @@ as the QM-MM boundary effect can be reduced.
 
 The qmatoms and actatoms lists (i.e. the values provided to qmatoms and actatoms keyword arguments to QM/MM object or
 geomeTRICOptimizer function can be modified manually, e.g. by visually inspecting an XYZ-file version of the Cluster and
-provide the correct list of atom indices (Note: Yggdrasill counts from zero).
+provide the correct list of atom indices (Note: Ash counts from zero).
 
 More conveniently, the QMregionfragexpand function can be used to find nearby atoms for an initial list of atoms.
 
@@ -329,7 +329,7 @@ The radius variable would have to be tweaked and the result inspected to get app
 MOLCRYS: Property calculation
 #########################################
 
-A QM/MM molecular/spectroscopic property calculations can be carried either using Yggdrasill or using the QM program directly.
+A QM/MM molecular/spectroscopic property calculations can be carried either using Ash or using the QM program directly.
 If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables that will be passed onto ORCA.
 
 A single-point QM/MM calculation can be performed by defining a QM/MM object as done before and then simply use the object's
@@ -338,8 +338,8 @@ from the CIF-file or the Cluster file from the QM/MM optimization (contains opti
 
 .. code-block:: python
 
-    from yggdrasill import *
-    settings_yggdrasill.init()
+    from ash import *
+    settings_ash.init()
 
     #Read in Cluster fragment
     Cluster=Fragment(fragfile='Cluster.ygg')

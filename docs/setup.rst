@@ -1,7 +1,7 @@
 Setup
 ======================================
 
-Yggdrasill is designed to be as simple to setup as possible.
+Ash is designed to be as simple to setup as possible.
 
 Requirements:
     - A Python3 installation (version >3.6 or higher most likely required).

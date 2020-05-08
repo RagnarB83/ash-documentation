@@ -2,7 +2,7 @@
 QM/MM Theory
 ==========================
 
-QM/MM in Yggdrasill is flexible. Note that currently only nonbonded QM/MM is available.
+QM/MM in Ash is flexible. Note that currently only nonbonded QM/MM is available.
 
 To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
@@ -14,8 +14,8 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
 
 .. code-block:: python
 
-    from yggdrasill import *
-    settings_yggdrasill.init()
+    from ash import *
+    settings_ash.init()
 
     #H2O...MeOH fragment defined
     H2O_MeOH = Fragment(xyzfile="h2o_MeOH.xyz")

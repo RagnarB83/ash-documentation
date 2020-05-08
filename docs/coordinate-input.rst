@@ -6,11 +6,11 @@ Coordinates and fragments
 Creating/modifying fragment objects
 ***********************************
 
-Fragments in Yggdrasill are Python objects containing basic information about a molecule. You can create as many fragment objects
+Fragments in Ash are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.
 
-Fragments are Python objects created from the Yggdrasill *Fragment* object class.
+Fragments are Python objects created from the Ash *Fragment* object class.
 See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.
 
 Direct creation of fragment from coordinates
@@ -28,7 +28,7 @@ First define multi-line string (called fragcoords here) with element and coordin
     """
 
 Then define object (here called **HF_frag**) of class *Fragment* by passing the coordinates to *coordsstring*, using coordinates from the string "fragcoords".
-The *Fragment* class is an Yggdrasill class.
+The *Fragment* class is an Ash class.
 
 .. code-block:: python
 
@@ -135,7 +135,7 @@ If you want to delete coordinates from object (both coords list and elems lists)
 Calculate connectivity of fragment object
 ===========================================
 
-Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Yggdrasill functionality.
+Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
 Currently, connectivity is calculated based on a distance and radii-based criterion (to be documented later).
 
 .. role:: red

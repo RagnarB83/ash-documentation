@@ -6,7 +6,7 @@
 #: https://sphinx-rtd-theme.readthedocs.io/en/latest/configuring.html
 
 
-# Yggdrasill documentation build configuration file, created by
+# Ash documentation build configuration file, created by
 # sphinx-quickstart on Mon Jan 27 14:15:55 2020.
 #
 # This file is execfile()d with the current directory set to its
@@ -60,7 +60,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Yggdrasill'
+project = 'Ash'
 copyright = '2020, Ragnar Bjornsson'
 author = 'Ragnar Bjornsson'
 
@@ -87,11 +87,12 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 #pygments_style = 'sphinx' yellow-green
-#pygments_style = 'default' grey
-#pygments_style = 'monokai' black
-pygments_style = 'fruity'
-
-
+#pygments_style = 'default'
+#pygments_style = 'monokai'
+#pygments_style = 'fruity'
+#pygments_style = 'native'
+pygments_style = 'paraiso-dark'
+#pygments_style = 'manni'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
@@ -122,7 +123,7 @@ html_theme = 'sphinx_rtd_theme'
 #
 # html_theme_options = {}
 #LOGO
-html_logo= 'yggdrasill-logo.png'
+html_logo= 'ash-logo.png'
 #html_logo= 'figures/ash-simple-logo-letterbig.png'
 html_theme_options = {
     'canonical_url': '',
@@ -143,10 +144,12 @@ html_theme_options = {
 
 
 #RB Added
-def setup(app):
-    app.add_stylesheet('my_theme.css')
+#def setup(app):
+    #app.add_stylesheet('prism.css')
+    #app.add_css_file('default.css')
 
-
+#setup(app)
+#setup()
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -168,7 +171,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Yggdrasilldoc'
+htmlhelp_basename = 'Ashdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -195,7 +198,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Yggdrasill.tex', 'Yggdrasill Documentation',
+    (master_doc, 'Ash.tex', 'Ash Documentation',
      'Ragnar Bjornsson', 'manual'),
 ]
 
@@ -205,7 +208,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'yggdrasill', 'Yggdrasill Documentation',
+    (master_doc, 'ash', 'Ash Documentation',
      [author], 1)
 ]
 
@@ -216,8 +219,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Yggdrasill', 'Yggdrasill Documentation',
-     author, 'Yggdrasill', 'One line description of project.',
+    (master_doc, 'Ash', 'Ash Documentation',
+     author, 'Ash', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -1,8 +1,8 @@
 =======================
-Yggdrasill object classes
+Ash object classes
 =======================
 
-Information about the Yggdrasill object classes.
+Information about the Ash object classes.
 
 .. code-block:: python
 
