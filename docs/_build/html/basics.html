@@ -191,7 +191,7 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 </div>
 <div class="section" id="example-script">
 <h2>Example script<a class="headerlink" href="#example-script" title="Permalink to this headline">¶</a></h2>
-<p>Here is a basic Ash Python script, e.g. named: yggtest.py</p>
+<p>Here is a basic Ash Python script, e.g. named: ashtest.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
@@ -219,11 +219,11 @@ optimization  (see <a class="reference internal" href="job-types.html"><span cla
 <div class="section" id="running-script-directly">
 <h2>Running script directly<a class="headerlink" href="#running-script-directly" title="Permalink to this headline">¶</a></h2>
 <p>For a simple job we can just run the script directly</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 yggtest.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
 </pre></div>
 </div>
 <p>The output will be written to standard output (i.e. your shell). You can redirect the output to a file.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 yggtest.py &gt;<span class="p">&amp;</span> yggtest.out
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py &gt;<span class="p">&amp;</span> ashtest.out
 </pre></div>
 </div>
 </div>
@@ -292,7 +292,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.info <span class="nv">$tdir</span
 <span class="nb">echo</span> <span class="s2">&quot;Slurm Job name is: </span><span class="si">${</span><span class="nv">SLURM_JOB_NAME</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 <span class="nb">echo</span> <span class="nv">$SLURM_NODELIST</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 
-<span class="c1">#YGGDRASILL environment</span>
+<span class="c1">#ASH environment</span>
 <span class="c1">#conda activate p4dev</span>
 <span class="nb">source</span> activate rbdev
 

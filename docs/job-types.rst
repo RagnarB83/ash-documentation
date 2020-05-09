@@ -83,7 +83,11 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
 
 - An interface to the PyBerny optimization program (https://github.com/jhrmnn/pyberny) is available that allows efficient optimization in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.
 
-- The **recommended** optimizer is geomeTRIC (https://github.com/leeping/geomeTRIC) for which there is an Ash interface. geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms and the "ActiveRegion" feature inside Ash allows definition of an active region that aids QM/MM optimization (where most atoms are frozen).
+- The **recommended** optimizer is geomeTRIC (https://github.com/leeping/geomeTRIC) for which there is full-featured Ash interface.
+geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals.
+Supports constraints as well as frozen atoms natively.
+Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient
+QM/MM optimization of a large system (where most atoms are frozen).
 
 .. code-block:: python
 
@@ -110,9 +114,79 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
     Optimizer(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
 
 
-###########################
-Numerical frequencies
-###########################
+################################
+Numerical frequencies (Hessian)
+################################
+Numerical frequencies can be performed with Ash using any QM, MM or QM/MM theory object.
+Any method for which there is an analytical gradient (forces) available can be used (numerical 2nd derivative on top of numerical 1st derivative is not recommended).
+
+Use the **NumFreq** function to request a numerical frequency job. The function requires a fragment object and a theory level at minimum.
+The fragment object should typically contain a fragment with optimized coordinates at same level of theory (i.e. an already optimized minimum or saddlepoint).
+Additionally you can select to do a 1-point Hessian or a 2-point Hessian by the npoint keyword (value of 1 or 2).
+A 1-point Hessian makes a single displacement (+ direction) for each atom and each x,y and z-coordinate from the input geometry. This option is reasonably accurate and is the default.
+A more accurate 2-point Hessian makes displacement in both + and - directions (for each x-, y- and z-coordinate of each atom), is twice as expensive (double the displacements)
+but is more accurate.
+
+Two runmodes are available: 'serial' and 'parallel'. The 'serial' mode will run each displacement sequentially.
+The Energy+Gradient step can still be run in parallel if e.g. the QM or QM/MM object has this information;
+e.g. if an ORCA object has been defined with nprocs=8 then ORCA will run each Energy+Gradient evaluation with 8 cores using the OpenMPI parallelization of ORCA.
+For numerical frequencies, it is usually much more efficient, however, to run the displacement jobs in embarrassaringly parallel fashion.
+This is accomplished using runmode='parallel' and the parallelization will be linear scaling (almost always recommended).
+As there are almost always many more displacements available than CPUs, the parallelization of the QM or QM/MM object is turned off and instead as many displacements
+are run simultaneously as there are number of cores. For example, for a 30-atom system, there are 90 XYZ coordinates. For a 2-point Hessian, this means
+that 180 displacements to be calculated. If 20 cores are available, then 20 displacements can be run simultaneously, fully utilizing all 20 cores.
+This will require 9 runs in total (20*9=180).
+
+The displacement step can be chosen if wanted. The default setting is displacement 0.0005 Å.
+
+A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character.
+A partial Hessian job is performed if a list of Hessian atoms (e.g. hessatoms=[0,1,2] ) is passed to the NumFreq function. In this case, the displacements
+will only be calculated for the list of "hessatoms" and the result is a partial Hessian for the system.
+
+Once the displacements are complete, the gradients for all displacements are combined to give the full (or partial) Hessian.
+The Hessian is then mass-weighted and diagonalized. (Limitation: translational and rotational modes are currently not projected out).
+This gives the frequencies as eigenvalues and the normal mode eigenvectors.
+A normal mode composition factor analysis is automatically performed (NOT READY).
+
+
+Example script below demonstrates a combined geometry optimization (using geomeTRIC).
+The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
+
+.. code-block:: python
+
+    from ash import *
+    import sys
+    settings_ash.init() #initialize
+
+    #the total number of CPU cores available to Ash (should match the job-script)
+    Ashnumcores=8
+
+    orcadir='/opt/orca_4.2.1'
+    orcasimpleinput="! HF-3c "
+    orcablocks="%scf maxiter 200 end"
+
+    reactstring="""
+       C  -2.66064921   -0.44148342    0.02830018
+       H  -2.26377685   -1.23173358    0.68710920
+       H  -2.29485851   -0.62084858   -0.99570465
+       H  -2.27350346    0.53131334    0.37379014
+       F  -4.03235214   -0.44462811    0.05296388
+    """
+    Reactant=Fragment(coordsstring=reactstring)
+
+    #Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=Ashnumcores)
+
+    #Geometry optimization of Reactant object and ORCAcalc theory object.
+    #Each Energy+Grad step is parallelized by ORCA.
+    geomeTRICOptimizer(theory=ORCAcalc,fragment=Reactant)
+
+
+    #Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).
+    #Ash will use the number of cores given to run same number of displacments simultaneouslyu.
+    #ORCA parallelization is turned off automatically.
+    NumFreq(Reactant, ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
+
 
 
 ##################################
@@ -139,6 +213,10 @@ Any QM or QM/MM Hamiltonian can be used.
 
     interface_knarr.NEB(reactant=Reactant, product=Product, theory=xtbcalc, images=10, CI=True)
 
+
+###########################
+Saddle-point optimization
+###########################
 
 
 ###########################

@@ -5,28 +5,30 @@ The molecular crystal QM/MM method in Ash is based on the work described
 in articles by Bjornsson et al.[1,2].
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
-QM/MM approach for molecular crystals. The protocol reads a crystallographic information file (CIF) directly and proceeds
-to build up a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
+QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
+to creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
 molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded property calculations
 (e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
-Minimum energy paths and saddle-points ("transition states") can even be calculated via Nudged Elastic Band calculations.
+Minimum energy paths and saddle-points ("transition states") can be calculated via Nudged Elastic Band calculations.
 
-Any QM-code that has an interface in Ash can in principle be used and any QM-method within that code can be used
-(analytical gradient strongly recommended for optimizations).
+Any QM-code that has an interface in Ash can in principle be used for QM/MM geometry optimizations, using any QM-method
+within the program (analytical gradient strongly recommended for optimizations).
+For the charge-iteration step, only ORCA and xTB are currently the only supported QM codes.
 
-Current limitation: Only ORCA interface is complete at this point.
+
+
 
 .. image:: figures/molcrys-intro-v2a.png
    :align: center
    :width: 1200
 
-**The basic protocol is:**
+**The basic protocol::**
 
 
-| 1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.
-| 2. Apply symmetry operations to get coordinates for whole unit cell
+| 1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.
+| 2. Apply symmetry operations to get coordinates for whole unit cell (if needed).
 | 3. Identify the molecular fragments present in cell via connectivity and match with user-input
 | 4. Extend the unit cell and cut out a spherical cluster with user-defined MM radius (typically 30-50 Å). Only whole molecules included.
 | 5. Define atomic charges of the molecular fragments from QM calculations.
@@ -55,7 +57,6 @@ Current limitation: Only ORCA interface is complete at this point.
 
 **Features to be implemented:**
 
-| - Activate PySCF, Psi4 and xTB interfaces
 | - Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at the moment).
 | - Beyond Lennard-Jones potentials for improved QM-MM interaction.
 | - Molecular dynamics.

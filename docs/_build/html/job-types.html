@@ -248,14 +248,16 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                     <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+<span class="c1">#Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object</span>
 
 <span class="c1">#Geometry optimization of the ORCA using geomeTRIC optimizer</span>
-<span class="c1">#Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object</span>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
-<span class="c1">#PyBerny example: BernyOpt(ORCAcalc,HF_frag)</span>
+
+<span class="c1">#PyBerny example:</span>
+<span class="n">BernyOpt</span><span class="p">(</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">HF_frag</span><span class="p">)</span>
+
 <span class="c1"># Internal Cartesian-LBFGS Optimizer:</span>
-<span class="c1">#Opt_frag = Optimizer(fragment=HF_frag, theory=ORCAcalc, optimizer=&#39;KNARR-LBFGS&#39;, frozen_atoms=[])</span>
-<span class="c1">#Opt_frag.run()</span>
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="p">[])</span>
 </pre></div>
 </div>
 </div>
