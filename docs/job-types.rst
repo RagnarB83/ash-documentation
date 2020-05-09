@@ -122,11 +122,15 @@ Any method for which there is an analytical gradient (forces) available can be u
 
 Use the **NumFreq** function to request a numerical frequency job. The function requires a fragment object and a theory level at minimum.
 The fragment object should typically contain a fragment with optimized coordinates at same level of theory (i.e. an already optimized minimum or saddlepoint).
+
+*Type of Hessian*
 Additionally you can select to do a 1-point Hessian or a 2-point Hessian by the *npoint* keyword (value of 1 or 2).
 A 1-point Hessian makes a single displacement (+ direction) for each atom and each x,y and z-coordinate from the input geometry. This option is reasonably accurate and is the default.
 A more accurate 2-point Hessian makes displacement in both + and - directions (for each x-, y- and z-coordinate of each atom), is twice as expensive (double the displacements)
 but is more accurate.
+The displacement step can be chosen if wanted. The default setting is: 0.0005 Å.
 
+*Serial or parallel*
 Two runmodes are available: 'serial' and 'parallel'. The 'serial' mode will run each displacement sequentially.
 The Energy+Gradient step can still be run in parallel if e.g. the QM or QM/MM object has this information;
 e.g. if an ORCA object has been defined with nprocs=8 then ORCA will run each Energy+Gradient evaluation with 8 cores using the OpenMPI parallelization of ORCA.
@@ -137,18 +141,18 @@ are run simultaneously as there are number of cores. For example, for a 30-atom 
 that 180 displacements to be calculated. If 20 cores are available, then 20 displacements can be run simultaneously, fully utilizing all 20 cores.
 This will require 9 runs in total (20*9=180).
 
-The displacement step can be chosen if wanted. The default setting is: 0.0005 Å.
-
+*Full or partial Hessian*
 A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character
 and the quality of the approximation can be controlled. For a QM/MM model of a protein active site with an active region of a 1000 atoms, the full Hessian
 of all 1000 atoms would typically not be doable; instead a partial Hessian job of the important atoms (e.g. the QM region) makes more sense.
 A partial Hessian job is performed if a list of Hessian atoms (e.g. hessatoms=[0,1,2] ) is passed to the NumFreq function. In this case, the displacements
 will only be calculated for the list of "hessatoms" and the result is a partial Hessian for the system.
 
+*Final output*
 Once the displacements are complete, the gradients for all displacements are combined to give the full (or partial) Hessian.
 The Hessian is then mass-weighted and diagonalized. (Limitation: translational and rotational modes are currently not projected out).
 This gives the frequencies as eigenvalues and the normal mode eigenvectors.
-A normal mode composition factor analysis is automatically performed (NOT READY).
+A normal mode composition factor analysis is automatically performed (NOT READY) as well as zero-point energy thermochemistry.
 
 
 Example script below demonstrates a combined geometry optimization (using geomeTRIC).
