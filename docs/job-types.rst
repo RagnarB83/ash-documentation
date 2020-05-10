@@ -81,13 +81,13 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
 
 - An internal optimizer is available (called "Optimizer") that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.
 
-- An interface to the PyBerny optimization program (https://github.com/jhrmnn/pyberny) is available that allows efficient optimization in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.
+- An interface to the PyBerny optimization program (https://github.com/jhrmnn/pyberny) is available that allows efficient optimizations in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.
 
 - The **recommended** optimizer is geomeTRIC (https://github.com/leeping/geomeTRIC) for which there is full-featured Ash interface.
 geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals.
 Supports constraints as well as frozen atoms natively.
 Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient
-QM/MM optimization of a large system (where most atoms are frozen).
+QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
 
 .. code-block:: python
 
@@ -224,6 +224,16 @@ Any QM or QM/MM Hamiltonian can be used.
 Saddle-point optimization
 ###########################
 
+
+###########################
+Surface scans
+###########################
+
+**Unrelaxed scan**
+TODO
+
+**Relaxed scan**
+TODO
 
 ###########################
 Molecular Dynamics

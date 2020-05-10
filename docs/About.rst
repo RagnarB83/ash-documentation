@@ -50,7 +50,7 @@ Features
 **Parallelization :**
     - Parallelization via Python multiprocessing.
     - Support for simultaneous single-point jobs.
-    - Todo: Numfreq parallelization.
+    - Support for simultaneous Numerical-Hessian displacement calculations.
 
 **Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
     - **To do**: PySCF
@@ -76,9 +76,9 @@ Features
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
     - Partial Hessian possible
-    - Currently only ORCA supported. **Todo:** xTB, Psi4 and PySCF
-    - **Todo:** QM/MM not yet supported.
-    - **Todo:** Read analytical Hessian from ORCA and xTB
+    - Full parallelization.
+    - Support for any QM, MM or QM/MM Hamiltonian for which there is an Ash interface.
+    - **Todo:** Request analytical Hessian from ORCA.
 
 **Hessian analysis**
     - Diagonalization of Hessian (from Ash or ORCA). Print frequencies and normal modes.
