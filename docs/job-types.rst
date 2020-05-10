@@ -3,7 +3,7 @@ Job Types
 ==========================
 
 There are a few different job-types in Ash: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
-- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel
+- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel etc.
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
 - Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). To be finished.
 - Nudged elastic band calculations are available via an interface to an external code.
@@ -17,8 +17,9 @@ Single-point calculation
 ###########################
 A single-point calculation is the most basic job to perform.
 After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from: :doc:`QM-interfaces` an
-MMTheory (TODO) or a QM/MMTheory (see XX).
-The ORCATheory class is recommended for general jobs as this interface is more supported than others.
+MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`QM-MM`).
+The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
+ORCA contains a large variety of DFT and WFT methods.
 Below, the ORCASP object is created from the ORCATheory class, passing various ORCA-specific variables to it
 (location of ORCA dir and specifying how the inputfile should look). An Ash fragment object is also passed onto the object (now alwasy required).
 
@@ -47,7 +48,7 @@ TODO: Create SinglePointEnergy function too?
 The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
 single-point job. Thus one can define any calculation one wants:
 DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total energy of the system would typically be picked up by Ash though.
+Only the total ground-state energy (and/or gradient) of the system would typically be picked up by Ash though.
 
 It is also possible to request a gradient calculation :
 

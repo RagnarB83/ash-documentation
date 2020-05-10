@@ -12,16 +12,16 @@ Geometry optimizations and reaction
 Requirements:
 
     - Python3 installation
-    - Numpy
-    - Julia (for faster versions of some routines)
-    - Matplotlib (for some scientific plotting options).
+    - Numpy Python library
+    - Julia installation (for faster versions of some routines)
+    - Matplotlib (for some plotting options).
+    - geomeTRIC (optimizer). Python library, easily installed via pip.
 
 Optional Python modules for specific functionality (can be installed via pip or conda):
 
     - PySCF (C++/Python quantum chemistry code)
     - Psi4 (C++/Python quantum chemistry code)
     - PyBerny (optimizer)
-    - geomeTRIC (optimizer)
     - PyFrame (helper tool for Polarizable Embedding functionality)
 
 
@@ -39,16 +39,18 @@ Features
     - CIF file
     - PDB file
     - Python lists
+    - Ash file format
 
 
 **Interfaces to various QM codes:**
     - ORCA (inputfile-based). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding.
-    - xTB (inputfile-based). OpenMP parallelization
-    - Psi4 (both as Python library and inputfile-based). OpenMP parallelization.
+    - xTB (both as Python library and inputfile-based). OpenMP parallelization
+    - Psi4 (both as Python library and inputfile-based). Threaded parallelization.
     - PySCF (as Python library). OpenMP parallelization.
 
 **Parallelization :**
     - Parallelization via Python multiprocessing.
+    - QM code parallelization also available.
     - Support for simultaneous single-point jobs.
     - Support for simultaneous Numerical-Hessian displacement calculations.
 
@@ -58,11 +60,14 @@ Features
 **Polarizable embedding via Psi4 and CPPE library**
     - **Todo**: enable PySCF
 
-**Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
+**Nonbonded Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
     - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
     - Both energy and gradient available.
     - Slow Python version and fast Fortran version available (requires compilation of library).
     - Limitation: No bonded MM yet.
+
+**Full Molecular Mechanics (MM) via OpenMM interface**
+    - To be documented.
 
 **Geometry optimization with multiple optimizers**
     - Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
@@ -95,6 +100,7 @@ Features
     - **To be done**
 
 **Submodules:**
+
     **molcrys: Automatic Molecular crystal QM/MM**
 
     - Read-in CIF-file, extract cell information and coordinates of asymmetric unit.

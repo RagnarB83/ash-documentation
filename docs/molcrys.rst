@@ -398,7 +398,7 @@ positions (i.e. from the CIF-file). Same approximation applies to reaction paths
 
 Starting from a geometry-optimized fragment (as done above) that we will call our reactant state, we first need to optimize a product state.
 
-1. Locating product
+**1. Locating product**
 
 Starting from an Ash fragment file, here called reactant.ygg, we want to modify the coordinates of the central fragment
 (previously optimized for reactant state).
@@ -434,7 +434,7 @@ rerun fragedit.py and visualize fragment.xyz coordinates.
 
 Now that product.ygg file contains good-enough starting coordinates, we can run a geometry optimization to optimize to the product state.
 
-2. Running NEB-CI job.
+**2. Running NEB-CI job.**
 Once you have optimized coordinates for the desired reactant and product, we can start a NEB calculation.
 While the input for a NEB calculation, basically follows the example in :doc:`job-types`, it is important to specify the active-region for NEB.
 
@@ -472,23 +472,23 @@ Number of images should typically be specified (default is 6) and CI=True (for N
 ActiveRegion keyword should be set to True and actatoms set (typically same as QM-region, can not be larger).
 NEB-CI will return a fragment object for the saddlepoint (if saddlepoint optimization succeeds), here it is named as Saddlepoint.
 
-3. Visualizing the minimum energy path and saddlepoint mode.
+**3. Visualizing the minimum energy path and saddlepoint mode.**
 
 While the job is running it is convenient to visualize these files (e.g. in Chemcraft or VMD):
 
-XYZ-animation file for initial geuess path (active-region): knarr_path.xyz
-XYZ-animation file for minimum energy path (active-region): knarr_current.xyz
+- XYZ-animation file for initial geuess path (active-region): knarr_path.xyz
+- XYZ-animation file for minimum energy path (active-region): knarr_current.xyz
 
 
 Useful files to visualize after convergence  (e.g. in Chemcraft or VMD; VMD recommended for full coordinates):
 
-XYZ coordinate file for saddlepoint structure (active-region): knarr_saddle.xyz
-XYZ coordinate file for saddlepoint structure (full-region): Saddlepoint-optimized.xyz
-XYZ-animation file for saddlepoint mode printed as : knarr_mode.xyz
-XYZ-animation file for minimum energy path (active-region): knarr_MEP.xyz
-XYZ-animation file for minimum energy path (full-region): knarr_MEP_FULL.xyz
-Total energies of all images of minimum energy path: knarr.energy
+- XYZ coordinate file for saddlepoint structure (active-region): knarr_saddle.xyz
+- XYZ coordinate file for saddlepoint structure (full-region): Saddlepoint-optimized.xyz
+- XYZ-animation file for saddlepoint mode printed as : knarr_mode.xyz
+- XYZ-animation file for minimum energy path (active-region): knarr_MEP.xyz
+- XYZ-animation file for minimum energy path (full-region): knarr_MEP_FULL.xyz
 
+Total energies of all images of minimum energy path are found in file: knarr.energy
 For a converged CI-NEB job, the highest energy image of the minimum energy path is the energy of the saddlepoint.
 It is found in both knarr.energy, outputfile, header line of knarr_saddle.xyz, Saddlepoint-optimized.ygg, Saddlepoint-optimized.xyz
 
@@ -496,8 +496,7 @@ Ash fragment file for saddlepoint (full coordinates):
 Saddlepoint-optimized.ygg
 
 
-4. Confirm saddlepoint via numerical frequencies. See below.
-
+**4. Confirm saddlepoint via numerical frequencies. See below.**
 
 
 #########################################
@@ -505,12 +504,6 @@ MOLCRYS: Numerical QM/MM frequencies
 #########################################
 
 Available. Needs to be tested...
-
-#########################################
-MOLCRYS: Molecular Dynamics
-#########################################
-
-Not yet ready
 
 
 #####################################################
@@ -528,3 +521,10 @@ not being general enough for the system.
 Start by playing around with the tol parameter, try values between 0 to 0.5
 The scaling parameter can also be used, though often it is less useful.
 Often, modifying the covalent radius of an element (see above example for Na+) works well.
+
+
+#########################################
+MOLCRYS: Molecular Dynamics
+#########################################
+
+Not yet ready
