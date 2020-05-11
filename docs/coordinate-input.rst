@@ -204,12 +204,12 @@ Print number of atoms and number of connected atoms:
     print("Number of atoms in FeFeH2ase", FeFeH2ase.numatoms)
     print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
 
-All defined system attributed can be printed conveniently to disk:
+The Ash fragment file can be printed conveniently to disk:
 
 
 .. code-block:: python
 
-    HF_frag.print_system(filename='fragment-info.txt')
+    HF_frag.print_system(filename='fragment.ygg')
 
 An XYZ file of coordinates can be printed out:
 

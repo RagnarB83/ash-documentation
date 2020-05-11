@@ -3,12 +3,12 @@ MM Interfaces
 ==========================
 
 Molecular mechanics in Ash is currently quite rudimentary.
-There is no full-fledged forcefield code available (i.e. that handles both bonded and nonbonded terms).
+There is no full-fledged internal forcefield code available (i.e. that handles both bonded and nonbonded terms).
 There is, however, a flexible nonbonded forcefield code (see NonBondedTheory below) that allows for Coulomb and Lennard-Jones
 energy+gradient evaluations. This allows for rigid (MM atoms frozen) MM and QM/MM (:doc:`QM-MM`) theory objects that can be used in geometry optimizations
 and molecular dynamics simulations (:doc:`job-types`).
 
-In addition, we are working on interfaces to available full-fledged MM codes: OpenMM for example.
+In addition, an interface to OpenMM is available.
 
 
 ###########################

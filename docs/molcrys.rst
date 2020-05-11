@@ -25,7 +25,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
    :align: center
    :width: 1200
 
-**The basic automatic protocol::**
+**The basic automatic protocol:**
 
 
 | 1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.
@@ -435,6 +435,7 @@ rerun fragedit.py and visualize fragment.xyz coordinates.
 Now that product.ygg file contains good-enough starting coordinates, we can run a geometry optimization to optimize to the product state.
 
 **2. Running NEB-CI job.**
+
 Once you have optimized coordinates for the desired reactant and product, we can start a NEB calculation.
 While the input for a NEB calculation, basically follows the example in :doc:`job-types`, it is important to specify the active-region for NEB.
 
@@ -476,7 +477,7 @@ NEB-CI will return a fragment object for the saddlepoint (if saddlepoint optimiz
 
 While the job is running it is convenient to visualize these files (e.g. in Chemcraft or VMD):
 
-- XYZ-animation file for initial geuess path (active-region): knarr_path.xyz
+- XYZ-animation file for initial guess path (active-region): knarr_path.xyz
 - XYZ-animation file for minimum energy path (active-region): knarr_current.xyz
 
 
