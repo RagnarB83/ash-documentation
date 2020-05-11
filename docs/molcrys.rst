@@ -285,6 +285,7 @@ The optimization trajectory is also available as a multi-structure XYZ file, as 
 
 **Note:**
 
+
 If the optimization is done separately, the code above would have to be manually changed in a few places.
 First the Cluster fragment would be read in:
 
@@ -385,9 +386,9 @@ optimized QM coordinates and the pointcharge-file should contain the self-consis
 Thus a simple modification to the inputfile would only be required to run a property job using all functionality available in ORCA.
 
 
-#############################################################
+#################################################################
 MOLCRYS: Reaction path and saddle-point finding via NEB method
-#############################################################
+#################################################################
 Due to an interface to the Knarr program, NEB calculations (see :doc:`job-types` for general info) can easily be performed in Ash.
 This is even possible for a QM/MM Hamiltonian and for a molecular crystal system like here.
 The purpose of an NEB job is typically to locate the saddlepoint connecting a reactant and product while partially converging the minimum

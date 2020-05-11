@@ -5,28 +5,31 @@ The molecular crystal QM/MM method in Ash is based on the work described
 in articles by Bjornsson et al.[1,2].
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
-QM/MM approach for molecular crystals. The protocol reads a crystallographic information file (CIF) directly and proceeds
-to build up a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
+QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
+to creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
 molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded property calculations
 (e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
-Minimum energy paths and saddle-points ("transition states") can even be calculated via Nudged Elastic Band calculations.
+Minimum energy paths and saddle-points ("transition states") can be calculated via Nudged Elastic Band calculations.
 
-Any QM-code that has an interface in Ash can in principle be used and any QM-method within that code can be used
-(analytical gradient strongly recommended for optimizations).
+Any QM-code that has an interface in Ash can in principle be used for QM/MM geometry optimizations, using any QM-method
+within the program (analytical gradient strongly recommended for optimizations).
+For the charge-iteration step,  ORCA and xTB are the currently supported QM codes, while all QM codes listed in
+:doc:`QM-interfaces` can be used for geometry optimizations.
 
-Current limitation: Only ORCA interface is complete at this point.
+
+
 
 .. image:: figures/molcrys-intro-v2a.png
    :align: center
    :width: 1200
 
-**The basic protocol is:**
+**The basic automatic protocol:**
 
 
-| 1. Read CIF-file (or Vesta XTL-file) containing fractional coordinates of the cell.
-| 2. Apply symmetry operations to get coordinates for whole unit cell
+| 1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.
+| 2. Apply symmetry operations to get coordinates for whole unit cell (if needed).
 | 3. Identify the molecular fragments present in cell via connectivity and match with user-input
 | 4. Extend the unit cell and cut out a spherical cluster with user-defined MM radius (typically 30-50 Å). Only whole molecules included.
 | 5. Define atomic charges of the molecular fragments from QM calculations.
@@ -38,28 +41,27 @@ Current limitation: Only ORCA interface is complete at this point.
 | 8d. Optional: Molecular property calculation in the solid-state.
 
 
-
 **Critical features of the implementation:**
 
 | - Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.
 | - Accuracy can be controlled via QM-region expansion (reduces impact of approximate LJ potentials or MM charges).
-| - Numerical frequencies available (to be tested).
 | - State-of-the-art geometry optimization via efficient internal coordinates (geomeTRIC interface).
-| - Nudged-elastic-band calculations for reaction-path and TS-optimizations in the solid (to be tested)
+| - Nudged-elastic-band calculations for reaction-path and TS-optimizations in the solid.
+| - Numerical frequencies available (to be tested).
 
 **Limitations:**
 
+| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals are possible.
 | - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before.
 | - Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)
-| - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals are possible.
+
 
 **Features to be implemented:**
 
-| - Activate PySCF, Psi4 and xTB interfaces
 | - Automatic derivation of Lennard-Jones parameters (only UFF forcefield available at the moment).
 | - Beyond Lennard-Jones potentials for improved QM-MM interaction.
 | - Molecular dynamics.
-| - Polarizable embedding?
+| - Polarizable embedding
 
 | 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
 | 2. R. Bjornsson, manuscript in preparation
@@ -283,6 +285,7 @@ The optimization trajectory is also available as a multi-structure XYZ file, as 
 
 **Note:**
 
+
 If the optimization is done separately, the code above would have to be manually changed in a few places.
 First the Cluster fragment would be read in:
 
@@ -330,7 +333,7 @@ MOLCRYS: Property calculation
 #########################################
 
 A QM/MM molecular/spectroscopic property calculations can be carried either using Ash or using the QM program directly.
-If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables that will be passed onto ORCA.
+If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables in Ash that will be passed onto ORCA.
 
 A single-point QM/MM calculation can be performed by defining a QM/MM object as done before and then simply use the object's
 internal run function (run performs a single-point energy calculation). Make sure to specify the desired Cluster object: e.g. the original Cluster
@@ -377,23 +380,132 @@ from the CIF-file or the Cluster file from the QM/MM optimization (contains opti
     QMMM_object.run()
 
 
-Alternatively (somtimes easier), the last ORCA inputfile (orca-input.pc) and pointcharge file (orca-input.pc) from either **molcrys**
+Alternatively (sometimes easier), the last ORCA inputfile (orca-input.pc) and pointcharge file (orca-input.pc) from either **molcrys**
 or the optimization can be used to run a single-point property job. If the inputfile came from the optimization job then it contains
 optimized QM coordinates and the pointcharge-file should contain the self-consistently determined pointcharges for the full cluster.
-Thus a simple modification to the inputfile would be required to run a property job using all functionality available in ORCA.
+Thus a simple modification to the inputfile would only be required to run a property job using all functionality available in ORCA.
+
+
+#################################################################
+MOLCRYS: Reaction path and saddle-point finding via NEB method
+#################################################################
+Due to an interface to the Knarr program, NEB calculations (see :doc:`job-types` for general info) can easily be performed in Ash.
+This is even possible for a QM/MM Hamiltonian and for a molecular crystal system like here.
+The purpose of an NEB job is typically to locate the saddlepoint connecting a reactant and product while partially converging the minimum
+energy path between.
+
+Note that in the MOLCRYS approach , only the cental fragment is actually optimized, all other molecules in the cluster remain in their original
+positions (i.e. from the CIF-file). Same approximation applies to reaction paths.
+
+Starting from a geometry-optimized fragment (as done above) that we will call our reactant state, we first need to optimize a product state.
+
+**1. Locating product**
+
+Starting from an Ash fragment file, here called reactant.ygg, we want to modify the coordinates of the central fragment
+(previously optimized for reactant state).
+Let's first create a copy of the fragment file:
+
+.. code-block:: shell
+
+
+    cp reactant.ygg product.ygg
+
+The fragment file product.ygg will be modified.
+We use the fragedit script (located in scripts directory of Ash):
+
+.. code-block:: shell
+
+
+    python3 fragedit.py product.ygg
+
+The script assumes the presence of a file called "qmatoms" that contains a list of atom indices that are the QM atoms.
+Alternatively the name of the file can be specified as a second argument. The list of atom indices should be taken from the previous molcrys job.
+fragedit.py creates an XYZ file named "fragment.xyz". This file can be visualized in e.g. Chemcraft and the coordinates can be modified.
+Here we will changed the coordinates to reflect the desired product state. Once done, the coordinates are pasted back to the file "fragment.xyz".
+
+To update the Ash fragment file we need to run a script called fragupdate.py:
+
+.. code-block:: shell
+
+    fragupdate.py product.ygg
+
+fragupdate.py also relies on a file "qmatoms" being present in the same directory or alternatively another file can be passed as 2nd argument.
+This will update the file product.ygg using the modified coordinates in fragment.xyz. To confirm that product.ygg was update, one can delete fragment.xyz
+rerun fragedit.py and visualize fragment.xyz coordinates.
+
+Now that product.ygg file contains good-enough starting coordinates, we can run a geometry optimization to optimize to the product state.
+
+**2. Running NEB-CI job.**
+
+Once you have optimized coordinates for the desired reactant and product, we can start a NEB calculation.
+While the input for a NEB calculation, basically follows the example in :doc:`job-types`, it is important to specify the active-region for NEB.
+
+.. code-block:: python
+
+    from ash import *
+    from functions_molcrys import *
+    from molcrys import *
+    import interface_knarr
+    settings_ash.init()
+    numcores=8
+    #Read in reactant and product file, previously optimized.
+    Reactant=Fragment(fragfile='reactant.ygg')
+    Product=Fragment(fragfile='product.ygg')
+
+    #Read in forcefield
+    Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
+    #Read in qmatoms list from file qmatoms
+    Centralmainfrag = read_intlist_from_file("qmatoms")
+
+    #Theory level defined
+    xtbdir='/opt/xtb-6.2.3/xtb_6.2.3/bin'
+    xtbmethod='GFN2'
+    xtbcalc = xTBTheory(xtbdir=xtbdir, runmode='inputfile', nprocs=numcores, charge=0, mult=1, xtbmethod=xtbmethod)
+    MMpart = NonBondedTheory(charges = Reactant.atomcharges, atomtypes=Reactant.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
+    QMMM_xtb = QMMMTheory(qm_theory=xtbcalc, mm_theory=MMpart, fragment=Reactant, actatoms=Centralmainfrag,
+        qmatoms=Centralmainfrag, atomcharges=Reactant.atomcharges, embedding='Elstat', nprocs=numcores)
+
+    #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
+    Saddlepoint = interface_knarr.NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
+        ActiveRegion=True, actatoms=Centralmainfrag)
+
+We import interface_knarr and then call interface_knarr.NEB function. It requires the keyword arguments reactant, product, theory at minimum.
+Number of images should typically be specified (default is 6) and CI=True (for NEB-CI) or CI=False (for plain NEB).
+ActiveRegion keyword should be set to True and actatoms set (typically same as QM-region, can not be larger).
+NEB-CI will return a fragment object for the saddlepoint (if saddlepoint optimization succeeds), here it is named as Saddlepoint.
+
+**3. Visualizing the minimum energy path and saddlepoint mode.**
+
+While the job is running it is convenient to visualize these files (e.g. in Chemcraft or VMD):
+
+- XYZ-animation file for initial guess path (active-region): knarr_path.xyz
+- XYZ-animation file for minimum energy path (active-region): knarr_current.xyz
+
+
+Useful files to visualize after convergence  (e.g. in Chemcraft or VMD; VMD recommended for full coordinates):
+
+- XYZ coordinate file for saddlepoint structure (active-region): knarr_saddle.xyz
+- XYZ coordinate file for saddlepoint structure (full-region): Saddlepoint-optimized.xyz
+- XYZ-animation file for saddlepoint mode printed as : knarr_mode.xyz
+- XYZ-animation file for minimum energy path (active-region): knarr_MEP.xyz
+- XYZ-animation file for minimum energy path (full-region): knarr_MEP_FULL.xyz
+
+Total energies of all images of minimum energy path are found in file: knarr.energy
+For a converged CI-NEB job, the highest energy image of the minimum energy path is the energy of the saddlepoint.
+It is found in both knarr.energy, outputfile, header line of knarr_saddle.xyz, Saddlepoint-optimized.ygg, Saddlepoint-optimized.xyz
+
+Ash fragment file for saddlepoint (full coordinates):
+Saddlepoint-optimized.ygg
+
+
+**4. Confirm saddlepoint via numerical frequencies. See below.**
 
 
 #########################################
 MOLCRYS: Numerical QM/MM frequencies
 #########################################
 
-Not yet ready
-
-#########################################
-MOLCRYS: Molecular Dynamics
-#########################################
-
-Not yet ready
+Available. Needs to be tested...
 
 
 #####################################################
@@ -411,3 +523,10 @@ not being general enough for the system.
 Start by playing around with the tol parameter, try values between 0 to 0.5
 The scaling parameter can also be used, though often it is less useful.
 Often, modifying the covalent radius of an element (see above example for Na+) works well.
+
+
+#########################################
+MOLCRYS: Molecular Dynamics
+#########################################
+
+Not yet ready

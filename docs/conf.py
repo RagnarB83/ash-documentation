@@ -88,13 +88,18 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 #pygments_style = 'sphinx' yellow-green
 #pygments_style = 'default'
-#pygments_style = 'monokai'
+pygments_style = 'RB_theme'
 #pygments_style = 'fruity'
 #pygments_style = 'native'
-pygments_style = 'paraiso-dark'
+#pygments_style = 'paraiso-dark'
 #pygments_style = 'manni'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+#
+#html_js_files =
+
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -155,6 +160,12 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_css_files = ['okaidia.css']
+
+#@import 'okaidia.css'
+
+#html_style = 'yourtheme.css'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

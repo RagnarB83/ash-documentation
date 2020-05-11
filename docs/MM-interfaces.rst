@@ -12,7 +12,7 @@ In addition, an interface to OpenMM is available.
 
 
 ###########################
-Simple NonBondedTheory
+NonBondedTheory
 ###########################
 
 Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.
@@ -38,7 +38,7 @@ Simple way (forcefield_dict and atomtypes):
     #MM_forcefield[atomtype]=AtomMMobject()
     #MM_forcefield[atomtype].add_charge(atomcharge=charge)
     #MM_forcefield[atomtype].add_LJparameters(LJparameters=[sigma_i,eps_i])
-    3HF_MM_forcefield= {'HT' : LJparameters}
+    #HF_MM_forcefield= {'HT' : LJparameters}
 
 
     MMobject = NonBondedTheory(forcefield=MM_forcefield, atomtypes=atomtypes, LJcombrule='geometric')
