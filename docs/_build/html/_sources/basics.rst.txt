@@ -52,8 +52,7 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
                                 orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
 
     #Basic Cartesian optimization with KNARR-LBFGS
-    Opt_frag = Optimizer(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
-    Opt_frag.run()
+    Optimizer(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
 
 
 The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
@@ -88,7 +87,7 @@ Here is an example SLURM jobscript:
 
 .. code-block:: shell
 
-    #!/bin/zsh
+    #!/bin/bash
 
     #SBATCH -N 1
     #SBATCH --tasks-per-node=12
@@ -105,14 +104,6 @@ Here is an example SLURM jobscript:
     #Outputname
     outputname="$job.out"
 
-    # Usage:
-    #qsub job-solvshell.sh
-    ulimit -u unlimited
-    limit stacksize unlimited
-
-    #Necessary?
-    setopt EXTENDED_GLOB
-    setopt NULL_GLOB
     export MKL_NUM_THREADS=1
     export OMP_NUM_THREADS=1
     export OMP_STACKSIZE=1G
@@ -149,9 +140,14 @@ Here is an example SLURM jobscript:
     echo $SLURM_NODELIST >> $SLURM_SUBMIT_DIR/$outputname
 
     #ASH environment
-    #conda activate p4dev
-    source activate rbdev
+    # Load or set Python environment here:
+    # module load python
+    export PATH=/path/to/python/bin:$PATH
+    #
+    #conda activate rbdev
 
+    #Put ASH in PYTHONPATH
+    export PYTHONPATH=/path/to/ash:$PYTHONpath
     echo "PATH is $PATH"
     echo "LD_LIBRARY_PATH is $LD_LIBRARY_PATH"
     echo "Running Ash  job"

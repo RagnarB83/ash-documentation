@@ -208,8 +208,7 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
                             <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
 
 <span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
-<span class="n">Opt_frag</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
-<span class="n">Opt_frag</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
@@ -233,7 +232,7 @@ optimization  (see <a class="reference internal" href="job-types.html"><span cla
 <p>For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
 dealing with local scratch, copy files back when done etc.
 Here is an example SLURM jobscript:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1">#SBATCH -N 1</span>
 <span class="c1">#SBATCH --tasks-per-node=12</span>
@@ -250,14 +249,6 @@ Here is an example SLURM jobscript:</p>
 <span class="c1">#Outputname</span>
 <span class="nv">outputname</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$job</span><span class="s2">.out&quot;</span>
 
-<span class="c1"># Usage:</span>
-<span class="c1">#qsub job-solvshell.sh</span>
-<span class="nb">ulimit</span> -u unlimited
-limit stacksize unlimited
-
-<span class="c1">#Necessary?</span>
-setopt EXTENDED_GLOB
-setopt NULL_GLOB
 <span class="nb">export</span> <span class="nv">MKL_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
 <span class="nb">export</span> <span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
 <span class="nb">export</span> <span class="nv">OMP_STACKSIZE</span><span class="o">=</span>1G
@@ -294,9 +285,14 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.info <span class="nv">$tdir</span
 <span class="nb">echo</span> <span class="nv">$SLURM_NODELIST</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 
 <span class="c1">#ASH environment</span>
-<span class="c1">#conda activate p4dev</span>
-<span class="nb">source</span> activate rbdev
+<span class="c1"># Load or set Python environment here:</span>
+<span class="c1"># module load python</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/python/bin:<span class="nv">$PATH</span>
+<span class="c1">#</span>
+<span class="c1">#conda activate rbdev</span>
 
+<span class="c1">#Put ASH in PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONpath</span>
 <span class="nb">echo</span> <span class="s2">&quot;PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 <span class="nb">echo</span> <span class="s2">&quot;LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
 <span class="nb">echo</span> <span class="s2">&quot;Running Ash  job&quot;</span>
