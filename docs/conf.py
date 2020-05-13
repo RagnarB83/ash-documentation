@@ -88,9 +88,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 #pygments_style = 'sphinx' yellow-green
 #pygments_style = 'default'
-pygments_style = 'RB_theme'
+#pygments_style = 'RB_theme'
 #pygments_style = 'fruity'
-#pygments_style = 'native'
+pygments_style = 'native'
 #pygments_style = 'paraiso-dark'
 #pygments_style = 'manni'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
