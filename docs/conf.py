@@ -268,7 +268,8 @@ html_theme_options = {
 
 
 #RB Added
-#def setup(app):
+def setup(app):
+    app.add_css_file('my_theme.css')
     #app.add_stylesheet('prism.css')
     #app.add_css_file('default.css')
 
@@ -279,11 +280,10 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_css_files = ['okaidia.css']
-
+#html_css_files = ['okaidia.css']
 #@import 'okaidia.css'
 
-#html_style = 'yourtheme.css'
+#html_style = 'my_theme.css'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

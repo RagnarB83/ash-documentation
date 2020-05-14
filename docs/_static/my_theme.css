@@ -1,3 +1,16 @@
 .wy-nav-content {
-max-width: 1500px !important;
+max-width: 1200px !important;
 }
+
+
+#Modifying fonts
+#Need to figure out how to change font of codeblock only
+#@font-face {
+#    font-family: "Linux Biolinum Keyboard";
+#    src: url("../fonts/LinBiolinum_Kah.ttf");
+#}
+#
+#.keys
+#{
+#  font-family: "Linux Biolinum Keyboard", sans-serif;
+#}
