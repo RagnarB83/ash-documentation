@@ -106,7 +106,9 @@ class RB_themeStyle(Style):
     """
     This style mimics the Monokai color scheme.
     """
-    background_color = "#272822"
+    #okaidia: #272822
+    # #1a2631  https://www.scrygroup.com/tutorial/2018-09-04/find-size-of-python-object/
+    background_color = "#1a2631"
     highlight_color = "#49483e"
 
     styles = {
@@ -265,7 +267,7 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
-
+#    'code_font_family:' : 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace
 
 #RB Added
 def setup(app):
