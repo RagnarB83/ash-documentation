@@ -8,33 +8,28 @@ The QM-interface Classes available are: ORCATheory, PySCFTheory, Psi4Theory, xTB
 
 When defining a QMtheory object you are creating an instance of one of the QMTheory classes.
 When defining the object, a few keyword arguments are required, that differs between classes.
-It is not necessary to define a fragment (Ash fragment) as part of the QMTheory (e.g. not done for QM/MM),
-but is necessary for a single-point energy QM job. For a geometry optimization the fragment does not have to be part
-of the QMTheory object (instead passed to the optimizer object/function).
 Parallelization of the QM codes differs behind the scenes but is controlled by a nprocs=X keyword for all interfaces.
 
 Example:
 
 Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and nprocs keyword (available for all QM theories).
 nprocs=1 is the default and the keyword can be skipped if one wants a serial calculation.
-Here we also add a fragment (not necessary for an optimization but necessary for a single-point job).
 One would also add other keywords that are specific to the QMtheory used (that define the QM method and basis etc.).
-We can then run the object  created using the object run function (single-point energy job), with or without a Grad
-keyword (request calculation of gradient). It is possible to manipulate some behaviour of the QM object by providing
-other arguments to the run-function (here Grad=True and nprocs=12 is provided) but typically this should be kept to a minimum
-and should be done when object is created instead.
+We can then run a single-point calculation of a fragment using the object.
+This is done using the Singlepoint function that requires both theory and fragment keyword arguments.
+Additionally an Energy+Gradient calculation can be requested.
 
 .. code-block:: python
 
     #Create fragment object from XYZ-file
     HF_frag=Fragment(xyzfile='hf.xyz')
     # Defining an object of the (dummy) class QMTheory
-    QMcalc = QMTheory(fragment=HF_frag, charge=0, mult=1, nprocs=8)
+    QMcalc = QMTheory(charge=0, mult=1, nprocs=8)
 
     #Run a single-point energy job
-    QMcalc.run()
-    #An Energy+Gradient calculation where we change the number of cores to 12
-    QMcalc.run(Grad=True, nprocs=12)
+    Singlepoint(theory=QMcalc, fragment=HF_frag)
+    #An Energy+Gradient singlepoint calculation.
+    Singlepoint(theory=QMcalc, fragment=HF_frag, Grad=True)
 
 
 ###########################
@@ -64,21 +59,18 @@ Functionality such as adding to inputfile what orbitals to read and parallelizat
     end
     """
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
-                                orcasimpleinput=input, orcablocks=blocks, nprocs=8)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input, orcablocks=blocks, nprocs=8)
 
     #Run a single-point energy job
-    ORCAcalc.run()
+    Singlepoint(theory=ORCAcalc, fragment=HF_frag)
     #An Energy+Gradient calculation
-    ORCASP.run(Grad=True)
+    Singlepoint(theory=ORCAcalc, fragment=HF_frag, Grad=True)
 
 
 
-Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the ORCAtheory object (called ORCAcalc).
-Additionally, orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
+Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the Singlepoint function along with an
+ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
 are charge and spin multiplicity.
-The object can then be run via the object function (ORCAcalc.run) which is the equivalent of a single-point energy job.
-By using Grad=True keyword argument ORCAcalc.run, a gradient is also requested.
 
 **Parallelization**
 
@@ -120,17 +112,17 @@ Set pe=True and give path to potfile to use.
 
     #Psi4: Input-file based interface: using psi4dir to set path
     psi4dir='/path/to/psi4_install/bin/psi4'
-    Psi4calc = Psi4Theory(fragment=HF_frag, charge=0, mult=1, psi4settings, psi4functional, runmode='psithon'
+    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings, psi4functional, runmode='psithon',
                                 psi4dir=psi4dir, pe=False, outputname='psi4output.dat', label='psi4input',
                                  psi4memory=3000, prinsetting=False)
     #Psi4: Library-based interface
-    Psi4calc = Psi4Theory(fragment=HF_frag, charge=0, mult=1, psi4settings, psi4functional, runmode='library'
+    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings, psi4functional, runmode='library',
                                 pe=False, outputname='psi4output.dat', label='psi4input', psi4memory=3000)
 
     #Run a single-point energy job
-    Psi4calc.run()
+    Singlepoint(theory=Psi4calc, fragment=HF_frag)
     #An Energy+Gradient calculation
-    Psi4calc.run(Grad=True)
+    Singlepoint(theory=Psi4calc, fragment=HF_frag, Grad=True)
 
 **Parallelization**
 
@@ -153,13 +145,14 @@ The interface will become more flexible in the future.
     #Create fragment object from XYZ-file
     HF_frag=Fragment(xyzfile='hf.xyz')
     #PySCF
-    PySCFcalc = PySCFTheory(pyscfbasis="def2-SVP", pyscffunctional="B3LYP", nprocs=2
-    fragment=HF_frag, charge=0, mult=1, pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
+    PySCFcalc = PySCFTheory(pyscfbasis="def2-SVP", pyscffunctional="B3LYP", nprocs=2,
+    charge=0, mult=1, pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
 
     #Run a single-point energy job
-    PySCFcalc.run()
+    Singlepoint(theory=PySCFcalc, fragment=HF_frag)
     #An Energy+Gradient calculation
-    PySCFcalc.run(Grad=True)
+    Singlepoint(theory=PySCFcalc, fragment=HF_frag, Grad=True)
+
 
 
 **Parallelization**
@@ -190,13 +183,13 @@ The runmode='inputfile' option requires an additional xtbdir variable to be set 
 
     #Create fragment object from XYZ-file
     HF_frag=Fragment(xyzfile='hf.xyz')
-    xTBcalc = xTBTheory(fragment=HF_frag, charge=0, mult=1, xtbmethod='GFN2')
-    #xTBcalc = xTBTheory(fragment=HF_frag, charge=0, mult=1, xtbmethod='GFN2', runmode='inputfile', xtbdir='/path/to/xtb_6_2_3/bin')
+    xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2')
+    #xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2', runmode='inputfile', xtbdir='/path/to/xtb_6_2_3/bin')
 
     #Run a single-point energy job on the fragment associated with the xtb-object
-    xTBcalc.run()
+    Singlepoint(theory=xTBcalc, fragment=HF_frag)
     #An Energy+Gradient calculation running on 8 cores
-    xTBcalc.run(Grad=True, nprocs=8)
+    Singlepoint(theory=xTBcalc, fragment=HF_frag, Grad=True)
 
 
 **Parallelization**

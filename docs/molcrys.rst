@@ -335,9 +335,8 @@ MOLCRYS: Property calculation
 A QM/MM molecular/spectroscopic property calculations can be carried either using Ash or using the QM program directly.
 If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables in Ash that will be passed onto ORCA.
 
-A single-point QM/MM calculation can be performed by defining a QM/MM object as done before and then simply use the object's
-internal run function (run performs a single-point energy calculation). Make sure to specify the desired Cluster object: e.g. the original Cluster
-from the CIF-file or the Cluster file from the QM/MM optimization (contains optimized coordinates for the central fragment).
+A single-point QM/MM calculation can be performed by defining a QM/MM object as done before and then pass the QM/MM object and the cluster fragment
+object to the Singlepoint function. Make sure to specify the desired Cluster object: e.g. the original Cluster from the CIF-file or the Cluster file from the QM/MM optimization (contains optimized coordinates for the central fragment).
 
 .. code-block:: python
 
@@ -377,7 +376,7 @@ from the CIF-file or the Cluster file from the QM/MM optimization (contains opti
     QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, atomcharges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
-    QMMM_object.run()
+    Singlepoint(fragment=Cluster, theory=QMMM_object)
 
 
 Alternatively (sometimes easier), the last ORCA inputfile (orca-input.pc) and pointcharge file (orca-input.pc) from either **molcrys**
