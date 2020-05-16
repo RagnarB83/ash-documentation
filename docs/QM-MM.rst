@@ -2,7 +2,7 @@
 QM/MM Theory
 ==========================
 
-QM/MM in Ash is flexible. Note that currently only nonbonded QM/MM is available.
+QM/MM in ASH is flexible. Note that currently only nonbonded QM/MM is available.
 
 To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
