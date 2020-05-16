@@ -20,10 +20,10 @@ After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from
 MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`QM-MM`).
 The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
 ORCA contains a large variety of DFT and WFT methods.
-Below, the ORCASP object is created from the ORCATheory class, passing various ORCA-specific variables to it
+Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
 (location of ORCA dir and specifying how the inputfile should look).
 
-For a single-point calculation only then simply passes the Theory object and the Fragment object to the SinglePoint
+For a single-point calculation only then simply passes the Theory object and the Fragment object to the **Singlepoint**
 function.
 
 .. code-block:: python
@@ -37,14 +37,14 @@ function.
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAobject = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
+    ORCAobject = ORCATheory(orcadir=orcadir, charge=0, mult=1,
                         orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=4)
 
     #Simple Energy SP calc. Energy will be printed to output
     Singlepoint(theory=ORCAobject, fragment=HF_frag)
 
 
-The Singlepoint function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
+The **Singlepoint** function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
 The energy will be printed to standard output by default
 
 We can also run the calculation and store the energy as a new variable (to be used for anything):
@@ -106,7 +106,7 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAcalc = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
                         orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     #Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object
 
@@ -148,6 +148,7 @@ that 180 displacements to be calculated. If 20 cores are available, then 20 disp
 This will require 9 runs in total (20*9=180).
 
 *Full or partial Hessian*
+
 A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character
 and the quality of the approximation can be controlled. For a QM/MM model of a protein active site with an active region of a 1000 atoms, the full Hessian
 of all 1000 atoms would typically not be doable; instead a partial Hessian job of the important atoms (e.g. the QM region) makes more sense.
@@ -245,3 +246,4 @@ TODO
 Molecular Dynamics
 ###########################
 
+Not yet ready
