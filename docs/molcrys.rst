@@ -1,19 +1,22 @@
 =================================================
 MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
-The molecular crystal QM/MM method in Ash is based on the work described
-in articles by Bjornsson et al.[1,2].
+The molecular crystal QM/MM method in **ASH** is based on the work described
+in articles by Bjornsson et al.
+| 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
+| 2. R. Bjornsson, manuscript in preparation
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
 QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
-to creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for the different
-molecular fragments in the crystal and division of the system into a central active QM-region and a frozen MM environment,
+creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
+molecular fragments present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
-The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded property calculations
-(e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and even vibrational spectra via QM/MM numerical frequencies.
-Minimum energy paths and saddle-points ("transition states") can be calculated via Nudged Elastic Band calculations.
+The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded single-point property calculations
+(e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and vibrational spectra via QM/MM numerical frequencies (Currently missing: IR/Raman intensities ).
+Minimum energy paths can be calculated and saddle-points ("transition states") located by a state-of-the-art Nudged Elastic Band
+algorithm, available via the Knarr library.
 
-Any QM-code that has an interface in Ash can in principle be used for QM/MM geometry optimizations, using any QM-method
+Any QM-code that has an interface in **ASH** can in principle be used for QM/MM geometry optimizations, with any QM-method
 within the program (analytical gradient strongly recommended for optimizations).
 For the charge-iteration step,  ORCA and xTB are the currently supported QM codes, while all QM codes listed in
 :doc:`QM-interfaces` can be used for geometry optimizations.
@@ -63,13 +66,12 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 | - Molecular dynamics.
 | - Polarizable embedding
 
-| 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
-| 2. R. Bjornsson, manuscript in preparation
+
 
 ######################################################
 MOLCRYS Example: QM/MM Cluster setup from CIF-file
 ######################################################
-Here we show how to use the **MOLCRYS** code for an example Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \] crystal. This molecular crystal contains 2 fragment-types:
+Here we show how to use the **MOLCRYS** code for an example Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 
 .. image:: figures/nah2po4-cell.png
@@ -77,21 +79,24 @@ Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
    :width: 600
 
 
-A Python script should be created and then Ash  **molcrys** functionality should be imported.
+Here we will only do the cluster setup and the charge-iteration.
+A Python script should be created and then the **ASH** and MOLCRYS modules should be imported.
 
-The script should then actually just call one function, called **molcrys** at the bottom of the script:
+The script should then just call one function, called **molcrys** at the bottom of the script:
 
 .. code-block:: python
 
     Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc,
         numcores=numcores, clusterradius=sphereradius, chargemodel=chargemodel, shortrangemodel=shortrangemodel)
 
-
-This is the only function of this script but as we can see, there are a number of arguments to be provided.
+Calling **molcrys** will create the cluster and return a Cluster object that can be used directly (also written to disk).
+This is the only function of this script but as we can see, there are a number of keyword arguments, with values that
+are variables of multiple types.
 It is usually more convenient to define first the necessary variables in multiple lines above this command.
 In the full script, seen below, a number of variables are defined, following standard Python syntax.
-Ash-specific functionality is the creation of the ORCAcalc object (instance of the Ash ORCATheory class),
-the creation of mainfrag and counterfrag1 objects (instances of Ash Fragmenttype class).
+
+**ASH**-specific variables is the creation of the ORCAcalc object (instance of the **ASH** ORCATheory class),
+the creation of mainfrag and counterfrag1 objects (instances of **ASH** Fragmenttype class).
 The variables are then passed as keyword arguments to the  **molcrys** function at the bottom of the script.
 
 .. code-block:: python
@@ -105,35 +110,32 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
     cif_file="nah2po4_choudhary1981.cif"
     sphereradius=35
 
-    #Number of cores available for either ORCA parallelization or multiprocessing
+    #Number of cores available to ASH. Used by QM-code or ASH.
     numcores=12
 
-    #Charge-iteration QMinput
+    #Theory level for charge iterations
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
-    #Defining QM theory without fragment, charge or mult
     ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
-    #Chargemodel options: CHELPG, Hirshfeld, CM5, NPA, Mulliken
+    #Chargemodel. Options: CHELPG, Hirshfeld, CM5, NPA, Mulliken
     chargemodel='Hirshfeld'
     #Shortrange model. Usually Lennard-Jones. Options: UFF_all, UFF_modH
     shortrangemodel='UFF_modH'
 
-    #Define fragment types in crystal: Descriptive name, formula, charge and mult
+    #Define fragment types in crystal: Descriptive name, formula, charge and multiplicity
     mainfrag = Fragmenttype("Phosphate","PO4H2", charge=-1,mult=1)
     counterfrag1 = Fragmenttype("Sodium","Na", charge=1,mult=1)
     #Define list of fragmentobjects. Passed on to molcrys
     fragmentobjects=[mainfrag,counterfrag1]
 
-    #Define global system settings (currently scale and tol keywords for connectivity)
+    #Modify global connectivity settings (scale and tol keywords)
     settings_ash.scale=1.0
     settings_ash.tol=0.3
-    #settings_molcrys.tol=0.0001
     # Modified radii to assist with connectivity.
     #Setting radius of Na to almost 0. Na will then not bond
     eldict_covrad['Na']=0.0001
-    #eldict_covrad['H']=0.15
     print(eldict_covrad)
 
 
@@ -142,8 +144,8 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
             numcores=numcores, clusterradius=sphereradius, chargemodel=chargemodel, shortrangemodel=shortrangemodel)
 
 
-We point to the CIF file that should be read and define a sphereradius. We also define the number of cores available
-(should later match that defined in the jobscript), that both ORCA and Ash may use in their parallelization.
+We point to the CIF file (should be present in same directory as script) that should be read and define a sphereradius. We also define the number of cores available
+(should later match that defined in the job-submission script), that both ORCA and **ASH** may use in their parallelization.
 Next, an ORCA theory object is defined where we set the path to ORCA and define the structure of the inputfile used
 when running ORCA calculations.
 
@@ -159,7 +161,8 @@ parameters for H are set to zero to avoid artificial repulsion for acidic H-atom
 Next, we have to define the fragments present in the crystal. In the future, this may become more automated.
 Thus, we define a fragment, called *mainfrag*, that is our primary interest. Here, this is the H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 anion, while the counterion Na\ :sup:`+` \ ion is of less interest, here labelled *counterfrag1*.
-This distinction between fragments means that the *mainfrag* will be at the center of the cluster.
+This distinction between fragments means that the *mainfrag* will be at the center of the cluster and charge-iterations are currently only
+performed for *mainfrag*.
 It also means that the charge-iterations are only performed for *mainfrag*.
 For each molecular fragment, we define an object of class Fragmenttype with a name e.g. "Phosphate",
 elemental formula, e.g. "PO4H2", and define the charge and multiplicity of that fragment.
@@ -170,21 +173,23 @@ called fragmentobjects:     fragmentobjects=[mainfrag,counterfrag1]
 Finally, the script shows how the connectivity can be modified in order for the fragment identification to succeed.
 The fragment identification works by finding what atoms are connected according to the formula:
 
-(AtomA,AtomB-distance) < scale*(AtomA-covalent-radius+AtomB-covalent-radius) + tol
+.. math::
+
+    r(AtomA,AtomB) < scale*( covrad(AtomA) + covrad(AtomB) ) + tol
 
 Thus, if the distance between atoms A and B is less than the sum of the elemental covalent radii
 (which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
 Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
 (global scale and tol parameters are defined in settings_ash file) works in many cases.
-For the NaH\ :sub:`2` \PO\ :sub:`4` \ crystal, however, that features strong hydrogen-bonding and the ionic Na\ :sup:`+` \ fragment, however, we have to make some modifications.
+For the Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal, however, that features strong hydrogen-bonding and the ionic Na\ :sup:`+` \ fragment, however, we have to make some modifications.
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na\ :sup:`+` \ ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.
 
 Unlike the other variables, the *settings_ash.scale*, *settings_ash.tol* and *eldict_covrad* are
-global variables (already defined but can be modified) that **molcrys** and **Ash** will have access to.
+global variables (already defined but can be modified) that **molcrys** and **ASH** will have access to.
 
-The other variables defined in the script have to be passed as keyword argument values to the respective keyword of
+The other variables defined in the script have to be passed as values to the respective keyword arguments of
 the **molcrys** function:
 
 .. code-block:: python
@@ -196,7 +201,7 @@ These are currently the only arguments that can be provided to the **molcrys** f
 instead of a *cif_file* argument, an *xtl_file* argument can alternatively be provided where the name of the XTL-file should
 be passed on instead. An XTL-file can be created by the Vesta software (http://jp-minerals.org/vesta/en/).
 
-The purpose of the molcrys function is primarily to create an Ash cluster-fragment, here called Cluster. The Cluster fragment
+The purpose of the molcrys function is primarily to create an **ASH** cluster-fragment, here called Cluster. The Cluster fragment
 will contain the coordinates of the spherical MM cluster with charges from the self-consistent QM procedure and atom-types
 defined via the shortrange model procedure chosen. The Cluster fragment is both present in memory once defined (i.e. the molcrys function has finished)
 and is also written to disk as: Cluster.ygg. A forcefield file is also created by **molcrys**: Cluster_forcefield.ff, that contains
@@ -210,13 +215,13 @@ computer or frontnode of the cluster) may be easier.
 The Cluster fragment file, Cluster.ygg, can be used directly in a single-point property job (see later).
 If using the ORCA interface, the last orca-input.inp and orca-input.pc files created by **molcrys**
 can also directly be used to run a single-point electrostatically-embedded property calculation with ORCA
-(note: not a geometry optimization though) as they contain the QM-coordinates of the central fragment (orca-input.inp) and .
+(note: not a geometry optimization though) as they contain the QM-coordinates of the central fragment (orca-input.inp) and
 the MM coordinates and self-consistent pointcharges (orca-input.pc).
 
 #########################################
 MOLCRYS: QM/MM Geometry optimization
 #########################################
-To run a QM/MM geometry optimization, this can be done separately by preparing a regular Ash QM/MM inputfile and read in
+To run a QM/MM geometry optimization, this can be done separately by preparing a regular **ASH** QM/MM inputfile and read in
 the Cluster fragment file and the forcefield file, Cluster_forcefield.ff.
 It is often more convenient to continue with a QM/MM geometry optimization in the same script, after the **molcrys** function.
 In that case, the code below can simply be appended to the previous script.
@@ -273,9 +278,8 @@ Finally we call the optimizer program, here the geomeTRICoptimizer:
 We provide a theory argument to the optimizer (our QM/MM object), the Cluster fragment, we specify the coordinate
 system (here the TRIC internal coordinates are used), max no. of iterations may be provided and finally we specify that we have an active region
 and that only the atoms provided to the actatoms keyword argument should be optimized. Note that MM atoms can not be optimized when
-doing nonbonded QM/MM like we are doing here.
+doing nonbonded QM/MM like we are doing here. If the optimization converges, a new fragment containing the optimized geometry is provided, called "Fragment-optimized.ygg".
 
-If the optimization converges, a new fragment containing the optimized geometry is provided, called "Fragment-optimized.ygg".
 Note: Only the geometry of the central fragment (or whatever qmatoms/actoms was set to) is optimized. The other atoms
 are still at the original positions as determined from the crystal structure.
 The optimization trajectory is also available as a multi-structure XYZ file, as either "geometric_OPTtraj_Full.xyz"
@@ -283,9 +287,7 @@ The optimization trajectory is also available as a multi-structure XYZ file, as 
 
 
 
-**Note:**
-
-
+Note:
 If the optimization is done separately, the code above would have to be manually changed in a few places.
 First the Cluster fragment would be read in:
 
@@ -303,12 +305,13 @@ MOLCRYS: Expanded QM region calculation
 
 For either a QM/MM geometry optimization or a QM/MM single-point property calculation (see below), the QM-region does
 not have to be a single fragment. If the qmatoms list and the actatoms list (for optimizations) is modified, then a larger
-QM cluster can be calculated instead in the QM/MM calculation. This should generally result in a more accurate calculation
-as the QM-MM boundary effect can be reduced.
+QM cluster can be calculated instead in the QM/MM calculation: e.g. metalcomplex + counterion or a metalcomplex dimer.
+This should generally result in a more accurate calculation as the QM-MM boundary effect can be reduced.
+Hydrogen-bonding between fragments would particularly benefit from this as this is a strong noncovalent interaction.
 
 The qmatoms and actatoms lists (i.e. the values provided to qmatoms and actatoms keyword arguments to QM/MM object or
 geomeTRICOptimizer function can be modified manually, e.g. by visually inspecting an XYZ-file version of the Cluster and
-provide the correct list of atom indices (Note: Ash counts from zero).
+provide the correct list of atom indices (Note: **ASH** counts from zero).
 
 More conveniently, the QMregionfragexpand function can be used to find nearby atoms for an initial list of atoms.
 
@@ -325,18 +328,20 @@ The radius variable would have to be tweaked and the result inspected to get app
 
 **Note:** The charge and multiplicity keywords probably need to be changed for the new QM-cluster calculations.
 
-
+TODO: Create standalone QMregionfragexpand script.
 
 
 #########################################
 MOLCRYS: Property calculation
 #########################################
 
-A QM/MM molecular/spectroscopic property calculations can be carried either using Ash or using the QM program directly.
-If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables in Ash that will be passed onto ORCA.
+A QM/MM molecular/spectroscopic property calculations can be carried either using **ASH** or using the QM program directly.
+If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables in **ASH** that will be passed onto ORCA.
 
 A single-point QM/MM calculation can be performed by defining a QM/MM object as done before and then pass the QM/MM object and the cluster fragment
-object to the Singlepoint function. Make sure to specify the desired Cluster object: e.g. the original Cluster from the CIF-file or the Cluster file from the QM/MM optimization (contains optimized coordinates for the central fragment).
+object to the Singlepoint function. Make sure to specify the desired Cluster object: e.g. the original Cluster or the Cluster file from the QM/MM optimization (contains optimized coordinates for the central fragment).
+
+Script below shows an example electrostatically embedded NMR calculation using ORCA:
 
 .. code-block:: python
 
@@ -380,7 +385,7 @@ object to the Singlepoint function. Make sure to specify the desired Cluster obj
 
 
 Alternatively (sometimes easier), the last ORCA inputfile (orca-input.pc) and pointcharge file (orca-input.pc) from either **molcrys**
-or the optimization can be used to run a single-point property job. If the inputfile came from the optimization job then it contains
+or the optimization can be used to run a single-point property job using ORCA directly. If the inputfile came from the optimization job then it contains
 optimized QM coordinates and the pointcharge-file should contain the self-consistently determined pointcharges for the full cluster.
 Thus a simple modification to the inputfile would only be required to run a property job using all functionality available in ORCA.
 
@@ -388,7 +393,7 @@ Thus a simple modification to the inputfile would only be required to run a prop
 #################################################################
 MOLCRYS: Reaction path and saddle-point finding via NEB method
 #################################################################
-Due to an interface to the Knarr program, NEB calculations (see :doc:`job-types` for general info) can easily be performed in Ash.
+Due to an interface to the Knarr program, NEB calculations (see :doc:`job-types` for general info) can easily be performed in **ASH**.
 This is even possible for a QM/MM Hamiltonian and for a molecular crystal system like here.
 The purpose of an NEB job is typically to locate the saddlepoint connecting a reactant and product while partially converging the minimum
 energy path between.
@@ -420,7 +425,7 @@ We use the fragedit script (located in scripts directory of Ash):
 The script assumes the presence of a file called "qmatoms" that contains a list of atom indices that are the QM atoms.
 Alternatively the name of the file can be specified as a second argument. The list of atom indices should be taken from the previous molcrys job.
 fragedit.py creates an XYZ file named "fragment.xyz". This file can be visualized in e.g. Chemcraft and the coordinates can be modified.
-Here we will changed the coordinates to reflect the desired product state. Once done, the coordinates are pasted back to the file "fragment.xyz".
+Here we will change the coordinates to reflect the desired product state. Once done, the coordinates are pasted back to the file "fragment.xyz".
 
 To update the Ash fragment file we need to run a script called fragupdate.py:
 
@@ -429,10 +434,31 @@ To update the Ash fragment file we need to run a script called fragupdate.py:
     fragupdate.py product.ygg
 
 fragupdate.py also relies on a file "qmatoms" being present in the same directory or alternatively another file can be passed as 2nd argument.
-This will update the file product.ygg using the modified coordinates in fragment.xyz. To confirm that product.ygg was update, one can delete fragment.xyz
+This will update the file product.ygg using the modified coordinates in fragment.xyz. To confirm that product.ygg was updated, one can delete fragment.xyz,
 rerun fragedit.py and visualize fragment.xyz coordinates.
 
 Now that product.ygg file contains good-enough starting coordinates, we can run a geometry optimization to optimize to the product state.
+
+Optimization of product geometry:
+
+.. code-block:: python
+
+    from ash import *
+
+    Cluster_product=Fragment(fragfile='product.ygg')
+    Centralmainfrag=Cluster_product.connectivity[0]
+    print("Centralmainfrag:", Centralmainfrag)
+    Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
+    orcadir='/opt/orca_4.2.1'
+    orcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
+    orcablocks="%scf maxiter 200 end"
+    ORCAQMpart = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    MMpart = NonBondedTheory(charges = Cluster_product.atomcharges, atomtypes=Cluster_product.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
+    QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
+        qmatoms=Centralmainfrag, atomcharges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
+
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+
 
 **2. Running NEB-CI job.**
 
@@ -449,7 +475,7 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
     numcores=8
     #Read in reactant and product file, previously optimized.
     Reactant=Fragment(fragfile='reactant.ygg')
-    Product=Fragment(fragfile='product.ygg')
+    Product=Fragment(fragfile='Cluster_product.ygg')
 
     #Read in forcefield
     Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')

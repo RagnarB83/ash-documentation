@@ -42,7 +42,8 @@ Simple way (forcefield_dict and atomtypes):
 
 
     MMobject = NonBondedTheory(forcefield=MM_forcefield, atomtypes=atomtypes, LJcombrule='geometric')
-    MMobject.run()
+
+    Singlepoint(fragment=HF_frag,theory=MMobject)
 
 
 Alternative is to define the forcefield in a forcefieldfile that is read-in.

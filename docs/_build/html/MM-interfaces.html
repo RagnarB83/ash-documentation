@@ -199,7 +199,8 @@ associated with the atomtypes.</p>
 
 
 <span class="n">MMobject</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
-<span class="n">MMobject</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span><span class="n">theory</span><span class="o">=</span><span class="n">MMobject</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Alternative is to define the forcefield in a forcefieldfile that is read-in.</p>

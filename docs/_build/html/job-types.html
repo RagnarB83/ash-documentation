@@ -190,11 +190,10 @@ After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from
 MMTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>) or a QM/MMTheory (see <a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a>).
 The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
 ORCA contains a large variety of DFT and WFT methods.
-Below, the ORCASP object is created from the ORCATheory class, passing various ORCA-specific variables to it
-(location of ORCA dir and specifying how the inputfile should look). An Ash fragment object is also passed onto the object (now alwasy required).</p>
-<p>For a single-point calculation only then simply runs the Theory object via executing the internal run function of the
-object. For the object run command to work, the fragment would have to be associated with the object (as in this example).</p>
-<p>TODO: Create SinglePointEnergy function too?</p>
+Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
+(location of ORCA dir and specifying how the inputfile should look).</p>
+<p>For a single-point calculation only then simply passes the Theory object and the Fragment object to the <strong>Singlepoint</strong>
+function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
@@ -204,32 +203,38 @@ object. For the object run command to work, the fragment would have to be associ
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
-<span class="n">ORCASP</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+<span class="n">ORCAobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-<span class="c1">#Simple Energy SP calc</span>
-<span class="n">ORCASP</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="c1">#Simple Energy SP calc. Energy will be printed to output</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
-single-point job. Thus one can define any calculation one wants:
-DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total ground-state energy (and/or gradient) of the system would typically be picked up by Ash though.</p>
+<p>The <strong>Singlepoint</strong> function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
+The energy will be printed to standard output by default</p>
+<p>We can also run the calculation and store the energy as a new variable (to be used for anything):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Simple Energy+Gradient SP calc</span>
+<span class="c1"># The function will return the energy that can be stored as a variable</span>
+<span class="n">Energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy is&quot;</span><span class="p">,</span> <span class="n">Energy</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>It is also possible to request a gradient calculation :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#An Energy+Gradient calculation</span>
-<span class="n">ORCASP</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>While Ash will print out basic information about the run at runtime (e.g. the energy), the energy or gradient
-(if requested) is also stored inside the object and can be accessed once the job is completed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ORCASP</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ORCASP</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Simple Energy+Gradient SP calc</span>
+<span class="n">Energy</span><span class="p">,</span> <span class="n">Gradient</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy is&quot;</span><span class="p">,</span> <span class="n">Energy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gradient is:&quot;</span><span class="p">,</span> <span class="n">Gradient</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
-temporary files (e.g. so they don’t interfere with a future job), one can use the cleanup function.</p>
+temporary files (e.g. so they don’t interfere with a future job), one can use the cleanup function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Clean up</span>
-<span class="n">ORCASP</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+<span class="n">ORCAobject</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The energy and gradient from the last Energy/Energy+Gradient run is also stored inside the Theory object and can be accessed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ORCAobject</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ORCAobject</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -250,7 +255,7 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                     <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
 <span class="c1">#Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object</span>
 
@@ -287,8 +292,8 @@ As there are almost always many more displacements available than CPUs, the para
 are run simultaneously as there are number of cores. For example, for a 30-atom system, there are 90 XYZ coordinates. For a 2-point Hessian, this means
 that 180 displacements to be calculated. If 20 cores are available, then 20 displacements can be run simultaneously, fully utilizing all 20 cores.
 This will require 9 runs in total (20*9=180).</p>
-<p><em>Full or partial Hessian</em>
-A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character
+<p><em>Full or partial Hessian</em></p>
+<p>A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character
 and the quality of the approximation can be controlled. For a QM/MM model of a protein active site with an active region of a 1000 atoms, the full Hessian
 of all 1000 atoms would typically not be doable; instead a partial Hessian job of the important atoms (e.g. the QM region) makes more sense.
 A partial Hessian job is performed if a list of Hessian atoms (e.g. hessatoms=[0,1,2] ) is passed to the NumFreq function. In this case, the displacements
@@ -367,6 +372,7 @@ TODO</p>
 </div>
 <div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h2>
+<p>Not yet ready</p>
 </div>
 </div>
 

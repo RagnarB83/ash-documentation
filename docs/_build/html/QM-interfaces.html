@@ -180,28 +180,23 @@ To use the interfaces you define a QMtheory object of the appropriate Class.
 The QM-interface Classes available are: ORCATheory, PySCFTheory, Psi4Theory, xTBTheory</p>
 <p>When defining a QMtheory object you are creating an instance of one of the QMTheory classes.
 When defining the object, a few keyword arguments are required, that differs between classes.
-It is not necessary to define a fragment (Ash fragment) as part of the QMTheory (e.g. not done for QM/MM),
-but is necessary for a single-point energy QM job. For a geometry optimization the fragment does not have to be part
-of the QMTheory object (instead passed to the optimizer object/function).
 Parallelization of the QM codes differs behind the scenes but is controlled by a nprocs=X keyword for all interfaces.</p>
 <p>Example:</p>
 <p>Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and nprocs keyword (available for all QM theories).
 nprocs=1 is the default and the keyword can be skipped if one wants a serial calculation.
-Here we also add a fragment (not necessary for an optimization but necessary for a single-point job).
 One would also add other keywords that are specific to the QMtheory used (that define the QM method and basis etc.).
-We can then run the object  created using the object run function (single-point energy job), with or without a Grad
-keyword (request calculation of gradient). It is possible to manipulate some behaviour of the QM object by providing
-other arguments to the run-function (here Grad=True and nprocs=12 is provided) but typically this should be kept to a minimum
-and should be done when object is created instead.</p>
+We can then run a single-point calculation of a fragment using the object.
+This is done using the Singlepoint function that requires both theory and fragment keyword arguments.
+Additionally an Energy+Gradient calculation can be requested.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
 <span class="c1"># Defining an object of the (dummy) class QMTheory</span>
-<span class="n">QMcalc</span> <span class="o">=</span> <span class="n">QMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">QMcalc</span> <span class="o">=</span> <span class="n">QMTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
-<span class="n">QMcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="c1">#An Energy+Gradient calculation where we change the number of cores to 12</span>
-<span class="n">QMcalc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
+<span class="c1">#An Energy+Gradient singlepoint calculation.</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="orcatheory">
@@ -225,20 +220,17 @@ Functionality such as adding to inputfile what orbitals to read and parallelizat
 <span class="s2">end</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
-<span class="n">ORCAcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 <span class="c1">#An Energy+Gradient calculation</span>
-<span class="n">ORCASP</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the ORCAtheory object (called ORCAcalc).
-Additionally, orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
-are charge and spin multiplicity.
-The object can then be run via the object function (ORCAcalc.run) which is the equivalent of a single-point energy job.
-By using Grad=True keyword argument ORCAcalc.run, a gradient is also requested.</p>
+<p>Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the Singlepoint function along with an
+ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
+are charge and spin multiplicity.</p>
 <p><strong>Parallelization</strong></p>
 <p>ORCA parallelization is handled by OpenMPI. By specifying the nprocs=X, a <em>%pal nprocs X end block</em> will be added to the
 ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
@@ -268,17 +260,17 @@ Set pe=True and give path to potfile to use.</p>
 
 <span class="c1">#Psi4: Input-file based interface: using psi4dir to set path</span>
 <span class="n">psi4dir</span><span class="o">=</span><span class="s1">&#39;/path/to/psi4_install/bin/psi4&#39;</span>
-<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;psithon&#39;</span>
+<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;psithon&#39;</span><span class="p">,</span>
                             <span class="n">psi4dir</span><span class="o">=</span><span class="n">psi4dir</span><span class="p">,</span> <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;psi4output.dat&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;psi4input&#39;</span><span class="p">,</span>
                              <span class="n">psi4memory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">prinsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1">#Psi4: Library-based interface</span>
-<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span>
+<span class="n">Psi4calc</span> <span class="o">=</span> <span class="n">Psi4Theory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi4settings</span><span class="p">,</span> <span class="n">psi4functional</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span>
                             <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;psi4output.dat&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;psi4input&#39;</span><span class="p">,</span> <span class="n">psi4memory</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
-<span class="n">Psi4calc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">Psi4calc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 <span class="c1">#An Energy+Gradient calculation</span>
-<span class="n">Psi4calc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">Psi4calc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Parallelization</strong></p>
@@ -295,13 +287,13 @@ Printsetting controls whether to write pyscf-output to a file (False) or to stdo
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
 <span class="c1">#PySCF</span>
-<span class="n">PySCFcalc</span> <span class="o">=</span> <span class="n">PySCFTheory</span><span class="p">(</span><span class="n">pyscfbasis</span><span class="o">=</span><span class="s2">&quot;def2-SVP&quot;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s2">&quot;B3LYP&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">2</span>
-<span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;pyscf.out&#39;</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">PySCFcalc</span> <span class="o">=</span> <span class="n">PySCFTheory</span><span class="p">(</span><span class="n">pyscfbasis</span><span class="o">=</span><span class="s2">&quot;def2-SVP&quot;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s2">&quot;B3LYP&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;pyscf.out&#39;</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
-<span class="n">PySCFcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">PySCFcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 <span class="c1">#An Energy+Gradient calculation</span>
-<span class="n">PySCFcalc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">PySCFcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Parallelization</strong></p>
@@ -324,13 +316,13 @@ e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH</p>
 <p>The runmode=’inputfile’ option requires an additional xtbdir variable to be set that points to the dir containing the xtb executable, e.g. xtbdir=/path/to/xtb_6_2_3/bin .</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
-<span class="n">xTBcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">)</span>
-<span class="c1">#xTBcalc = xTBTheory(fragment=HF_frag, charge=0, mult=1, xtbmethod=&#39;GFN2&#39;, runmode=&#39;inputfile&#39;, xtbdir=&#39;/path/to/xtb_6_2_3/bin&#39;)</span>
+<span class="n">xTBcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">)</span>
+<span class="c1">#xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod=&#39;GFN2&#39;, runmode=&#39;inputfile&#39;, xtbdir=&#39;/path/to/xtb_6_2_3/bin&#39;)</span>
 
 <span class="c1">#Run a single-point energy job on the fragment associated with the xtb-object</span>
-<span class="n">xTBcalc</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xTBcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 <span class="c1">#An Energy+Gradient calculation running on 8 cores</span>
-<span class="n">xTBcalc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xTBcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Parallelization</strong></p>

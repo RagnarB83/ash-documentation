@@ -2,11 +2,12 @@
 QM/MM Theory
 ==========================
 
-QM/MM in Ash is flexible. Note that currently only nonbonded QM/MM is available.
+QM/MM in ASH is flexible. Note that currently only nonbonded QM/MM is available.
 
 To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
-
+Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
+the QMMMTheory object can define the division of QM-region and MM-region.
 
 Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
 

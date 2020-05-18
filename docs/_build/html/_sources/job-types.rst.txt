@@ -20,13 +20,11 @@ After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from
 MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`QM-MM`).
 The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
 ORCA contains a large variety of DFT and WFT methods.
-Below, the ORCASP object is created from the ORCATheory class, passing various ORCA-specific variables to it
-(location of ORCA dir and specifying how the inputfile should look). An Ash fragment object is also passed onto the object (now alwasy required).
+Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
+(location of ORCA dir and specifying how the inputfile should look).
 
-For a single-point calculation only then simply runs the Theory object via executing the internal run function of the
-object. For the object run command to work, the fragment would have to be associated with the object (as in this example).
-
-TODO: Create SinglePointEnergy function too?
+For a single-point calculation only then simply passes the Theory object and the Fragment object to the **Singlepoint**
+function.
 
 .. code-block:: python
 
@@ -39,39 +37,51 @@ TODO: Create SinglePointEnergy function too?
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCASP = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
-                        orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    ORCAobject = ORCATheory(orcadir=orcadir, charge=0, mult=1,
+                        orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=4)
 
-    #Simple Energy SP calc
-    ORCASP.run()
+    #Simple Energy SP calc. Energy will be printed to output
+    Singlepoint(theory=ORCAobject, fragment=HF_frag)
 
-The flexible input-nature of the ORCA interface here allows one to use any method/basis/property inside ORCA for the
-single-point job. Thus one can define any calculation one wants:
-DFT job, coupled-cluster, TDDFT, CASSCF, multi-reference configuration interaction, NMR/EPR properties.
-Only the total ground-state energy (and/or gradient) of the system would typically be picked up by Ash though.
+
+The **Singlepoint** function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
+The energy will be printed to standard output by default
+
+We can also run the calculation and store the energy as a new variable (to be used for anything):
+
+.. code-block:: python
+
+    #Simple Energy+Gradient SP calc
+    # The function will return the energy that can be stored as a variable
+    Energy = Singlepoint(theory=ORCAobject, fragment=HF_frag)
+    print("Energy is", Energy)
 
 It is also possible to request a gradient calculation :
 
 .. code-block:: python
 
-    #An Energy+Gradient calculation
-    ORCASP.run(Grad=True)
+    #Simple Energy+Gradient SP calc
+    Energy, Gradient = Singlepoint(theory=ORCAobject, fragment=HF_frag, Grad=True)
+    print("Energy is", Energy)
+    print("Gradient is:", Gradient)
 
-While Ash will print out basic information about the run at runtime (e.g. the energy), the energy or gradient
-(if requested) is also stored inside the object and can be accessed once the job is completed:
-
-.. code-block:: python
-
-    print(ORCASP.energy)
-    print(ORCASP.grad)
 
 By default, the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
-temporary files (e.g. so they don't interfere with a future job), one can use the cleanup function.
+temporary files (e.g. so they don't interfere with a future job), one can use the cleanup function:
 
 .. code-block:: python
 
     #Clean up
-    ORCASP.cleanup()
+    ORCAobject.cleanup()
+
+
+The energy and gradient from the last Energy/Energy+Gradient run is also stored inside the Theory object and can be accessed:
+
+.. code-block:: python
+
+    print(ORCAobject.energy)
+    print(ORCAobject.grad)
+
 
 
 
@@ -96,7 +106,7 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAcalc = ORCATheory(orcadir=orcadir, fragment=HF_frag, charge=0, mult=1,
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
                         orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     #Note: if fragment is passed to optimizer it is not necessary to pass it to the QMtheory (here ORCAcalc) object
 
@@ -138,6 +148,7 @@ that 180 displacements to be calculated. If 20 cores are available, then 20 disp
 This will require 9 runs in total (20*9=180).
 
 *Full or partial Hessian*
+
 A partial Hessian (NEEDS TO BE TESTED) can be easily performed instead of the full Hessian. This is an excellent approximation for vibrational modes with rather local character
 and the quality of the approximation can be controlled. For a QM/MM model of a protein active site with an active region of a 1000 atoms, the full Hessian
 of all 1000 atoms would typically not be doable; instead a partial Hessian job of the important atoms (e.g. the QM region) makes more sense.
@@ -235,3 +246,4 @@ TODO
 Molecular Dynamics
 ###########################
 
+Not yet ready

@@ -166,9 +166,11 @@
             
   <div class="section" id="qm-mm-theory">
 <h1>QM/MM Theory<a class="headerlink" href="#qm-mm-theory" title="Permalink to this headline">¶</a></h1>
-<p>QM/MM in Ash is flexible. Note that currently only nonbonded QM/MM is available.</p>
+<p>QM/MM in ASH is flexible. Note that currently only nonbonded QM/MM is available.</p>
 <p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
-and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.</p>
+and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
+Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
+the QMMMTheory object can define the division of QM-region and MM-region.</p>
 <p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.</p>
 <p>Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
