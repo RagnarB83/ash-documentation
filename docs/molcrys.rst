@@ -9,7 +9,7 @@ in articles by Bjornsson et al.
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
 QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
 creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
-molecular fragments present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
+molecular fragment present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded single-point property calculations
 (e.g. NMR, EPR, excited state spectra, Mössbauer etc.) and vibrational spectra via QM/MM numerical frequencies (Currently missing: IR/Raman intensities ).
