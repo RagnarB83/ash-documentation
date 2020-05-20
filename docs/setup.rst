@@ -59,6 +59,7 @@ Put these environment definitions in your shell environment startup file e.g. .b
     pip install geometric   (geomeTRIC optimizer)
 
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_
+Julia is necessary for fast QM/MM functionality inside ASH.
 
 | i. Download appropriate binaries from the official Julia website. Extract archive.
 | ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
@@ -105,6 +106,7 @@ Inside the Python interpreter do:
     #If this is successful then the python-jl binary (installed by PyJulia) should be available.
 
 **Step 6.** Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:
+The Fortran library is necessary for fast QM/MM functionality inside ASH.
 
 .. code-block:: shell
 
@@ -140,3 +142,41 @@ Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda
 .. code-block:: shell
 
     conda install psi4
+
+
+**Step 8.** Try it out.
+
+* If not doing QM/MM: The regular Python3 binary, *python3*  can be used to run all ASH scripts.
+
+* If doing QM/MM: The Python-Julia binary, *python-jl* should always be used (for fast treatment of large systems via Julia).
+
+Example ASH script to try out (geometry optimization of H2O using ORCA):
+
+.. code-block:: shell
+
+    python-jl first-ash-job.py
+
+first-ash-job.py:
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init()
+
+    #Create H2O fragment
+    coords="""
+    O       -1.377626260      0.000000000     -1.740199718
+    H       -1.377626260      0.759337000     -1.144156718
+    H       -1.377626260     -0.759337000     -1.144156718
+    """
+    H2Ofragment=Fragment(coordsstring=coords)
+    #Defining ORCA-related variables
+    orcadir='/opt/orca_4.2.1'
+    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
+    orcablocks="%scf maxiter 200 end"
+
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
+                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+
+    #Basic Cartesian optimization with KNARR-LBFGS
+    geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')

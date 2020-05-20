@@ -211,7 +211,8 @@ Put these environment definitions in your shell environment startup file e.g. .b
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install geometric   <span class="o">(</span>geomeTRIC optimizer<span class="o">)</span>
 </pre></div>
 </div>
-<p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a></p>
+<p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a>
+Julia is necessary for fast QM/MM functionality inside ASH.</p>
 <div class="line-block">
 <div class="line">i. Download appropriate binaries from the official Julia website. Extract archive.</div>
 <div class="line">ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.</div>
@@ -244,12 +245,13 @@ Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is i
 <span class="c1">#If this is successful then the python-jl binary (installed by PyJulia) should be available.</span>
 </pre></div>
 </div>
-<p><strong>Step 6.</strong> Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:</p>
+<p><strong>Step 6.</strong> Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:
+The Fortran library is necessary for fast QM/MM functionality inside ASH.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>f2py -c -m ljlib2 ljlib2.f90 --fcompiler<span class="o">=</span>gfortran
 <span class="c1">#f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel</span>
 </pre></div>
 </div>
-<p>The f2py command is available if Python3 and numpy has been installed correctly.
+<p>The f2py command (<a class="reference external" href="https://numpy.org/doc/stable/f2py/">Fortran to Python Interface</a>) is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib</p>
 <p><strong>Step 7.</strong> Make sure preferred QM packages are available:</p>
@@ -271,6 +273,38 @@ pip install pyframe     <span class="c1">#polarizable embedding helper tool</spa
 </div>
 <p>Optional installation of <a class="reference external" href="http://www.psicode.org/">Psi4</a> , best done via Conda:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4
+</pre></div>
+</div>
+<p><strong>Step 8.</strong> Try it out.</p>
+<ul class="simple">
+<li><p>If not doing QM/MM: The regular Python3 binary, <em>python3</em>  can be used to run all ASH scripts.</p></li>
+<li><p>If doing QM/MM: The Python-Julia binary, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia).</p></li>
+</ul>
+<p>Example ASH script to try out (geometry optimization of H2O using ORCA):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl first-ash-job.py
+</pre></div>
+</div>
+<p>first-ash-job.py:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1">#Create H2O fragment</span>
+<span class="n">coords</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">O       -1.377626260      0.000000000     -1.740199718</span>
+<span class="s2">H       -1.377626260      0.759337000     -1.144156718</span>
+<span class="s2">H       -1.377626260     -0.759337000     -1.144156718</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">H2Ofragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
+<span class="c1">#Defining ORCA-related variables</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+
+<span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2Ofragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
