@@ -9,25 +9,25 @@ Anaconda comes with Python3, Numpy, SciPy, Matplotlib.
 
 Dependencies:
 
-* Python 3.6 >=
-* Numpy library.
-* Julia 1.X installation. PyCall library also required.
-* PyJulia installation (Python package via pip).
-* geomeTRIC (Python package via pip).
-
+* `Python version 3.6 <https://www.python.org>`_ >=
+* `Numpy <https://numpy.org>`_ library.
+* `Julia 1.X <https://julialang.org/downloads>`_ installation. PyCall library also required.
+* `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
+* `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
 
 
 ###############################
 Installation and Configuration
 ###############################
-**Step 1.** Install Ash e.g. in your home directory.
+**Step 1.** Clone or download an archive containing Ash and put the directory (named ash) in your home directory.
+The ash directory contains the Python source code files, named ash.py etc.
 
-**Step 2.** Check if a suitable Python distribution is available. Needs to contain numpy and you will need to be able to install
-Python packages using pip. If you don't have one then go to 2b.
+**Step 2.** Check if a suitable Python3 distribution is available. Needs to contain numpy and you will need to be able to install
+Python packages using pip. If you don't already have a suitable Python3 distribution one then go to Step 2b.
 
 **Step 2b.** Anaconda Python3 setup (recommended)
 
-Download Anaconda Python3 package (https://www.anaconda.com/products/individual) and install in e.g. your user directory.
+Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ and install in e.g. your user directory.
 Follow Anaconda installation instructions.
 
 **Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:
@@ -58,15 +58,17 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
     pip install geometric   (geomeTRIC optimizer)
 
-**Step 5a.** Install Julia from https://julialang.org/downloads
+**Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_
 
-| i. Download appropriate binaries from site. Extract archive.
+| i. Download appropriate binaries from the official Julia website. Extract archive.
 | ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
 | iii. Launch Julia to install PyCall:
 
 .. code-block:: shell
 
     julia  #This launches the julia interpreter
+
+Inside the Julia interpreter do:
 
 .. code-block:: julia
 
@@ -76,10 +78,9 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
-
 Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
 
-**Step 5b.** Install PyJulia: https://pyjulia.readthedocs.io
+**Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
 Install using pip:
 
@@ -92,6 +93,8 @@ Activate PyJulia by opening up the python3 interpreter, import julia library and
 .. code-block:: shell
 
     python3 #This launches the python3 interpreter
+
+Inside the Python interpreter do:
 
 .. code-block:: python
 
@@ -108,6 +111,7 @@ Activate PyJulia by opening up the python3 interpreter, import julia library and
     f2py -c -m ljlib2 ljlib2.f90 --fcompiler=gfortran
     #f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel
 
+The f2py command is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib
 
@@ -117,11 +121,12 @@ and move to lib dir: /path/to/ash/lib
 * xTB needs to be in PATH and later your jobscript.
 
 
-Optional Python packages to install via pip:
+Optional Python packages to install via pip (depends on whether you will use the interfaces to PyBerny, PySCF and PyFrame):
 
-* PyBerny: https://jan.hermann.name/pyberny/index.html
-* PySCF: http://pyscf.org
-* PyFrame: https://gitlab.com/FraME-projects/PyFraME
+* `PyBerny <https://jan.hermann.name/pyberny/index.html>`_
+* `PySCF <http://www.pyscf.org/>`_
+* `PyFrame <https://gitlab.com/FraME-projects/PyFraME>`_:
+
 
 .. code-block:: shell
 
@@ -129,5 +134,8 @@ Optional Python packages to install via pip:
     pip install pyscf       #PySCF QM program
     pip install pyframe     #polarizable embedding helper tool
 
+Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda:
 
+.. code-block:: shell
 
+    conda install psi4

@@ -9,11 +9,11 @@ Anaconda comes with Python3, Numpy, SciPy, Matplotlib.
 
 Dependencies:
 
-* Python 3.6 >=
-* Numpy library.
-* Julia 1.X installation. PyCall library also required.
-* PyJulia installation (Python package via pip).
-* geomeTRIC (Python package via pip).
+* `Python version 3.6 <https://www.python.org>`_ >=
+* `Numpy <https://numpy.org>`_ library.
+* `Julia 1.X <https://julialang.org/downloads>`_ installation. PyCall library also required.
+* `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
+* `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
 
 
 ###############################
@@ -27,7 +27,7 @@ Python packages using pip. If you don't already have a suitable Python3 distribu
 
 **Step 2b.** Anaconda Python3 setup (recommended)
 
-Download Anaconda Python3 package (https://www.anaconda.com/products/individual) and install in e.g. your user directory.
+Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ and install in e.g. your user directory.
 Follow Anaconda installation instructions.
 
 **Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:
@@ -58,7 +58,7 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
     pip install geometric   (geomeTRIC optimizer)
 
-**Step 5a.** Install Julia from https://julialang.org/downloads
+**Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_
 
 | i. Download appropriate binaries from the official Julia website. Extract archive.
 | ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
@@ -80,7 +80,7 @@ Inside the Julia interpreter do:
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
 Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
 
-**Step 5b.** Install PyJulia: https://pyjulia.readthedocs.io
+**Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
 Install using pip:
 
@@ -121,11 +121,12 @@ and move to lib dir: /path/to/ash/lib
 * xTB needs to be in PATH and later your jobscript.
 
 
-Optional Python packages to install via pip:
+Optional Python packages to install via pip (depends on whether you will use the interfaces to PyBerny, PySCF and PyFrame):
 
-* PyBerny: https://jan.hermann.name/pyberny/index.html
-* PySCF: http://pyscf.org
-* PyFrame: https://gitlab.com/FraME-projects/PyFraME
+* `PyBerny <https://jan.hermann.name/pyberny/index.html>`_
+* `PySCF <http://www.pyscf.org/>`_
+* `PyFrame <https://gitlab.com/FraME-projects/PyFraME>`_:
+
 
 .. code-block:: shell
 
@@ -133,5 +134,8 @@ Optional Python packages to install via pip:
     pip install pyscf       #PySCF QM program
     pip install pyframe     #polarizable embedding helper tool
 
+Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda:
 
+.. code-block:: shell
 
+    conda install psi4
