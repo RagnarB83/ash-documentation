@@ -26,20 +26,37 @@ Installation and Configuration
 Python packages using pip. If you don't have one then go to 2b.
 
 **Step 2b.** Anaconda Python3 setup (recommended)
-i. Download Anaconda Python3 package (https://www.anaconda.com/products/individual) and install in e.g. your user directory. Set up
+
+Download Anaconda Python3 package (https://www.anaconda.com/products/individual) and install in e.g. your user directory.
+Follow Anaconda installation instructions.
 
 **Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:
-conda create -n ashpy37 python=3.7 numpy
-Switch to that environment: conda activate ashpy37. Alternatively you can use the default base environment
 
-**Step 3.** To make Ash part of the Python environment do:
-export PYTHONPATH=/path/to/ash:/path/to/ash/lib:$PYTHONPATH  where /path/to/ash is the dir where all the ASH sourcefiles are.
-Also the LD_LIBRARY_PATH need to be set:
-export LD_LIBRARY_PATH=/path/to/ash/lib:$LD_LIBRARY_PATH
-Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile, .zshrc etc.
+.. code-block:: shell
 
-**Step 4.** Install recommended necessary Python packages via pip:
-pip install geometric   (geomeTRIC optimizer)
+    conda create -n ashpy37 python=3.7 numpy   # Alternatively you can use the default base environment
+
+Select the environment:
+
+.. code-block:: shell
+
+    conda activate ashpy37 # or use base environment if preferred
+
+**Step 3.** To make ASH available to Python, set the environment variables:
+
+.. code-block:: shell
+
+    export PYTHONPATH=/path/to/ash:/path/to/ash/lib:$PYTHONPATH
+    export LD_LIBRARY_PATH=/path/to/ash/lib:$LD_LIBRARY_PATH
+
+where */path/to/ash* is the dir where all the ASH sourcefiles are.
+Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.
+
+**Step 4.** Install the recommended Python packages via pip:
+
+.. code-block:: shell
+
+    pip install geometric   (geomeTRIC optimizer)
 
 **Step 5a.** Install Julia from https://julialang.org/downloads
 
@@ -59,12 +76,18 @@ pip install geometric   (geomeTRIC optimizer)
 
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
-Execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
 
-**Step 5b.** Install PyJulia: https://pyjulia.readthedocs.io:
+Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
 
-| i. pip install julia
-| ii. Activate PyJulia by opening up the python3 interpreter, import julia library and install:
+**Step 5b.** Install PyJulia: https://pyjulia.readthedocs.io
+
+Install using pip:
+
+.. code-block:: shell
+
+    pip install julia
+
+Activate PyJulia by opening up the python3 interpreter, import julia library and install:
 
 .. code-block:: shell
 
@@ -86,17 +109,25 @@ Execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is instal
     #f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel
 
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
-and move to lib dir.
+and move to lib dir: /path/to/ash/lib
 
 **Step 7.** Make sure preferred QM packages are available:
-| - The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript
-| - xTB needs to be in PATH and later your jobscript.
+
+* The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript
+* xTB needs to be in PATH and later your jobscript.
 
 
 Optional Python packages to install via pip:
-| pip install pyberny     (pyBerny geometry optimizer)
-| pip install pyscf       (PySCF QM program)
-| pip install pyframe     (polarizable embedding helper tool)
+
+* PyBerny: https://jan.hermann.name/pyberny/index.html
+* PySCF: http://pyscf.org
+* PyFrame: https://gitlab.com/FraME-projects/PyFraME
+
+.. code-block:: shell
+
+    pip install pyberny     #pyBerny geometry optimizer
+    pip install pyscf       #PySCF QM program
+    pip install pyframe     #polarizable embedding helper tool
 
 
 

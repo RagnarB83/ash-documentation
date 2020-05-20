@@ -25,6 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -179,7 +180,9 @@
 </pre></div>
 </div>
 <p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH. Make sure you have set in the shell:</p>
-<p>export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
+</pre></div>
+</div>
 <p>For convenience you may want to initalize standard global settings (connectivity etc.):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>

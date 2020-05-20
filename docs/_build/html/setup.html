@@ -188,18 +188,28 @@ Anaconda comes with Python3, Numpy, SciPy, Matplotlib.</p>
 <p><strong>Step 1.</strong> Install Ash e.g. in your home directory.</p>
 <p><strong>Step 2.</strong> Check if a suitable Python distribution is available. Needs to contain numpy and you will need to be able to install
 Python packages using pip. If you don’t have one then go to 2b.</p>
-<p><strong>Step 2b.</strong> Anaconda Python3 setup (recommended)
-i. Download Anaconda Python3 package (<a class="reference external" href="https://www.anaconda.com/products/individual">https://www.anaconda.com/products/individual</a>) and install in e.g. your user directory. Set up</p>
-<p><strong>Step 2c.</strong> Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:
-conda create -n ashpy37 python=3.7 numpy
-Switch to that environment: conda activate ashpy37. Alternatively you can use the default base environment</p>
-<p><strong>Step 3.</strong> To make Ash part of the Python environment do:
-export PYTHONPATH=/path/to/ash:/path/to/ash/lib:$PYTHONPATH  where /path/to/ash is the dir where all the ASH sourcefiles are.
-Also the LD_LIBRARY_PATH need to be set:
-export LD_LIBRARY_PATH=/path/to/ash/lib:$LD_LIBRARY_PATH
-Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile, .zshrc etc.</p>
-<p><strong>Step 4.</strong> Install recommended necessary Python packages via pip:
-pip install geometric   (geomeTRIC optimizer)</p>
+<p><strong>Step 2b.</strong> Anaconda Python3 setup (recommended)</p>
+<p>Download Anaconda Python3 package (<a class="reference external" href="https://www.anaconda.com/products/individual">https://www.anaconda.com/products/individual</a>) and install in e.g. your user directory.
+Follow Anaconda installation instructions.</p>
+<p><strong>Step 2c.</strong> Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create -n ashpy37 <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 numpy   <span class="c1"># Alternatively you can use the default base environment</span>
+</pre></div>
+</div>
+<p>Select the environment:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate ashpy37 <span class="c1"># or use base environment if preferred</span>
+</pre></div>
+</div>
+<p><strong>Step 3.</strong> To make ASH available to Python, set the environment variables:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+</pre></div>
+</div>
+<p>where <em>/path/to/ash</em> is the dir where all the ASH sourcefiles are.
+Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.</p>
+<p><strong>Step 4.</strong> Install the recommended Python packages via pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install geometric   <span class="o">(</span>geomeTRIC optimizer<span class="o">)</span>
+</pre></div>
+</div>
 <p><strong>Step 5a.</strong> Install Julia from <a class="reference external" href="https://julialang.org/downloads">https://julialang.org/downloads</a></p>
 <div class="line-block">
 <div class="line">i. Download appropriate binaries from site. Extract archive.</div>
@@ -214,13 +224,14 @@ pip install geometric   (geomeTRIC optimizer)</p>
 <span class="n">exit</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>If there is an error like this: ERROR: SystemError: opening file “/path/to/.julia/registries/General/Registry.toml”: No such file or directory
-Execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).</p>
-<p><strong>Step 5b.</strong> Install PyJulia: <a class="reference external" href="https://pyjulia.readthedocs.io">https://pyjulia.readthedocs.io</a>:</p>
-<div class="line-block">
-<div class="line">i. pip install julia</div>
-<div class="line">ii. Activate PyJulia by opening up the python3 interpreter, import julia library and install:</div>
+<p>If there is an error like this: ERROR: SystemError: opening file “/path/to/.julia/registries/General/Registry.toml”: No such file or directory</p>
+<p>Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).</p>
+<p><strong>Step 5b.</strong> Install PyJulia: <a class="reference external" href="https://pyjulia.readthedocs.io">https://pyjulia.readthedocs.io</a></p>
+<p>Install using pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install julia
+</pre></div>
 </div>
+<p>Activate PyJulia by opening up the python3 interpreter, import julia library and install:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 <span class="c1">#This launches the python3 interpreter</span>
 </pre></div>
 </div>
@@ -236,14 +247,23 @@ Execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is instal
 </pre></div>
 </div>
 <p>Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
-and move to lib dir.</p>
-<p><strong>Step 7.</strong> Make sure preferred QM packages are available:
-| - The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript
-| - xTB needs to be in PATH and later your jobscript.</p>
-<p>Optional Python packages to install via pip:
-| pip install pyberny     (pyBerny geometry optimizer)
-| pip install pyscf       (PySCF QM program)
-| pip install pyframe     (polarizable embedding helper tool)</p>
+and move to lib dir: /path/to/ash/lib</p>
+<p><strong>Step 7.</strong> Make sure preferred QM packages are available:</p>
+<ul class="simple">
+<li><p>The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript</p></li>
+<li><p>xTB needs to be in PATH and later your jobscript.</p></li>
+</ul>
+<p>Optional Python packages to install via pip:</p>
+<ul class="simple">
+<li><p>PyBerny: <a class="reference external" href="https://jan.hermann.name/pyberny/index.html">https://jan.hermann.name/pyberny/index.html</a></p></li>
+<li><p>PySCF: <a class="reference external" href="http://pyscf.org">http://pyscf.org</a></p></li>
+<li><p>PyFrame: <a class="reference external" href="https://gitlab.com/FraME-projects/PyFraME">https://gitlab.com/FraME-projects/PyFraME</a></p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install pyberny     <span class="c1">#pyBerny geometry optimizer</span>
+pip install pyscf       <span class="c1">#PySCF QM program</span>
+pip install pyframe     <span class="c1">#polarizable embedding helper tool</span>
+</pre></div>
+</div>
 </div>
 </div>
 

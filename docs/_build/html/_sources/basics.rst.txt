@@ -14,7 +14,9 @@ You create a Python3 script (e.g. called system.py) and import the Ash functiona
 
 Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH. Make sure you have set in the shell:
 
-export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
+.. code-block:: shell
+
+    export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
 For convenience you may want to initalize standard global settings (connectivity etc.):
 
