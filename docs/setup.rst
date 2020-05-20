@@ -117,8 +117,7 @@ and move to lib dir: /path/to/ash/lib
 
 **Step 7.** Make sure preferred QM packages are available:
 
-* `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH).
-See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_.
+* `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_.
 * The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
 * `xTB <https://xtb-docs.readthedocs.io>`_ needs to be in PATH and later your jobscript.
 
