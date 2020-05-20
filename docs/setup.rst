@@ -111,7 +111,7 @@ Inside the Python interpreter do:
     f2py -c -m ljlib2 ljlib2.f90 --fcompiler=gfortran
     #f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel
 
-The f2py command is available if Python3 and numpy has been installed correctly.
+The f2py command (`Fortran to Python Interface <https://numpy.org/doc/stable/f2py/>`_) is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib
 
