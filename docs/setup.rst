@@ -16,7 +16,6 @@ Dependencies:
 * geomeTRIC (Python package via pip).
 
 
-
 ###############################
 Installation and Configuration
 ###############################
