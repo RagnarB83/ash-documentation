@@ -19,10 +19,11 @@ Dependencies:
 ###############################
 Installation and Configuration
 ###############################
-**Step 1.** Install Ash e.g. in your home directory.
+**Step 1.** Clone or download an archive containing Ash and put the directory (named ash) in your home directory.
+The ash directory contains the Python source code files, named ash.py etc.
 
-**Step 2.** Check if a suitable Python distribution is available. Needs to contain numpy and you will need to be able to install
-Python packages using pip. If you don't have one then go to 2b.
+**Step 2.** Check if a suitable Python3 distribution is available. Needs to contain numpy and you will need to be able to install
+Python packages using pip. If you don't already have a suitable Python3 distribution one then go to Step 2b.
 
 **Step 2b.** Anaconda Python3 setup (recommended)
 
@@ -59,13 +60,15 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
 **Step 5a.** Install Julia from https://julialang.org/downloads
 
-| i. Download appropriate binaries from site. Extract archive.
+| i. Download appropriate binaries from the official Julia website. Extract archive.
 | ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
 | iii. Launch Julia to install PyCall:
 
 .. code-block:: shell
 
     julia  #This launches the julia interpreter
+
+Inside the Julia interpreter do:
 
 .. code-block:: julia
 
@@ -75,7 +78,6 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
-
 Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
 
 **Step 5b.** Install PyJulia: https://pyjulia.readthedocs.io
@@ -92,6 +94,8 @@ Activate PyJulia by opening up the python3 interpreter, import julia library and
 
     python3 #This launches the python3 interpreter
 
+Inside the Python interpreter do:
+
 .. code-block:: python
 
 
@@ -107,6 +111,7 @@ Activate PyJulia by opening up the python3 interpreter, import julia library and
     f2py -c -m ljlib2 ljlib2.f90 --fcompiler=gfortran
     #f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel
 
+The f2py command is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib
 
