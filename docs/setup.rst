@@ -110,8 +110,8 @@ The Fortran library is necessary for fast QM/MM functionality inside ASH.
 
 .. code-block:: shell
 
-    f2py -c -m ljlib2 ljlib2.f90 --fcompiler=gfortran
-    #f2py -c -m ljlib2 ljlib2.f90 --fcompiler=intel
+    f2py -c -m LJCoulombv1 LJCoulombv1.f90 --fcompiler=gfortran
+    #f2py -c -m LJCoulombv1 LJCoulombv1.f90 --fcompiler=intel
 
 The f2py command (`Fortran to Python Interface <https://numpy.org/doc/stable/f2py/>`_) is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
