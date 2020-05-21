@@ -74,6 +74,8 @@ MOLCRYS Example: QM/MM Cluster setup from CIF-file
 Here we show how to use the **MOLCRYS** code for an example Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 
+`CIF-file download. <https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid=ICSD%20200885&DatabaseToSearch=Published>`_
+
 .. image:: figures/nah2po4-cell.png
    :align: center
    :width: 600
