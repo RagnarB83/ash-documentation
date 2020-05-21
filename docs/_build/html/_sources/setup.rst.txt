@@ -85,8 +85,8 @@ Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is i
 
 **Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
-**Important:** Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
-Install using pip:
+Important:Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
+Then install using pip:
 
 .. code-block:: shell
 
