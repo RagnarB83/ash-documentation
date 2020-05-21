@@ -42,6 +42,8 @@ Select the environment:
 
     conda activate ashpy37 # or use base environment if preferred
 
+Make sure this environment is active while you finish the installation process and use this same environment when running Ash.
+
 **Step 3.** To make ASH available to Python, set the environment variables:
 
 .. code-block:: shell
@@ -146,9 +148,10 @@ Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda
 
 **Step 8.** Try it out.
 
-* If not doing QM/MM: The regular Python3 binary, *python3*  can be used to run all ASH scripts.
+* If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
 
-* If doing QM/MM: The Python-Julia binary, *python-jl* should always be used (for fast treatment of large systems via Julia).
+* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia).
+The python-jl executable was installe
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
@@ -180,3 +183,20 @@ first-ash-job.py:
 
     #Basic Cartesian optimization with KNARR-LBFGS
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
+
+
+If you get error message when launching python-jl:
+
+.. code-block:: shell
+
+    File "/path/to/envs/ashpy37/bin/python-jl", line 8, in <module>
+    sys.exit(main())
+    File "/path/to/miniconda3/envs/ashpy37/lib/python3.7/site-packages/julia/python_jl.py", line 114, in main
+    execprog([julia, "-e", script_jl, "--"] + unused_args)
+    FileNotFoundError: [Errno 2] No such file or directory
+
+This means that the Python-Julia interface is not completely active yet.
+Check the following:
+1. Is Julia accessible from the shell?, i.e. does typing *julia* launch the Julia interpreter ? If not then the PATH to Julia needs to set.
+2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.
+3. Make sure you are using the same Python-conda environment you used when you installed things.
