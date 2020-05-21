@@ -85,7 +85,8 @@ Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is i
 
 **Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
-Install using pip:
+Important:Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
+Then install using pip:
 
 .. code-block:: shell
 
@@ -139,19 +140,18 @@ Optional Python packages to install via pip (depends on whether you will use the
     pip install pyscf       #PySCF QM program
     pip install pyframe     #polarizable embedding helper tool
 
-Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda:
+Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you intend to use it), best done via Conda:
 
 .. code-block:: shell
 
-    conda install psi4
+    conda install psi4 psi4-rt -c psi4
 
 
 **Step 8.** Try it out.
 
 * If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
 
-* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia).
-The python-jl executable was installe
+* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia). The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
@@ -185,7 +185,7 @@ first-ash-job.py:
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
 
 
-If you get error message when launching python-jl:
+If you get error message when launching python-jl or something similar:
 
 .. code-block:: shell
 
@@ -197,6 +197,7 @@ If you get error message when launching python-jl:
 
 This means that the Python-Julia interface is not completely active yet.
 Check the following:
-1. Is Julia accessible from the shell?, i.e. does typing *julia* launch the Julia interpreter ? If not then the PATH to Julia needs to set.
+
+1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.
 2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.
 3. Make sure you are using the same Python-conda environment you used when you installed things.

@@ -42,6 +42,8 @@ Select the environment:
 
     conda activate ashpy37 # or use base environment if preferred
 
+Make sure this environment is active while you finish the installation process and use this same environment when running Ash.
+
 **Step 3.** To make ASH available to Python, set the environment variables:
 
 .. code-block:: shell
@@ -83,6 +85,7 @@ Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is i
 
 **Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
+**Important:** Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
 Install using pip:
 
 .. code-block:: shell
@@ -137,18 +140,18 @@ Optional Python packages to install via pip (depends on whether you will use the
     pip install pyscf       #PySCF QM program
     pip install pyframe     #polarizable embedding helper tool
 
-Optional installation of `Psi4 <http://www.psicode.org/>`_ , best done via Conda:
+Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you intend to use it), best done via Conda:
 
 .. code-block:: shell
 
-    conda install psi4
+    conda install psi4 psi4-rt -c psi4
 
 
 **Step 8.** Try it out.
 
-* If not doing QM/MM: The regular Python3 binary, *python3*  can be used to run all ASH scripts.
+* If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
 
-* If doing QM/MM: The Python-Julia binary, *python-jl* should always be used (for fast treatment of large systems via Julia).
+* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia). The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
@@ -180,3 +183,21 @@ first-ash-job.py:
 
     #Basic Cartesian optimization with KNARR-LBFGS
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
+
+
+If you get error message when launching python-jl or something similar:
+
+.. code-block:: shell
+
+    File "/path/to/envs/ashpy37/bin/python-jl", line 8, in <module>
+    sys.exit(main())
+    File "/path/to/miniconda3/envs/ashpy37/lib/python3.7/site-packages/julia/python_jl.py", line 114, in main
+    execprog([julia, "-e", script_jl, "--"] + unused_args)
+    FileNotFoundError: [Errno 2] No such file or directory
+
+This means that the Python-Julia interface is not completely active yet.
+Check the following:
+
+1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.
+2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.
+3. Make sure you are using the same Python-conda environment you used when you installed things.

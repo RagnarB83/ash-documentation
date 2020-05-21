@@ -200,6 +200,7 @@ Follow Anaconda installation instructions.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate ashpy37 <span class="c1"># or use base environment if preferred</span>
 </pre></div>
 </div>
+<p>Make sure this environment is active while you finish the installation process and use this same environment when running Ash.</p>
 <p><strong>Step 3.</strong> To make ASH available to Python, set the environment variables:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$PYTHONPATH</span>
 <span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
@@ -230,7 +231,8 @@ Julia is necessary for fast QM/MM functionality inside ASH.</p>
 <p>If there is an error like this: ERROR: SystemError: opening file “/path/to/.julia/registries/General/Registry.toml”: No such file or directory
 Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).</p>
 <p><strong>Step 5b.</strong> Install <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a></p>
-<p>Install using pip:</p>
+<p><strong>Important:</strong> Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
+Install using pip:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install julia
 </pre></div>
 </div>
@@ -271,14 +273,14 @@ pip install pyscf       <span class="c1">#PySCF QM program</span>
 pip install pyframe     <span class="c1">#polarizable embedding helper tool</span>
 </pre></div>
 </div>
-<p>Optional installation of <a class="reference external" href="http://www.psicode.org/">Psi4</a> , best done via Conda:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4
+<p>Optional installation of the <a class="reference external" href="http://www.psicode.org/">Psi4</a> QM code (if you intend to use it), best done via Conda:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4 psi4-rt -c psi4
 </pre></div>
 </div>
 <p><strong>Step 8.</strong> Try it out.</p>
 <ul class="simple">
-<li><p>If not doing QM/MM: The regular Python3 binary, <em>python3</em>  can be used to run all ASH scripts.</p></li>
-<li><p>If doing QM/MM: The Python-Julia binary, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia).</p></li>
+<li><p>If not doing QM/MM: The regular Python3 executable, <em>python3</em>  can be used to run all ASH scripts.</p></li>
+<li><p>If doing QM/MM: The Python-Julia executable, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia). The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).</p></li>
 </ul>
 <p>Example ASH script to try out (geometry optimization of H2O using ORCA):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl first-ash-job.py
@@ -307,6 +309,21 @@ pip install pyframe     <span class="c1">#polarizable embedding helper tool</spa
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2Ofragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>If you get error message when launching python-jl or something similar:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>File <span class="s2">&quot;/path/to/envs/ashpy37/bin/python-jl&quot;</span>, line <span class="m">8</span>, in &lt;module&gt;
+sys.exit<span class="o">(</span>main<span class="o">())</span>
+File <span class="s2">&quot;/path/to/miniconda3/envs/ashpy37/lib/python3.7/site-packages/julia/python_jl.py&quot;</span>, line <span class="m">114</span>, in main
+execprog<span class="o">([</span>julia, <span class="s2">&quot;-e&quot;</span>, script_jl, <span class="s2">&quot;--&quot;</span><span class="o">]</span> + unused_args<span class="o">)</span>
+FileNotFoundError: <span class="o">[</span>Errno <span class="m">2</span><span class="o">]</span> No such file or directory
+</pre></div>
+</div>
+<p>This means that the Python-Julia interface is not completely active yet.
+Check the following:</p>
+<ol class="arabic simple">
+<li><p>Is Julia accessible from the shell?, i.e. does typing <em>julia</em> in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.</p></li>
+<li><p>Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.</p></li>
+<li><p>Make sure you are using the same Python-conda environment you used when you installed things.</p></li>
+</ol>
 </div>
 </div>
 
