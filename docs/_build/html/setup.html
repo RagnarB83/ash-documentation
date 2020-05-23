@@ -256,10 +256,9 @@ The Fortran library is necessary for fast QM/MM functionality inside ASH.</p>
 <p>The f2py command (<a class="reference external" href="https://numpy.org/doc/stable/f2py/">Fortran to Python Interface</a>) is available if Python3 and numpy has been installed correctly.
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib</p>
-<p><strong>Step 7.</strong> Make sure preferred QM packages are available:</p>
+<p><strong>Step 7a.</strong> Install desired QM program(s):</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://orcaforum.kofo.mpg.de">ORCA</a> is a recommended QM code (flexible interface in ASH). See installation instructions on the <a class="reference external" href="https://sites.google.com/site/orcainputlibrary/setting-up-orca">ORCA Input Library</a>.</p></li>
-<li><p>The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.</p></li>
+<li><p><a class="reference external" href="https://orcaforum.kofo.mpg.de">ORCA</a> is a recommended QM code (flexible interface in ASH). See installation instructions on the <a class="reference external" href="https://sites.google.com/site/orcainputlibrary/setting-up-orca">ORCA Input Library</a>. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.</p></li>
 <li><p><a class="reference external" href="https://xtb-docs.readthedocs.io">xTB</a> needs to be in PATH and later your jobscript.</p></li>
 </ul>
 <p>Optional Python packages to install via pip (depends on whether you will use the interfaces to PyBerny, PySCF and PyFrame):</p>
@@ -275,6 +274,13 @@ pip install pyframe     <span class="c1">#polarizable embedding helper tool</spa
 </div>
 <p>Optional installation of the <a class="reference external" href="http://www.psicode.org/">Psi4</a> QM code (if you intend to use it), best done via Conda:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4 psi4-rt -c psi4
+</pre></div>
+</div>
+<p><strong>Step 7b.</strong> Optional: Install OpenMM (if needed)</p>
+<p>Note: Not yet documented…</p>
+<p>For protein and explict solvation QM/MM in ASH, then the <a class="reference external" href="http://openmm.org">OpenMM program</a> is used as MM code.
+It can be installed using conda.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c omnia openmm
 </pre></div>
 </div>
 <p><strong>Step 8.</strong> Try it out.</p>

@@ -183,7 +183,7 @@ Thus, if the distance between atoms A and B is less than the sum of the elementa
 (which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
 Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
 (global scale and tol parameters are defined in settings_ash file) works in many cases.
-For the Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal, however, that features strong hydrogen-bonding and the ionic Na\ :sup:`+` \ fragment, however, we have to make some modifications.
+For the Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal, however, that features strong hydrogen-bonding and the ionic Na\ :sup:`+` \ fragment, we have to make some modifications.
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na\ :sup:`+` \ ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.
@@ -254,7 +254,7 @@ In that case, the code below can simply be appended to the previous script.
     ORCAQMpart = ORCATheory(orcadir=orcadir, charge=charge, mult=mult, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster.atomcharges, atomtypes=Cluster.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart,
-        qmatoms=Centralmainfrag, atomcharges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
+        qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
 
     geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
@@ -381,7 +381,7 @@ Script below shows an example electrostatically embedded NMR calculation using O
     ORCAQMpart = ORCATheory(orcadir=orcadir, charge=charge, mult=mult, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster.atomcharges, atomtypes=Cluster.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart,
-        qmatoms=Centralmainfrag, atomcharges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
+        qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
     Singlepoint(fragment=Cluster, theory=QMMM_object)
 
@@ -457,7 +457,7 @@ Optimization of product geometry:
     ORCAQMpart = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster_product.atomcharges, atomtypes=Cluster_product.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
-        qmatoms=Centralmainfrag, atomcharges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
+        qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
     geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
@@ -490,7 +490,7 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
     xtbcalc = xTBTheory(xtbdir=xtbdir, runmode='inputfile', nprocs=numcores, charge=0, mult=1, xtbmethod=xtbmethod)
     MMpart = NonBondedTheory(charges = Reactant.atomcharges, atomtypes=Reactant.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_xtb = QMMMTheory(qm_theory=xtbcalc, mm_theory=MMpart, fragment=Reactant, actatoms=Centralmainfrag,
-        qmatoms=Centralmainfrag, atomcharges=Reactant.atomcharges, embedding='Elstat', nprocs=numcores)
+        qmatoms=Centralmainfrag, charges=Reactant.atomcharges, embedding='Elstat', nprocs=numcores)
 
     #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
     Saddlepoint = interface_knarr.NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,

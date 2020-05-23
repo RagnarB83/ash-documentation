@@ -120,10 +120,9 @@ The f2py command (`Fortran to Python Interface <https://numpy.org/doc/stable/f2p
 Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
 and move to lib dir: /path/to/ash/lib
 
-**Step 7.** Make sure preferred QM packages are available:
+**Step 7a.** Install desired QM program(s):
 
-* `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_.
-* The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
+* `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
 * `xTB <https://xtb-docs.readthedocs.io>`_ needs to be in PATH and later your jobscript.
 
 
@@ -145,6 +144,18 @@ Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you i
 .. code-block:: shell
 
     conda install psi4 psi4-rt -c psi4
+
+
+**Step 7b.** Optional: Install OpenMM (if needed)
+
+Note: Not yet documented...
+
+For protein and explict solvation QM/MM in ASH, then the `OpenMM program <http://openmm.org>`_ is used as MM code.
+It can be installed using conda.
+
+.. code-block:: shell
+
+    conda install -c omnia openmm
 
 
 **Step 8.** Try it out.

@@ -322,7 +322,7 @@ The fragment identification works by finding what atoms are connected according 
 (which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
 Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
 (global scale and tol parameters are defined in settings_ash file) works in many cases.
-For the Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub>] <sup>-</sup> crystal, however, that features strong hydrogen-bonding and the ionic Na<sup>+</sup> fragment, however, we have to make some modifications.
+For the Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub>] <sup>-</sup> crystal, however, that features strong hydrogen-bonding and the ionic Na<sup>+</sup> fragment, we have to make some modifications.
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na<sup>+</sup> ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.</p>
