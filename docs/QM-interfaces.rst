@@ -96,8 +96,9 @@ a separate Psi4 executable (can be a separate Python installation) via the psi4d
 Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.
 
 Todo:
+
 - Allow to pass dictionaries for other modules
-- Enable e.g. coupled-cluster E+G calculation
+- Enable Psi4 coupled-cluster E+G calculation
 
 Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
 Set pe=True and give path to potfile to use.
