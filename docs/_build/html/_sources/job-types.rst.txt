@@ -2,12 +2,13 @@
 Job Types
 ==========================
 
-There are a few different job-types in Ash: single-point , geometry optimization, nudged-elastic band optimization, numerical frequencies and molecular dynamics (not ready).
+The job-types available in ASH:
+
 - Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel etc.
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
-- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). To be finished.
-- Nudged elastic band calculations are available via an interface to an external code.
-- Molecular dynamics (not ready)
+- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM).
+- Nudged elastic band calculations are available via an interface to the Knarr-NEB code.
+- Molecular dynamics (not ready).
 
 The job-types can be used with any theory object available, e.g. one of the QMTheories in :doc:`QM-interfaces` or using
 a QM/MM Theory object from :doc:`QM-MM`

@@ -1,3 +1,9 @@
+.. raw:: html
+
+     <style> .red {color:#aa0060; font-weight:bold; font-size:16px} </style>
+
+.. role:: red
+
 Setup
 ======================================
 
@@ -19,18 +25,19 @@ Dependencies:
 ###############################
 Installation and Configuration
 ###############################
-**Step 1.** Clone or download an archive containing Ash and put the directory (named ash) in your home directory.
+**Step 1.** Clone or download an archive containing ASH and put the directory (named ash) in your home directory.
 The ash directory contains the Python source code files, named ash.py etc.
 
-**Step 2.** Check if a suitable Python3 distribution is available. Needs to contain numpy and you will need to be able to install
-Python packages using pip. If you don't already have a suitable Python3 distribution one then go to Step 2b.
+**Step 2.** Check if a suitable Python3 installation is available. It needs to contain numpy and you will need to be able to install
+Python packages to it using pip. If you don't already have a suitable Python3 distribution, go to Step 2b.
 
 **Step 2b.** Anaconda Python3 setup (recommended)
 
 Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ and install in e.g. your user directory.
+`Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ also works.
 Follow Anaconda installation instructions.
 
-**Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for Ash:
+**Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:
 
 .. code-block:: shell
 
@@ -42,7 +49,7 @@ Select the environment:
 
     conda activate ashpy37 # or use base environment if preferred
 
-Make sure this environment is active while you finish the installation process and use this same environment when running Ash.
+Make sure this environment is active while you finish the installation process and use this same environment when running ASH.
 
 **Step 3.** To make ASH available to Python, set the environment variables:
 
@@ -60,12 +67,12 @@ Put these environment definitions in your shell environment startup file e.g. .b
 
     pip install geometric   (geomeTRIC optimizer)
 
-**Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_
+**Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
 Julia is necessary for fast QM/MM functionality inside ASH.
 
-| i. Download appropriate binaries from the official Julia website. Extract archive.
-| ii. Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
-| iii. Launch Julia to install PyCall:
+ i) Download appropriate binaries from the official Julia website. Extract archive.
+ ii) Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
+ iii) Launch Julia to install PyCall:
 
 .. code-block:: shell
 
@@ -81,11 +88,12 @@ Inside the Julia interpreter do:
 
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
-Then execute in shell: rm -rf ~/.julia/registries/General   (assuming Julia is installed in ~).
+Then execute in shell: rm -rf ~/.julia/registries/General
 
 **Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
-Important:Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
+
+:red:`Important:` Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
 Then install using pip:
 
 .. code-block:: shell

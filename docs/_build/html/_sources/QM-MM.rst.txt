@@ -37,7 +37,7 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
     ORCAQMpart = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = atomcharges, atomtypes=atomtypes, forcefield=MM_forcefield, LJcombrule='geometric')
     QMMMobject = QMMMTheory(fragment=H2O_MeOH, qm_theory=ORCAQMpart, mm_theory=MMpart, qmatoms=qmatoms,
-                            atomcharges=atomcharges, embedding='Elstat')
+                            charges=atomcharges, embedding='Elstat')
 
     #Geometry optimzation of QM/MM object
     geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8])

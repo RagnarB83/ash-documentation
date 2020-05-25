@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>About Ash &mdash; Ash 0.1 documentation</title>
+  <title>About ASH &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -91,7 +91,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">About Ash</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About ASH</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
 </ul>
 </li>
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
@@ -149,7 +151,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>About Ash</li>
+      <li>About ASH</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,18 +171,18 @@
            <div itemprop="articleBody">
             
   <div class="section" id="about-ash">
-<h1>About Ash<a class="headerlink" href="#about-ash" title="Permalink to this headline">¶</a></h1>
-<p>Ash is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
+<h1>About ASH<a class="headerlink" href="#about-ash" title="Permalink to this headline">¶</a></h1>
+<p>ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
 explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations,
 molecular dynamics (soon), numerical frequencies using a MM, QM or QM/MM Hamiltonian.
-Interfaces to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
+Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).</p>
 <p>Requirements:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Python3 installation</p></li>
 <li><p>Numpy Python library</p></li>
-<li><p>Julia installation (for faster versions of some routines)</p></li>
+<li><p>Julia installation (for faster Julia versions of MM routines)</p></li>
 <li><p>Matplotlib (for some plotting options).</p></li>
 <li><p>geomeTRIC (optimizer). Python library, easily installed via pip.</p></li>
 </ul>
@@ -205,7 +207,7 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>CIF file</p></li>
 <li><p>PDB file</p></li>
 <li><p>Python lists</p></li>
-<li><p>Ash file format</p></li>
+<li><p>ASH file format</p></li>
 </ul>
 </dd>
 <dt><strong>Interfaces to various QM codes:</strong></dt><dd><ul class="simple">
@@ -216,7 +218,7 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 </ul>
 </dd>
 <dt><strong>Parallelization :</strong></dt><dd><ul class="simple">
-<li><p>Parallelization via Python multiprocessing.</p></li>
+<li><p>Parallelization via Python multiprocessing: multiple jobs and numerical frequencies.</p></li>
 <li><p>QM code parallelization also available.</p></li>
 <li><p>Support for simultaneous single-point jobs.</p></li>
 <li><p>Support for simultaneous Numerical-Hessian displacement calculations.</p></li>
@@ -256,12 +258,12 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <dt><strong>Numerical frequencies: one-point (forward difference) and two-point (central difference)</strong></dt><dd><ul class="simple">
 <li><p>Partial Hessian possible</p></li>
 <li><p>Full parallelization.</p></li>
-<li><p>Support for any QM, MM or QM/MM Hamiltonian for which there is an Ash interface.</p></li>
+<li><p>Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.</p></li>
 <li><p><strong>Todo:</strong> Request analytical Hessian from ORCA.</p></li>
 </ul>
 </dd>
 <dt><strong>Hessian analysis</strong></dt><dd><ul class="simple">
-<li><p>Diagonalization of Hessian (from Ash or ORCA). Print frequencies and normal modes.</p></li>
+<li><p>Diagonalization of Hessian (from ASH or ORCA). Print frequencies and normal modes.</p></li>
 <li><p><strong>Todo:</strong> projection of translation/rotational modes</p></li>
 <li><p>Normal mode composition analysis in terms of individual atoms, elements and atom groups.</p></li>
 <li><p>Print vibrational densities of states files (with linebroadening)</p></li>

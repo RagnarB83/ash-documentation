@@ -21,6 +21,8 @@ These are the documentation pages of Ash.
    MM-interfaces
    QM-MM
    molcrys
+   pes
+   workflows
    ash-classes
 
 

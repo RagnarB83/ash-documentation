@@ -1,19 +1,19 @@
 
 ==================================================
-About Ash
+About ASH
 ==================================================
 
-Ash is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
+ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
 explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations,
 molecular dynamics (soon), numerical frequencies using a MM, QM or QM/MM Hamiltonian.
-Interfaces to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
+Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 
 Requirements:
 
     - Python3 installation
     - Numpy Python library
-    - Julia installation (for faster versions of some routines)
+    - Julia installation (for faster Julia versions of MM routines)
     - Matplotlib (for some plotting options).
     - geomeTRIC (optimizer). Python library, easily installed via pip.
 
@@ -39,7 +39,7 @@ Features
     - CIF file
     - PDB file
     - Python lists
-    - Ash file format
+    - ASH file format
 
 
 **Interfaces to various QM codes:**
@@ -49,7 +49,7 @@ Features
     - PySCF (as Python library). OpenMP parallelization.
 
 **Parallelization :**
-    - Parallelization via Python multiprocessing.
+    - Parallelization via Python multiprocessing: multiple jobs and numerical frequencies.
     - QM code parallelization also available.
     - Support for simultaneous single-point jobs.
     - Support for simultaneous Numerical-Hessian displacement calculations.
@@ -82,11 +82,11 @@ Features
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
     - Partial Hessian possible
     - Full parallelization.
-    - Support for any QM, MM or QM/MM Hamiltonian for which there is an Ash interface.
+    - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
     - **Todo:** Request analytical Hessian from ORCA.
 
 **Hessian analysis**
-    - Diagonalization of Hessian (from Ash or ORCA). Print frequencies and normal modes.
+    - Diagonalization of Hessian (from ASH or ORCA). Print frequencies and normal modes.
     - **Todo:** projection of translation/rotational modes
     - Normal mode composition analysis in terms of individual atoms, elements and atom groups.
     - Print vibrational densities of states files (with linebroadening)

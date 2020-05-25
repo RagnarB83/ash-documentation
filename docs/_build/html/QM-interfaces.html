@@ -91,7 +91,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="About.html">About Ash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
@@ -109,6 +109,8 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
@@ -248,9 +250,11 @@ The library interface means that Ash will load Psi4 Python libraries that have t
 In the inputfile-based interface (Psithon), Ash will create a Psi4 inputfile in Psithon syntax and will then call
 a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).</p>
 <p>Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.</p>
-<p>Todo:
-- Allow to pass dictionaries for other modules
-- Enable e.g. coupled-cluster E+G calculation</p>
+<p>Todo:</p>
+<ul class="simple">
+<li><p>Allow to pass dictionaries for other modules</p></li>
+<li><p>Enable Psi4 coupled-cluster E+G calculation</p></li>
+</ul>
 <p>Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
 Set pe=True and give path to potfile to use.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
