@@ -57,14 +57,14 @@ Example: Running multiple single-point energies with different functionals
         ORCAcalc.cleanup()
         print("=================================")
 
-        print("Dictionary with results:", energies_dict)
-        print("")
-        #Pretty formatted printing:
-        print("")
-        print(" Functional   Energy (Eh)")
-        print("----------------------------")
-        for func, e in energies_dict.items():
-            print("{:10} {:13.10f}".format(func,e))
+    print("Dictionary with results:", energies_dict)
+    print("")
+    #Pretty formatted printing:
+    print("")
+    print(" Functional   Energy (Eh)")
+    print("----------------------------")
+    for func, e in energies_dict.items():
+        print("{:10} {:13.10f}".format(func,e))
 
 
 Producing a nice table of results:
