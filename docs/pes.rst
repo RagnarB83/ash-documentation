@@ -7,7 +7,7 @@ The workflow combines an SCF-calculation of the initial state, an SCF+TDDFT calc
 ionization energies. Dyson orbital norms are then calculated as approximate intensities.
 
 
-- ORCA is only supported as the QM-code for now.
+- ORCA is the only supported QM-code for now.
 - Requires `Wfoverlap <https://sharc-md.org/?page_id=309>`_ program
 - Plotting option requires installation of Matplotlib.
 
