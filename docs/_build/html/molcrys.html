@@ -364,9 +364,11 @@ In that case, the code below can simply be appended to the previous script.</p>
 <span class="c1"># We can then do optimization right here using that Cluster object.</span>
 <span class="c1">#Alternatively or for restart purposes we can read Cluster object into a separate QM/MM Opt job.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Now Doing Optimization&quot;</span><span class="p">)</span>
+
 <span class="c1"># Defining Centralmainfrag (list of atoms) for optimization</span>
 <span class="c1">#Centralmainfrag=fragmentobjects[0].clusterfraglist[0]</span>
-<span class="n">Centralmainfrag</span><span class="o">=</span><span class="n">Cluster</span><span class="o">.</span><span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#Read list of atom indices from file (created by molcrys)</span>
+<span class="n">Centralmainfrag</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag&quot;</span><span class="p">)</span>
 <span class="c1">#Can also be done manually</span>
 <span class="c1">#Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag:&quot;</span><span class="p">,</span> <span class="n">Centralmainfrag</span><span class="p">)</span>
@@ -427,7 +429,7 @@ Hydrogen-bonding between fragments would particularly benefit from this as this 
 geomeTRICOptimizer function can be modified manually, e.g. by visually inspecting an XYZ-file version of the Cluster and
 provide the correct list of atom indices (Note: <strong>ASH</strong> counts from zero).</p>
 <p>More conveniently, the QMregionfragexpand function can be used to find nearby atoms for an initial list of atoms.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Centralmainfrag</span><span class="o">=</span><span class="n">Cluster</span><span class="o">.</span><span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Centralmainfrag</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag&quot;</span><span class="p">)</span>
 <span class="n">expanded_central_region</span> <span class="o">=</span> <span class="n">QMregionfragexpand</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span><span class="n">initial_atoms</span><span class="o">=</span><span class="n">Centralmainfrag</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -453,7 +455,7 @@ object to the Singlepoint function. Make sure to specify the desired Cluster obj
 <span class="n">Cluster</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">fragfile</span><span class="o">=</span><span class="s1">&#39;Cluster.ygg&#39;</span><span class="p">)</span>
 
 <span class="c1"># Defining Centralmainfrag (list of atoms) for optimization</span>
-<span class="n">Centralmainfrag</span><span class="o">=</span><span class="n">Cluster</span><span class="o">.</span><span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Centralmainfrag</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag&quot;</span><span class="p">)</span>
 <span class="c1">#Can also be done manually</span>
 <span class="c1">#Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag:&quot;</span><span class="p">,</span> <span class="n">Centralmainfrag</span><span class="p">)</span>
@@ -527,7 +529,7 @@ rerun fragedit.py and visualize fragment.xyz coordinates.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">Cluster_product</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">fragfile</span><span class="o">=</span><span class="s1">&#39;product.ygg&#39;</span><span class="p">)</span>
-<span class="n">Centralmainfrag</span><span class="o">=</span><span class="n">Cluster_product</span><span class="o">.</span><span class="n">connectivity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Centralmainfrag</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Centralmainfrag:&quot;</span><span class="p">,</span> <span class="n">Centralmainfrag</span><span class="p">)</span>
 <span class="n">Cluster_FF</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;Cluster_forcefield.ff&#39;</span><span class="p">)</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>

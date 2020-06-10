@@ -234,9 +234,11 @@ In that case, the code below can simply be appended to the previous script.
     # We can then do optimization right here using that Cluster object.
     #Alternatively or for restart purposes we can read Cluster object into a separate QM/MM Opt job.
     print("Now Doing Optimization")
+
     # Defining Centralmainfrag (list of atoms) for optimization
     #Centralmainfrag=fragmentobjects[0].clusterfraglist[0]
-    Centralmainfrag=Cluster.connectivity[0]
+    #Read list of atom indices from file (created by molcrys)
+    Centralmainfrag = read_intlist_from_file("Centralmainfrag")
     #Can also be done manually
     #Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]
     print("Centralmainfrag:", Centralmainfrag)
@@ -319,7 +321,7 @@ More conveniently, the QMregionfragexpand function can be used to find nearby at
 
 .. code-block:: python
 
-    Centralmainfrag=Cluster.connectivity[0]
+    Centralmainfrag = read_intlist_from_file("Centralmainfrag")
     expanded_central_region = QMregionfragexpand(fragment=Cluster,initial_atoms=Centralmainfrag, radius=3)
 
 In the code example above, a new variable called "expanded_central_region" is defined that contains a new list of atoms containing
@@ -354,7 +356,7 @@ Script below shows an example electrostatically embedded NMR calculation using O
     Cluster=Fragment(fragfile='Cluster.ygg')
 
     # Defining Centralmainfrag (list of atoms) for optimization
-    Centralmainfrag=Cluster.connectivity[0]
+    Centralmainfrag = read_intlist_from_file("Centralmainfrag")
     #Can also be done manually
     #Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]
     print("Centralmainfrag:", Centralmainfrag)
@@ -448,7 +450,7 @@ Optimization of product geometry:
     from ash import *
 
     Cluster_product=Fragment(fragfile='product.ygg')
-    Centralmainfrag=Cluster_product.connectivity[0]
+    Centralmainfrag = read_intlist_from_file("Centralmainfrag")
     print("Centralmainfrag:", Centralmainfrag)
     Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
     orcadir='/opt/orca_4.2.1'
