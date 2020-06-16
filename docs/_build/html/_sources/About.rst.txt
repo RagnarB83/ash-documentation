@@ -13,6 +13,7 @@ Requirements:
 
     - Python3 installation
     - Numpy Python library
+    - Scipy Python library
     - Julia installation (for faster Julia versions of MM routines)
     - Matplotlib (for some plotting options).
     - geomeTRIC (optimizer). Python library, easily installed via pip.

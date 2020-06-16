@@ -12,7 +12,8 @@ ionization energies. Dyson orbital norms are then calculated as approximate inte
 - Plotting option requires installation of Matplotlib.
 
 
-Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure
+Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
+libraries is in your LD_LIBRARY_PATH.
 
 ######################################################
 Example: H\ :sub:`2`\ O
@@ -75,7 +76,7 @@ Also shown is how results with multiple functionals can be calculated at the sam
 
     functionals=['BP86', 'BLYP', 'TPSS', 'TPSSh', 'B3LYP', 'PBE0', 'BHLYP', 'CAM-B3LYP', 'wB97M-D3BJ', 'HF']
     for functional in functionals:
-        joblabel="FeSmin-"+functional
+        joblabel="FeS2min-"+functional
         orcadir='/opt/orca_4.2.1'
         input="! def2-TZVP RIJCOSX def2/J GridX5 Grid5 Finalgrid6 tightscf slowconv " + functional
         blocks="""

@@ -17,6 +17,7 @@ Dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
+* `Scipy <https://www.scipy.org>` library.
 * `Julia 1.X <https://julialang.org/downloads>`_ installation. PyCall library also required.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
@@ -220,3 +221,5 @@ Check the following:
 1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.
 2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.
 3. Make sure you are using the same Python-conda environment you used when you installed things.
+4. Setup PyCall for each Julia user environment (updates ~/.julia)
+

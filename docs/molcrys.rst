@@ -3,6 +3,7 @@ MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
 The molecular crystal QM/MM method in **ASH** is based on the work described
 in articles by Bjornsson et al.
+
 | 1. Modelling Molecular Crystals by QM/MM: Self-Consistent Electrostatic Embedding for Geometry Optimizations and Molecular Property Calculations in the Solid,  R. Bjornsson and M. Bühl,  J. Chem. Theory Comput., 2012, 8, 498-508.
 | 2. R. Bjornsson, manuscript in preparation
 
@@ -55,8 +56,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 **Limitations:**
 
 | - Polymeric systems or pure solids (e.g. metallic) can not be described. Only system with natural fragmentation such as molecular crystals are possible.
-| - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before.
-| - Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)
+| - CIF file can not contain extra atoms such as multiple thermal populations. Also missing H-atoms have to be added beforehand. Use e.g. VESTA, Mercurcy, Chemcraft to inspect CIF-file before. Adding hydrogens to CIF-file can be problematic. Some success has been seen with using Avogadro or Olex2 (others?)
 
 
 **Features to be implemented:**
@@ -65,7 +65,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 | - Beyond Lennard-Jones potentials for improved QM-MM interaction.
 | - Molecular dynamics.
 | - Polarizable embedding
-
+| - Proper parallelization of Numerical frequencies.
 
 
 ######################################################

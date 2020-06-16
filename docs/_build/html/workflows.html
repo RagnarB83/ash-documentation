@@ -103,6 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows in ASH</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-running-multiple-single-point-energies-with-different-functionals">Example: Running multiple single-point energies with different functionals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example: Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
@@ -238,6 +239,143 @@ TPSSh      -1.1729787552
 PBE0       -1.1610065506
 BHLYP      -1.1624650247
 CAM-B3LYP  -1.1625896338
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">
+<h2>Example: Running conformer-sampling, geometry optimizations and High-level single-points<a class="headerlink" href="#example-running-conformer-sampling-geometry-optimizations-and-high-level-single-points" title="Permalink to this headline">¶</a></h2>
+<p>This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
+This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
+Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)) are performed for each conformer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="kn">from</span> <span class="nn">interface_crest</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1/&#39;</span>
+<span class="n">crestdir</span><span class="o">=</span><span class="s1">&#39;/opt/crest&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">24</span>
+
+<span class="c1">#0. Starting structure and charge and mult</span>
+<span class="n">molecule</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;dmp.xyz&quot;</span><span class="p">)</span>
+<span class="n">charge</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="c1">#1. Calling crest</span>
+<span class="c1">#call_crest(fragment=molecule, xtbmethod=&#39;GFN2-xTB&#39;, crestdir=crestdir, charge=charge, mult=mult, solvent=&#39;H2O&#39;, energywindow=6 )</span>
+<span class="n">call_crest</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="n">crestdir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.</span>
+<span class="n">list_conformer_frags</span><span class="p">,</span> <span class="n">xtb_energies</span> <span class="o">=</span> <span class="n">get_crest_conformers</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;list_conformer_frags:&quot;</span><span class="p">,</span> <span class="n">list_conformer_frags</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Crest Conformer Searches done. Found </span><span class="si">{}</span><span class="s2"> conformers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xTB energies: &quot;</span><span class="p">,</span> <span class="n">xtb_energies</span><span class="p">)</span>
+
+<span class="c1">#3. Run DFT geometry optimizations for each crest-conformer</span>
+<span class="c1">#ML Theory level. TODO: Run in ASH parallel instead of ORCA parallel?</span>
+<span class="n">MLorcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="n">MLorcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+<span class="n">MLORCATheory</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">MLorcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">MLorcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="n">DFT_energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">conformer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_conformer_frags</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performing DFT Geometry Optimization for Conformer &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">conformer</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">MLORCATheory</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
+    <span class="n">DFT_energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conformer</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+    <span class="c1">#Saving ASH fragment and XYZ file for each DFT-optimized conformer</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;Fragment-optimized.ygg&#39;</span><span class="p">,</span> <span class="s1">&#39;Conformer</span><span class="si">{}</span><span class="s1">_DFT.ygg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;Fragment-optimized.xyz&#39;</span><span class="p">,</span> <span class="s1">&#39;Conformer</span><span class="si">{}</span><span class="s1">_DFT.xyz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DFT Geometry Optimization done&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DFT_energies: &quot;</span><span class="p">,</span> <span class="n">DFT_energies</span><span class="p">)</span>
+
+<span class="c1">#4.Run high-level DLPNO-CCSD(T). Ash should now have optimized conformers</span>
+<span class="n">HLorcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) def2-SVP def2-SVP/C tightscf&quot;</span>
+<span class="n">HLorcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">maxiter 200</span>
+<span class="s2">end</span>
+<span class="s2">%mdci</span>
+<span class="s2">maxiter 100</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">HLORCATheory</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">HLorcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">HLorcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">HL_energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">conformer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_conformer_frags</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performing High-level calculation for DFT-optimized Conformer &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="n">HLenergy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">HLORCATheory</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">conformer</span><span class="p">)</span>
+    <span class="n">HL_energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HLenergy</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINAL RESULTS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================&quot;</span><span class="p">)</span>
+
+<span class="c1">#Printing total energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Conformer   xTB-energy    DFT-energy    HL-energy (Eh)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------&quot;</span><span class="p">)</span>
+
+<span class="n">min_xtbenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)</span>
+<span class="n">min_dftenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">DFT_energies</span><span class="p">)</span>
+<span class="n">min_HLenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">HL_energies</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,(</span><span class="n">xtb_en</span><span class="p">,</span><span class="n">dft_en</span><span class="p">,</span><span class="n">HL_en</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">,</span><span class="n">DFT_energies</span><span class="p">,</span> <span class="n">HL_energies</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">xtb_en</span><span class="p">,</span> <span class="n">dft_en</span><span class="p">,</span> <span class="n">HL_en</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#Printing relative energies</span>
+<span class="n">min_xtbenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)</span>
+<span class="n">min_dftenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">DFT_energies</span><span class="p">)</span>
+<span class="n">min_HLenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">HL_energies</span><span class="p">)</span>
+<span class="n">harkcal</span> <span class="o">=</span> <span class="mf">627.50946900</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Conformer   xTB-energy    DFT-energy    HL-energy (kcal/mol)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,(</span><span class="n">xtb_en</span><span class="p">,</span><span class="n">dft_en</span><span class="p">,</span><span class="n">HL_en</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">,</span><span class="n">DFT_energies</span><span class="p">,</span> <span class="n">HL_energies</span><span class="p">)):</span>
+    <span class="n">rel_xtb</span><span class="o">=</span><span class="p">(</span><span class="n">xtb_en</span><span class="o">-</span><span class="n">min_xtbenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="n">rel_dfT</span><span class="o">=</span><span class="p">(</span><span class="n">dft_en</span><span class="o">-</span><span class="n">min_dftenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="n">rel_HL</span><span class="o">=</span><span class="p">(</span><span class="n">HL_en</span><span class="o">-</span><span class="n">min_HLenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">rel_xtb</span><span class="p">,</span> <span class="n">rel_dfT</span><span class="p">,</span> <span class="n">rel_HL</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Workflow done!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Final result table of calculated conformers at 3 different theory levels:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">=================</span>
+FINAL <span class="nv">RESULTS</span>
+<span class="o">=================</span>
+
+ Conformer   xTB-energy    DFT-energy    HL-energy <span class="o">(</span>Eh<span class="o">)</span>
+----------------------------------------------------------------
+         <span class="m">0</span> -25.8392205500 -346.2939482921 -345.2965932205
+         <span class="m">1</span> -25.8377914500 -346.2884905132 -345.2911748671
+         <span class="m">2</span> -25.8358803400 -346.2818766960 -345.2848279253
+         <span class="m">3</span> -25.8313250600 -346.2788608396 -345.2815202116
+         <span class="m">4</span> -25.8307377800 -346.2788662649 -345.2815419285
+         <span class="m">5</span> -25.8303374700 -346.2775476223 -345.2792917601
+         <span class="m">6</span> -25.8300128900 -346.2776089771 -345.2794648759
+
+ Conformer   xTB-energy    DFT-energy    HL-energy <span class="o">(</span>kcal/mol<span class="o">)</span>
+----------------------------------------------------------------
+         <span class="m">0</span>  <span class="m">0</span>.0000000000  <span class="m">0</span>.0000000000  <span class="m">0</span>.0000000000
+         <span class="m">1</span>  <span class="m">0</span>.8967737821  <span class="m">3</span>.4248079602  <span class="m">3</span>.4000680178
+         <span class="m">2</span>  <span class="m">2</span>.0960134034  <span class="m">7</span>.5750408530  <span class="m">7</span>.3828340833
+         <span class="m">3</span>  <span class="m">4</span>.9544947374  <span class="m">9</span>.4675192805  <span class="m">9</span>.4584557521
+         <span class="m">4</span>  <span class="m">5</span>.3230184983  <span class="m">9</span>.4641148891  <span class="m">9</span>.4448282319
+         <span class="m">5</span>  <span class="m">5</span>.5742168139 <span class="m">10</span>.2915756050 <span class="m">10</span>.8568301896
+         <span class="m">6</span>  <span class="m">5</span>.7778938373 <span class="m">10</span>.2530749008 <span class="m">10</span>.7481984235
 </pre></div>
 </div>
 </div>

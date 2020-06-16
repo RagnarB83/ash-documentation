@@ -181,7 +181,8 @@ ionization energies. Dyson orbital norms are then calculated as approximate inte
 <li><p>Requires <a class="reference external" href="https://sharc-md.org/?page_id=309">Wfoverlap</a> program</p></li>
 <li><p>Plotting option requires installation of Matplotlib.</p></li>
 </ul>
-<p>Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure</p>
+<p>Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
+libraries is in your LD_LIBRARY_PATH.</p>
 <div class="section" id="example-h2o">
 <h2>Example: H<sub>2</sub>O<a class="headerlink" href="#example-h2o" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -232,7 +233,7 @@ ionization energies. Dyson orbital norms are then calculated as approximate inte
 
 <span class="n">functionals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;BLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSSh&#39;</span><span class="p">,</span> <span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">,</span> <span class="s1">&#39;BHLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM-B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;wB97M-D3BJ&#39;</span><span class="p">,</span> <span class="s1">&#39;HF&#39;</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="n">functionals</span><span class="p">:</span>
-    <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeSmin-&quot;</span><span class="o">+</span><span class="n">functional</span>
+    <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-&quot;</span><span class="o">+</span><span class="n">functional</span>
     <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
     <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP RIJCOSX def2/J GridX5 Grid5 Finalgrid6 tightscf slowconv &quot;</span> <span class="o">+</span> <span class="n">functional</span>
     <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
