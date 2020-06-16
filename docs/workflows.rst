@@ -87,7 +87,7 @@ Example: Running conformer-sampling, geometry optimizations and High-level singl
 ###########################################################################################
 This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
 This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
-Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)) are performed for each conformer.
+Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.
 
 
 .. code-block:: python
@@ -121,7 +121,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
 
     #3. Run DFT geometry optimizations for each crest-conformer
     #ML Theory level. TODO: Run in ASH parallel instead of ORCA parallel?
-    MLorcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
+    MLorcasimpleinput="! BP86 D3 def2-TZVP def2/J Grid5 Finalgrid6 tightscf"
     MLorcablocks="%scf maxiter 200 end"
     MLORCATheory = ORCATheory(orcadir=orcadir, charge=charge, mult=mult,
                         orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, nprocs=numcores)
@@ -142,7 +142,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     print("DFT_energies: ", DFT_energies)
 
     #4.Run high-level DLPNO-CCSD(T). Ash should now have optimized conformers
-    HLorcasimpleinput="! DLPNO-CCSD(T) def2-SVP def2-SVP/C tightscf"
+    HLorcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C tightscf TightPNO"
     HLorcablocks="""
     %scf
     maxiter 200
