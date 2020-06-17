@@ -5,10 +5,45 @@ Workflows in ASH
 
 As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
 
-For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job using another QM-program even.
+For example (Example 1), a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs)
 
-Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.).
+Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.), see Example 2.
+
+An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure) from a starting structure,
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
+
+
+##############################################################################
+Example1 : Optimization + Frequency + HL-singlepoint
+##############################################################################
+
+.. code-block:: python
+
+    from ash import *
+    import sys
+    import PES
+    settings_ash.init() #initialize
+
+    molstring="""
+    H 0 0 0
+    H 0 0 0.7
+    """
+    molecule=Fragment(coordsstring=h2string)
+    numcores=8
+    orcadir='/opt/orca_4.2.1'
+    #Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
+
+    #Geometry optimization of Reactant object and ORCAcalc theory object.
+    geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
+
+    #Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).
+    NumFreq(molecule, ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
+
+    #Single-point HL job.
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
+    HLenergy = Singlepoint(theory=HLORCATheory, fragment=molecule)
 
 ##############################################################################
 Example: Running multiple single-point energies with different functionals
