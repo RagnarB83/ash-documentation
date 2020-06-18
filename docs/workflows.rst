@@ -5,12 +5,12 @@ Workflows in ASH
 
 As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
 
-For example (Example 1), a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs)
+For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1.
 
-Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.), see Example 2.
+Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 2.
 
-An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure) from a starting structure,
+An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
 automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
 
 
@@ -25,25 +25,26 @@ Example1 : Optimization + Frequency + HL-singlepoint
     import PES
     settings_ash.init() #initialize
 
+    #Defining molecular fragment
     molstring="""
     H 0 0 0
     H 0 0 0.7
     """
     molecule=Fragment(coordsstring=h2string)
+    #Defining ORCA object for optimization
     numcores=8
     orcadir='/opt/orca_4.2.1'
-    #Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
 
-    #Geometry optimization of Reactant object and ORCAcalc theory object.
+    #Geometry optimization of molecule and ORCAcalc theory object.
     geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
 
-    #Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).
+    #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode parallel (recommended).
     NumFreq(molecule, ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
 
-    #Single-point HL job.
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
-    HLenergy = Singlepoint(theory=HLORCATheory, fragment=molecule)
+    #Single-point HL job ussing new
+    HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
+    HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
 
 ##############################################################################
 Example: Running multiple single-point energies with different functionals
@@ -64,10 +65,10 @@ Example: Running multiple single-point energies with different functionals
 
     h2=Fragment(coordsstring=h2string)
 
-    #List of functional keywords (strings) to loop over
+    #List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.
     functionals=['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']
 
-    #Dictionary to keep track of results
+    #Dictionary to keep track of energies
     energies_dict={}
 
     for functional in functionals:
