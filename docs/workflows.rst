@@ -6,16 +6,19 @@ Workflows in ASH
 As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
 
 For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1.
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1 for such a workflow.
 
-Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 2.
+Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
+This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.
+
+Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.
 
 An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
-automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 4.
 
 
 ##############################################################################
-Example1 : Optimization + Frequency + HL-singlepoint
+Example 1 : Optimization + Frequency + HL-singlepoint
 ##############################################################################
 
 .. code-block:: python
@@ -46,8 +49,55 @@ Example1 : Optimization + Frequency + HL-singlepoint
     HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
     HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
 
+
+
+#######################################################################################################
+Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
+#######################################################################################################
+
+.. code-block:: python
+
+    from ash import *
+    import sys
+    import PES
+    settings_ash.init() #initialize
+
+    #Defining all reaction species as ASH objects from XYZ-files
+    N2=Fragment(xyzfile="n2.xyz")
+    H2=Fragment(xyzfile="h2.xyz")
+    NH3=Fragment(xyzfile="nh3.xyz")
+
+    ##Defining reeaction##
+    # List of species from reactant to product
+    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+
+    #Equation stoichiometry : negative integer for reactant, positive integer for product
+    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [1,3,-2]
+    stoichiometry=[-1, -3, 2] #Use same order as specieslist
+    ##
+    numcores=1
+    orcadir='/opt/orca_4.2.1'
+
+    FinalEnergies=[]
+    for molecule in specieslist:
+        #Defining ORCA object for optimization
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
+        energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
+        FinalEnergies.append(energy)
+        ORCAcalc.cleanup()
+
+    print("")
+
+    #Reaction Energy via list of total energies:
+    ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, list_of_energies=FinalEnergies)
+
+    print("-------------")
+    ##Reaction Energy via internal energies of fragment objects:
+    ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
+
+
 ##############################################################################
-Example: Running multiple single-point energies with different functionals
+Example 3 : Running multiple single-point energies with different functionals
 ##############################################################################
 
 
@@ -119,7 +169,7 @@ Producing a nice table of results:
 
 
 ###########################################################################################
-Example: Running conformer-sampling, geometry optimizations and High-level single-points
+Example 4 : Running conformer-sampling, geometry optimizations and High-level single-points
 ###########################################################################################
 This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
 This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
