@@ -56,7 +56,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
 
 #######################################################################################################
-Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
+Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
 #######################################################################################################
 
 .. code-block:: python
@@ -99,10 +99,6 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\
 
 
 .. code-block:: shell
-
-      ReactionEnergy function. Unit: kcalpermol
-
-    List of total energies provided (Eh units assumed).
 
       Reaction_energy: -65.12668956189346 kcalpermol
 

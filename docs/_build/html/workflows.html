@@ -103,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows in ASH</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>+ 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-3-running-multiple-single-point-energies-with-different-functionals">Example 3 : Running multiple single-point energies with different functionals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-4-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 4 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
 </ul>
@@ -192,12 +192,12 @@ automatically performs DFT geometry optimizations for each conformer and finally
 
 <span class="c1">#Defining molecular fragment</span>
 <span class="n">molstring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">H 0 0 0</span>
-<span class="s2">H 0 0 0.7</span>
+<span class="s2">N 0 0 0</span>
+<span class="s2">N 0 0 0.9</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2string</span><span class="p">)</span>
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">molstring</span><span class="p">)</span>
 <span class="c1">#Defining ORCA object for optimization</span>
-<span class="n">numcores</span><span class="o">=</span><span class="mi">8</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">2</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
@@ -205,16 +205,21 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
 
 <span class="c1">#Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode parallel (recommended).</span>
-<span class="n">NumFreq</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">NumFreq</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
 
 <span class="c1">#Single-point HL job ussing new</span>
 <span class="n">HLORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 <span class="n">HLenergy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">HLORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: &quot;</span><span class="p">,</span> <span class="n">HLenergy</span><span class="p">,</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DLPNO-CCSD<span class="o">(</span>T<span class="o">)</span>/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
 </pre></div>
 </div>
 </div>
 <div class="section" id="example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
-<h2>Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>+ 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
+<h2>Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">PES</span>
@@ -225,7 +230,7 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2.xyz&quot;</span><span class="p">)</span>
 <span class="n">NH3</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;nh3.xyz&quot;</span><span class="p">)</span>
 
-<span class="c1">##Defining reeaction##</span>
+<span class="c1">##Defining reaction##</span>
 <span class="c1"># List of species from reactant to product</span>
 <span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#Use same order as stoichiometry</span>
 
@@ -238,9 +243,10 @@ automatically performs DFT geometry optimizations for each conformer and finally
 
 <span class="n">FinalEnergies</span><span class="o">=</span><span class="p">[]</span>
 <span class="k">for</span> <span class="n">molecule</span> <span class="ow">in</span> <span class="n">specieslist</span><span class="p">:</span>
-    <span class="c1">#Defining ORCA object for optimization</span>
+    <span class="c1">#Defining ORCA object.</span>
     <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+    <span class="c1">#Storing energy as list. Energy is also stored as part of fragment.</span>
     <span class="n">FinalEnergies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
     <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
@@ -248,7 +254,10 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">list_of_energies</span><span class="o">=</span><span class="n">FinalEnergies</span><span class="p">)</span>
 
 <span class="c1">##Reaction Energy via internal energies of fragment objects:</span>
-<span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">)</span>
+<span class="c1">#ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Reaction_energy: -65.12668956189346 kcalpermol
 </pre></div>
 </div>
 </div>
