@@ -6,10 +6,10 @@ Workflows in ASH
 As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
 
 For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1.
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1 for such a workflow.
 
-Another protocol might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
-This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy free reaction energy.
+Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
+This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.
 
 Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.
 
@@ -86,12 +86,9 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\
         FinalEnergies.append(energy)
         ORCAcalc.cleanup()
 
-    print("")
-
     #Reaction Energy via list of total energies:
     ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, list_of_energies=FinalEnergies)
 
-    print("-------------")
     ##Reaction Energy via internal energies of fragment objects:
     ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
 

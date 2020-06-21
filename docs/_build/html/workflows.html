@@ -177,9 +177,9 @@
 <h1>Workflows in ASH<a class="headerlink" href="#workflows-in-ash" title="Permalink to this headline">¶</a></h1>
 <p>As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.</p>
 <p>For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1.</p>
-<p>Another protocol might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
-This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy free reaction energy.</p>
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1 for such a workflow.</p>
+<p>Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
+This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.</p>
 <p>Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.</p>
 <p>An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
 automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 4.</p>
@@ -244,12 +244,9 @@ automatically performs DFT geometry optimizations for each conformer and finally
     <span class="n">FinalEnergies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
     <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
 <span class="c1">#Reaction Energy via list of total energies:</span>
 <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">list_of_energies</span><span class="o">=</span><span class="n">FinalEnergies</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------&quot;</span><span class="p">)</span>
 <span class="c1">##Reaction Energy via internal energies of fragment objects:</span>
 <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">)</span>
 </pre></div>

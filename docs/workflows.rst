@@ -67,7 +67,7 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\
     H2=Fragment(xyzfile="h2.xyz")
     NH3=Fragment(xyzfile="nh3.xyz")
 
-    ##Defining reeaction##
+    ##Defining reaction##
     # List of species from reactant to product
     specieslist=[N2, H2, NH3] #Use same order as stoichiometry
 
@@ -80,18 +80,16 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\
 
     FinalEnergies=[]
     for molecule in specieslist:
-        #Defining ORCA object for optimization
+        #Defining ORCA object.
         ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
         energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
+        #Storing energy as list. Energy is also stored as part of fragment.
         FinalEnergies.append(energy)
         ORCAcalc.cleanup()
-
-    print("")
 
     #Reaction Energy via list of total energies:
     ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, list_of_energies=FinalEnergies)
 
-    print("-------------")
     ##Reaction Energy via internal energies of fragment objects:
     ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
 
