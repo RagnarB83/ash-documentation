@@ -30,12 +30,12 @@ Example 1 : Optimization + Frequency + HL-singlepoint
 
     #Defining molecular fragment
     molstring="""
-    H 0 0 0
-    H 0 0 0.7
+    N 0 0 0
+    N 0 0 0.9
     """
-    molecule=Fragment(coordsstring=h2string)
+    molecule=Fragment(coordsstring=molstring)
     #Defining ORCA object for optimization
-    numcores=8
+    numcores=2
     orcadir='/opt/orca_4.2.1'
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
 
@@ -43,13 +43,17 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
 
     #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode parallel (recommended).
-    NumFreq(molecule, ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
+    NumFreq(molecule, ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job ussing new
     HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
     HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
 
+    print("DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: ", HLenergy, "Eh")
 
+.. code-block:: shell
+
+    DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
 
 #######################################################################################################
 Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
@@ -91,7 +95,16 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2`\ + 3H\ :sub:`2`\
     ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, list_of_energies=FinalEnergies)
 
     ##Reaction Energy via internal energies of fragment objects:
-    ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
+    #ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
+
+
+.. code-block:: shell
+
+      ReactionEnergy function. Unit: kcalpermol
+
+    List of total energies provided (Eh units assumed).
+
+      Reaction_energy: -65.12668956189346 kcalpermol
 
 
 ##############################################################################
