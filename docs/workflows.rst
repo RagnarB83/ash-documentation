@@ -24,8 +24,6 @@ Example 1 : Optimization + Frequency + HL-singlepoint
 .. code-block:: python
 
     from ash import *
-    import sys
-    import PES
     settings_ash.init() #initialize
 
     #Defining molecular fragment
@@ -62,8 +60,6 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2
 .. code-block:: python
 
     from ash import *
-    import sys
-    import PES
     settings_ash.init() #initialize
 
     #Defining all reaction species as ASH objects from XYZ-files
@@ -111,8 +107,6 @@ Example 3 : Running multiple single-point energies with different functionals
 .. code-block:: python
 
     from ash import *
-    import sys
-    import PES
     settings_ash.init() #initialize
 
     h2string="""
@@ -186,8 +180,6 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
 .. code-block:: python
 
     from ash import *
-    import sys
-    import PES
     from interface_crest import *
     settings_ash.init() #initialize
 
