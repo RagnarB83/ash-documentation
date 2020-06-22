@@ -169,15 +169,24 @@ It can be installed using conda.
 
 **Step 8.** Try it out.
 
+* Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).
+
 * If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
 
-* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia). The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).
+* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
 .. code-block:: shell
 
+    python3 first-ash-job.py
+
+or:
+
+.. code-block:: shell
+
     python-jl first-ash-job.py
+
 
 first-ash-job.py:
 

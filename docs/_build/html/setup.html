@@ -181,7 +181,7 @@ Anaconda comes with Python3, Numpy, SciPy, Matplotlib.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.python.org">Python version 3.6</a> &gt;=</p></li>
 <li><p><a class="reference external" href="https://numpy.org">Numpy</a> library.</p></li>
-<li><p><cite>Scipy &lt;https://www.scipy.org&gt;</cite> library.</p></li>
+<li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library.</p></li>
 <li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.X</a> installation. PyCall library also required.</p></li>
 <li><p><a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a> installation (Python package via pip).</p></li>
 <li><p><a class="reference external" href="https://github.com/leeping/geomeTRIC">geomeTRIC</a> (Python package via pip).</p></li>
@@ -291,10 +291,15 @@ It can be installed using conda.</p>
 </div>
 <p><strong>Step 8.</strong> Try it out.</p>
 <ul class="simple">
+<li><p>Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).</p></li>
 <li><p>If not doing QM/MM: The regular Python3 executable, <em>python3</em>  can be used to run all ASH scripts.</p></li>
-<li><p>If doing QM/MM: The Python-Julia executable, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia). The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).</p></li>
+<li><p>If doing QM/MM: The Python-Julia executable, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).</p></li>
 </ul>
 <p>Example ASH script to try out (geometry optimization of H2O using ORCA):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 first-ash-job.py
+</pre></div>
+</div>
+<p>or:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl first-ash-job.py
 </pre></div>
 </div>

@@ -186,8 +186,6 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <div class="section" id="example-1-optimization-frequency-hl-singlepoint">
 <h2>Example 1 : Optimization + Frequency + HL-singlepoint<a class="headerlink" href="#example-1-optimization-frequency-hl-singlepoint" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">PES</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="c1">#Defining molecular fragment</span>
@@ -204,7 +202,7 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="c1">#Geometry optimization of molecule and ORCAcalc theory object.</span>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
 
-<span class="c1">#Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode parallel (recommended).</span>
+<span class="c1">#Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.</span>
 <span class="n">NumFreq</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
 
 <span class="c1">#Single-point HL job ussing new</span>
@@ -221,8 +219,6 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <div class="section" id="example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
 <h2>Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">PES</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="c1">#Defining all reaction species as ASH objects from XYZ-files</span>
@@ -264,8 +260,6 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <div class="section" id="example-3-running-multiple-single-point-energies-with-different-functionals">
 <h2>Example 3 : Running multiple single-point energies with different functionals<a class="headerlink" href="#example-3-running-multiple-single-point-energies-with-different-functionals" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">PES</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="n">h2string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
@@ -332,8 +326,6 @@ CAM-B3LYP  -1.1625896338
 This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
 Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">PES</span>
 <span class="kn">from</span> <span class="nn">interface_crest</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
