@@ -142,7 +142,7 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
 
 
     #Calling molcrys function and define Cluster object
-    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc,
+    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc, auto_connectivity=True
             numcores=numcores, clusterradius=sphereradius, chargemodel=chargemodel, shortrangemodel=shortrangemodel)
 
 
@@ -191,12 +191,16 @@ and its contents printed. In the future, the radius of the Na may by default be 
 Unlike the other variables, the *settings_ash.scale*, *settings_ash.tol* and *eldict_covrad* are
 global variables (already defined but can be modified) that **molcrys** and **ASH** will have access to.
 
+June 2020: New Automatic Connectivity feature: auto_connectivity=True.
+When this feature is used, Molcrys scans through different tolerances (0.1 to 0.7 in 0.1 steps) until it finds a connectivity that gives complete assignment.
+This feature should work most of the time.
+
 The other variables defined in the script have to be passed as values to the respective keyword arguments of
 the **molcrys** function:
 
 .. code-block:: python
 
-    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc,
+    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc, auto_connectivity=True
         numcores=numcores, clusterradius=sphereradius, chargemodel=chargemodel, shortrangemodel=shortrangemodel)
 
 These are currently the only arguments that can be provided to the **molcrys** function, with the exception that
@@ -255,7 +259,7 @@ In that case, the code below can simply be appended to the previous script.
     orcablocks="%scf maxiter 200 end"
     ORCAQMpart = ORCATheory(orcadir=orcadir, charge=charge, mult=mult, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster.atomcharges, atomtypes=Cluster.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
-    QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart,
+    QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart, actatoms=Centralmainfrag,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
 
@@ -264,13 +268,13 @@ In that case, the code below can simply be appended to the previous script.
 
 
 We define a variable Centralmainfrag as the list of atoms that should be both described at the QM level (will be passed to qmatoms keyword argument)
-and should be optimized in a geometry optimization (will be passed to actatoms of optimizer ). This list may also be a larger QM-cluster, e.g. multiple H2PO4 units or with Na+ included.
+and should be optimized in a geometry optimization (passed to actatoms of optimizer ). This list may also be a larger QM-cluster, e.g. multiple H2PO4 units or with Na+ included.
 
 The charge and multiplicity of the molecule is then defined and a forcefield object is defined by reading in the 'Cluster_forcefield.ff'
 forcefield file, previously created by the **molcrys** function.
 
 Next we have to define a QM/MM object by combining a QM-theory object (here of class ORCATheory) and an MM theory object (of class NonBondedTheory).
-See QM/MM theory page for more information on this.
+See QM/MM theory page for more information on this. Note that actatoms is defined here as well as this means that the internal MM energy of the frozen MM region can be skipped.
 
 Finally we call the optimizer program, here the geomeTRICoptimizer:
 
@@ -552,6 +556,8 @@ not being general enough for the system.
 Start by playing around with the tol parameter, try values between 0 to 0.5
 The scaling parameter can also be used, though often it is less useful.
 Often, modifying the covalent radius of an element (see above example for Na+) works well.
+
+The auto_connectivity=True feature should usually work.
 
 
 #########################################

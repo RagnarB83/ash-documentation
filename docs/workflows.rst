@@ -40,7 +40,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     #Geometry optimization of molecule and ORCAcalc theory object.
     geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
 
-    #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode parallel (recommended).
+    #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.
     NumFreq(molecule, ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job ussing new
