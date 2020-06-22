@@ -17,7 +17,7 @@ Dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
-* `Scipy <https://www.scipy.org>` library.
+* `Scipy <https://www.scipy.org>`_ library.
 * `Julia 1.X <https://julialang.org/downloads>`_ installation. PyCall library also required.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
