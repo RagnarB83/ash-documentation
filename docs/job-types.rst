@@ -199,7 +199,7 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     #Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).
     #Ash will use the number of cores given to run same number of displacments simultaneouslyu.
     #ORCA parallelization is turned off automatically.
-    NumFreq(Reactant, ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
+    NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
 
 
 
