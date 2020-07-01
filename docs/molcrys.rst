@@ -296,7 +296,7 @@ The optimization trajectory is also available as a multi-structure XYZ file, as 
 
 Note: To restart a geometry optimization of the cluster it is best to locate the file "Fragment-currentgeo.ygg" (written and updated in each optimization step)
 and use this to restart a QM/MM geometry optimization. This file contains coordinates for the whole system but with updated coordinates for the active region
-and the previously optimized charges.s
+and the previously optimized charges.
 
 
 Note:
