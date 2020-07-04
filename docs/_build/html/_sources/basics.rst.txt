@@ -85,7 +85,8 @@ Submitting job
 
 For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
 dealing with local scratch, copy files back when done etc.
-Here is an example SLURM jobscript:
+Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
+local scratch, set the correct PATH variables, load modules etc.
 
 .. code-block:: shell
 
@@ -96,9 +97,12 @@ Here is an example SLURM jobscript:
     #SBATCH --time=8760:00:00
     #SBATCH -p compute
     #SBATCH --mem-per-cpu=3000
-    #SBATCH --job-name=Solvshelljob
+    #SBATCH --job-name=ASHJOB
     #SBATCH --output=%x.o%j
     #SBATCH --error=%x.o%j
+
+    #Use like this:
+    #sbatch -J inputfile.py jobscript.sh
 
     export job=$SLURM_JOB_NAME
     export job=$(echo ${job%%.*})
@@ -111,16 +115,17 @@ Here is an example SLURM jobscript:
     export OMP_STACKSIZE=1G
     export OMP_MAX_ACTIVE_LEVELS=1
 
-    #Create scratch
-    if [ ! -d /scratch/$USER ]
+    #Create scratch directory on local scratch
+    path_to_scratch=/scratch
+    if [ ! -d $path_to_scratch/$USER ]
     then
-      mkdir -p /scratch/$USER
+      mkdir -p $path_to_scratch/$USER
     fi
-    tdir=$(mktemp -d /scratch/$USER/ashjob__$SLURM_JOB_ID-XXXX)
+    tdir=$(mktemp -d $path_to_scratch/$USER/ashjob__$SLURM_JOB_ID-XXXX)
     chmod +xr $tdir
 
 
-    #inputfile should be present in dir
+    #Copy all relevant inputfiles for ASH: python scripts, CIF-files, XYZ files etc.
     cp $SLURM_SUBMIT_DIR/*.py $tdir/
     cp $SLURM_SUBMIT_DIR/*.cif $tdir/
     cp $SLURM_SUBMIT_DIR/*.xyz $tdir/
@@ -128,11 +133,14 @@ Here is an example SLURM jobscript:
     cp $SLURM_SUBMIT_DIR/*.ff $tdir/
     cp $SLURM_SUBMIT_DIR/*.ygg $tdir/
     cp $SLURM_SUBMIT_DIR/*.pdb $tdir/
+    cp $SLURM_SUBMIT_DIR/*.hess $tdir/
     cp $SLURM_SUBMIT_DIR/*.info $tdir/
+    cp $SLURM_SUBMIT_DIR/Centralmainfrag $tdir/
 
     # cd to scratch
     cd $tdir
     echo "tdir is $tdir"
+
     # Copy job and node info to beginning of outputfile
     echo "Starting job in scratch dir: $tdir" > $SLURM_SUBMIT_DIR/$outputname
     echo "Job execution start: $(date)" >> $SLURM_SUBMIT_DIR/$outputname
@@ -142,17 +150,36 @@ Here is an example SLURM jobscript:
     echo $SLURM_NODELIST >> $SLURM_SUBMIT_DIR/$outputname
 
     #ASH environment
-    # Load or set Python environment here:
-    # module load python
-    export PATH=/path/to/python/bin:$PATH
-    #
-    #conda activate rbdev
 
-    #Put ASH in PYTHONPATH
+    #Load necessary modules.
+    #If using modules for Python/OpenMPI/ORCA etc. then that all should be loaded here.
+
+    # Load or set Python environment here:
+    # e.g. module load python37  or:
+    export PATH=/path/to/python/bin:$PATH
+    # If using Conda, activate desired Conda environment.
+    # May have to add conda bin directory to $PATH first.
+    #conda activate ashpy37
+
+
+
+    #Add path to Julia
+    export PATH=/path/to/julia/bin:$PATH
+
+    #Put ASH in PYTHONPATH and LD_LIBRARY_PATH
     export PYTHONPATH=/path/to/ash:$PYTHONpath
+    export LD_LIBRARY_PATH=/path/to/ash:/path/to/ash/lib:$LD_LIBRARY_PATH
+
+    #Print out environment variables for debuggin.
     echo "PATH is $PATH"
+    echo "PYTHONPATH is $PYTHONPATH"
     echo "LD_LIBRARY_PATH is $LD_LIBRARY_PATH"
+    echo ""
     echo "Running Ash  job"
+
+    #Put ORCA in PATH and LD_LIBRARY_PATH
+    export PATH=/path/to/orca:$PATH
+    export LD_LIBRARY_PATH=/path/to/orca:$LD_LIBRARY_PATH
 
     #OpenMPI path for ORCA
     export PATH=/opt/openmpi-2.1.5/bin:$PATH

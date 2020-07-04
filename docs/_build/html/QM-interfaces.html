@@ -200,8 +200,14 @@ Additionally an Energy+Gradient calculation can be requested.</p>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 <span class="c1">#An Energy+Gradient singlepoint calculation.</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#Cleanup</span>
+<span class="n">QMcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Since some QM-interfaces may generate a lot of files it can be a good idea to request a cleanup after the job is run
+as sometimes old files may interfer with new calculations.
+This would be done via the internal cleanup function of the object as shown.</p>
 <div class="section" id="orcatheory">
 <h2>ORCATheory<a class="headerlink" href="#orcatheory" title="Permalink to this headline">¶</a></h2>
 <p>To be done: ORCATheory Class definition and arguments</p>
@@ -247,14 +253,13 @@ setting:</p>
 <h2>Psi4Theory<a class="headerlink" href="#psi4theory" title="Permalink to this headline">¶</a></h2>
 <p>The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
 The library interface means that Ash will load Psi4 Python libraries that have to be part of the same Python installation.
-In the inputfile-based interface (Psithon), Ash will create a Psi4 inputfile in Psithon syntax and will then call
+In the inputfile-based interface (Psithon), ASH will create a Psi4 inputfile in Psithon syntax and will then call
 a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).</p>
-<p>Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.</p>
-<p>Todo:</p>
-<ul class="simple">
-<li><p>Allow to pass dictionaries for other modules</p></li>
-<li><p>Enable Psi4 coupled-cluster E+G calculation</p></li>
-</ul>
+<p>Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.
+The Psi4 method is controlled by the psi4method argument. It can be set to a functional name : e.g. ‘B3LYP’, ‘B3LYP-D3BJ’
+or even ‘CCSD’  and ‘CCSD(T)’. Analytical gradients are available in Psi4 for both CCSD and CCSD(T).</p>
+<p>Todo:
+- Allow to pass dictionaries for other modules</p>
 <p>Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
 Set pe=True and give path to potfile to use.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
@@ -308,9 +313,9 @@ to PySCF.</p>
 <div class="section" id="xtbtheory">
 <h2>xTBTheory<a class="headerlink" href="#xtbtheory" title="Permalink to this headline">¶</a></h2>
 <p>The xTB interface comes in two forms, a shared-library interface and a file-based interface.
-The shared-library interface is recommended as no disk I/O is required while running xTB. Ash and xTB communicate via a Python C-API.
+The shared-library interface is recommended as no disk I/O is required while running xTB. ASH and xTB communicate via a Python C-API.
 As no files are written to disk, this makes the interface faster than the file-based interface, useful for e.g. fast MD.
-The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by Ash.
+The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by ASH.
 For regular jobs, e.g. geometry optimizations, the speed-difference between interfaces will probably not matter.</p>
 <p>To use either interface is quite simple, when an xTB object is created, charge and multiplicity keywords should be provided
 as well as the xtbmethod keyword argument that takes values: “GFN2”, “GFN1” for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.

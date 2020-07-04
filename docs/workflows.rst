@@ -12,9 +12,10 @@ Another workflow might involve calculating all species of a chemical reaction wi
 This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.
 
 Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.
+Or run a single-point calculation on a collection of XYZ files. See Example 4.
 
 An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
-automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 4.
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 5.
 
 
 ##############################################################################
@@ -170,7 +171,56 @@ Producing a nice table of results:
 
 
 ###########################################################################################
-Example 4 : Running conformer-sampling, geometry optimizations and High-level single-points
+Example 4 : Running single-point energies on a collection of XYZ files
+###########################################################################################
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+    import glob
+    #
+    orcadir='/opt/orca_4.2.1'
+    numcores=1
+    #Directory of XYZ files. Can be full path or relative path.
+    dir = './xyz_files'
+    #Changing to dir
+    os.chdir(dir)
+
+    energies=[]
+    for file in glob.glob('*.xyz'):
+        print("XYZ-file:", file)
+        mol=Fragment(xyzfile=file)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=1)
+        energy = Singlepoint(theory=ORCAcalc, fragment=mol)
+        print("Energy of file {} : {} Eh".format(file, energy))
+        ORCAcalc.cleanup()
+        energies.append(energy)
+        print("")
+    #Pretty print
+    print(" XYZ-file             Energy (Eh)")
+    print("-----------------------------------------------")
+    for xyzfile, e in zip(glob.glob('*.xyz'),energies):
+        print("{:20} {:>13.10f}".format(xyzfile,e))
+
+
+Output:
+
+.. code-block:: python
+
+     XYZ-file             Energy (Eh)
+    -----------------------------------------------
+    h2.xyz               -1.1715257797
+    h2o_MeOH.xyz         -192.0023991603
+    O-O-dimer.xyz        -149.8555328055
+    butane.xyz           -158.3248873844
+    nh3.xyz              -56.5093301286
+    n2.xyz               -109.4002969311
+    hi.xyz               -298.3735362292
+    h2o_strained.xyz     -76.2253312246
+
+###########################################################################################
+Example 5 : Running conformer-sampling, geometry optimizations and High-level single-points
 ###########################################################################################
 This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
 This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.

@@ -31,6 +31,13 @@ Additionally an Energy+Gradient calculation can be requested.
     #An Energy+Gradient singlepoint calculation.
     Singlepoint(theory=QMcalc, fragment=HF_frag, Grad=True)
 
+    #Cleanup
+    QMcalc.cleanup()
+
+Since some QM-interfaces may generate a lot of files it can be a good idea to request a cleanup after the job is run
+as sometimes old files may interfer with new calculations.
+This would be done via the internal cleanup function of the object as shown.
+
 
 ###########################
 ORCATheory
@@ -90,15 +97,15 @@ Psi4Theory
 ###########################
 The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
 The library interface means that Ash will load Psi4 Python libraries that have to be part of the same Python installation.
-In the inputfile-based interface (Psithon), Ash will create a Psi4 inputfile in Psithon syntax and will then call
+In the inputfile-based interface (Psithon), ASH will create a Psi4 inputfile in Psithon syntax and will then call
 a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).
 
 Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.
+The Psi4 method is controlled by the psi4method argument. It can be set to a functional name : e.g. 'B3LYP', 'B3LYP-D3BJ'
+or even 'CCSD'  and 'CCSD(T)'. Analytical gradients are available in Psi4 for both CCSD and CCSD(T).
 
 Todo:
-
 - Allow to pass dictionaries for other modules
-- Enable Psi4 coupled-cluster E+G calculation
 
 Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
 Set pe=True and give path to potfile to use.
@@ -165,9 +172,9 @@ to PySCF.
 xTBTheory
 ###########################
 The xTB interface comes in two forms, a shared-library interface and a file-based interface.
-The shared-library interface is recommended as no disk I/O is required while running xTB. Ash and xTB communicate via a Python C-API.
+The shared-library interface is recommended as no disk I/O is required while running xTB. ASH and xTB communicate via a Python C-API.
 As no files are written to disk, this makes the interface faster than the file-based interface, useful for e.g. fast MD.
-The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by Ash.
+The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by ASH.
 For regular jobs, e.g. geometry optimizations, the speed-difference between interfaces will probably not matter.
 
 To use either interface is quite simple, when an xTB object is created, charge and multiplicity keywords should be provided

@@ -236,15 +236,16 @@ In that case, the code below can simply be appended to the previous script.
 
     #Once molcrys is done we have a Cluster object (named Cluster) in memory and also printed to disk as Cluster.ygg
     # We can then do optimization right here using that Cluster object.
-    #Alternatively or for restart purposes we can read Cluster object into a separate QM/MM Opt job.
+    #Alternatively or for restart purposes we can read a Cluster object into a separate QM/MM Opt job like this:
+    #Cluster=Fragment(fragfile='Cluster.ygg')
     print("Now Doing Optimization")
 
-    # Defining Centralmainfrag (list of atoms) for optimization
+    # Defining Centralmainfrag (a list of atoms) for optimization. Can be done in multiple ways:
     #Centralmainfrag=fragmentobjects[0].clusterfraglist[0]
-    #Read list of atom indices from file (created by molcrys)
-    Centralmainfrag = read_intlist_from_file("Centralmainfrag")
-    #Can also be done manually
-    #Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]
+    #Read list of atom indices from file (created by molcrys): Centralmainfrag = read_intlist_from_file("Centralmainfrag")
+    #Can also be done manually: Centralmainfrag=[0, 1, 5, 8, 9, 12, 14]
+    #Easiest way:
+    Centralmainfrag = Cluster.Centralmainfrag
     print("Centralmainfrag:", Centralmainfrag)
 
     charge=fragmentobjects[0].Charge
@@ -293,6 +294,9 @@ are still at the original positions as determined from the crystal structure.
 The optimization trajectory is also available as a multi-structure XYZ file, as either "geometric_OPTtraj_Full.xyz"
 (Full system) or "geometric_OPTtraj.xyz" (Act-region only).
 
+Note: To restart a geometry optimization of the cluster it is best to locate the file "Fragment-currentgeo.ygg" (written and updated in each optimization step)
+and use this to restart a QM/MM geometry optimization. This file contains coordinates for the whole system but with updated coordinates for the active region
+and the previously optimized charges.
 
 
 Note:

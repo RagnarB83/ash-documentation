@@ -196,11 +196,24 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     geomeTRICOptimizer(theory=ORCAcalc,fragment=Reactant)
 
 
-    #Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).
-    #Ash will use the number of cores given to run same number of displacments simultaneouslyu.
+    #Numfreq job. A 1-point or 2-point Hessian can be requested.
+    # Either serial or parallell runmode can be used.
+    # For parallel: Ash will use the number of cores given to run same number of displacments simultaneouslyu.
     #ORCA parallelization is turned off automatically.
-    NumFreq(Reactant, ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
 
+    #Serial mode:
+    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='serial')
+    #Parallel mode:
+    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
+
+    print("freqresult:", freqresult)
+    #The resulting object from a NumFreq calculation is a dictionary (here called freqresult)
+    # It contains the calculated frequencies and results from the Thermochemical analysis.
+    #Individual items from the dictionary can be accessed by specifying the dictionary key:
+    # Available keys: frequencies, ZPVE, vibenergy, transenergy, rotenergy, vibenergy, vibenergycorr
+    # TO BE FINISHED...
+    print("Frequencies : ", freqresult['frequencies])
+    print("ZPVE : ", freqresult['ZPVE])
 
 
 ##################################

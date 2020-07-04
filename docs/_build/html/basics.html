@@ -236,7 +236,8 @@ optimization  (see <a class="reference internal" href="job-types.html"><span cla
 <h2>Submitting job<a class="headerlink" href="#submitting-job" title="Permalink to this headline">¶</a></h2>
 <p>For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
 dealing with local scratch, copy files back when done etc.
-Here is an example SLURM jobscript:</p>
+Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
+local scratch, set the correct PATH variables, load modules etc.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1">#SBATCH -N 1</span>
@@ -244,9 +245,12 @@ Here is an example SLURM jobscript:</p>
 <span class="c1">#SBATCH --time=8760:00:00</span>
 <span class="c1">#SBATCH -p compute</span>
 <span class="c1">#SBATCH --mem-per-cpu=3000</span>
-<span class="c1">#SBATCH --job-name=Solvshelljob</span>
+<span class="c1">#SBATCH --job-name=ASHJOB</span>
 <span class="c1">#SBATCH --output=%x.o%j</span>
 <span class="c1">#SBATCH --error=%x.o%j</span>
+
+<span class="c1">#Use like this:</span>
+<span class="c1">#sbatch -J inputfile.py jobscript.sh</span>
 
 <span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="nv">$SLURM_JOB_NAME</span>
 <span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="si">${</span><span class="nv">job</span><span class="p">%%.*</span><span class="si">}</span><span class="k">)</span>
@@ -259,16 +263,17 @@ Here is an example SLURM jobscript:</p>
 <span class="nb">export</span> <span class="nv">OMP_STACKSIZE</span><span class="o">=</span>1G
 <span class="nb">export</span> <span class="nv">OMP_MAX_ACTIVE_LEVELS</span><span class="o">=</span><span class="m">1</span>
 
-<span class="c1">#Create scratch</span>
-<span class="k">if</span> <span class="o">[</span> ! -d /scratch/<span class="nv">$USER</span> <span class="o">]</span>
+<span class="c1">#Create scratch directory on local scratch</span>
+<span class="nv">path_to_scratch</span><span class="o">=</span>/scratch
+<span class="k">if</span> <span class="o">[</span> ! -d <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span> <span class="o">]</span>
 <span class="k">then</span>
-  mkdir -p /scratch/<span class="nv">$USER</span>
+  mkdir -p <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span>
 <span class="k">fi</span>
-<span class="nv">tdir</span><span class="o">=</span><span class="k">$(</span>mktemp -d /scratch/<span class="nv">$USER</span>/ashjob__<span class="nv">$SLURM_JOB_ID</span>-XXXX<span class="k">)</span>
+<span class="nv">tdir</span><span class="o">=</span><span class="k">$(</span>mktemp -d <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span>/ashjob__<span class="nv">$SLURM_JOB_ID</span>-XXXX<span class="k">)</span>
 chmod +xr <span class="nv">$tdir</span>
 
 
-<span class="c1">#inputfile should be present in dir</span>
+<span class="c1">#Copy all relevant inputfiles for ASH: python scripts, CIF-files, XYZ files etc.</span>
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.py <span class="nv">$tdir</span>/
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.cif <span class="nv">$tdir</span>/
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.xyz <span class="nv">$tdir</span>/
@@ -276,11 +281,14 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.xtl <span class="nv">$tdir</span>
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.ff <span class="nv">$tdir</span>/
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.ygg <span class="nv">$tdir</span>/
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.pdb <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.hess <span class="nv">$tdir</span>/
 cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.info <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$tdir</span>/
 
 <span class="c1"># cd to scratch</span>
 <span class="nb">cd</span> <span class="nv">$tdir</span>
 <span class="nb">echo</span> <span class="s2">&quot;tdir is </span><span class="nv">$tdir</span><span class="s2">&quot;</span>
+
 <span class="c1"># Copy job and node info to beginning of outputfile</span>
 <span class="nb">echo</span> <span class="s2">&quot;Starting job in scratch dir: </span><span class="nv">$tdir</span><span class="s2">&quot;</span> &gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 <span class="nb">echo</span> <span class="s2">&quot;Job execution start: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
@@ -290,17 +298,36 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.info <span class="nv">$tdir</span
 <span class="nb">echo</span> <span class="nv">$SLURM_NODELIST</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 
 <span class="c1">#ASH environment</span>
-<span class="c1"># Load or set Python environment here:</span>
-<span class="c1"># module load python</span>
-<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/python/bin:<span class="nv">$PATH</span>
-<span class="c1">#</span>
-<span class="c1">#conda activate rbdev</span>
 
-<span class="c1">#Put ASH in PYTHONPATH</span>
+<span class="c1">#Load necessary modules.</span>
+<span class="c1">#If using modules for Python/OpenMPI/ORCA etc. then that all should be loaded here.</span>
+
+<span class="c1"># Load or set Python environment here:</span>
+<span class="c1"># e.g. module load python37  or:</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/python/bin:<span class="nv">$PATH</span>
+<span class="c1"># If using Conda, activate desired Conda environment.</span>
+<span class="c1"># May have to add conda bin directory to $PATH first.</span>
+<span class="c1">#conda activate ashpy37</span>
+
+
+
+<span class="c1">#Add path to Julia</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/julia/bin:<span class="nv">$PATH</span>
+
+<span class="c1">#Put ASH in PYTHONPATH and LD_LIBRARY_PATH</span>
 <span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONpath</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+
+<span class="c1">#Print out environment variables for debuggin.</span>
 <span class="nb">echo</span> <span class="s2">&quot;PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;PYTHONPATH is </span><span class="nv">$PYTHONPATH</span><span class="s2">&quot;</span>
 <span class="nb">echo</span> <span class="s2">&quot;LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;&quot;</span>
 <span class="nb">echo</span> <span class="s2">&quot;Running Ash  job&quot;</span>
+
+<span class="c1">#Put ORCA in PATH and LD_LIBRARY_PATH</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/orca:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/orca:<span class="nv">$LD_LIBRARY_PATH</span>
 
 <span class="c1">#OpenMPI path for ORCA</span>
 <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/opt/openmpi-2.1.5/bin:<span class="nv">$PATH</span>

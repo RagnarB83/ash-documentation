@@ -338,10 +338,24 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">)</span>
 
 
-<span class="c1">#Numfreq job. A 2-point Hessian is requested in runmode parallel (recommended).</span>
-<span class="c1">#Ash will use the number of cores given to run same number of displacments simultaneouslyu.</span>
+<span class="c1">#Numfreq job. A 1-point or 2-point Hessian can be requested.</span>
+<span class="c1"># Either serial or parallell runmode can be used.</span>
+<span class="c1"># For parallel: Ash will use the number of cores given to run same number of displacments simultaneouslyu.</span>
 <span class="c1">#ORCA parallelization is turned off automatically.</span>
-<span class="n">NumFreq</span><span class="p">(</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">Ashnumcores</span><span class="p">)</span>
+
+<span class="c1">#Serial mode:</span>
+<span class="n">freqresult</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
+<span class="c1">#Parallel mode:</span>
+<span class="n">freqresult</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">Ashnumcores</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;freqresult:&quot;</span><span class="p">,</span> <span class="n">freqresult</span><span class="p">)</span>
+<span class="c1">#The resulting object from a NumFreq calculation is a dictionary (here called freqresult)</span>
+<span class="c1"># It contains the calculated frequencies and results from the Thermochemical analysis.</span>
+<span class="c1">#Individual items from the dictionary can be accessed by specifying the dictionary key:</span>
+<span class="c1"># Available keys: frequencies, ZPVE, vibenergy, transenergy, rotenergy, vibenergy, vibenergycorr</span>
+<span class="c1"># TO BE FINISHED...</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Frequencies : &quot;</span><span class="p">,</span> <span class="n">freqresult</span><span class="p">[</span><span class="s1">&#39;frequencies])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE : &quot;</span><span class="p">,</span> <span class="n">freqresult</span><span class="p">[</span><span class="s1">&#39;ZPVE])</span>
 </pre></div>
 </div>
 </div>
