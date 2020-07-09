@@ -100,6 +100,61 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2
       Reaction_energy: -65.12668956189346 kcalpermol
 
 
+A more advanced feature is to run each fragment with a high-level thermochemistry protocol (using ORCA) and get the final
+reaction energy with chemical accuracy. Here the coupled-cluster based W1 method is used as part of the
+thermochemprotocol function. The protocol will run a DFT opt+Freq job (as defined via the ORCA-inputline string shown)
+and then do the high-level W1 theory protocol on top (multiple CCSD, CCSD(T) jobs with extrapolation, core-valence, scalar relativistic and atomic spin-orbit corrections etc.)
+This feature is in progress and will be made more userfriendly soon. Note that W1 is only doable for really small molecules (1-4 heavy atom systems are doable).
+
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+
+    #
+    orcadir='/opt/orca_4.2.1'
+    numcores=4
+
+    N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+
+    ##Defining reaction##
+    # List of species from reactant to product
+    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+
+    #Equation stoichiometry : negative integer for reactant, positive integer for product
+    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [1,3,-2]
+    stoichiometry=[-1, -3, 2] #Use same order as specieslist
+    ##
+
+    #ORCA theory inputline for Opt+Freq
+    Opt_protocol_inputline="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
+
+    #Thermochemistry protocol
+    thermochemprotocol(SPprotocol='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
+
+
+Final output:
+
+.. code-block:: shell
+
+     Reaction_energy(ΔSCF):  -33.980155385058865
+     Reaction_energy(ΔCCSD):  -6.937247193220541
+     Reaction_energy(Δ(T)):  1.4333499904116154
+     Reaction_energy(ΔCV+SR):  -0.07653672690344188
+     Reaction_energy(ΔSO):  0.0
+     Reaction_energy(ΔZPVE):  20.455727327700334
+    ----------------------------------------------
+     Reaction_energy(Total ΔE):  -19.104861987083417
+
+The output shows the total reaction energy (0 K enthalpy) and the contribution from Hartree-Fock (SCF), singles-doubles excitations (ΔCCSD),
+perturbative triples (Δ(T)), core-valence + scalar-relativistics (CV+SR), atomic spin-orbit coupling (ΔSO, here none), and zero-point
+vibrational energy (ΔZPVE).
+The agreement with experiment (-18.4 kcal/mol) is excellent.
+
+
 ##############################################################################
 Example 3 : Running multiple single-point energies with different functionals
 ##############################################################################

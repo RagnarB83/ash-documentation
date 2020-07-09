@@ -352,10 +352,10 @@ rm -rf <span class="nv">$tdir</span>
 <p>For even more convenient job-submissions one can utilize a <strong>subash</strong> wrapper script that copies the jobscript.sh file (above)
 to the current directory, modifies the number of cores requested and then submits.
 The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
-or alternatively it can read the numcores variable in ashtest.py (if present).</p>
+or alternatively it can read the numcores variable in ashtest.py (if present). Make sure to change path_to_jobscript variable in line 5.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>subash ashtest.py
 <span class="c1"># or:</span>
-subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for</span>
+subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for requesting an 8-core job.</span>
 </pre></div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
