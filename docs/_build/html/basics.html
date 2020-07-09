@@ -201,6 +201,8 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
+<span class="c1">#Setting numcores. Used by ORCA.</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
 <span class="c1">#Create fragment</span>
 <span class="n">Ironhexacyanide</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;fecn6.xyz&quot;</span><span class="p">)</span>
 
@@ -210,7 +212,7 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
 
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
 <span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
@@ -238,26 +240,27 @@ optimization  (see <a class="reference internal" href="job-types.html"><span cla
 dealing with local scratch, copy files back when done etc.
 Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
 local scratch, set the correct PATH variables, load modules etc.</p>
+<p>Use like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sbatch -J ashtest.py jobscript.sh
+</pre></div>
+</div>
+<p>where jobscript.sh is:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1">#SBATCH -N 1</span>
-<span class="c1">#SBATCH --tasks-per-node=12</span>
+<span class="c1">#SBATCH --tasks-per-node=1</span>
 <span class="c1">#SBATCH --time=8760:00:00</span>
 <span class="c1">#SBATCH -p compute</span>
 <span class="c1">#SBATCH --mem-per-cpu=3000</span>
-<span class="c1">#SBATCH --job-name=ASHJOB</span>
-<span class="c1">#SBATCH --output=%x.o%j</span>
-<span class="c1">#SBATCH --error=%x.o%j</span>
 
 <span class="c1">#Use like this:</span>
 <span class="c1">#sbatch -J inputfile.py jobscript.sh</span>
 
 <span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="nv">$SLURM_JOB_NAME</span>
 <span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="si">${</span><span class="nv">job</span><span class="p">%%.*</span><span class="si">}</span><span class="k">)</span>
-
-<span class="c1">#Outputname</span>
 <span class="nv">outputname</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$job</span><span class="s2">.out&quot;</span>
 
+<span class="c1">#Controlling threading</span>
 <span class="nb">export</span> <span class="nv">MKL_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
 <span class="nb">export</span> <span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
 <span class="nb">export</span> <span class="nv">OMP_STACKSIZE</span><span class="o">=</span>1G
@@ -297,7 +300,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 <span class="nb">echo</span> <span class="s2">&quot;Slurm Job name is: </span><span class="si">${</span><span class="nv">SLURM_JOB_NAME</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 <span class="nb">echo</span> <span class="nv">$SLURM_NODELIST</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
 
-<span class="c1">#ASH environment</span>
+<span class="c1">#Python and ASH environment</span>
 
 <span class="c1">#Load necessary modules.</span>
 <span class="c1">#If using modules for Python/OpenMPI/ORCA etc. then that all should be loaded here.</span>
@@ -315,7 +318,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/julia/bin:<span class="nv">$PATH</span>
 
 <span class="c1">#Put ASH in PYTHONPATH and LD_LIBRARY_PATH</span>
-<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONpath</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONPATH</span>
 <span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
 
 <span class="c1">#Print out environment variables for debuggin.</span>
@@ -341,19 +344,58 @@ python-jl <span class="nv">$job</span>.py &gt;&gt;<span class="p">&amp;</span> <
 <span class="c1"># Ash has finished. Now copy important stuff back.</span>
 <span class="nv">outputdir</span><span class="o">=</span><span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="si">${</span><span class="nv">job</span><span class="si">}</span>_<span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span>
 cp -r <span class="nv">$tdir</span> <span class="nv">$outputdir</span>
-<span class="c1">#mkdir $outputdir</span>
-<span class="c1">#cp -r $tdir/*xyz $outputdir</span>
-<span class="c1">#cp -r $tdir/*txt $outputdir</span>
-<span class="c1">#cp -r $tdir/*xtl $outputdir</span>
-<span class="c1">#cp -r $tdir/*charges $outputdir</span>
-<span class="c1">#cp -r $tdir/orca*inp $outputdir</span>
-<span class="c1">#cp -r $tdir/orca*out $outputdir</span>
-<span class="c1">#cp -r $tdir/*.ygg $outputdir</span>
-<span class="c1">#cp -r $tdir/*.ff $outputdir</span>
-<span class="c1">#cp -r $tdir/*.info $outputdir</span>
 
 <span class="c1"># Removing scratch folder</span>
 rm -rf <span class="nv">$tdir</span>
+</pre></div>
+</div>
+<p>For even more convenient job-submissions one can utilize a <strong>subash</strong> wrapper script that copies the jobscript.sh file (above)
+to the current directory, modifies the number of cores requested and then submits.
+The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
+or alternatively it can read the numcores variable in ashtest.py (if present).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>subash ashtest.py
+<span class="c1"># or:</span>
+subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
+<span class="c1">#subash</span>
+<span class="c1">#Wrapper script for ASH job-script</span>
+
+<span class="nv">path_to_jobscript</span><span class="o">=</span>/home/bjornsson/jobscripts/job-ash.sh
+
+<span class="nv">green</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">2</span><span class="sb">`</span>
+<span class="nv">yellow</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">3</span><span class="sb">`</span>
+<span class="nv">normal</span><span class="o">=</span><span class="sb">`</span>tput sgr0<span class="sb">`</span>
+<span class="nv">cyan</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">6</span><span class="sb">`</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span>
+<span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">green</span><span class="si">}</span><span class="s2">subash</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">yellow</span><span class="si">}</span><span class="s2">Usage: subash input.py      Dir should contain .py Python script.</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">yellow</span><span class="si">}</span><span class="s2">Or: subash input.py -p 8      Submit with 8 cores.</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">exit</span>
+<span class="k">fi</span>
+
+<span class="nb">export</span> <span class="nv">file</span><span class="o">=</span><span class="nv">$1</span>
+
+
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;-p&quot;</span> <span class="o">]]</span>
+<span class="k">then</span>
+<span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="nv">$3</span>
+<span class="k">else</span>
+<span class="c1">#Grabbing numcores from input-file.py if not using -p flag</span>
+<span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script.&quot;</span>
+<span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span>grep -m <span class="m">1</span> numcores <span class="nv">$file</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+<span class="k">fi</span>
+
+<span class="c1">#Copying job-script to dir:</span>
+cp <span class="nv">$path_to_jobscript</span> .
+
+sed -i <span class="s2">&quot;s/#SBATCH --tasks-per-node=1/#SBATCH --tasks-per-node=</span><span class="nv">$NPROC</span><span class="s2">/g&quot;</span> job-ash.sh
+
+<span class="c1">#Submit job.</span>
+sbatch -J <span class="nv">$file</span> job-ash.sh
+<span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">cyan</span><span class="si">}</span><span class="s2">ASH job submitted using </span><span class="nv">$NPROC</span><span class="s2"> cores using file </span><span class="nv">$file</span><span class="s2">.</span><span class="nv">$mult</span><span class="s2"> </span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </div>

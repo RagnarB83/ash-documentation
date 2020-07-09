@@ -42,6 +42,8 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
     from ash import *
     settings_ash.init()
 
+    #Setting numcores. Used by ORCA.
+    numcores=4
     #Create fragment
     Ironhexacyanide = Fragment(xyzfile="fecn6.xyz")
 
@@ -51,7 +53,7 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
     orcablocks="%scf maxiter 200 end"
 
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
     #Basic Cartesian optimization with KNARR-LBFGS
     Optimizer(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
@@ -88,28 +90,33 @@ dealing with local scratch, copy files back when done etc.
 Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
 local scratch, set the correct PATH variables, load modules etc.
 
+Use like this:
+
+.. code-block:: shell
+
+    sbatch -J ashtest.py jobscript.sh
+
+
+where jobscript.sh is:
+
 .. code-block:: shell
 
     #!/bin/bash
 
     #SBATCH -N 1
-    #SBATCH --tasks-per-node=12
+    #SBATCH --tasks-per-node=1
     #SBATCH --time=8760:00:00
     #SBATCH -p compute
     #SBATCH --mem-per-cpu=3000
-    #SBATCH --job-name=ASHJOB
-    #SBATCH --output=%x.o%j
-    #SBATCH --error=%x.o%j
 
     #Use like this:
     #sbatch -J inputfile.py jobscript.sh
 
     export job=$SLURM_JOB_NAME
     export job=$(echo ${job%%.*})
-
-    #Outputname
     outputname="$job.out"
 
+    #Controlling threading
     export MKL_NUM_THREADS=1
     export OMP_NUM_THREADS=1
     export OMP_STACKSIZE=1G
@@ -149,7 +156,7 @@ local scratch, set the correct PATH variables, load modules etc.
     echo "Slurm Job name is: ${SLURM_JOB_NAME}" >> $SLURM_SUBMIT_DIR/$outputname
     echo $SLURM_NODELIST >> $SLURM_SUBMIT_DIR/$outputname
 
-    #ASH environment
+    #Python and ASH environment
 
     #Load necessary modules.
     #If using modules for Python/OpenMPI/ORCA etc. then that all should be loaded here.
@@ -167,7 +174,7 @@ local scratch, set the correct PATH variables, load modules etc.
     export PATH=/path/to/julia/bin:$PATH
 
     #Put ASH in PYTHONPATH and LD_LIBRARY_PATH
-    export PYTHONPATH=/path/to/ash:$PYTHONpath
+    export PYTHONPATH=/path/to/ash:$PYTHONPATH
     export LD_LIBRARY_PATH=/path/to/ash:/path/to/ash/lib:$LD_LIBRARY_PATH
 
     #Print out environment variables for debuggin.
@@ -193,20 +200,62 @@ local scratch, set the correct PATH variables, load modules etc.
     # Ash has finished. Now copy important stuff back.
     outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}
     cp -r $tdir $outputdir
-    #mkdir $outputdir
-    #cp -r $tdir/*xyz $outputdir
-    #cp -r $tdir/*txt $outputdir
-    #cp -r $tdir/*xtl $outputdir
-    #cp -r $tdir/*charges $outputdir
-    #cp -r $tdir/orca*inp $outputdir
-    #cp -r $tdir/orca*out $outputdir
-    #cp -r $tdir/*.ygg $outputdir
-    #cp -r $tdir/*.ff $outputdir
-    #cp -r $tdir/*.info $outputdir
 
     # Removing scratch folder
     rm -rf $tdir
 
+For even more convenient job-submissions one can utilize a **subash** wrapper script that copies the jobscript.sh file (above)
+to the current directory, modifies the number of cores requested and then submits.
+The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
+or alternatively it can read the numcores variable in ashtest.py (if present).
+
+.. code-block:: shell
+
+    subash ashtest.py
+    # or:
+    subash ashtest.py -p 8  #for
+
+
+.. code-block:: shell
+
+    #!/bin/zsh
+    #subash
+    #Wrapper script for ASH job-script
+
+    path_to_jobscript=/home/bjornsson/jobscripts/job-ash.sh
+
+    green=`tput setaf 2`
+    yellow=`tput setaf 3`
+    normal=`tput sgr0`
+    cyan=`tput setaf 6`
+    if [[ "$1" == "" ]]
+    then
+      echo "${green}subash${normal}"
+      echo "${yellow}Usage: subash input.py      Dir should contain .py Python script.${normal}"
+      echo "${yellow}Or: subash input.py -p 8      Submit with 8 cores.${normal}"
+      exit
+    fi
+
+    export file=$1
+
+
+    if [[ "$2" == "-p" ]]
+    then
+    export NPROC=$3
+    else
+    #Grabbing numcores from input-file.py if not using -p flag
+    echo "No -p N provided. Grabbing cores from Python script."
+    export NPROC=$(grep -m 1 numcores $file | awk -F'=' '{print $2}')
+    fi
+
+    #Copying job-script to dir:
+    cp $path_to_jobscript .
+
+    sed -i "s/#SBATCH --tasks-per-node=1/#SBATCH --tasks-per-node=$NPROC/g" job-ash.sh
+
+    #Submit job.
+    sbatch -J $file job-ash.sh
+    echo "${cyan}ASH job submitted using $NPROC cores using file $file.$mult ${normal}"
 
 
 
