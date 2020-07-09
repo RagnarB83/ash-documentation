@@ -193,6 +193,10 @@ Example 3 : Running multiple single-point energies with different functionals
 
         # Run single-point job
         energy = Singlepoint(theory=ORCAcalc, fragment=h2)
+
+        #Keep ORCA outputfile for each functional
+        os.rename('orca-input.out', functional+'_orcajob.out')
+
         #Adding energy to dictionary
         energies_dict[functional] = energy
 

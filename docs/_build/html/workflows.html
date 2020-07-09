@@ -339,6 +339,10 @@ The agreement with experiment (-18.4 kcal/mol) is excellent.</p>
 
     <span class="c1"># Run single-point job</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2</span><span class="p">)</span>
+
+    <span class="c1">#Keep ORCA outputfile for each functional</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.out&#39;</span><span class="p">,</span> <span class="n">functional</span><span class="o">+</span><span class="s1">&#39;_orcajob.out&#39;</span><span class="p">)</span>
+
     <span class="c1">#Adding energy to dictionary</span>
     <span class="n">energies_dict</span><span class="p">[</span><span class="n">functional</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
 
