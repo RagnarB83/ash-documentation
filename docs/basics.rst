@@ -207,13 +207,13 @@ where jobscript.sh is:
 For even more convenient job-submissions one can utilize a **subash** wrapper script that copies the jobscript.sh file (above)
 to the current directory, modifies the number of cores requested and then submits.
 The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
-or alternatively it can read the numcores variable in ashtest.py (if present).
+or alternatively it can read the numcores variable in ashtest.py (if present). Make sure to change path_to_jobscript variable in line 5.
 
 .. code-block:: shell
 
     subash ashtest.py
     # or:
-    subash ashtest.py -p 8  #for
+    subash ashtest.py -p 8  #for requesting an 8-core job.
 
 
 .. code-block:: shell
