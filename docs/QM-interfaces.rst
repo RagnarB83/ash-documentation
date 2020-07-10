@@ -78,6 +78,14 @@ Functionality such as adding to inputfile what orbitals to read and parallelizat
 Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the Singlepoint function along with an
 ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
 are charge and spin multiplicity.
+The ORCA object is then used by passing it to a function: e.g. Singepoint, an optimizer, a QM/MM object, NumFreq function etc.
+When the ORCA object is run (e.g. by the Singlepoint function, an optimizer etc.) it will create an ORCA inputfile
+that will always be called orca-input.inp. This inputfile will look familiar to any ORCA user as it will contain a "Simpleinput line", Block-input
+a coordinate block etc. ASH will then tell ORCA to run the inputfile and an outputfile called orca-input.out will be created.
+Once the ORCA calculation is done the outputfile (or other files) is read for information (usually the energy and gradient) by ASH
+and ASH will continue. The ORCA inputfile , "orca-input.inp" may be replaced later (e.g. if an optimization job" and ORCA
+will be run again.
+
 
 **Parallelization**
 
