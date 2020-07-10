@@ -101,6 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#replace-coordinates-of-object">Replace coordinates of object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#delete-coordinates-of-object">Delete coordinates of object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-connectivity-of-fragment-object">Calculate connectivity of fragment object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#charge-and-multiplicity">Charge and Multiplicity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#inspect-defined-fragment-objects">Inspect defined fragment objects</a></li>
 </ul>
 </li>
@@ -286,6 +287,22 @@ The connectivity table is available as:</p>
 </div>
 <p>Note. The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.</p>
 </div>
+<div class="section" id="charge-and-multiplicity">
+<h3>Charge and Multiplicity<a class="headerlink" href="#charge-and-multiplicity" title="Permalink to this headline">¶</a></h3>
+<p>Charge and spin multiplicity can be associated with the fragment (either at creation or afterwards) but does not have to.
+The QM theory level needs the charge and multiplicity information and it usually must be provided when the QMtheory object is created.
+When working with multiple fragment objects, however, it is convenient to associate a total charge and spin multiplicity with each fragment object.
+Usually done when fragment is created like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NO_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;no.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragcoords</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively afterwards:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NO_frag</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">NO_frag</span><span class="o">.</span><span class="n">mult</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="inspect-defined-fragment-objects">
 <h3>Inspect defined fragment objects<a class="headerlink" href="#inspect-defined-fragment-objects" title="Permalink to this headline">¶</a></h3>
 <p>To inspect a defined fragment one can print out a Python dictionary of all defined attributes of the object.</p>
@@ -321,6 +338,11 @@ The connectivity table is available as:</p>
 </div>
 <p>An XYZ file of coordinates can be printed out:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">.</span><span class="n">write_xyzfile</span><span class="p">(</span><span class="n">xyzfilename</span><span class="o">=</span><span class="s2">&quot;Fragment-xyzfile.xyz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Print charge and mult attributes (if not defined, then None will be outputted).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">HF_frag</span><span class="o">.</span><span class="n">charge</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">HF_frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

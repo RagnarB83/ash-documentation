@@ -161,6 +161,28 @@ The connectivity table is available as:
 Note. The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
 
 
+Charge and Multiplicity
+=================================
+
+Charge and spin multiplicity can be associated with the fragment (either at creation or afterwards) but does not have to.
+The QM theory level needs the charge and multiplicity information and it usually must be provided when the QMtheory object is created.
+When working with multiple fragment objects, however, it is convenient to associate a total charge and spin multiplicity with each fragment object.
+Usually done when fragment is created like this:
+
+.. code-block:: python
+
+    NO_frag = Fragment(xyzfile="no.xyz", charge=0, mult=2)
+    HF_frag=Fragment(coordsstring=fragcoords, charge=0, mult=1)
+
+Alternatively, this can also be done afterwards:
+
+.. code-block:: python
+
+    NO_frag.charge = 0
+    NO_frag.mult = 2
+
+
+
 Inspect defined fragment objects
 =================================
 
@@ -217,3 +239,10 @@ An XYZ file of coordinates can be printed out:
 
     HF_frag.write_xyzfile(xyzfilename="Fragment-xyzfile.xyz")
 
+
+Print charge and mult attributes (if not defined, then None will be outputted).
+
+.. code-block:: python
+
+    print(HF_frag.charge)
+    print(HF_frag.mult)
