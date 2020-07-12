@@ -174,7 +174,7 @@ Usually done when fragment is created like this:
     NO_frag = Fragment(xyzfile="no.xyz", charge=0, mult=2)
     HF_frag=Fragment(coordsstring=fragcoords, charge=0, mult=1)
 
-Alternatively afterwards:
+Alternatively, this can also be done afterwards:
 
 .. code-block:: python
 

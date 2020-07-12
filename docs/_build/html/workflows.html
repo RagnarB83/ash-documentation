@@ -103,9 +103,12 @@
 <li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows in ASH</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-3-running-multiple-single-point-energies-with-different-functionals">Example 3 : Running multiple single-point energies with different functionals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-4-running-single-point-energies-on-a-collection-of-xyz-files">Example 4 : Running single-point energies on a collection of XYZ files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">Example 3a : Running multiple single-point energies with different functionals (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-5-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 5 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
 </ul>
 </li>
@@ -178,13 +181,27 @@
 <h1>Workflows in ASH<a class="headerlink" href="#workflows-in-ash" title="Permalink to this headline">¶</a></h1>
 <p>As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.</p>
 <p>For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1 for such a workflow.</p>
-<p>Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
-This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.</p>
-<p>Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.
-Or run a single-point calculation on a collection of XYZ files. See Example 4.</p>
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs).</p>
+<ul class="simple">
+<li><p>See Example 1 for such a workflow.</p></li>
+</ul>
+<p>Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result.</p>
+<ul class="simple">
+<li><p>Example 2a shows an example of this using a simple for-loop.</p></li>
+<li><p>Example 2b shows how the reaction energy could be calculated with a high-level thermochemistry protocol (thermochemprotocol function).</p></li>
+</ul>
+<p>It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)</p>
+<ul class="simple">
+<li><p>Example 3a shows how multiple single-point energies with different functionals can be easily run.</p></li>
+<li><p>Example 3b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)</p></li>
+<li><p>Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.</p></li>
+<li><p>Example 4b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)</p></li>
+</ul>
 <p>An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
-automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 5.</p>
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.</p>
+<ul class="simple">
+<li><p>See Example 5.</p></li>
+</ul>
 <div class="section" id="example-1-optimization-frequency-hl-singlepoint">
 <h2>Example 1 : Optimization + Frequency + HL-singlepoint<a class="headerlink" href="#example-1-optimization-frequency-hl-singlepoint" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -218,8 +235,8 @@ automatically performs DFT geometry optimizations for each conformer and finally
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
-<h2>Example 2 : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
+<h2>Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
@@ -258,6 +275,9 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Reaction_energy: -65.12668956189346 kcalpermol
 </pre></div>
 </div>
+</div>
+<div class="section" id="example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">
+<h2>Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol<a class="headerlink" href="#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol" title="Permalink to this headline">¶</a></h2>
 <p>A more advanced feature is to run each fragment with a high-level thermochemistry protocol (using ORCA) and get the final
 reaction energy with chemical accuracy. Here the coupled-cluster based W1 method is used as part of the
 thermochemprotocol function. The protocol will run a DFT opt+Freq job (as defined via the ORCA-inputline string shown)
@@ -306,8 +326,8 @@ perturbative triples (Δ(T)), core-valence + scalar-relativistics (CV+SR), atomi
 vibrational energy (ΔZPVE).
 The agreement with experiment (-18.4 kcal/mol) is excellent.</p>
 </div>
-<div class="section" id="example-3-running-multiple-single-point-energies-with-different-functionals">
-<h2>Example 3 : Running multiple single-point energies with different functionals<a class="headerlink" href="#example-3-running-multiple-single-point-energies-with-different-functionals" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">
+<h2>Example 3a : Running multiple single-point energies with different functionals (sequential)<a class="headerlink" href="#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
@@ -335,7 +355,7 @@ The agreement with experiment (-18.4 kcal/mol) is excellent.</p>
 <span class="s2">    end</span>
 <span class="s2">    &quot;&quot;&quot;</span>
     <span class="c1">#Defining/redefining ORCA theory. Does not need charge/mult keywords.</span>
-    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="c1"># Run single-point job</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2</span><span class="p">)</span>
@@ -373,8 +393,42 @@ CAM-B3LYP  -1.1625896338
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-4-running-single-point-energies-on-a-collection-of-xyz-files">
-<h2>Example 4 : Running single-point energies on a collection of XYZ files<a class="headerlink" href="#example-4-running-single-point-energies-on-a-collection-of-xyz-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">
+<h2>Example 3b : Running multiple single-point energies with different functionals (in parallel)<a class="headerlink" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel" title="Permalink to this headline">¶</a></h2>
+<p>The example in 3a ran each job sequentially, one after the other, according to the list of functional strings.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="c1">#Fragment</span>
+<span class="n">h2string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">H 0 0 0</span>
+<span class="s2">H 0 0 0.7</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">h2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2string</span><span class="p">)</span>
+
+<span class="c1">#Single-point job parallelization</span>
+<span class="c1">#Case: Multiple theories</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="c1">#Creating multiple ORCA objects and storing in list: orcaobjects</span>
+<span class="c1">#Important: use a label (here functional-name)for the created ORCA object to distinguish jobs</span>
+<span class="n">orcaobjects</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">]:</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! def2-SVP def2/J &quot;</span><span class="o">+</span><span class="n">functional</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">functional</span><span class="p">)</span>
+    <span class="n">orcaobjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ORCAcalc</span><span class="p">)</span>
+
+<span class="c1">#Calling the Singlepoint_parallel function and providing list of fragments and list of theories:</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="p">[</span><span class="n">h2</span><span class="p">],</span> <span class="n">theories</span><span class="o">=</span><span class="n">orcaobjects</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#results is a dictionary of energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">
+<h2>Example 4a : Running single-point energies on a collection of XYZ files (sequential)<a class="headerlink" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -414,6 +468,39 @@ CAM-B3LYP  -1.1625896338
 <span class="n">n2</span><span class="o">.</span><span class="n">xyz</span>               <span class="o">-</span><span class="mf">109.4002969311</span>
 <span class="n">hi</span><span class="o">.</span><span class="n">xyz</span>               <span class="o">-</span><span class="mf">298.3735362292</span>
 <span class="n">h2o_strained</span><span class="o">.</span><span class="n">xyz</span>     <span class="o">-</span><span class="mf">76.2253312246</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">
+<h2>Example 4b : Running single-point energies on a collection of XYZ files (parallel)<a class="headerlink" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel" title="Permalink to this headline">¶</a></h2>
+<p>The example in 4a ran each job sequentially, one after the other, according to the list of XYZ-files available.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of XYZ-files.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;./xyz_files&#39;</span>
+
+<span class="n">molecules</span><span class="o">=</span><span class="p">[]</span>
+<span class="c1">#Creating list of ASH fragments from XYZ files. Using filename as label</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span><span class="o">+</span><span class="s1">&#39;/*.xyz&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XYZ-file:&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="n">basename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">label</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">basename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">file</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+
+<span class="c1">#Calling the Singlepoint_parallel function and providing list of fragments and list of theories:</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="n">molecules</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="p">[</span><span class="n">ORCAcalc</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#results is a dictionary of energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

@@ -6,16 +6,26 @@ Workflows in ASH
 As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
 
 For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs). See Example 1 for such a workflow.
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs).
 
-Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result. See Example 2.
-This could be extended by combining Example 1 and 2 and deriving both electronic reaction energy and free reaction energy.
+- See Example 1 for such a workflow.
 
-Simple for-loops can also be created to run multiple jobs with slightly different parameters (different theory level, different geometry etc.). See Example 3.
-Or run a single-point calculation on a collection of XYZ files. See Example 4.
+Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result.
+
+- Example 2a shows an example of this using a simple for-loop.
+- Example 2b shows how the reaction energy could be calculated with a high-level thermochemistry protocol (thermochemprotocol function).
+
+It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)
+
+- Example 3a shows how multiple single-point energies with different functionals can be easily run.
+- Example 3b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
+- Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.
+- Example 4b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
 
 An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
-automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy. See Example 5.
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
+
+- See Example 5.
 
 
 ##############################################################################
@@ -55,7 +65,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
 
 #######################################################################################################
-Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
+Example 2a : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
 #######################################################################################################
 
 .. code-block:: python
@@ -99,6 +109,10 @@ Example 2 : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2
 
       Reaction_energy: -65.12668956189346 kcalpermol
 
+
+#######################################################################################################
+Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol
+#######################################################################################################
 
 A more advanced feature is to run each fragment with a high-level thermochemistry protocol (using ORCA) and get the final
 reaction energy with chemical accuracy. Here the coupled-cluster based W1 method is used as part of the
@@ -155,9 +169,9 @@ vibrational energy (ΔZPVE).
 The agreement with experiment (-18.4 kcal/mol) is excellent.
 
 
-##############################################################################
-Example 3 : Running multiple single-point energies with different functionals
-##############################################################################
+############################################################################################
+Example 3a : Running multiple single-point energies with different functionals (sequential)
+############################################################################################
 
 
 .. code-block:: python
@@ -189,7 +203,7 @@ Example 3 : Running multiple single-point energies with different functionals
         end
         """
         #Defining/redefining ORCA theory. Does not need charge/mult keywords.
-        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=8, charge=0, mult=1)
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4, charge=0, mult=1)
 
         # Run single-point job
         energy = Singlepoint(theory=ORCAcalc, fragment=h2)
@@ -229,8 +243,44 @@ Producing a nice table of results:
     CAM-B3LYP  -1.1625896338
 
 
+############################################################################################
+Example 3b : Running multiple single-point energies with different functionals (in parallel)
+############################################################################################
+The example in 3a ran each job sequentially, one after the other, according to the list of functional strings.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+    #Fragment
+    h2string="""
+    H 0 0 0
+    H 0 0 0.7
+    """
+    h2=Fragment(coordsstring=h2string)
+
+    #Single-point job parallelization
+    #Case: Multiple theories
+    orcadir='/opt/orca_4.2.1'
+    #Creating multiple ORCA objects and storing in list: orcaobjects
+    #Important: use a label (here functional-name)for the created ORCA object to distinguish jobs
+    orcaobjects=[]
+    for functional in ['B3LYP', 'BP86', 'PBE0']:
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! def2-SVP def2/J "+functional, orcablocks="", label=functional)
+        orcaobjects.append(ORCAcalc)
+
+    #Calling the Singlepoint_parallel function and providing list of fragments and list of theories:
+    results = Singlepoint_parallel(fragments=[h2], theories=orcaobjects, numcores=4)
+
+    #results is a dictionary of energies
+    print("results :", results)
+
 ###########################################################################################
-Example 4 : Running single-point energies on a collection of XYZ files
+Example 4a : Running single-point energies on a collection of XYZ files (sequential)
 ###########################################################################################
 
 .. code-block:: python
@@ -277,6 +327,45 @@ Output:
     n2.xyz               -109.4002969311
     hi.xyz               -298.3735362292
     h2o_strained.xyz     -76.2253312246
+
+
+############################################################################################
+Example 4b : Running single-point energies on a collection of XYZ files (parallel)
+############################################################################################
+The example in 4a ran each job sequentially, one after the other, according to the list of XYZ-files available.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of XYZ-files.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+    import glob
+    #
+    orcadir='/opt/orca_4.2.1'
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=1)
+    #Directory of XYZ files. Can be full path or relative path.
+    dir = './xyz_files'
+
+    molecules=[]
+    #Creating list of ASH fragments from XYZ files. Using filename as label
+    for file in glob.glob(dir+'/*.xyz'):
+        print("XYZ-file:", file)
+        basename=os.path.basename(file)
+        label=os.path.splitext(basename)[0]
+        molecule=Fragment(xyzfile=file,label=label)
+        molecules.append(molecule)
+
+    #Calling the Singlepoint_parallel function and providing list of fragments and list of theories:
+    results = Singlepoint_parallel(fragments=molecules, theories=[ORCAcalc], numcores=4)
+
+    #results is a dictionary of energies
+    print("results :", results)
+
+
+
 
 ###########################################################################################
 Example 5 : Running conformer-sampling, geometry optimizations and High-level single-points
