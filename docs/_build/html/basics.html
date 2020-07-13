@@ -220,8 +220,7 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 </div>
 <p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), defines an Optimizer object and finally runs a geometry
-optimization  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other options).</p>
+(see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), and runs a geometry optimization using the Optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other options).</p>
 </div>
 <div class="section" id="running-script-directly">
 <h2>Running script directly<a class="headerlink" href="#running-script-directly" title="Permalink to this headline">¶</a></h2>
@@ -245,7 +244,7 @@ local scratch, set the correct PATH variables, load modules etc.</p>
 </pre></div>
 </div>
 <p>where jobscript.sh is:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
 
 <span class="c1">#SBATCH -N 1</span>
 <span class="c1">#SBATCH --tasks-per-node=1</span>
@@ -339,7 +338,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 
 <span class="c1">#Start Ash job from scratch dir.  Output file is written directly to submit directory</span>
 <span class="nb">export</span> <span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
-python-jl <span class="nv">$job</span>.py &gt;&gt;<span class="p">&amp;</span> <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+python-jl <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 
 <span class="c1"># Ash has finished. Now copy important stuff back.</span>
 <span class="nv">outputdir</span><span class="o">=</span><span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="si">${</span><span class="nv">job</span><span class="si">}</span>_<span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span>
@@ -351,8 +350,11 @@ rm -rf <span class="nv">$tdir</span>
 </div>
 <p>For even more convenient job-submissions one can utilize a <strong>subash</strong> wrapper script that copies the jobscript.sh file (above)
 to the current directory, modifies the number of cores requested and then submits.
-The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
-or alternatively it can read the numcores variable in ashtest.py (if present). Make sure to change path_to_jobscript variable in line 5.</p>
+The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. as in ashtest.py above)
+or alternatively it can read the numcores variable in ashtest.py (if present). For the latter: make sure to have a line containing:
+“numcores=X”
+in the Python script (as in ashtest.py above).
+Make sure to change path_to_jobscript variable in line 5.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>subash ashtest.py
 <span class="c1"># or:</span>
 subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for requesting an 8-core job.</span>
@@ -381,16 +383,21 @@ subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for requesting 
 
 <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;-p&quot;</span> <span class="o">]]</span>
 <span class="k">then</span>
-<span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="nv">$3</span>
+  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="nv">$3</span>
 <span class="k">else</span>
-<span class="c1">#Grabbing numcores from input-file.py if not using -p flag</span>
-<span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script.&quot;</span>
-<span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span>grep -m <span class="m">1</span> numcores <span class="nv">$file</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+  <span class="c1">#Grabbing numcores from input-file.py if not using -p flag</span>
+  <span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script.&quot;</span>
+  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span>grep -m <span class="m">1</span> numcores <span class="nv">$file</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+  <span class="k">if</span> <span class="o">((</span><span class="si">${#</span><span class="nv">NPROC</span><span class="si">}</span> <span class="o">==</span> <span class="m">0</span><span class="o">))</span>
+  <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;No numcores variable in Python script found. Exiting...&quot;</span>
+    <span class="nb">exit</span>
+  <span class="k">fi</span>
 <span class="k">fi</span>
 
 <span class="c1">#Copying job-script to dir:</span>
 cp <span class="nv">$path_to_jobscript</span> .
-
+<span class="c1">#Note: jobscript should have tasks-per-node set to 1 for the sed substitution to work</span>
 sed -i <span class="s2">&quot;s/#SBATCH --tasks-per-node=1/#SBATCH --tasks-per-node=</span><span class="nv">$NPROC</span><span class="s2">/g&quot;</span> job-ash.sh
 
 <span class="c1">#Submit job.</span>

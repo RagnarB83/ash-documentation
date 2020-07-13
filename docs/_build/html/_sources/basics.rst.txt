@@ -61,8 +61,7 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
 
 The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces`), defines an Optimizer object and finally runs a geometry
-optimization  (see :doc:`job-types` for other options).
+(see :doc:`QM-interfaces`), and runs a geometry optimization using the Optimizer function  (see :doc:`job-types` for other options).
 
 ########################
 Running script directly
@@ -101,7 +100,7 @@ where jobscript.sh is:
 
 .. code-block:: shell
 
-    #!/bin/bash
+    #!/bin/zsh
 
     #SBATCH -N 1
     #SBATCH --tasks-per-node=1
@@ -195,7 +194,7 @@ where jobscript.sh is:
 
     #Start Ash job from scratch dir.  Output file is written directly to submit directory
     export PYTHONUNBUFFERED=1
-    python-jl $job.py >>& $SLURM_SUBMIT_DIR/$outputname
+    python-jl $job.py >> $SLURM_SUBMIT_DIR/$outputname 2>&1
 
     # Ash has finished. Now copy important stuff back.
     outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}
@@ -206,8 +205,11 @@ where jobscript.sh is:
 
 For even more convenient job-submissions one can utilize a **subash** wrapper script that copies the jobscript.sh file (above)
 to the current directory, modifies the number of cores requested and then submits.
-The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. ashtest.py)
-or alternatively it can read the numcores variable in ashtest.py (if present). Make sure to change path_to_jobscript variable in line 5.
+The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. as in ashtest.py above)
+or alternatively it can read the numcores variable in ashtest.py (if present). For the latter: make sure to have a line containing:
+"numcores=X"
+in the Python script (as in ashtest.py above).
+Make sure to change path_to_jobscript variable in line 5.
 
 .. code-block:: shell
 
@@ -241,16 +243,21 @@ or alternatively it can read the numcores variable in ashtest.py (if present). M
 
     if [[ "$2" == "-p" ]]
     then
-    export NPROC=$3
+      export NPROC=$3
     else
-    #Grabbing numcores from input-file.py if not using -p flag
-    echo "No -p N provided. Grabbing cores from Python script."
-    export NPROC=$(grep -m 1 numcores $file | awk -F'=' '{print $2}')
+      #Grabbing numcores from input-file.py if not using -p flag
+      echo "No -p N provided. Grabbing cores from Python script."
+      export NPROC=$(grep -m 1 numcores $file | awk -F'=' '{print $2}')
+      if ((${#NPROC} == 0))
+      then
+        echo "No numcores variable in Python script found. Exiting..."
+        exit
+      fi
     fi
 
     #Copying job-script to dir:
     cp $path_to_jobscript .
-
+    #Note: jobscript should have tasks-per-node set to 1 for the sed substitution to work
     sed -i "s/#SBATCH --tasks-per-node=1/#SBATCH --tasks-per-node=$NPROC/g" job-ash.sh
 
     #Submit job.
