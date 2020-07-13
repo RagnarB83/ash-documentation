@@ -55,6 +55,16 @@ Perhaps most convenient is to define the fragment directly from reading an XYZ-f
 
     HI_frag = Fragment(xyzfile="hi.xyz")
 
+*From external PDB file*
+
+Also possible to read coordinates from a PDB file. This functionality is very rudimentary, only supporting read-in of
+elements and coordinates, not atom-types or residue information.
+
+.. code-block:: python
+
+    pdbfrag = Fragment(pdbfile="mol.pdb")
+
+
 Adding coordinates to empty object
 =====================================
 
