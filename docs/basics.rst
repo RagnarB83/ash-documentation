@@ -246,8 +246,10 @@ Make sure to change path_to_jobscript variable in line 5.
       export NPROC=$3
     else
       #Grabbing numcores from input-file.py if not using -p flag
-      echo "No -p N provided. Grabbing cores from Python script."
-      export NPROC=$(grep -m 1 numcores $file | awk -F'=' '{print $2}')
+      echo "No -p N provided. Grabbing cores from Python script (searches for line beginning with numcores= )"
+      var=$(grep '^numcores' $file)
+      export NPROC=$(echo $var | awk -F'=' '{print $2}')
+      #export NPROC=$(grep -m 1 numcores $file | awk -F'=' '{print $2}')
       if ((${#NPROC} == 0))
       then
         echo "No numcores variable in Python script found. Exiting..."
