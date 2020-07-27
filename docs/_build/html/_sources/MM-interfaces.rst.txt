@@ -30,7 +30,7 @@ Simple way (forcefield_dict and atomtypes):
     import sys
     settings_ash.init() #initialize
 
-    HF_frag=Fragment(xyzfiles="hf.xyz")
+    HF_frag=Fragment(xyzfile="hf.xyz")
     #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.
     atomtypes =['HT', 'FX']
 

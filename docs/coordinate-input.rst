@@ -55,6 +55,16 @@ Perhaps most convenient is to define the fragment directly from reading an XYZ-f
 
     HI_frag = Fragment(xyzfile="hi.xyz")
 
+*From previous ASH fragment file*
+
+ASH fragment files use the .ygg extension. They are typically not created manually but are often created automatically by ASH code and
+can be created upon request. To read an old file from disk (here "previous.ygg") you do:
+
+.. code-block:: python
+
+    mol_frag = Fragment(fragfile="previous.ygg")
+
+
 *From external PDB file*
 
 Also possible to read coordinates from a PDB file. This functionality is very rudimentary, only supporting read-in of
@@ -146,11 +156,17 @@ Calculate connectivity of fragment object
 ===========================================
 
 Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
-Currently, connectivity is calculated based on a distance and radii-based criterion (to be documented later).
+Connectivity is calculated based on a distance and covalen radii-based criterion.
+Atoms A and B will be defined to be connected according to:
 
-.. role:: red
+.. math::
 
-:red:`DOCUMENT BASIC CONNECTIVITY HERE`
+    r(AtomA,AtomB) < scale*( covrad(AtomA) + covrad(AtomB) ) + tol
+
+Thus, if the distance between atoms A and B is less than the sum of the elemental covalent radii
+(which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
+Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
+(global scale and tol parameters are defined in settings_ash file) works in many cases.
 
 To calculate the connectivity table for a molecule:
 
@@ -168,7 +184,8 @@ The connectivity table is available as:
     mol_frag.connectivity
 
 
-Note. The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
+The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
+It is typically unnecessary to request a calculation or recalculation.
 
 
 Charge and Multiplicity
@@ -184,12 +201,44 @@ Usually done when fragment is created like this:
     NO_frag = Fragment(xyzfile="no.xyz", charge=0, mult=2)
     HF_frag=Fragment(coordsstring=fragcoords, charge=0, mult=1)
 
-Alternatively, this can also be done afterwards:
+This can also be done afterwards:
 
 .. code-block:: python
 
     NO_frag.charge = 0
     NO_frag.mult = 2
+
+Yet another option is to read the charge and multiplicity information from the name/title line of the XYZ file.
+
+.. code-block:: python
+
+    NO_frag = Fragment(xyzfile="no.xyz", readchargemult=True)
+
+This will only work if the 2nd-line of the XYZ file contains the charge and multiplicity, separated by a space as seen below:
+
+.. code-block:: shell
+
+    2
+    0 2
+    N 0.0 0.0 0.0
+    O 0.0 0.0 1.0
+
+Label
+=================================
+
+If working with multiple fragment objects it can be useful to distinguish between them via a label-string.
+The label can be added when fragment is first created:
+
+.. code-block:: python
+
+    benzene_frag = Fragment(xyzfile="c6h6.xyz", label='benzene')
+    water_frag = Fragment(xyzfile="h2o.xyz", label='water')
+
+or afterwards (by default, the label attribute is set to None).
+
+.. code-block:: python
+
+    benzene_frag.label='Benzene'
 
 
 
@@ -236,8 +285,16 @@ Print number of atoms and number of connected atoms:
     print("Number of atoms in FeFeH2ase", FeFeH2ase.numatoms)
     print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
 
-The Ash fragment file can be printed conveniently to disk:
+Print various molecule attributed:
 
+.. code-block:: python
+
+    print("Elemental formula of fragment", frag.formula)
+    print("Pretty elemental formula of fragment", frag.prettyformula)
+    print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
+
+
+The Ash fragment file can be printed conveniently to disk:
 
 .. code-block:: python
 

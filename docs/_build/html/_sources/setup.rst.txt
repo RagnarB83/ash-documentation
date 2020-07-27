@@ -7,20 +7,26 @@
 Setup
 ======================================
 
-ASH is 98% Python with 1 % Julia and 1% Fortran.
+ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and as packages will have to be installed you need to be able to
 install Python packages via pip.
-We recommend Anaconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
+We recommend Anaconda or miniconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
 Anaconda comes with Python3, Numpy, SciPy, Matplotlib.
+For treatment of large systems via QM/MM, a Julia installation is strongly recommended (as the Python routines will be too slow).
 
-Dependencies:
+
+Strict dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
 * `Scipy <https://www.scipy.org>`_ library.
-* `Julia 1.X <https://julialang.org/downloads>`_ installation. PyCall library also required.
-* `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
+
+Strongly recommended:
+
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
+* `Julia 1.X <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
+* `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
+
 
 
 ###############################
@@ -117,7 +123,9 @@ Inside the Python interpreter do:
 
     #If this is successful then the python-jl binary (installed by PyJulia) should be available.
 
-**Step 6.** Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:
+**Step 6.**
+...TO BE REMOVED....
+Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:
 The Fortran library is necessary for fast QM/MM functionality inside ASH.
 
 .. code-block:: shell

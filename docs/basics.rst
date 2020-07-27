@@ -5,14 +5,15 @@ Basic usage
 #####################
 Input structure
 #####################
-You create a Python3 script (e.g. called system.py) and import the Ash functionality:
+You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:
 
 .. code-block:: python
 
     from ash import *
 
 
-Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH. Make sure you have set in the shell:
+Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
+Make sure you have already set in the shell (part of Setup):
 
 .. code-block:: shell
 

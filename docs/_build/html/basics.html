@@ -177,11 +177,12 @@
 <h1>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="input-structure">
 <h2>Input structure<a class="headerlink" href="#input-structure" title="Permalink to this headline">¶</a></h2>
-<p>You create a Python3 script (e.g. called system.py) and import the Ash functionality:</p>
+<p>You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
-<p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH. Make sure you have set in the shell:</p>
+<p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
+Make sure you have already set in the shell (part of Setup):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
@@ -386,8 +387,10 @@ subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for requesting 
   <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="nv">$3</span>
 <span class="k">else</span>
   <span class="c1">#Grabbing numcores from input-file.py if not using -p flag</span>
-  <span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script.&quot;</span>
-  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span>grep -m <span class="m">1</span> numcores <span class="nv">$file</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+  <span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script (searches for line beginning with numcores= )&quot;</span>
+  <span class="nv">var</span><span class="o">=</span><span class="k">$(</span>grep <span class="s1">&#39;^numcores&#39;</span> <span class="nv">$file</span><span class="k">)</span>
+  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$var</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+  <span class="c1">#export NPROC=$(grep -m 1 numcores $file | awk -F&#39;=&#39; &#39;{print $2}&#39;)</span>
   <span class="k">if</span> <span class="o">((</span><span class="si">${#</span><span class="nv">NPROC</span><span class="si">}</span> <span class="o">==</span> <span class="m">0</span><span class="o">))</span>
   <span class="k">then</span>
     <span class="nb">echo</span> <span class="s2">&quot;No numcores variable in Python script found. Exiting...&quot;</span>

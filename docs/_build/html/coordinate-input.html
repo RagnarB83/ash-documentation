@@ -102,6 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#delete-coordinates-of-object">Delete coordinates of object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-connectivity-of-fragment-object">Calculate connectivity of fragment object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#charge-and-multiplicity">Charge and Multiplicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#label">Label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#inspect-defined-fragment-objects">Inspect defined fragment objects</a></li>
 </ul>
 </li>
@@ -215,6 +216,18 @@ The <em>Fragment</em> class is an Ash class.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HI_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hi.xyz&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><em>From previous ASH fragment file</em></p>
+<p>ASH fragment files use the .ygg extension. They are typically not created manually but are often created automatically by ASH code and
+can be created upon request. To read an old file from disk (here “previous.ygg”) you do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mol_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">fragfile</span><span class="o">=</span><span class="s2">&quot;previous.ygg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>From external PDB file</em></p>
+<p>Also possible to read coordinates from a PDB file. This functionality is very rudimentary, only supporting read-in of
+elements and coordinates, not atom-types or residue information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pdbfrag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;mol.pdb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="adding-coordinates-to-empty-object">
 <h3>Adding coordinates to empty object<a class="headerlink" href="#adding-coordinates-to-empty-object" title="Permalink to this headline">¶</a></h3>
@@ -272,8 +285,14 @@ will follow.</p>
 <div class="section" id="calculate-connectivity-of-fragment-object">
 <h3>Calculate connectivity of fragment object<a class="headerlink" href="#calculate-connectivity-of-fragment-object" title="Permalink to this headline">¶</a></h3>
 <p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
-Currently, connectivity is calculated based on a distance and radii-based criterion (to be documented later).</p>
-<p><span class="red">DOCUMENT BASIC CONNECTIVITY HERE</span></p>
+Connectivity is calculated based on a distance and covalen radii-based criterion.
+Atoms A and B will be defined to be connected according to:</p>
+<div class="math notranslate nohighlight">
+\[r(AtomA,AtomB) &lt; scale*( covrad(AtomA) + covrad(AtomB) ) + tol\]</div>
+<p>Thus, if the distance between atoms A and B is less than the sum of the elemental covalent radii
+(which can be scaled by a parameter scale or shifted by a parameter tol) then the atoms are connected.
+Using default parameters of the element radii (Alvarez 2008), the default scaling of 1.0 and a tolerance of 0.1
+(global scale and tol parameters are defined in settings_ash file) works in many cases.</p>
 <p>To calculate the connectivity table for a molecule:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mol_frag</span><span class="o">.</span><span class="n">calc_connectivity</span><span class="p">()</span>
 </pre></div>
@@ -285,7 +304,8 @@ The connectivity table is available as:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mol_frag</span><span class="o">.</span><span class="n">connectivity</span>
 </pre></div>
 </div>
-<p>Note. The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.</p>
+<p>The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
+It is typically unnecessary to request a calculation or recalculation.</p>
 </div>
 <div class="section" id="charge-and-multiplicity">
 <h3>Charge and Multiplicity<a class="headerlink" href="#charge-and-multiplicity" title="Permalink to this headline">¶</a></h3>
@@ -297,9 +317,33 @@ Usually done when fragment is created like this:</p>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragcoords</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Alternatively, this can also be done afterwards:</p>
+<p>This can also be done afterwards:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NO_frag</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">NO_frag</span><span class="o">.</span><span class="n">mult</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Yet another option is to read the charge and multiplicity information from the name/title line of the XYZ file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NO_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;no.xyz&quot;</span><span class="p">,</span> <span class="n">readchargemult</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will only work if the 2nd-line of the XYZ file contains the charge and multiplicity, separated by a space as seen below:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="m">2</span>
+<span class="m">0</span> <span class="m">2</span>
+N <span class="m">0</span>.0 <span class="m">0</span>.0 <span class="m">0</span>.0
+O <span class="m">0</span>.0 <span class="m">0</span>.0 <span class="m">1</span>.0
+</pre></div>
+</div>
+</div>
+<div class="section" id="label">
+<h3>Label<a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h3>
+<p>If working with multiple fragment objects it can be useful to distinguish between them via a label-string.
+The label can be added when fragment is first created:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">benzene_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;c6h6.xyz&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;benzene&#39;</span><span class="p">)</span>
+<span class="n">water_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;water&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or afterwards (by default, the label attribute is set to None).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">benzene_frag</span><span class="o">.</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Benzene&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -329,6 +373,12 @@ Usually done when fragment is created like this:</p>
 </div>
 <p>Print number of atoms and number of connected atoms:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of atoms in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">numatoms</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number atoms in connectivity in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">connected_atoms_number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Print various molecule attributed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pretty elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">prettyformula</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number atoms in connectivity in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">connected_atoms_number</span><span class="p">)</span>
 </pre></div>
 </div>
