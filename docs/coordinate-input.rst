@@ -274,25 +274,27 @@ Print connectivity:
 
 .. code-block:: python
 
-    conn = FeFeH2ase.connectivity
+    conn = aspirine.connectivity
     print("conn:", conn)
-    print("Number of subfragments in FeFeH2ase", len(conn))
+    print("Number of subfragments in aspirine", len(conn))
 
 Print number of atoms and number of connected atoms:
 
 .. code-block:: python
 
-    print("Number of atoms in FeFeH2ase", FeFeH2ase.numatoms)
-    print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
+    print("Number of atoms in aspirine", aspirine.numatoms)
+    print("Number atoms in connectivity in aspirine", aspirine.connected_atoms_number)
 
-Print various molecule attributed:
+Print various molecule attributes:
 
 .. code-block:: python
 
+    print("List of atom indices", frag.atomlist)
+    print("Total mass of fragment", frag.mass)
+    print("List of atom masses of fragment", frag.list_of_masses)
+    print("Pretty elemental formula of fragment", frag.prettyformula)
     print("Elemental formula of fragment", frag.formula)
     print("Pretty elemental formula of fragment", frag.prettyformula)
-    print("Number atoms in connectivity in FeFeH2ase", FeFeH2ase.connected_atoms_number)
-
 
 The Ash fragment file can be printed conveniently to disk:
 
