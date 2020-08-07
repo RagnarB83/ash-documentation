@@ -4,7 +4,7 @@ Job Types
 
 The job-types available in ASH:
 
-- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel etc.
+- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
 - Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM).
 - Nudged elastic band calculations are available via an interface to the Knarr-NEB code.

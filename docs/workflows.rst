@@ -21,11 +21,13 @@ It can also be advantageous to run multiple jobs with slightly different paramet
 - Example 3b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
 - Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.
 - Example 4b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
+- Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file
 
-An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
+
+An even more advanced workflow combines metadynamics-based conformational sampling (Crest procedure by Grimme) from a starting structure,
 automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
 
-- See Example 5.
+- See Example 6.
 
 
 ##############################################################################
@@ -366,9 +368,94 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 
 
 
+###########################################################################################################
+Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ-file or an XYZ-trajectory
+###########################################################################################################
+
+Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or a trajectory (optimization or MD)
+can be useful to understand the nature of the reaction. The workflow below shows how this can be accomplished in ASH
+via a workflow involving single-point DFT, orbital localization and Cube-file creation.
+
+TODO: Add centroid analysis
+
+Using a collection of XYZ-files:
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+    import glob
+    #
+    orcadir='/opt/orca_4.2.1'
+    numcores=1
+    #Directory of XYZ files. Can be full path or relative path.
+    dir = '/home/bjornsson/ASH-DEV_GIT/testsuite/localized-orbital-IRC-workflow/calcs/images'
+    #Changing to dir
+    #os.chdir(dir)
+    #Localization block in ORCA inputfile
+    blockinput="""
+    %loc
+    LocMet IAOIBO
+    end
+    """
+
+    #Looping over XYZ-files in directory, creating ASH fragments, running ORCA and calling orca_plot
+    for file in sorted(glob.glob(dir+'/*.xyz')):
+        basefile=os.path.basename(file)
+        print("XYZ-file:", basefile)
+        mol=Fragment(xyzfile=file)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, nprocs=1)
+        energy = Singlepoint(theory=ORCAcalc, fragment=mol)
+        print("Energy of file {} : {} Eh".format(basefile, energy))
+        locfile=basefile.split('.')[0]+'_calc.loc'
+        os.rename('orca-input.loc', locfile)
+        #Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17
+        run_orca_plot(orcadir, locfile, 'mo', gridvalue=30, mo_operator=0, mo_number=13)
+        run_orca_plot(orcadir, locfile, 'mo', gridvalue=30, mo_operator=0, mo_number=17)
+
+        ORCAcalc.cleanup()
+        print("")
+
+
+Using a multi-XYZ file containing multiple sets of geometries (could be a NEB path, MD/Opt trajectory, XYZ animation etc.)
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+    import glob
+    #
+    orcadir='/opt/orca_4.2.1'
+    numcores=1
+
+    #Name of trajectory file containing multiple geometries (could be optimization traj, MD traj, NEB-path traj, Hessian XYZ animation etc.)
+    #File should be in dir
+    trajectoryfile="neb-ts_MEP_trj.xyz"
+
+    blockinput="""
+    %loc
+    LocMet IAOIBO
+    end
+    """
+
+    fraglist = get_molecules_from_trajectory(trajectoryfile)
+
+    for index,frag in enumerate(fraglist):
+        print("Frag :", index)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, nprocs=1)
+        energy = Singlepoint(theory=ORCAcalc, fragment=frag)
+        print("Energy of frag {} : {} Eh".format(index, energy))
+        locfile='frag{}_calc.loc'.format(index)
+        os.rename('orca-input.loc', locfile)
+        #Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17
+        run_orca_plot(orcadir, locfile, 'mo', gridvalue=30, mo_operator=0, mo_number=13)
+        run_orca_plot(orcadir, locfile, 'mo', gridvalue=30, mo_operator=0, mo_number=17)
+
+        ORCAcalc.cleanup()
+
 
 ###########################################################################################
-Example 5 : Running conformer-sampling, geometry optimizations and High-level single-points
+Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points
 ###########################################################################################
 This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
 This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.

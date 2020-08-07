@@ -354,11 +354,11 @@ The label can be added when fragment is first created:</p>
 </pre></div>
 </div>
 <p>One can also access individual attributes like accessing the pure coordinates only:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HF_frag.coords&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HF_frag.coords : &quot;</span><span class="p">,</span> <span class="n">HF_frag</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>More conveniently would be to use the print_coords function though (to print elems and coords):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HF_frag.print_coords&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">.</span><span class="n">print_coords</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Get coords and elems of specific atom indices:</p>
@@ -366,20 +366,23 @@ The label can be added when fragment is first created:</p>
 </pre></div>
 </div>
 <p>Print connectivity:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">connectivity</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">aspirine</span><span class="o">.</span><span class="n">connectivity</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;conn:&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of subfragments in FeFeH2ase&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">conn</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of subfragments in aspirine&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">conn</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Print number of atoms and number of connected atoms:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of atoms in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">numatoms</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number atoms in connectivity in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">connected_atoms_number</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of atoms in aspirine&quot;</span><span class="p">,</span> <span class="n">aspirine</span><span class="o">.</span><span class="n">numatoms</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number atoms in connectivity in aspirine&quot;</span><span class="p">,</span> <span class="n">aspirine</span><span class="o">.</span><span class="n">connected_atoms_number</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Print various molecule attributed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+<p>Print various molecule attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;List of atom indices&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">atomlist</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total mass of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;List of atom masses of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">list_of_masses</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pretty elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">prettyformula</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number atoms in connectivity in FeFeH2ase&quot;</span><span class="p">,</span> <span class="n">FeFeH2ase</span><span class="o">.</span><span class="n">connected_atoms_number</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pretty elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">prettyformula</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The Ash fragment file can be printed conveniently to disk:</p>

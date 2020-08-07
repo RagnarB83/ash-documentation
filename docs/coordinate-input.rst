@@ -255,13 +255,13 @@ One can also access individual attributes like accessing the pure coordinates on
 
 .. code-block:: python
 
-    print("HF_frag.coords")
+    print("HF_frag.coords : ", HF_frag.coords)
 
 More conveniently would be to use the print_coords function though (to print elems and coords):
 
 .. code-block:: python
 
-    print("HF_frag.print_coords")
+    HF_frag.print_coords()
 
 
 Get coords and elems of specific atom indices:
