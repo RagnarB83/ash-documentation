@@ -3,9 +3,10 @@
 Workflows in ASH
 ======================================
 
-As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.
+As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
+call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.
 
-For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
+As a basic example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
 can be followed by a subsequent higher-level single-point energy job (even with different QM programs).
 
 - See Example 1 for such a workflow.
@@ -17,11 +18,11 @@ Another workflow might involve calculating all species of a chemical reaction wi
 
 It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)
 
-- Example 3a shows how multiple single-point energies with different functionals can be easily run.
-- Example 3b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
+- Example 3a shows how multiple single-point energies with different functionals on 1 geometry can be easily run.
+- Example 3b shows how the same can be accomplished in a completely parallel fashion (Singlepoint_parallel)
 - Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.
-- Example 4b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)
-- Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file
+- Example 4b shows how the same can be accomplished in a completely fashion (Singlepoint_parallel)
+- Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file.
 
 
 An even more advanced workflow combines metadynamics-based conformational sampling (Crest procedure by Grimme) from a starting structure,
