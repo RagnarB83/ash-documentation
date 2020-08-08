@@ -370,12 +370,12 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 
 
 ###########################################################################################################
-Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ-file or an XYZ-trajectory
+Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory
 ###########################################################################################################
 
 Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or a trajectory (optimization or MD)
-can be useful to understand the nature of the reaction. The workflow below shows how this can be accomplished in ASH
-via a workflow involving single-point DFT, orbital localization and Cube-file creation.
+can be useful to understand the nature of the reaction. The code below shows how this can be accomplished in ASH
+via a workflow involving single-point DFT, orbital localization and Cube-file creation (via orca_plot).
 
 TODO: Add centroid analysis
 

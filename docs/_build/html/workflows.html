@@ -109,7 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-file-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ-file or an XYZ-trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
 </ul>
 </li>
@@ -180,8 +180,9 @@
             
   <div class="section" id="workflows-in-ash">
 <h1>Workflows in ASH<a class="headerlink" href="#workflows-in-ash" title="Permalink to this headline">¶</a></h1>
-<p>As an ASH-script is pure Python, this allows one to easily create advanced workflows in a single script.</p>
-<p>For example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
+<p>As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
+call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.</p>
+<p>As a basic example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
 can be followed by a subsequent higher-level single-point energy job (even with different QM programs).</p>
 <ul class="simple">
 <li><p>See Example 1 for such a workflow.</p></li>
@@ -193,13 +194,13 @@ can be followed by a subsequent higher-level single-point energy job (even with 
 </ul>
 <p>It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)</p>
 <ul class="simple">
-<li><p>Example 3a shows how multiple single-point energies with different functionals can be easily run.</p></li>
-<li><p>Example 3b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)</p></li>
+<li><p>Example 3a shows how multiple single-point energies with different functionals on 1 geometry can be easily run.</p></li>
+<li><p>Example 3b shows how the same can be accomplished in a completely parallel fashion (Singlepoint_parallel)</p></li>
 <li><p>Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.</p></li>
-<li><p>Example 4b shows how the same can be accomplished in a more parallel fashion (Singlepoint_parallel)</p></li>
-<li><p>Example 5 shows how one can calculate localized orbitals and created Cube files for a collection of XYZ-file or a trajectory file</p></li>
+<li><p>Example 4b shows how the same can be accomplished in a completely fashion (Singlepoint_parallel)</p></li>
+<li><p>Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file.</p></li>
 </ul>
-<p>An even more advanced workflow combines metadynamic-based conformational sampling (Crest procedure by Grimme) from a starting structure,
+<p>An even more advanced workflow combines metadynamics-based conformational sampling (Crest procedure by Grimme) from a starting structure,
 automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.</p>
 <ul class="simple">
 <li><p>See Example 6.</p></li>
@@ -506,11 +507,12 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-file-or-an-xyz-trajectory">
-<h2>Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ-file or an XYZ-trajectory<a class="headerlink" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-file-or-an-xyz-trajectory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">
+<h2>Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory<a class="headerlink" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory" title="Permalink to this headline">¶</a></h2>
 <p>Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or a trajectory (optimization or MD)
-can be useful to understand the nature of the reaction. The workflow below shows how this can be accomplished in ASH
-via a workflow involving single-point DFT, orbital localization and Cube-file creation.</p>
+can be useful to understand the nature of the reaction. The code below shows how this can be accomplished in ASH
+via a workflow involving single-point DFT, orbital localization and Cube-file creation (via orca_plot).</p>
+<p>TODO: Add centroid analysis</p>
 <p>Using a collection of XYZ-files:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
@@ -522,14 +524,14 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
 <span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/home/bjornsson/ASH-DEV_GIT/testsuite/localized-orbital-IRC-workflow/calcs/images&#39;</span>
 <span class="c1">#Changing to dir</span>
 <span class="c1">#os.chdir(dir)</span>
-
+<span class="c1">#Localization block in ORCA inputfile</span>
 <span class="n">blockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="si">%lo</span><span class="s2">c</span>
 <span class="s2">LocMet IAOIBO</span>
 <span class="s2">end</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="n">energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="c1">#Looping over XYZ-files in directory, creating ASH fragments, running ORCA and calling orca_plot</span>
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span><span class="o">+</span><span class="s1">&#39;/*.xyz&#39;</span><span class="p">)):</span>
     <span class="n">basefile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XYZ-file:&quot;</span><span class="p">,</span> <span class="n">basefile</span><span class="p">)</span>
@@ -539,7 +541,7 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy of file </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> Eh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basefile</span><span class="p">,</span> <span class="n">energy</span><span class="p">))</span>
     <span class="n">locfile</span><span class="o">=</span><span class="n">basefile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_calc.loc&#39;</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.loc&#39;</span><span class="p">,</span> <span class="n">locfile</span><span class="p">)</span>
-    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile</span>
+    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17</span>
     <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
     <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
 
@@ -567,8 +569,6 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
 
 <span class="n">fraglist</span> <span class="o">=</span> <span class="n">get_molecules_from_trajectory</span><span class="p">(</span><span class="n">trajectoryfile</span><span class="p">)</span>
 
-<span class="n">energies</span><span class="o">=</span><span class="p">[]</span>
-
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">frag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fraglist</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Frag :&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
     <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -576,12 +576,11 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy of frag </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> Eh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">energy</span><span class="p">))</span>
     <span class="n">locfile</span><span class="o">=</span><span class="s1">&#39;frag</span><span class="si">{}</span><span class="s1">_calc.loc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.loc&#39;</span><span class="p">,</span> <span class="n">locfile</span><span class="p">)</span>
-    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile</span>
+    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17</span>
     <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
     <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
 
     <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
