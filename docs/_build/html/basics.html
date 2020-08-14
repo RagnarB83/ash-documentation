@@ -187,13 +187,20 @@ Make sure you have already set in the shell (part of Setup):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
-<p>For convenience you may want to initalize standard global settings (connectivity etc.):</p>
+<p>You usually also want to run the settings_ash.init() function which displays the ASH banner and sets the initial time:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified.</p>
-<p>From then on you have the freedom of writing a Python script in whatever way you prefer but taking the advantage
-of Ash functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+<p>Global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified.
+Current options are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">use_ANSI_color</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#Whether to use ANSI escape sequences for displaying color.</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Scales connectivity</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># Adds connectivity tolerance. See Coordinates and fragments.</span>
+</pre></div>
+</div>
+<p>More user-defined settings will be available in settings_ash.py later on.</p>
+<p>You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
+of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
 See  <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for various ways of dealing with coordinates and fragments.</p>
 </div>

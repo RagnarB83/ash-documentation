@@ -19,16 +19,25 @@ Make sure you have already set in the shell (part of Setup):
 
     export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
-For convenience you may want to initalize standard global settings (connectivity etc.):
+You usually also want to run the settings_ash.init() function which displays the ASH banner and sets the initial time:
 
 .. code-block:: python
 
     settings_ash.init()
 
-The global settings are stored in your *ash-dir/settings_ash.py* and can be modified.
+Global settings are stored in your *ash-dir/settings_ash.py* and can be modified.
+Current options are:
 
-From then on you have the freedom of writing a Python script in whatever way you prefer but taking the advantage
-of Ash functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+.. code-block:: python
+
+    use_ANSI_color = True #Whether to use ANSI escape sequences for displaying color.
+    scale = 1.0 # Scales connectivity
+    tol = 0.1 # Adds connectivity tolerance. See Coordinates and fragments.
+
+More user-defined settings will be available in settings_ash.py later on.
+
+You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
+of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
 See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
 
