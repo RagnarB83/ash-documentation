@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Benchmarking in ASH &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Ash object classes" href="ash-classes.html" />
+    <link rel="prev" title="Workflows in ASH" href="workflows.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Benchmarking in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-run-benchmark-function">The run_benchmark function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-test-set-with-a-chosen-qmtheory">Running a test set with a chosen QMtheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-test-set-with-a-workflow">Running a test set with a workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-or-modifying-a-test-set">Creating or modifying a test set</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Benchmarking in ASH</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/benchmarking.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="benchmarking-in-ash">
+<h1>Benchmarking in ASH<a class="headerlink" href="#benchmarking-in-ash" title="Permalink to this headline">¶</a></h1>
+<p>ASH contains convenient tools to do energy-benchmarking over test sets.
+Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
+<p>Currently available test sets are:</p>
+<ul class="simple">
+<li><p>IE-Pantazis (IE benchmark)</p></li>
+<li><p>IE-benzenes (IE benchmark)</p></li>
+</ul>
+<div class="section" id="the-run-benchmark-function">
+<h2>The run_benchmark function<a class="headerlink" href="#the-run-benchmark-function" title="Permalink to this headline">¶</a></h2>
+<p>The run_benchmark function needs at minimum the set keyword argument and either a theory or workflow argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reuseorbs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">corrections</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>set: Name of benchmark test set.</p></li>
+<li><p>theory: ASH Theory object</p></li>
+<li><p>workflow: name of valid function that can act as theory level</p></li>
+<li><p>orcadir : Only needed for workflow. Path to ORCA (string).</p></li>
+<li><p>numcores: Only needed for workflow. Number of cores to use.</p></li>
+<li><p>reuseorbs: Whether orbitals should be reused for each species in reaction. Only makes sense if geometries are similar (e.g. IE/EA reactions). Boolean True/False.</p></li>
+<li><p>corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats. Can also be defined within testset.</p></li>
+</ul>
+</div>
+<div class="section" id="running-a-test-set-with-a-chosen-qmtheory">
+<h2>Running a test set with a chosen QMtheory<a class="headerlink" href="#running-a-test-set-with-a-chosen-qmtheory" title="Permalink to this headline">¶</a></h2>
+<p>Running a test set is easy. First define a theory object (e.g. an ORCATheory object).
+Then call the run_benchmark function choosing a specific testset as set keyword argument and the theory object as theory keyword argument.
+The chosen set has to be a valid directory that is inside :
+ASH-dir/databases/Benchmarking-sets
+with a valid directory structure (see more info below).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1">#Define global system settings ( scale, tol and conndepth keywords for connectivity)</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="c1">#Some variables for ORCA</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SV(P) tightscf&quot;</span>
+<span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+
+<span class="c1">#Define theory level for benchmarks</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Running the benchmark</span>
+<span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running with added corrections and reusing orbitals within each reaction (convenient for IE reactions).
+Note: Corrections can also be applied by providing a corrections.txt file to the test set (see below).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#ZPE corrections per reaction in eV. Theory level: XXX</span>
+<span class="n">ZPE_corrections</span> <span class="o">=</span><span class="p">[</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.11</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">]</span>
+<span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">corrections</span><span class="o">=</span><span class="n">ZPE_corrections</span><span class="p">,</span> <span class="n">reuseorbs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> ======================================================================
+ FINAL RESULTS FOR TESTSET:   IE-benzenes
+ ======================================================================
+Unit: eV
+ Index   Reaction                                                 Ref.          Calc.         Calc.+corr.     Error
+------------------------------------------------------------------------------------------------------------------------
+ 1       fluorobenzene-neut ⟶   fluorobenzene-ox                  9.2032        8.9576        9.0576         -0.1456
+ 2       benzene-neut ⟶   benzene-ox                              9.2438        9.1534        9.1634         -0.0803
+ 3       chlorobenzene-neut ⟶   chlorobenzene-ox                  9.0728        8.7748        8.8848         -0.1880
+ 4       bromobenzene-neut ⟶   bromobenzene-ox                    8.9975        8.6682        8.7882         -0.2093
+ 5       iodobenzene-neut ⟶   iodobenzene-ox                      8.7580        8.4440        8.5740         -0.1840
+------------------------------------------------------------------------------------------------------------------------
+ MAE               0.1614 eV
+ ME               -0.1614 eV
+ RMSE              0.1677 eV
+ MaxError         -0.2093 eV
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-a-test-set-with-a-workflow">
+<h2>Running a test set with a workflow<a class="headerlink" href="#running-a-test-set-with-a-workflow" title="Permalink to this headline">¶</a></h2>
+<p>The test set can also be run with a workflow (multi-step theory). Available workflows are:</p>
+<ul class="simple">
+<li><p>W1theory_SP</p></li>
+<li><p>W1F12theory_SP</p></li>
+<li><p>DLPNO_W1F12theory_SP</p></li>
+<li><p>DLPNO_W1theory_SP</p></li>
+<li><p>DLPNO_F12_SP</p></li>
+<li><p>DLPNO_W2theory_SP</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1">#Define global system settings ( scale, tol and conndepth keywords for connectivity)</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
+<span class="c1">#Running the benchmark with a workflow</span>
+<span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">DLPNO_W1theory_SP</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">orcadir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-or-modifying-a-test-set">
+<h2>Creating or modifying a test set<a class="headerlink" href="#creating-or-modifying-a-test-set" title="Permalink to this headline">¶</a></h2>
+<p>Each directory inside ASH-dir/databases/Benchmarking-sets is a separate benchmarking database for a group of molecular reactions.
+Each testset-directory, e.g. “IE-benzenes” should contain a README file and a directory called data.
+The README file should contain human-readable basic information about the dataset.
+The data directory should contain XYZ-files for the dataset and a file: “Reference_data.txt” that contains definitions about the reactions.</p>
+<p><em>Example:</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IE-benzenes
+├── README
+└── data
+   ├── benzene-neut.xyz
+   ├── benzene-ox.xyz
+   ├── etc.
+   ├── Reference_data.txt
+   └── corrections.txt (optional file)
+</pre></div>
+</div>
+<p><strong>IMPORTANT</strong>: Each XYZ-file should contain the charge and multiplicity in the title-line (2nd header-line of XYZ file format)</p>
+<p>The <strong>Reference_data.txt</strong> contains information about the reactions in the following format:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The #TESTSET_INFO lines contain information on the number of reactions and the unit for the reference data.
+These special lines are read and parsed by ASH.</p></li>
+<li><p>Other # lines are convenient comment-lines but are not read by ASH.</p></li>
+<li><p>Each numbered line defines a reaction. The ASCII-string words in the line point to XYZ-files in the same dir
+while the integers indicate the stoichiometry of the reaction (negative number: reactant, positive number: product).
+The last floating point number is always the reference value (e.g. experimental value) in the unit indicated in the #TESTSET_INFO line.</p></li>
+</ul>
+</div></blockquote>
+<p>If the <strong>corrections.txt</strong> file is present inside data dir (this is optional) then additive corrections per reaction will be read when
+run_benchmark is run.
+This correction can e.g. be ZPE, total enthalpy-correction, total free-energy correction etc.</p>
+<p><strong>Reference_data.txt</strong> example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#TESTSET_INFO Numentries: 5
+#TESTSET_INFO Unit: eV
+#X-benzenes. Geometries: B3LYP-D3/def2-TZVP
+1 fluorobenzene-neut fluorobenzene-ox -1 1 9.2032
+2 benzene-neut benzene-ox -1 1 9.24378
+3 chlorobenzene-neut chlorobenzene-ox -1 1 9.0728
+4 bromobenzene-neut bromobenzene-ox -1 1 8.9975
+5 iodobenz
+</pre></div>
+</div>
+<p><strong>corrections.txt</strong> example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>##################
+#TESTSET_INFO
+#TESTSET_INFO Numentries: 5
+#TESTSET_INFO Unit: eV
+#TESTSET_INFO Type: ZPE
+# ZPE corrections per reaction to be added to calculated reaction energies
+1 0.012
+2 0.013
+3 0.009
+4 0.010
+5 0.010
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ash-classes.html" class="btn btn-neutral float-right" title="Ash object classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="workflows.html" class="btn btn-neutral float-left" title="Workflows in ASH" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ragnar Bjornsson
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

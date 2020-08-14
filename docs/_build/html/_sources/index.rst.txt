@@ -23,8 +23,8 @@ These are the documentation pages of Ash.
    molcrys
    pes
    workflows
+   benchmarking.rst
    ash-classes
-
 
 
 .. role:: underline
