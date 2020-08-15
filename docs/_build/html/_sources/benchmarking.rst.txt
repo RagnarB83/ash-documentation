@@ -93,7 +93,8 @@ Output:
 Running a test set with a workflow
 #########################################
 
-The test set can also be run with a workflow (multi-step theory). Available workflows are:
+The test set can also be run with a workflow (multi-step theory).
+Available workflows are (all using ORCA):
 
 - W1theory_SP
 - W1F12theory_SP
@@ -102,6 +103,8 @@ The test set can also be run with a workflow (multi-step theory). Available work
 - DLPNO_F12_SP
 - DLPNO_W2theory_SP
 
+When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
+
 .. code-block:: python
 
     from ash import *
@@ -109,7 +112,7 @@ The test set can also be run with a workflow (multi-step theory). Available work
     settings_ash.init() #initialize
     orcadir='/Applications/orca_4.2.1'
     #Running the benchmark with a workflow
-    run_benchmark(set="IE-benzenes", workflow=DLPNO_W1theory_SP, numcores=4, orcadir)
+    run_benchmark(set="IE-benzenes", workflow=DLPNO_W1theory_SP, numcores=4, orcadir=orcadir)
 
 
 

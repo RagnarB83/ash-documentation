@@ -252,7 +252,8 @@ Unit: eV
 </div>
 <div class="section" id="running-a-test-set-with-a-workflow">
 <h2>Running a test set with a workflow<a class="headerlink" href="#running-a-test-set-with-a-workflow" title="Permalink to this headline">¶</a></h2>
-<p>The test set can also be run with a workflow (multi-step theory). Available workflows are:</p>
+<p>The test set can also be run with a workflow (multi-step theory).
+Available workflows are (all using ORCA):</p>
 <ul class="simple">
 <li><p>W1theory_SP</p></li>
 <li><p>W1F12theory_SP</p></li>
@@ -261,12 +262,13 @@ Unit: eV
 <li><p>DLPNO_F12_SP</p></li>
 <li><p>DLPNO_W2theory_SP</p></li>
 </ul>
+<p>When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="c1">#Define global system settings ( scale, tol and conndepth keywords for connectivity)</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
 <span class="c1">#Running the benchmark with a workflow</span>
-<span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">DLPNO_W1theory_SP</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">orcadir</span><span class="p">)</span>
+<span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">DLPNO_W1theory_SP</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

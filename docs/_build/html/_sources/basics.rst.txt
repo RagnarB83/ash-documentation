@@ -26,7 +26,7 @@ You usually also want to run the settings_ash.init() function which displays the
     settings_ash.init()
 
 Global settings are stored in your *ash-dir/settings_ash.py* and can be modified.
-Current options are:
+Current available options are:
 
 .. code-block:: python
 
