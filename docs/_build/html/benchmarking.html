@@ -179,9 +179,22 @@
 <p>ASH contains convenient tools to do energy-benchmarking over test sets.
 Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
 <p>Currently available test sets are:</p>
+<p><em>Reaction energies</em></p>
 <ul class="simple">
-<li><p>IE-Pantazis (IE benchmark)</p></li>
-<li><p>IE-benzenes (IE benchmark)</p></li>
+<li><p>MB08-165 (from <a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30">GMTKN30</a> , random reactions, reference-data: CCSD(T)/CBS)</p></li>
+<li><p><a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/mor41/metal-organic-reactions-mor">MOR41</a> (closed-shell organometallic reactions, reference-data: DLPNO-CCSD(T)/CBS)</p></li>
+<li><p>S22 (from <a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30">GMTKN30</a>, noncovalent interactions, reference-data: CCSD(T)/CBS)</p></li>
+<li><p>SIE11 (from <a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30">GMTKN30</a>, self-interaction error dominated reactions, reference-data: CCSD(T)/CBS)</p></li>
+</ul>
+<p><em>Electron affinities</em></p>
+<ul class="simple">
+<li><p>G21EA (from <a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30">GMTKN30</a>, reference-data: back-corrected experiment)</p></li>
+</ul>
+<p><em>Ionization energies</em></p>
+<ul class="simple">
+<li><p>G21IP (from <a class="reference external" href="https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30">GMTKN30</a>, reference-data: back-corrected experiment)</p></li>
+<li><p>IE-Pantazis (from <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b00252">Isegawa et al.</a>, reference-data: experiment)</p></li>
+<li><p>IE-benzenes (reference-data: experiment)</p></li>
 </ul>
 <div class="section" id="the-run-benchmark-function">
 <h2>The run_benchmark function<a class="headerlink" href="#the-run-benchmark-function" title="Permalink to this headline">¶</a></h2>
@@ -296,7 +309,7 @@ The data directory should contain XYZ-files for the dataset and a file: “Refer
 <li><p>The #TESTSET_INFO lines contain information on the number of reactions and the unit for the reference data.
 These special lines are read and parsed by ASH.</p></li>
 <li><p>Other # lines are convenient comment-lines but are not read by ASH.</p></li>
-<li><p>Each numbered line defines a reaction. The ASCII-string words in the line point to XYZ-files in the same dir
+<li><p>Each numbered line defines a reaction. The ASCII-string words (must contain a non-numeric character) in the line point to XYZ-files in the same dir
 while the integers indicate the stoichiometry of the reaction (negative number: reactant, positive number: product).
 The last floating point number is always the reference value (e.g. experimental value) in the unit indicated in the #TESTSET_INFO line.</p></li>
 </ul>

@@ -6,8 +6,22 @@ Available test sets are in ASH-dir/databases/Benchmarking-sets.
 
 Currently available test sets are:
 
--   IE-Pantazis (IE benchmark)
--   IE-benzenes (IE benchmark)
+*Reaction energies*
+
+-   MB08-165 (from `GMTKN30 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30>`_ , random reactions, reference-data: CCSD(T)/CBS)
+-   `MOR41 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/mor41/metal-organic-reactions-mor>`_ (closed-shell organometallic reactions, reference-data: DLPNO-CCSD(T)/CBS)
+-   S22 (from `GMTKN30 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30>`_, noncovalent interactions, reference-data: CCSD(T)/CBS)
+-   SIE11 (from `GMTKN30 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30>`_, self-interaction error dominated reactions, reference-data: CCSD(T)/CBS)
+
+*Electron affinities*
+
+-   G21EA (from `GMTKN30 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30>`_, reference-data: back-corrected experiment)
+
+*Ionization energies*
+
+-   G21IP (from `GMTKN30 <https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/GMTKN/gmtkn30>`_, reference-data: back-corrected experiment)
+-   IE-Pantazis (from `Isegawa et al. <https://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b00252>`_, reference-data: experiment)
+-   IE-benzenes (reference-data: experiment)
 
 #########################################
 The run_benchmark function
@@ -146,7 +160,7 @@ The **Reference_data.txt** contains information about the reactions in the follo
     - The #TESTSET_INFO lines contain information on the number of reactions and the unit for the reference data.
       These special lines are read and parsed by ASH.
     - Other # lines are convenient comment-lines but are not read by ASH.
-    - Each numbered line defines a reaction. The ASCII-string words in the line point to XYZ-files in the same dir
+    - Each numbered line defines a reaction. The ASCII-string words (must contain a non-numeric character) in the line point to XYZ-files in the same dir
       while the integers indicate the stoichiometry of the reaction (negative number: reactant, positive number: product).
       The last floating point number is always the reference value (e.g. experimental value) in the unit indicated in the #TESTSET_INFO line.
 
