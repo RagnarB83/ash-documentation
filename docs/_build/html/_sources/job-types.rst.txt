@@ -242,19 +242,78 @@ Any QM or QM/MM Hamiltonian can be used.
 
 
 ###########################
+Surface scans
+###########################
+Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** that uses the **geometric** optimization library.
+Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction coordinates.
+
+The calc_surface function takes a fragment object and theory object as input. The type of scan is specified ('Unrelaxed' or 'Relaxed') and
+then either 1 or 2 reaction coordinates are specified via keyword arguments: RC1_type, RC1_range and RC1_indices (and RC2 versions if using two reaction coordinates).
+
+- The RC1_type/RC2_type keyword can be: 'bond', 'angle' or 'dihedral'.
+- The RC1_indices/RC2_indices keyword defines the atom indices for the bond/angle/dihedral. Note: ASH counts from zero.
+- The RC1_range/RC2_range keyword species the start coordinate, end coordinate and the stepsize (Å units for bonds, ° for angles/dihedrals).
+
+The resultfile keyword should be used to specify the name of the file that contains the results of the scan ( format: coord1 coord2 energy).
+This file can be used to restart an incomplete/failed scan. If ASH finds this file in the same dir as the script, it will read the data and skip unneeded calculations.
+Default name : 'surface_results.txt'
+
+**1D scan:**
+
+.. code-block:: python
+
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+        RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[0,1])
+
+**2D scan:**
+
+.. code-block:: python
+
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+        RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[[0,1],[0,2]], RC2_range=[180,110,-10], RC2_type='angle', RC2_indices=[1,0,2])
+
+NOTE: It is possible to have each chosen reaction coordinate apply to multiple sets of atom indices by specifying a list of lists.
+In the 2D scan example above, the RC1_indices keyword (a 'bond' reaction coordinate) will apply to both atoms [0,1] as well as [0,2].
+This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.
+
+NOTE: Currently the runmode is serial which means that one surface point is run after the other and only the theory level can be parallelized.
+A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.
+
+**Plotting**
+
+The final result of the scan is stored in a dictionary (named 'surfacedictionary' in the examples above).
+The dictionary has the format: (coord1,coord2) : energy
+where (coord1,coord2) is a tuple of floats and energy is the total energy as a float.
+
+For a 2D scan, the dictionary can be given to the plotting.contourplot function which will visualize the energy surface as a contourplot.
+This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is a
+
+- The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).
+- Datapoint interpolation can be performed (currently only 'Cubic' option; the cubic power can be modified via interpolparameter). This requires a scipy installation.
+- The axes labels of the plot can be changed via: x_axislabel and y_axislabel.
+- The label keyword is used to named the file saved: e.g.: SurfaceXX.png
+- The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.
+- The default colormap is 'inferno_r'. Other colormaps are e.g. 'viridis', 'inferno', 'plasma', 'magma' (matplotlib keywords).
+
+.. code-block:: python
+
+    import plotting
+    plotting.contourplot(surfacedictionary, finalunit='kcal/mol',label=method, interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
+
+
+.. image:: figures/SurfaceTPSSh.png
+   :align: center
+   :width: 600
+
+Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.
+
+###########################
 Saddle-point optimization
 ###########################
 
+Not yet ready
 
-###########################
-Surface scans
-###########################
 
-**Unrelaxed scan**
-TODO
-
-**Relaxed scan**
-TODO
 
 ###########################
 Molecular Dynamics
