@@ -396,10 +396,11 @@ This file can be used to restart an incomplete/failed scan. If ASH finds this fi
 Default name : ‘surface_results.txt’</p>
 <p><strong>1D scan:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span>
-    <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;bond&#39;</span><span class="p">,</span> <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">2.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">],</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mi">180</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
 <p><strong>2D scan:</strong></p>
+<p>If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span>
     <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;bond&#39;</span><span class="p">,</span> <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">2.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">],</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="n">RC2_range</span><span class="o">=</span><span class="p">[</span><span class="mi">180</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">RC2_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
@@ -411,10 +412,23 @@ This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.
 A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.</p>
 <p><strong>Plotting</strong></p>
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above).
-The dictionary has the format: (coord1,coord2) : energy
-where (coord1,coord2) is a tuple of floats and energy is the total energy as a float.</p>
-<p>For a 2D scan, the dictionary can be given to the plotting.contourplot function which will visualize the energy surface as a contourplot.
-This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is a</p>
+The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
+where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.</p>
+<p>For a 1D scan, the dictionary can be given to the <strong>plotting.reactionprofile_plot</strong> function which will visualize the energy surface as a lineplot.
+This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
+<ul class="simple">
+<li><p>The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).</p></li>
+<li><p>The x-axis label of the plot can be changed via: x_axislabel.</p></li>
+<li><p>The label keyword is used to named the file saved: e.g.: PlotXX.png</p></li>
+<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>
+<p>For a 2D scan, the dictionary can be given to the <strong>plotting.contourplot</strong> function which will visualize the energy surface as a contourplot.
+This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
 <ul class="simple">
 <li><p>The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).</p></li>
 <li><p>Datapoint interpolation can be performed (currently only ‘Cubic’ option; the cubic power can be modified via interpolparameter). This requires a scipy installation.</p></li>

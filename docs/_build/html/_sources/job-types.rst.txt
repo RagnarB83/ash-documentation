@@ -263,9 +263,11 @@ Default name : 'surface_results.txt'
 .. code-block:: python
 
     surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
-        RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[0,1])
+        RC1_range=[180,110,-10], RC1_type='angle', RC1_indices=[1,0,2])
 
 **2D scan:**
+
+If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.
 
 .. code-block:: python
 
@@ -282,11 +284,29 @@ A future parallel runmode will become available where X surfacepoints can be run
 **Plotting**
 
 The final result of the scan is stored in a dictionary (named 'surfacedictionary' in the examples above).
-The dictionary has the format: (coord1,coord2) : energy
-where (coord1,coord2) is a tuple of floats and energy is the total energy as a float.
+The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
+where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.
 
-For a 2D scan, the dictionary can be given to the plotting.contourplot function which will visualize the energy surface as a contourplot.
-This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is a
+For a 1D scan, the dictionary can be given to the **plotting.reactionprofile_plot** function which will visualize the energy surface as a lineplot.
+This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.
+
+- The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).
+- The x-axis label of the plot can be changed via: x_axislabel.
+- The label keyword is used to named the file saved: e.g.: PlotXX.png
+- The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.
+
+.. code-block:: python
+
+    import plotting
+    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label=method, x_axislabel='Angle')
+
+
+.. image:: figures/PlotTPSS.png
+   :align: center
+   :width: 600
+
+For a 2D scan, the dictionary can be given to the **plotting.contourplot** function which will visualize the energy surface as a contourplot.
+This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.
 
 - The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).
 - Datapoint interpolation can be performed (currently only 'Cubic' option; the cubic power can be modified via interpolparameter). This requires a scipy installation.
