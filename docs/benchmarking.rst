@@ -40,7 +40,7 @@ The run_benchmark function needs at minimum the set keyword argument and either 
 - numcores: Only needed for workflow. Number of cores to use.
 - reuseorbs: Whether orbitals should be reused for each species in reaction. Only makes sense if geometries are similar (e.g. IE/EA reactions). Boolean True/False.
 - corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats. Can also be defined within testset.
-
+- workflow_args: Optional workflow arguments if using workflow and the default settings need to be modified.
 
 #########################################
 Running a test set with a chosen QMtheory

@@ -66,12 +66,12 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
                                 orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
     #Basic Cartesian optimization with KNARR-LBFGS
-    Optimizer(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
+    SimpleOpt(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
 
 
 The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces`), and runs a geometry optimization using the Optimizer function  (see :doc:`job-types` for other options).
+(see :doc:`QM-interfaces`), and runs a geometry optimization using the SimpleOpt optimizer function  (see :doc:`job-types` for other better options).
 
 ########################
 Running script directly
