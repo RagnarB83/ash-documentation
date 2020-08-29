@@ -116,6 +116,7 @@ Available workflows are (all using ORCA):
 - DLPNO_W1theory_SP
 - DLPNO_F12_SP
 - DLPNO_W2theory_SP
+- DLPNO_CC_CBS_SP
 
 When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
 
@@ -128,6 +129,20 @@ When using an ORCA-based workflow the orcadir keyword argument and numcores argu
     #Running the benchmark with a workflow
     run_benchmark(set="IE-benzenes", workflow=DLPNO_W1theory_SP, numcores=4, orcadir=orcadir)
 
+If some of the default settings of each workflow needs to be modified this can be accomplished like this:
+
+.. code-block:: python
+
+    from ash import *
+    #Define global system settings ( scale, tol and conndepth keywords for connectivity)
+    settings_ash.init() #initialize
+    orcadir='/Applications/orca_4.2.1'
+
+    #Define a dictionary containing the arguments of the workflow to be modified
+    DLPNO_CC_CBS_SP_args = {'cardinals' : '3/4', "basisfamily" : "cc", 'stabilityanalysis' : True, 'memory' : 5112}
+
+    #Running the benchmark with a workflow
+    run_benchmark(set="IE-benzenes", workflow=DLPNO_CC_CBS_SP, workflow_args = DLPNO_CC_CBS_SP_args, orcadir=orcadir, numcores=numcores)
 
 
 ################################
