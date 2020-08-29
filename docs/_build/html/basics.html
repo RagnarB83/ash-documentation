@@ -224,12 +224,12 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
                             <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
-<span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
+<span class="n">SimpleOpt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), and runs a geometry optimization using the Optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other options).</p>
+(see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), and runs a geometry optimization using the SimpleOpt optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other better options).</p>
 </div>
 <div class="section" id="running-script-directly">
 <h2>Running script directly<a class="headerlink" href="#running-script-directly" title="Permalink to this headline">¶</a></h2>

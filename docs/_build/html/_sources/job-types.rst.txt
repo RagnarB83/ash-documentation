@@ -89,12 +89,9 @@ The energy and gradient from the last Energy/Energy+Gradient run is also stored 
 ###########################
 Geometry optimization
 ###########################
-Geometry optimizations are easily performed in Ash due to availability of a few different optimization codes.
-
-- An internal optimizer is available (called "Optimizer") that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.
-- An interface to the PyBerny optimization program (https://github.com/jhrmnn/pyberny) is available that allows efficient optimizations in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.
-- The **recommended** optimizer is geomeTRIC (https://github.com/leeping/geomeTRIC) for which there is full-featured Ash interface. geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
-
+Geometry optimizations are easily performed in Ash due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC)
+geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
+ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
 
 .. code-block:: python
 
@@ -114,11 +111,19 @@ Geometry optimizations are easily performed in Ash due to availability of a few 
     #Geometry optimization of the ORCA using geomeTRIC optimizer
     geomeTRICOptimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
 
+
+Other optimizers:
+
+- An internal optimizer is available (called "SimpleOpt") that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.
+- An interface to the PyBerny optimization program (https://github.com/jhrmnn/pyberny) is available that allows efficient optimizations in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.
+
+.. code-block:: python
+
     #PyBerny example:
     BernyOpt(ORCAcalc,HF_frag)
 
     # Internal Cartesian-LBFGS Optimizer:
-    Optimizer(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
+    SimpleOpt(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
 
 
 ################################

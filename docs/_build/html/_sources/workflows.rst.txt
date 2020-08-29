@@ -6,7 +6,7 @@ Workflows in ASH
 As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
 call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.
 
-As a basic example, a geometry optimization of a structure in on QM-program can easily be combined with a subsequent frequency job and this
+As a basic example, a geometry optimization of a structure with a QM method can easily be combined with a subsequent frequency job and this
 can be followed by a subsequent higher-level single-point energy job (even with different QM programs).
 
 - See Example 1 for such a workflow.

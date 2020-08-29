@@ -246,12 +246,9 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 </div>
 <div class="section" id="geometry-optimization">
 <h2>Geometry optimization<a class="headerlink" href="#geometry-optimization" title="Permalink to this headline">¶</a></h2>
-<p>Geometry optimizations are easily performed in Ash due to availability of a few different optimization codes.</p>
-<ul class="simple">
-<li><p>An internal optimizer is available (called “Optimizer”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
-<li><p>An interface to the PyBerny optimization program (<a class="reference external" href="https://github.com/jhrmnn/pyberny">https://github.com/jhrmnn/pyberny</a>) is available that allows efficient optimizations in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.</p></li>
-<li><p>The <strong>recommended</strong> optimizer is geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>) for which there is full-featured Ash interface. geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.</p></li>
-</ul>
+<p>Geometry optimizations are easily performed in Ash due to availability of the flexible optimizer: geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>)
+geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
+ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
@@ -267,12 +264,18 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 
 <span class="c1">#Geometry optimization of the ORCA using geomeTRIC optimizer</span>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
-
-<span class="c1">#PyBerny example:</span>
+</pre></div>
+</div>
+<p>Other optimizers:</p>
+<ul class="simple">
+<li><p>An internal optimizer is available (called “SimpleOpt”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
+<li><p>An interface to the PyBerny optimization program (<a class="reference external" href="https://github.com/jhrmnn/pyberny">https://github.com/jhrmnn/pyberny</a>) is available that allows efficient optimizations in redundant internal coordinates. No frozen atoms or constraints are available currently. PyBerny requires installation via pip.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#PyBerny example:</span>
 <span class="n">BernyOpt</span><span class="p">(</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">HF_frag</span><span class="p">)</span>
 
 <span class="c1"># Internal Cartesian-LBFGS Optimizer:</span>
-<span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">SimpleOpt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="p">[])</span>
 </pre></div>
 </div>
 </div>
