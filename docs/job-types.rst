@@ -263,6 +263,9 @@ The resultfile keyword should be used to specify the name of the file that conta
 This file can be used to restart an incomplete/failed scan. If ASH finds this file in the same dir as the script, it will read the data and skip unneeded calculations.
 Default name : 'surface_results.txt'
 
+**calc_surface** returns a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
+(RC1value,RC2value) : energy
+
 **1D scan:**
 
 .. code-block:: python
@@ -291,9 +294,10 @@ A future parallel runmode will become available where X surfacepoints can be run
 If a surface scan has already been performed, it's possible to use the created XYZ-files and calculate energies for each surfacepoint with
 e.g. a high-level of theory (CCSD(T) for instance).
 
-We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz) from a directory.
+We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from **calc_surface** already (present in surface_xyzfiles results directory).
 By providing a theory level object we can then easily perform single-point calculations for each surface point.
+The results is a dictionary like before.
 
 .. code-block:: python
 
@@ -302,9 +306,6 @@ By providing a theory level object we can then easily perform single-point calcu
 
     #Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile="surface-results.txt")
     surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
-
-
-
 
 
 
