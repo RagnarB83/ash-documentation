@@ -414,6 +414,19 @@ In the 2D scan example above, the RC1_indices keyword (a ‘bond’ reaction coo
 This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.</p>
 <p>NOTE: Currently the runmode is serial which means that one surface point is run after the other and only the theory level can be parallelized.
 A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.</p>
+<p><strong>Working with a previous scan from collection of XYZ files</strong></p>
+<p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate energies for each surfacepoint with
+e.g. a high-level of theory (CCSD(T) for instance).</p>
+<p>We can use the <strong>calc_surface_fromXYZ</strong> function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz) from a directory.
+These files should have been created from <strong>calc_surface</strong> already (present in surface_xyzfiles results directory).
+By providing a theory level object we can then easily perform single-point calculations for each surface point.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
+<span class="n">surfacedir</span> <span class="o">=</span> <span class="s1">&#39;/users/home/ragnarbj/Fe2S2Cl4/PES/Relaxed-Scan-test1/SP-DLPNOCC/surface_xyzfiles&#39;</span>
+
+<span class="c1">#Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile=&quot;surface-results.txt&quot;)</span>
+<span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface_fromXYZ</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="n">surfacedir</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
 <p><strong>Plotting</strong></p>
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above).
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan

@@ -286,6 +286,28 @@ This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.
 NOTE: Currently the runmode is serial which means that one surface point is run after the other and only the theory level can be parallelized.
 A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.
 
+**Working with a previous scan from collection of XYZ files**
+
+If a surface scan has already been performed, it's possible to use the created XYZ-files and calculate energies for each surfacepoint with
+e.g. a high-level of theory (CCSD(T) for instance).
+
+We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz) from a directory.
+These files should have been created from **calc_surface** already (present in surface_xyzfiles results directory).
+By providing a theory level object we can then easily perform single-point calculations for each surface point.
+
+.. code-block:: python
+
+    #Directory of XYZ files. Can be full path or relative path.
+    surfacedir = '/users/home/ragnarbj/Fe2S2Cl4/PES/Relaxed-Scan-test1/SP-DLPNOCC/surface_xyzfiles'
+
+    #Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile="surface-results.txt")
+    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
+
+
+
+
+
+
 **Plotting**
 
 The final result of the scan is stored in a dictionary (named 'surfacedictionary' in the examples above).
