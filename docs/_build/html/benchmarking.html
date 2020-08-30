@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Ash object classes" href="ash-classes.html" />
+    <link rel="next" title="High-level Thermochemistry in ASH" href="thermochemistry.html" />
     <link rel="prev" title="Workflows in ASH" href="workflows.html" /> 
 </head>
 
@@ -109,6 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-or-modifying-a-test-set">Creating or modifying a test set</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
@@ -293,7 +294,8 @@ Available workflows are (all using ORCA):</p>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
 
 <span class="c1">#Define a dictionary containing the arguments of the workflow to be modified</span>
-<span class="n">DLPNO_CC_CBS_SP_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cardinals&#39;</span> <span class="p">:</span> <span class="s1">&#39;3/4&#39;</span><span class="p">,</span> <span class="s2">&quot;basisfamily&quot;</span> <span class="p">:</span> <span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="s1">&#39;stabilityanalysis&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span> <span class="p">:</span> <span class="mi">5112</span><span class="p">}</span>
+<span class="n">DLPNO_CC_CBS_SP_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cardinals&#39;</span> <span class="p">:</span> <span class="s1">&#39;2/3&#39;</span><span class="p">,</span> <span class="s2">&quot;basisfamily&quot;</span> <span class="p">:</span> <span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="s1">&#39;stabilityanalysis&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;memory&#39;</span> <span class="p">:</span> <span class="mi">5112</span><span class="p">,</span> <span class="s1">&#39;extrablocks&#39;</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf</span><span class="se">\n</span><span class="s2">directresetfreq 1</span><span class="se">\n</span><span class="s2">end</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;extrainputkeyword&#39;</span> <span class="p">:</span> <span class="s1">&#39;Slowconv&#39;</span><span class="p">}</span>
 
 <span class="c1">#Running the benchmark with a workflow</span>
 <span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">DLPNO_CC_CBS_SP</span><span class="p">,</span> <span class="n">workflow_args</span> <span class="o">=</span> <span class="n">DLPNO_CC_CBS_SP_args</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
@@ -368,7 +370,7 @@ This correction can e.g. be ZPE, total enthalpy-correction, total free-energy co
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ash-classes.html" class="btn btn-neutral float-right" title="Ash object classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="thermochemistry.html" class="btn btn-neutral float-right" title="High-level Thermochemistry in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="workflows.html" class="btn btn-neutral float-left" title="Workflows in ASH" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

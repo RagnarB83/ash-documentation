@@ -23,7 +23,8 @@ These are the documentation pages of Ash.
    molcrys
    pes
    workflows
-   benchmarking.rst
+   benchmarking
+   thermochemistry
    ash-classes
 
 

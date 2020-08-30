@@ -6,6 +6,7 @@ Workflows in ASH
 As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
 call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.
 
+
 As a basic example, a geometry optimization of a structure with a QM method can easily be combined with a subsequent frequency job and this
 can be followed by a subsequent higher-level single-point energy job (even with different QM programs).
 
@@ -123,6 +124,7 @@ thermochemprotocol function. The protocol will run a DFT opt+Freq job (as define
 and then do the high-level W1 theory protocol on top (multiple CCSD, CCSD(T) jobs with extrapolation, core-valence, scalar relativistic and atomic spin-orbit corrections etc.)
 This feature is in progress and will be made more userfriendly soon. Note that W1 is only doable for really small molecules (1-4 heavy atom systems are doable).
 
+See :doc:`thermochemistry` for more information.
 
 .. code-block:: python
 
@@ -599,15 +601,6 @@ The manually defined workflow above can also be more conveniently run like this:
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
                              HLtheory=HL_CC, orcadir=orcadir, numcores=numcores, charge=frag.charge, mult=frag.mult)
-
-
-
-
-
-
-
-
-
 
 Final result table of calculated conformers at 3 different theory levels:
 

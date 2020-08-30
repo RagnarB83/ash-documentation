@@ -114,6 +114,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 
@@ -287,6 +288,7 @@ reaction energy with chemical accuracy. Here the coupled-cluster based W1 method
 thermochemprotocol function. The protocol will run a DFT opt+Freq job (as defined via the ORCA-inputline string shown)
 and then do the high-level W1 theory protocol on top (multiple CCSD, CCSD(T) jobs with extrapolation, core-valence, scalar relativistic and atomic spin-orbit corrections etc.)
 This feature is in progress and will be made more userfriendly soon. Note that W1 is only doable for really small molecules (1-4 heavy atom systems are doable).</p>
+<p>See <a class="reference internal" href="thermochemistry.html"><span class="doc">High-level Thermochemistry in ASH</span></a> for more information.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
