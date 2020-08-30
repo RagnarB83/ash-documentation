@@ -474,7 +474,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     numcores=24
 
     #0. Starting structure and charge and mult
-    molecule = Fragment(xyzfile="dmp.xyz")
+    molecule = Fragment(xyzfile="ethanol.xyz")
     charge=0
     mult=1
 
@@ -566,6 +566,48 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
 
     print("")
     print("Workflow done!")
+
+
+The manually defined workflow above can also be more conveniently run like this:
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+
+    #
+    crestdir='/opt/crest'
+    orcadir='/opt/orca_4.2.1'
+    numcores=4
+    #Fragment to define
+    frag=Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
+
+    #Defining MLTheory: DFT optimization
+    orcadir='/opt/orca_4.2.1'
+    MLsimpleinput="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
+    MLblockinput="""
+    %scf maxiter 200 end
+    """
+    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+    #Defining HLTheory: DLPNO-CCSD(T)/CBS
+    HLsimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF"
+    HLblockinput="""
+    %scf maxiter 200 end
+    """
+    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+
+    #Call confsampler_protocol
+    confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
+                             HLtheory=HL_CC, orcadir=orcadir, numcores=numcores, charge=frag.charge, mult=frag.mult)
+
+
+
+
+
+
+
+
+
 
 Final result table of calculated conformers at 3 different theory levels:
 

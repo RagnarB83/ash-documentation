@@ -139,7 +139,8 @@ If some of the default settings of each workflow needs to be modified this can b
     orcadir='/Applications/orca_4.2.1'
 
     #Define a dictionary containing the arguments of the workflow to be modified
-    DLPNO_CC_CBS_SP_args = {'cardinals' : '3/4', "basisfamily" : "cc", 'stabilityanalysis' : True, 'memory' : 5112}
+    DLPNO_CC_CBS_SP_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True,
+                        'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
 
     #Running the benchmark with a workflow
     run_benchmark(set="IE-benzenes", workflow=DLPNO_CC_CBS_SP, workflow_args = DLPNO_CC_CBS_SP_args, orcadir=orcadir, numcores=numcores)
