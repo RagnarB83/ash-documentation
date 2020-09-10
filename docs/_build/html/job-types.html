@@ -267,6 +267,31 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Options to <strong>geometricOptimizer</strong>:</p>
+<ul>
+<li><p>coordsystem (Default: ‘tric’, other options: ‘hdlc’, ‘dlc’, ‘cartesian’, ‘prim’, ‘tric-p’)</p></li>
+<li><p>frozenatoms (default: None, provide list of atoms to be frozen in space)</p></li>
+<li><p>constraintsinputfile (default: None, provide name of constraints-inputfile according to geomeTRIC syntax.</p></li>
+<li><p>constraints (default: None, provide dictionary of constraint definitions, with or without the value of the constraint. Example: constraints = { ‘bond’ : [[0,1]]}</p></li>
+<li><p>constrainvalue (default: False, Boolean, whether constrain-value is provided in constraints dictionary or not)</p></li>
+<li><p>maxiter (default: 50, maximum number of iterations)</p></li>
+<li><p>ActiveRegion (default:False, whether to use an active region or not. Requires accompanying actatoms list.</p></li>
+<li><p>actatoms (default: None, list of atoms that are active during optimization, all others are frozen)</p></li>
+<li><p>convergence_setting (default: ‘ORCA’. What type of convergence criteria to use. Valid options are: ‘ORCA’, ‘Chemshell’, ‘ORCA_TIGHT’, ‘GAU’, ‘GAU_TIGHT’, ‘GAU_VERYTIGHT’, ‘SuperLoose’.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>ORCA:    conv_criteria = {‘convergence_energy’ : 5e-6, ‘convergence_grms’ : 1e-4, ‘convergence_gmax’ : 3.0e-4, ‘convergence_drms’ : 2.0e-3, ‘convergence_dmax’ : 4.0e-3 }</p></li>
+<li><p>Chemshell:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-4, ‘convergence_gmax’ : 4.5e-4, ‘convergence_drms’ : 1.2e-3, ‘convergence_dmax’ : 1.8e-3 }</p></li>
+<li><p>ORCA_TIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-5, ‘convergence_gmax’ : 1.0e-4, ‘convergence_drms’ : 6.0e-4, ‘convergence_dmax’ : 1.0e-3 }</p></li>
+<li><p>GAU:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-4, ‘convergence_gmax’ : 4.5e-4, ‘convergence_drms’ : 1.2e-3, ‘convergence_dmax’ : 1.8e-3 }</p></li>
+<li><p>GAU_TIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 1e-5, ‘convergence_gmax’ : 1.5e-5, ‘convergence_drms’ : 4.0e-5, ‘convergence_dmax’ : 6e-5 }</p></li>
+<li><p>GAU_VERYTIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 1e-6, ‘convergence_gmax’ : 2e-6, ‘convergence_drms’ : 4.0e-6, ‘convergence_dmax’ : 6e-6 }</p></li>
+<li><p>SuperLoose:            conv_criteria = { ‘convergence_energy’ : 1e-1, ‘convergence_grms’ : 1e-1, ‘convergence_gmax’ : 1e-1, ‘convergence_drms’ : 1e-1, ‘convergence_dmax’ : 1e-1 }</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>conv_criteria (Default: see ORCA setting above. Optionally provide your own dictionary of settings using syntax above.</p></li>
+</ul>
 <p>Other optimizers:</p>
 <ul class="simple">
 <li><p>An internal optimizer is available (called “SimpleOpt”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
@@ -416,6 +441,13 @@ In the 2D scan example above, the RC1_indices keyword (a ‘bond’ reaction coo
 This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.</p>
 <p>NOTE: Currently the runmode is serial which means that one surface point is run after the other and only the theory level can be parallelized.
 A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.</p>
+<p>Other options to calc_surface:</p>
+<ul class="simple">
+<li><p>coordsystem  (for geomeTRICOptimizer, default: ‘dlc’. Other options: ‘hdlc’ and ‘tric’)</p></li>
+<li><p>maxiter (for geomeTRICOptimizer,default : 50)</p></li>
+<li><p>extraconstraints (for geomeTRICOptimizer, default : None. dictionary of additional constraints. Same syntax as constraints in <strong>geomeTRICOptimizer</strong>)</p></li>
+<li><p>convergence_setting (for geomeTRICOptimizer, same syntax as in <strong>geomeTRICOptimizer</strong>)</p></li>
+</ul>
 <p><strong>Working with a previous scan from collection of XYZ files</strong></p>
 <p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate energies for each surfacepoint with
 e.g. a high-level of theory (CCSD(T) for instance).</p>
