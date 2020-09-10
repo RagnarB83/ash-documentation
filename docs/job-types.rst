@@ -315,6 +315,12 @@ The final result of the scan is stored in a dictionary (named 'surfacedictionary
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
 where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.
 
+A dictionary using data from a previous job (stored e.g. in surface_results.txt) can be created via the **read_surfacedict_from_file** function:
+
+.. code-block:: python
+
+    surfacedictionary = read_surfacedict_from_file("surface_results.txt", dimension=1)
+
 For a 1D scan, the dictionary can be given to the **plotting.reactionprofile_plot** function which will visualize the energy surface as a lineplot.
 This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.
 
@@ -336,12 +342,18 @@ This option requires a Matplotlib installation (easily installed via Anaconda) t
 For a 2D scan, the dictionary can be given to the **plotting.contourplot** function which will visualize the energy surface as a contourplot.
 This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.
 
-- The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).
+- The unit of the surface can be chosen via finalunit keyword (kcal/mol, kJ/mol, eV etc.).
+- A relative energy surface is by default calculated (RelativeEnergy=True) but this can be turned off (RelativeEnergy=False) e.g. for plotting a non-energetic surface.
 - Datapoint interpolation can be performed (currently only 'Cubic' option; the cubic power can be modified via interpolparameter). This requires a scipy installation.
 - The axes labels of the plot can be changed via: x_axislabel and y_axislabel.
 - The label keyword is used to named the file saved: e.g.: SurfaceXX.png
-- The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.
+- The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200. See Matplotlib documentation for other imageformat options.
 - The default colormap is 'inferno_r'. Other colormaps are e.g. 'viridis', 'inferno', 'plasma', 'magma' (matplotlib keywords).
+- The number of contourlines used both for the filled contoursurface is by default 500 (numcontourlines=500). This value can be changed.
+- Alternatively only a few selected contour-lines can be shown by providing a list as argument to contour_values keyword. e.g. contour_values=[0.1,1.0,2.0.5.0]
+- Contourlines can be labelled or not: clinelabels=True/False
+- The filled surface can be made more opaque or more transparent via the contour_alpha keyword (default 0.75).
+- The color of the contour lines can be changed (contourline_color=black by default)
 
 .. code-block:: python
 

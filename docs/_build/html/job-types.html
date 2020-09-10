@@ -398,6 +398,8 @@ then either 1 or 2 reaction coordinates are specified via keyword arguments: RC1
 <p>The resultfile keyword should be used to specify the name of the file that contains the results of the scan ( format: coord1 coord2 energy).
 This file can be used to restart an incomplete/failed scan. If ASH finds this file in the same dir as the script, it will read the data and skip unneeded calculations.
 Default name : ‘surface_results.txt’</p>
+<p><strong>calc_surface</strong> returns a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
+(RC1value,RC2value) : energy</p>
 <p><strong>1D scan:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span>
     <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mi">180</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
@@ -417,9 +419,10 @@ A future parallel runmode will become available where X surfacepoints can be run
 <p><strong>Working with a previous scan from collection of XYZ files</strong></p>
 <p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate energies for each surfacepoint with
 e.g. a high-level of theory (CCSD(T) for instance).</p>
-<p>We can use the <strong>calc_surface_fromXYZ</strong> function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz) from a directory.
+<p>We can use the <strong>calc_surface_fromXYZ</strong> function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from <strong>calc_surface</strong> already (present in surface_xyzfiles results directory).
-By providing a theory level object we can then easily perform single-point calculations for each surface point.</p>
+By providing a theory level object we can then easily perform single-point calculations for each surface point.
+The results is a dictionary like before.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
 <span class="n">surfacedir</span> <span class="o">=</span> <span class="s1">&#39;/users/home/ragnarbj/Fe2S2Cl4/PES/Relaxed-Scan-test1/SP-DLPNOCC/surface_xyzfiles&#39;</span>
 
@@ -431,6 +434,10 @@ By providing a theory level object we can then easily perform single-point calcu
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above).
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
 where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.</p>
+<p>A dictionary using data from a previous job (stored e.g. in surface_results.txt) can be created via the <strong>read_surfacedict_from_file</strong> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">read_surfacedict_from_file</span><span class="p">(</span><span class="s2">&quot;surface_results.txt&quot;</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>For a 1D scan, the dictionary can be given to the <strong>plotting.reactionprofile_plot</strong> function which will visualize the energy surface as a lineplot.
 This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
 <ul class="simple">
@@ -447,12 +454,18 @@ This option requires a Matplotlib installation (easily installed via Anaconda) t
 <p>For a 2D scan, the dictionary can be given to the <strong>plotting.contourplot</strong> function which will visualize the energy surface as a contourplot.
 This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
 <ul class="simple">
-<li><p>The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).</p></li>
+<li><p>The unit of the surface can be chosen via finalunit keyword (kcal/mol, kJ/mol, eV etc.).</p></li>
+<li><p>A relative energy surface is by default calculated (RelativeEnergy=True) but this can be turned off (RelativeEnergy=False) e.g. for plotting a non-energetic surface.</p></li>
 <li><p>Datapoint interpolation can be performed (currently only ‘Cubic’ option; the cubic power can be modified via interpolparameter). This requires a scipy installation.</p></li>
 <li><p>The axes labels of the plot can be changed via: x_axislabel and y_axislabel.</p></li>
 <li><p>The label keyword is used to named the file saved: e.g.: SurfaceXX.png</p></li>
-<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.</p></li>
+<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200. See Matplotlib documentation for other imageformat options.</p></li>
 <li><p>The default colormap is ‘inferno_r’. Other colormaps are e.g. ‘viridis’, ‘inferno’, ‘plasma’, ‘magma’ (matplotlib keywords).</p></li>
+<li><p>The number of contourlines used both for the filled contoursurface is by default 500 (numcontourlines=500). This value can be changed.</p></li>
+<li><p>Alternatively only a few selected contour-lines can be shown by providing a list as argument to contour_values keyword. e.g. contour_values=[0.1,1.0,2.0.5.0]</p></li>
+<li><p>Contourlines can be labelled or not: clinelabels=True/False</p></li>
+<li><p>The filled surface can be made more opaque or more transparent via the contour_alpha keyword (default 0.75).</p></li>
+<li><p>The color of the contour lines can be changed (contourline_color=black by default)</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
 <span class="n">plotting</span><span class="o">.</span><span class="n">contourplot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;Cubic&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Bond (Å)&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle (°)&#39;</span><span class="p">)</span>
