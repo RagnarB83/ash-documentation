@@ -16,6 +16,93 @@ Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 bina
 libraries is in your LD_LIBRARY_PATH.
 
 ######################################################
+PhotoElectronSpectrum function
+######################################################
+
+The PES.PhotoElectronSpectrum function takes the following keyword arguments:
+
+**Necessary:**
+
+- theory: An ASH Theory object (only ORCATheory supported at the moment)
+- fragment: An ASH fragment object
+- InitialState_charge : integer
+- InitialState_mult : integer
+- Ionizedstate_charge: integer
+- Ionizedstate_mult: integer or list of integers, e.g. [5,7]
+- path_wfoverlap: string
+- numionstates : integer (default: 50)
+
+**Optional:**
+
+- memory: integer (in MB), (memory used by Wfoverlap, default: 40000)
+- numcores: integer (number of cores used in WFOverlap, default: 1)
+- noDyson : Boolean(True/False), (whether to skip Dyson-norm computation, default: False)
+- tda : Boolean (default: True)
+- brokensym: Boolean (default: False)
+- HSmult : integer (for brokensym feature, default: None)
+- atomstoflip : list of integers (for brokensym feature, default: None)
+- initialorbitalfiles : list of filename-strings (for reading in orbital guesses, default : None)
+- Densities: String-option ('SCF', 'All', 'None'). For calculating SCF densities, SCF+TDDFT densities or none.
+- densgridvalue : integer (gridpoints for densities, default: 100)
+- CAS : Boolean (True/False), (CASSCF-PES option, default: False)
+- CAS_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)
+- CAS_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)
+- CASCI : Boolean(True/False), (whether to skip CASSCF-orbital optimization for Ionized states, default: False)
+
+- MRCI : Boolean (True/False), (MRCI-PES option, default: False)
+- MRCI_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)
+- MRCI_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)
+
+By default a TDDFT-TDA approach is used. For a CASSCF PES, use CAS=True, for MRCI PES, use MRCI=True and set the respective additional arguments
+
+
+The output of the function are lists of IPs, Dyson-norms, alpha-MO-energies, beta-MO-energies.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
+    IPs, dysonnorms, MOs_a, MOs_b = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=h2o, InitialState_charge=0, Initialstate_mult=1,
+                              Ionizedstate_charge=1, Ionizedstate_mult=2, numionstates=50,
+                                path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
+
+
+######################################################
+plot_PES_Spectrum function
+######################################################
+
+The PES.plot_PES_Spectrum function takes a list (Python list) of ionization energies (in eVs), a list of dysonnorms and creates broadened
+spectra. Typically you would run this in th same job as the PES.PhotoElectronSpectrum function, using the respective output as input.
+
+Optional is to plot the alpha/beta MO spectrum as well. The ionization energy range can be controlled (start and finish keywords),
+number of points and broadening factor (eV) and the name of the plot. A PNG image file of the broadened spectrum and a stick-spectrum is created as well
+as files contained broadened spectrum (.dat files) and stick-spectrum (.stk files).
+
+.. code-block:: python
+
+    #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
+    PES.plot_PES_Spectrum(IPs=IPs, dysonnorms=dysonnorms, mos_alpha=MOs_a, mos_beta=MOs_b,
+                              start=0, finish=60, broadening=0.1, points=10000, plotname='H2O-B3LYP')
+
+
+The plot_PES_Spectrum function can be run on its own.
+If a previous PES.PhotoElectronSpectrum job is available, the respective Results file ("PES-Results.txt") can be conveniently read in like this.
+Make sure the PES-Results.txt is available in the same directory.
+
+
+.. code-block:: python
+
+    #Read in old results
+    IPs, dysonnorms, mos_alpha, mos_beta = PES.Read_old_results()
+
+    #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
+    PES.plot_PES_Spectrum(IPs=IPs, dysonnorms=dysonnorms, mos_alpha=MOs_a, mos_beta=MOs_b,
+                              start=0, finish=60, broadening=0.1, points=10000, plotname='H2O-B3LYP')
+
+
+
+######################################################
 Example: H\ :sub:`2`\ O
 ######################################################
 

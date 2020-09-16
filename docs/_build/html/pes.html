@@ -101,6 +101,8 @@
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PES: PhotoElectron/PhotoEmission Spectrum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#photoelectronspectrum-function">PhotoElectronSpectrum function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plot-pes-spectrum-function">plot_PES_Spectrum function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-h2o">Example: H<sub>2</sub>O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-fes2">Example: FeS<sub>2</sub> <sup>-</sup></a></li>
 </ul>
@@ -185,6 +187,75 @@ ionization energies. Dyson orbital norms are then calculated as approximate inte
 </ul>
 <p>Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
 libraries is in your LD_LIBRARY_PATH.</p>
+<div class="section" id="photoelectronspectrum-function">
+<h2>PhotoElectronSpectrum function<a class="headerlink" href="#photoelectronspectrum-function" title="Permalink to this headline">¶</a></h2>
+<p>The PES.PhotoElectronSpectrum function takes the following keyword arguments:</p>
+<p><strong>Necessary:</strong></p>
+<ul class="simple">
+<li><p>theory: An ASH Theory object (only ORCATheory supported at the moment)</p></li>
+<li><p>fragment: An ASH fragment object</p></li>
+<li><p>InitialState_charge : integer</p></li>
+<li><p>InitialState_mult : integer</p></li>
+<li><p>Ionizedstate_charge: integer</p></li>
+<li><p>Ionizedstate_mult: integer or list of integers, e.g. [5,7]</p></li>
+<li><p>path_wfoverlap: string</p></li>
+<li><p>numionstates : integer (default: 50)</p></li>
+</ul>
+<p><strong>Optional:</strong></p>
+<ul class="simple">
+<li><p>memory: integer (in MB), (memory used by Wfoverlap, default: 40000)</p></li>
+<li><p>numcores: integer (number of cores used in WFOverlap, default: 1)</p></li>
+<li><p>noDyson : Boolean(True/False), (whether to skip Dyson-norm computation, default: False)</p></li>
+<li><p>tda : Boolean (default: True)</p></li>
+<li><p>brokensym: Boolean (default: False)</p></li>
+<li><p>HSmult : integer (for brokensym feature, default: None)</p></li>
+<li><p>atomstoflip : list of integers (for brokensym feature, default: None)</p></li>
+<li><p>initialorbitalfiles : list of filename-strings (for reading in orbital guesses, default : None)</p></li>
+<li><p>Densities: String-option (‘SCF’, ‘All’, ‘None’). For calculating SCF densities, SCF+TDDFT densities or none.</p></li>
+<li><p>densgridvalue : integer (gridpoints for densities, default: 100)</p></li>
+<li><p>CAS : Boolean (True/False), (CASSCF-PES option, default: False)</p></li>
+<li><p>CAS_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>CAS_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>CASCI : Boolean(True/False), (whether to skip CASSCF-orbital optimization for Ionized states, default: False)</p></li>
+<li><p>MRCI : Boolean (True/False), (MRCI-PES option, default: False)</p></li>
+<li><p>MRCI_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>MRCI_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+</ul>
+<p>By default a TDDFT-TDA approach is used. For a CASSCF PES, use CAS=True, for MRCI PES, use MRCI=True and set the respective additional arguments</p>
+<p>The output of the function are lists of IPs, Dyson-norms, alpha-MO-energies, beta-MO-energies.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span><span class="p">,</span> <span class="n">MOs_a</span><span class="p">,</span> <span class="n">MOs_b</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2o</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numionstates</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plot-pes-spectrum-function">
+<h2>plot_PES_Spectrum function<a class="headerlink" href="#plot-pes-spectrum-function" title="Permalink to this headline">¶</a></h2>
+<p>The PES.plot_PES_Spectrum function takes a list (Python list) of ionization energies (in eVs), a list of dysonnorms and creates broadened
+spectra. Typically you would run this in th same job as the PES.PhotoElectronSpectrum function, using the respective output as input.</p>
+<p>Optional is to plot the alpha/beta MO spectrum as well. The ionization energy range can be controlled (start and finish keywords),
+number of points and broadening factor (eV) and the name of the plot. A PNG image file of the broadened spectrum and a stick-spectrum is created as well
+as files contained broadened spectrum (.dat files) and stick-spectrum (.stk files).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">PES</span><span class="o">.</span><span class="n">plot_PES_Spectrum</span><span class="p">(</span><span class="n">IPs</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">mos_alpha</span><span class="o">=</span><span class="n">MOs_a</span><span class="p">,</span> <span class="n">mos_beta</span><span class="o">=</span><span class="n">MOs_b</span><span class="p">,</span>
+                          <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">finish</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;H2O-B3LYP&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The plot_PES_Spectrum function can be run on its own.
+If a previous PES.PhotoElectronSpectrum job is available, the respective Results file (“PES-Results.txt”) can be conveniently read in like this.
+Make sure the PES-Results.txt is available in the same directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Read in old results</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span><span class="p">,</span> <span class="n">mos_alpha</span><span class="p">,</span> <span class="n">mos_beta</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">Read_old_results</span><span class="p">()</span>
+
+<span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">PES</span><span class="o">.</span><span class="n">plot_PES_Spectrum</span><span class="p">(</span><span class="n">IPs</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">mos_alpha</span><span class="o">=</span><span class="n">MOs_a</span><span class="p">,</span> <span class="n">mos_beta</span><span class="o">=</span><span class="n">MOs_b</span><span class="p">,</span>
+                          <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">finish</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;H2O-B3LYP&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="example-h2o">
 <h2>Example: H<sub>2</sub>O<a class="headerlink" href="#example-h2o" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
