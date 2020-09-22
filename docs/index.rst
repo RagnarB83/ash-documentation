@@ -26,6 +26,7 @@ These are the documentation pages of Ash.
    benchmarking
    thermochemistry
    ash-classes
+   plotting
 
 
 .. role:: underline

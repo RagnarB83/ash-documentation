@@ -114,6 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
 </ul>
 
             
@@ -463,48 +464,15 @@ The results is a dictionary like before.</p>
 </pre></div>
 </div>
 <p><strong>Plotting</strong></p>
-<p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above).
-The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
+<p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above) and can be easily
+plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
+See <a class="reference internal" href="plotting.html"><span class="doc">Plotting options</span></a>) page.</p>
+<p>The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
 where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.</p>
 <p>A dictionary using data from a previous job (stored e.g. in surface_results.txt) can be created via the <strong>read_surfacedict_from_file</strong> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">read_surfacedict_from_file</span><span class="p">(</span><span class="s2">&quot;surface_results.txt&quot;</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For a 1D scan, the dictionary can be given to the <strong>plotting.reactionprofile_plot</strong> function which will visualize the energy surface as a lineplot.
-This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
-<ul class="simple">
-<li><p>The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).</p></li>
-<li><p>The x-axis label of the plot can be changed via: x_axislabel.</p></li>
-<li><p>The label keyword is used to named the file saved: e.g.: PlotXX.png</p></li>
-<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
-<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>
-<p>For a 2D scan, the dictionary can be given to the <strong>plotting.contourplot</strong> function which will visualize the energy surface as a contourplot.
-This option requires a Matplotlib installation (easily installed via Anaconda) to the Python environment. The output is an imagefile.</p>
-<ul class="simple">
-<li><p>The unit of the surface can be chosen via finalunit keyword (kcal/mol, kJ/mol, eV etc.).</p></li>
-<li><p>A relative energy surface is by default calculated (RelativeEnergy=True) but this can be turned off (RelativeEnergy=False) e.g. for plotting a non-energetic surface.</p></li>
-<li><p>Datapoint interpolation can be performed (currently only ‘Cubic’ option; the cubic power can be modified via interpolparameter). This requires a scipy installation.</p></li>
-<li><p>The axes labels of the plot can be changed via: x_axislabel and y_axislabel.</p></li>
-<li><p>The label keyword is used to named the file saved: e.g.: SurfaceXX.png</p></li>
-<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200. See Matplotlib documentation for other imageformat options.</p></li>
-<li><p>The default colormap is ‘inferno_r’. Other colormaps are e.g. ‘viridis’, ‘inferno’, ‘plasma’, ‘magma’ (matplotlib keywords).</p></li>
-<li><p>The number of contourlines used both for the filled contoursurface is by default 500 (numcontourlines=500). This value can be changed.</p></li>
-<li><p>Alternatively only a few selected contour-lines can be shown by providing a list as argument to contour_values keyword. e.g. contour_values=[0.1,1.0,2.0.5.0]</p></li>
-<li><p>Contourlines can be labelled or not: clinelabels=True/False</p></li>
-<li><p>The filled surface can be made more opaque or more transparent via the contour_alpha keyword (default 0.75).</p></li>
-<li><p>The color of the contour lines can be changed (contourline_color=black by default)</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
-<span class="n">plotting</span><span class="o">.</span><span class="n">contourplot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;Cubic&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Bond (Å)&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle (°)&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="_images/SurfaceTPSSh.png"><img alt="_images/SurfaceTPSSh.png" class="align-center" src="_images/SurfaceTPSSh.png" style="width: 600px;" /></a>
-<p>Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.</p>
 </div>
 <div class="section" id="saddle-point-optimization">
 <h2>Saddle-point optimization<a class="headerlink" href="#saddle-point-optimization" title="Permalink to this headline">¶</a></h2>

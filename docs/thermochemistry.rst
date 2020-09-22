@@ -5,7 +5,7 @@ High-level Thermochemistry in ASH
 
 ASH includes various high-level thermochemistry protocols (a.k.a. composite methods) and include convenient functionality to use them automatically on a set of compounds.
 
-See aslo Benchmarking page and Workflows page.
+See also Benchmarking page and Workflows page.
 
 
 ##############################################################################
