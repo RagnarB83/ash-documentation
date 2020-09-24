@@ -13,7 +13,8 @@ a broadened spectrum and a stick spectrum. The xvalues list is traditionally a P
 list is typically a list of intensities. Typically these quantities come from a current or previous ASH job.
 Gaussian broadening is used.
 
-The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png)
+The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png),
+the latter requires Matplotlib.
 
 Options:
 
@@ -24,6 +25,7 @@ Options:
 - points : integer (number of points in broadened spectrum, default:10000)
 - imageformat : string-option (Matplotlib image format, e.g. png, svg; default: png)
 - dpi : integer (resolution of image, default:200)
+- matplotlib : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
 
 .. code-block:: python
 
@@ -56,7 +58,7 @@ The output is an imagefile (PNG by default).
 .. code-block:: python
 
     import plotting
-    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label=method, x_axislabel='Angle')
+    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle')
 
 
 .. image:: figures/PlotTPSS.png

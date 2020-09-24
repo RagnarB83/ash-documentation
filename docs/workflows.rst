@@ -87,7 +87,7 @@ Example 2a : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`
     specieslist=[N2, H2, NH3] #Use same order as stoichiometry
 
     #Equation stoichiometry : negative integer for reactant, positive integer for product
-    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [1,3,-2]
+    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
     stoichiometry=[-1, -3, 2] #Use same order as specieslist
     ##
     numcores=1

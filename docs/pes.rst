@@ -101,6 +101,7 @@ Make sure the PES-Results.txt is available in the same directory.
                               start=0, finish=60, broadening=0.1, points=10000, plotname='H2O-B3LYP')
 
 
+Note: The plotting part (requires Matplotlib)  that creates the final image file can be turned off by setting matplotlib=False
 
 
 ######################################################
