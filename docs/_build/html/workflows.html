@@ -256,7 +256,7 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#Use same order as stoichiometry</span>
 
 <span class="c1">#Equation stoichiometry : negative integer for reactant, positive integer for product</span>
-<span class="c1"># Example: N2 + 3H2 -&gt; 2NH3  reaction should be:  [1,3,-2]</span>
+<span class="c1"># Example: N2 + 3H2 -&gt; 2NH3  reaction should be:  [-1,-3,2]</span>
 <span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1">#Use same order as specieslist</span>
 <span class="c1">##</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>

@@ -184,7 +184,8 @@
 a broadened spectrum and a stick spectrum. The xvalues list is traditionally a Python list of energies (e.g. transition energies, Ionization-energies) and yvalues
 list is typically a list of intensities. Typically these quantities come from a current or previous ASH job.
 Gaussian broadening is used.</p>
-<p>The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png)</p>
+<p>The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png),
+the latter requires Matplotlib.</p>
 <p>Options:</p>
 <ul class="simple">
 <li><p>plotname: String (name, used to name the output files)</p></li>
@@ -194,6 +195,7 @@ Gaussian broadening is used.</p>
 <li><p>points : integer (number of points in broadened spectrum, default:10000)</p></li>
 <li><p>imageformat : string-option (Matplotlib image format, e.g. png, svg; default: png)</p></li>
 <li><p>dpi : integer (resolution of image, default:200)</p></li>
+<li><p>matplotlib : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
 
@@ -218,7 +220,7 @@ The output is an imagefile (PNG by default).</p>
 <li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
-<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">)</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>
