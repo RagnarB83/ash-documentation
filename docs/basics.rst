@@ -65,8 +65,8 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
                                 orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
-    #Basic Cartesian optimization with KNARR-LBFGS
-    SimpleOpt(fragment=Ironhexacyanide, theory=ORCAcalc, optimizer='KNARR-LBFGS')
+    #Geometry Optimization using geomeTRIC
+    geomeTRICOptimizer(fragment=Ironhexacyanide, theory=ORCAcalc, coordsystem='tric')
 
 
 The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
