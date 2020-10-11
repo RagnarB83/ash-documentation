@@ -9,7 +9,7 @@ in articles by Bjornsson et al.
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
 QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
-creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
+creation of either a spherical cluster or supercell of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
 molecular fragment present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded single-point property calculations
@@ -35,7 +35,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 | 1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.
 | 2. Apply symmetry operations to get coordinates for whole unit cell (if needed).
 | 3. Identify the molecular fragments present in cell via connectivity and match with user-input
-| 4. Extend the unit cell and cut out a spherical cluster with user-defined MM radius (typically 30-50 Å). Only whole molecules included.
+| 4. Extend the unit cell and cut out a spherical cluster or supercell with user-defined MM radius (typically 30-50 Å). Only whole molecules included.
 | 5. Define atomic charges of the molecular fragments from QM calculations.
 | 6. Define Lennard-Jones parameters of the molecular fragments.
 | 7. Iterate the atomic charges of the main molecular fragment in the center of the cluster (electrostatically embedded QM/MM) until self-concistency.
@@ -67,10 +67,74 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 | - Polarizable embedding
 | - Proper parallelization of Numerical frequencies.
 
+######################################################
+MOLCRYS function: Creating a cluster
+######################################################
 
-######################################################
-MOLCRYS Example: QM/MM Cluster setup from CIF-file
-######################################################
+.. code-block:: python
+
+    def molcrys(cif_file=None, xtl_file=None, xyz_file=None, cell_length=None, cell_angles=None,
+        fragmentobjects=[], theory=None, numcores=1, chargemodel='', clusterradius=None,
+        shortrangemodel='UFF_modH', auto_connectivity=False, shiftasymmunit=False, cluster_type='sphere',
+        supercell_expansion=[3,3,3])
+
+The purpose of the **molcrys** function is to create a cluster fragment (either spherical or supercell) from a file containing periodic information and to define
+a nonbonded MM forcefield for the whole system. The cluster fragment (an ASH fragment) can then be subjected to a QM/MM geometry optimization.
+There are 3 inputfile options: cif_file, xtl_file or xyz_file. The CIF-file and XTL-file (created by VESTA) contain fractional coordinates and the unit-cell shape and this is automatically
+parsed by ASH. If you provide an XYZ-file then the file must contain real-space coordinates in Å for a whole unitcell and additionally the length and angles of the unitcell have to be provide as well,
+using cell_length and cell_angles keywords.
+
+The following keyword arguments must be provided:
+
+- **fragmentobjects**: list of fragment-types
+- **theory**: ASH QMTheory object
+- **chargemodel**: String. Which atomchargemodel to use for the nonbonded forcefield. Options: 'CHELPG', 'Hirshfeld', 'CM5', 'NPA', 'Mulliken'.
+- **shortrangemodel**: String. What model to describe the short-range potential. Currently, the potential is Lennard-Jones with parameter options: 'UFF_all', 'UFF_modH'
+
+
+Optional keyword arguments.
+
+- **auto_connectivity**: Boolean(True/False). Whether to figure out the connectivity automatically or not. Default: False
+- **numcores**: number of cores to use. Default: 1
+- **cluster_type**: String. Options are: 'sphere' and 'supercell'. Default: 'sphere'
+- **clusterradius**: Integer. Radius of cluster sphere. Necessary if cluster_type='sphere'
+- **supercell_expansion**: List of integers. How many times to expand the unitcell in x,y,z directions if using cluster_type='supercell'
+
+
+*Input-file examples:*
+
+.. code-block:: python
+
+    #3 input-file options
+    # From CIF-file:
+    Cluster = molcrys(cif_file="cif_filename.cif", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+        clusterradius=32, chargemodel='CM5', shortrangemodel='UFF_all')
+    # From XTL-file:
+    Cluster = molcrys(xtk_file="xtl_filename.xtl", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+        clusterradius=32, chargemodel='CM5', shortrangemodel='UFF')
+    # From XYZ-file:
+    Cluster = molcrys(xyz_file="xyz_filename.xyz", cell_length=[10.1,12.2,10.1], cell_angles=[90,90,90],
+        fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+            clusterradius=32, chargemodel='CM5', shortrangemodel='UFF')
+
+
+*Cluster-sphere or supercell examples:*
+
+.. code-block:: python
+
+    #2 types of cluster-shapes (here using CIF-file)
+    # Spherical cluster (with 32 Å radius)
+    Cluster = molcrys(cif_file="cif_filename.cif", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+        clusterradius=32, chargemodel='CM5', shortrangemodel='UFF_all')
+    # 3x3x3 Supercell
+    Cluster = molcrys(cif_file="cif_filename.cif", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+        cluster_type='supercell', supercell_expansion=[3,3,3], chargemodel='CM5', shortrangemodel='UFF_all')
+
+
+
+################################################################
+MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file
+################################################################
 Here we show how to use the **MOLCRYS** code for an example Na\ :sup:`+` \[H\ :sub:`2`\PO\ :sub:`4`] :sup:`-` \ crystal. This molecular crystal contains 2 fragment-types:
 Na\ :sup:`+` \ and H\ :sub:`2`\PO\ :sub:`4`:sup:`-` \
 

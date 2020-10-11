@@ -176,8 +176,9 @@
             
   <div class="section" id="plotting-options">
 <h1>Plotting options<a class="headerlink" href="#plotting-options" title="Permalink to this headline">¶</a></h1>
-<p>ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.</p>
-<p>This requires a Matplotlib installation (easily installed via Anaconda) to the Python environment.</p>
+<p>ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.
+These are essentially wrapper-functions around Matplotlib functionality.
+This requires a Matplotlib installation (easily installed via Anaconda) to the Python environment.</p>
 <div class="section" id="plot-spectrum-plotting-broadened-spectrum">
 <h2>plot_Spectrum: Plotting broadened spectrum<a class="headerlink" href="#plot-spectrum-plotting-broadened-spectrum" title="Permalink to this headline">¶</a></h2>
 <p>The plot_Spectrum function takes a list of x-axis values (xvalues keyword), y-axis values (yvalues keyword) and plots
@@ -188,14 +189,14 @@ Gaussian broadening is used.</p>
 the latter requires Matplotlib.</p>
 <p>Options:</p>
 <ul class="simple">
-<li><p>plotname: String (name, used to name the output files)</p></li>
-<li><p>range : List (x-axis range to plot; first value is start, second value is end)</p></li>
-<li><p>unit : String (unit of x-axis used to label axis, default: eV)</p></li>
-<li><p>broadening : number (the broadening factor in same unit as data, default: 0.1)</p></li>
-<li><p>points : integer (number of points in broadened spectrum, default:10000)</p></li>
-<li><p>imageformat : string-option (Matplotlib image format, e.g. png, svg; default: png)</p></li>
-<li><p>dpi : integer (resolution of image, default:200)</p></li>
-<li><p>matplotlib : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)</p></li>
+<li><p><strong>plotname</strong> : String (name, used to name the output files)</p></li>
+<li><p><strong>range</strong> : List (x-axis range to plot; first value is start, second value is end)</p></li>
+<li><p><strong>unit</strong> : String (unit of x-axis used to label axis, default: eV)</p></li>
+<li><p><strong>broadening</strong> : number (the broadening factor in same unit as data, default: 0.1)</p></li>
+<li><p><strong>points</strong> : integer (number of points in broadened spectrum, default:10000)</p></li>
+<li><p><strong>imageformat</strong> : string-option (Matplotlib image format, e.g. png, svg; default: png)</p></li>
+<li><p><strong>dpi</strong> : integer (resolution of image, default:200)</p></li>
+<li><p><strong>matplotlib</strong> : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
 
@@ -211,16 +212,24 @@ the latter requires Matplotlib.</p>
 </div>
 <div class="section" id="reaction-profile">
 <h2>Reaction_profile<a class="headerlink" href="#reaction-profile" title="Permalink to this headline">¶</a></h2>
-<p>For a 1D scan (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a>), the result dictionary can be given to the <strong>plotting.reactionprofile_plot</strong> function which will visualize the energy surface as a lineplot.
+<p>For a 1D scan (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a>), the result dictionary can be given to the <strong>plotting.reactionprofile_plot</strong> function which will visualize the
+relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
 The output is an imagefile (PNG by default).</p>
 <ul class="simple">
-<li><p>The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).</p></li>
-<li><p>The x-axis label of the plot can be changed via: x_axislabel.</p></li>
-<li><p>The label keyword is used to named the file saved: e.g.: PlotXX.png</p></li>
-<li><p>The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.</p></li>
+<li><p>By default, the <em>RelativeEnergy</em> =True keyword option is on but can be turned off. This assumes energies are initially in Eh (Hartree) and they will be converted into the desired unit.</p></li>
+<li><p>The desired relative-energy unit is chosen via the <em>finalunit</em> keyword (valid options are: ‘kcal/mol’, ‘kJ/mol’, ‘eV’, ‘cm-1’).</p></li>
+<li><p>The x-axis label or y-axis label of the plot can be changed via: <em>x_axislabel</em> =’String’ or <em>y_axislabel</em> =’String’.</p></li>
+<li><p>The <em>label</em> keyword is used to named the file saved: e.g.: PlotXX.png</p></li>
+<li><p>The <em>imageformat</em> and <em>dpi</em> keywords can be used to specify the image format: default is PNG and 200.</p></li>
+<li><p><em>pointsize</em>, <em>scatter_linewidth</em>, <em>linewidth</em> and <em>color</em> keywords can be used to modify the plot.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotting</span>
-<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">)</span>
+<span class="c1">#Simple with default options</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
+<span class="c1">#Specifying options</span>
+
+<span class="n">plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy&#39;</span><span class="p">,</span>
+    <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">RelativeEnergy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>

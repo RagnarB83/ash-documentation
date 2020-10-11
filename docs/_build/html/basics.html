@@ -225,8 +225,8 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
-<span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
-<span class="n">SimpleOpt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">)</span>
+<span class="c1">#Geometry Optimization using geomeTRIC</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),

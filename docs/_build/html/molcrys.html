@@ -100,7 +100,8 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">MOLCRYS: Automatic QM/MM for Molecular Crystals</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#molcrys-example-qm-mm-cluster-setup-from-cif-file">MOLCRYS Example: QM/MM Cluster setup from CIF-file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molcrys-function-creating-a-cluster">MOLCRYS function: Creating a cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-qm-mm-geometry-optimization">MOLCRYS: QM/MM Geometry optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-expanded-qm-region-calculation">MOLCRYS: Expanded QM region calculation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molcrys-property-calculation">MOLCRYS: Property calculation</a></li>
@@ -190,7 +191,7 @@ in articles by Bjornsson et al.</p>
 </div>
 <p>The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
 QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
-creation of a spherical cluster of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
+creation of either a spherical cluster or supercell of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
 molecular fragment present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
 The method then allows one to do electrostatically embedded QM/MM geometry optimizations, electrostically embedded single-point property calculations
@@ -207,7 +208,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 <div class="line">1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.</div>
 <div class="line">2. Apply symmetry operations to get coordinates for whole unit cell (if needed).</div>
 <div class="line">3. Identify the molecular fragments present in cell via connectivity and match with user-input</div>
-<div class="line">4. Extend the unit cell and cut out a spherical cluster with user-defined MM radius (typically 30-50 Å). Only whole molecules included.</div>
+<div class="line">4. Extend the unit cell and cut out a spherical cluster or supercell with user-defined MM radius (typically 30-50 Å). Only whole molecules included.</div>
 <div class="line">5. Define atomic charges of the molecular fragments from QM calculations.</div>
 <div class="line">6. Define Lennard-Jones parameters of the molecular fragments.</div>
 <div class="line">7. Iterate the atomic charges of the main molecular fragment in the center of the cluster (electrostatically embedded QM/MM) until self-concistency.</div>
@@ -237,8 +238,61 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 <div class="line">- Polarizable embedding</div>
 <div class="line">- Proper parallelization of Numerical frequencies.</div>
 </div>
-<div class="section" id="molcrys-example-qm-mm-cluster-setup-from-cif-file">
-<h2>MOLCRYS Example: QM/MM Cluster setup from CIF-file<a class="headerlink" href="#molcrys-example-qm-mm-cluster-setup-from-cif-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="molcrys-function-creating-a-cluster">
+<h2>MOLCRYS function: Creating a cluster<a class="headerlink" href="#molcrys-function-creating-a-cluster" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtl_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xyz_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_angles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[],</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">clusterradius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_modH&#39;</span><span class="p">,</span> <span class="n">auto_connectivity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shiftasymmunit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cluster_type</span><span class="o">=</span><span class="s1">&#39;sphere&#39;</span><span class="p">,</span>
+    <span class="n">supercell_expansion</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The purpose of the <strong>molcrys</strong> function is to create a cluster fragment (either spherical or supercell) from a file containing periodic information and to define
+a nonbonded MM forcefield for the whole system. The cluster fragment (an ASH fragment) can then be subjected to a QM/MM geometry optimization.
+There are 3 inputfile options: cif_file, xtl_file or xyz_file. The CIF-file and XTL-file (created by VESTA) contain fractional coordinates and the unit-cell shape and this is automatically
+parsed by ASH. If you provide an XYZ-file then the file must contain real-space coordinates in Å for a whole unitcell and additionally the length and angles of the unitcell have to be provide as well,
+using cell_length and cell_angles keywords.</p>
+<p>The following keyword arguments must be provided:</p>
+<ul class="simple">
+<li><p><strong>fragmentobjects</strong>: list of fragment-types</p></li>
+<li><p><strong>theory</strong>: ASH QMTheory object</p></li>
+<li><p><strong>chargemodel</strong>: String. Which atomchargemodel to use for the nonbonded forcefield. Options: ‘CHELPG’, ‘Hirshfeld’, ‘CM5’, ‘NPA’, ‘Mulliken’.</p></li>
+<li><p><strong>shortrangemodel</strong>: String. What model to describe the short-range potential. Currently, the potential is Lennard-Jones with parameter options: ‘UFF_all’, ‘UFF_modH’</p></li>
+</ul>
+<p>Optional keyword arguments.</p>
+<ul class="simple">
+<li><p><strong>auto_connectivity</strong>: Boolean(True/False). Whether to figure out the connectivity automatically or not. Default: False</p></li>
+<li><p><strong>numcores</strong>: number of cores to use. Default: 1</p></li>
+<li><p><strong>cluster_type</strong>: String. Options are: ‘sphere’ and ‘supercell’. Default: ‘sphere’</p></li>
+<li><p><strong>clusterradius</strong>: Integer. Radius of cluster sphere. Necessary if cluster_type=’sphere’</p></li>
+<li><p><strong>supercell_expansion</strong>: List of integers. How many times to expand the unitcell in x,y,z directions if using cluster_type=’supercell’</p></li>
+</ul>
+<p><em>Input-file examples:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#3 input-file options</span>
+<span class="c1"># From CIF-file:</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="s2">&quot;cif_filename.cif&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+    <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_all&#39;</span><span class="p">)</span>
+<span class="c1"># From XTL-file:</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">xtk_file</span><span class="o">=</span><span class="s2">&quot;xtl_filename.xtl&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+    <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF&#39;</span><span class="p">)</span>
+<span class="c1"># From XYZ-file:</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">xyz_file</span><span class="o">=</span><span class="s2">&quot;xyz_filename.xyz&quot;</span><span class="p">,</span> <span class="n">cell_length</span><span class="o">=</span><span class="p">[</span><span class="mf">10.1</span><span class="p">,</span><span class="mf">12.2</span><span class="p">,</span><span class="mf">10.1</span><span class="p">],</span> <span class="n">cell_angles</span><span class="o">=</span><span class="p">[</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">],</span>
+    <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+        <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Cluster-sphere or supercell examples:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#2 types of cluster-shapes (here using CIF-file)</span>
+<span class="c1"># Spherical cluster (with 32 Å radius)</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="s2">&quot;cif_filename.cif&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+    <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_all&#39;</span><span class="p">)</span>
+<span class="c1"># 3x3x3 Supercell</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="s2">&quot;cif_filename.cif&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+    <span class="n">cluster_type</span><span class="o">=</span><span class="s1">&#39;supercell&#39;</span><span class="p">,</span> <span class="n">supercell_expansion</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">
+<h2>MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file<a class="headerlink" href="#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file" title="Permalink to this headline">¶</a></h2>
 <p>Here we show how to use the <strong>MOLCRYS</strong> code for an example Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub>] <sup>-</sup> crystal. This molecular crystal contains 2 fragment-types:
 Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
 <p><a class="reference external" href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid=ICSD%20200885&amp;DatabaseToSearch=Published">CIF-file download.</a></p>

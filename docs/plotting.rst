@@ -2,7 +2,7 @@ Plotting options
 ======================================
 
 ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.
-
+These are essentially wrapper-functions around Matplotlib functionality.
 This requires a Matplotlib installation (easily installed via Anaconda) to the Python environment.
 
 ##############################################################################
@@ -18,14 +18,14 @@ the latter requires Matplotlib.
 
 Options:
 
-- plotname: String (name, used to name the output files)
-- range : List (x-axis range to plot; first value is start, second value is end)
-- unit : String (unit of x-axis used to label axis, default: eV)
-- broadening : number (the broadening factor in same unit as data, default: 0.1)
-- points : integer (number of points in broadened spectrum, default:10000)
-- imageformat : string-option (Matplotlib image format, e.g. png, svg; default: png)
-- dpi : integer (resolution of image, default:200)
-- matplotlib : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
+- **plotname** : String (name, used to name the output files)
+- **range** : List (x-axis range to plot; first value is start, second value is end)
+- **unit** : String (unit of x-axis used to label axis, default: eV)
+- **broadening** : number (the broadening factor in same unit as data, default: 0.1)
+- **points** : integer (number of points in broadened spectrum, default:10000)
+- **imageformat** : string-option (Matplotlib image format, e.g. png, svg; default: png)
+- **dpi** : integer (resolution of image, default:200)
+- **matplotlib** : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
 
 .. code-block:: python
 
@@ -47,24 +47,30 @@ Options:
 ##############################################################################
  Reaction_profile
 ##############################################################################
-For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **plotting.reactionprofile_plot** function which will visualize the energy surface as a lineplot.
+For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **plotting.reactionprofile_plot** function which will visualize the
+relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
 The output is an imagefile (PNG by default).
 
-- The unit of the surface can be chosen (kcal/mol, kJ/mol, eV etc.).
-- The x-axis label of the plot can be changed via: x_axislabel.
-- The label keyword is used to named the file saved: e.g.: PlotXX.png
-- The imageformat and dpi keywords can be used to specify the image format: default is PNG and 200.
+- By default, the *RelativeEnergy* =True keyword option is on but can be turned off. This assumes energies are initially in Eh (Hartree) and they will be converted into the desired unit.
+- The desired relative-energy unit is chosen via the *finalunit* keyword (valid options are: 'kcal/mol', 'kJ/mol', 'eV', 'cm-1').
+- The x-axis label or y-axis label of the plot can be changed via: *x_axislabel* ='String' or *y_axislabel* ='String'.
+- The *label* keyword is used to named the file saved: e.g.: PlotXX.png
+- The *imageformat* and *dpi* keywords can be used to specify the image format: default is PNG and 200.
+- *pointsize*, *scatter_linewidth*, *linewidth* and *color* keywords can be used to modify the plot.
 
 .. code-block:: python
 
     import plotting
-    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle')
+    #Simple with default options
+    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy')
+    #Specifying options
 
+    plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy',
+        imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, linewidth=1, color='blue')
 
 .. image:: figures/PlotTPSS.png
    :align: center
    :width: 600
-
 
 
 

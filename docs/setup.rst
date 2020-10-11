@@ -6,20 +6,22 @@
 
 Setup
 ======================================
+Contact Ragnar if you want access to the code.
 
 ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and as packages will have to be installed you need to be able to
 install Python packages via pip.
 We recommend Anaconda or miniconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
-Anaconda comes with Python3, Numpy, SciPy, Matplotlib.
-For treatment of large systems via QM/MM, a Julia installation is strongly recommended (as the Python routines will be too slow).
+Anaconda is inconvenient for installing Numpy, SciPy, Matplotlib.
 
+Treatment of large systems via QM/MM require a Julia installation (as the Python routines will be too slow).
+Future versions will make Julia a requirement.
 
 Strict dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
-* `Scipy <https://www.scipy.org>`_ library.
+
 
 Strongly recommended:
 
@@ -27,6 +29,9 @@ Strongly recommended:
 * `Julia 1.X <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 
+Useful:
+
+* `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces.
 
 
 ###############################
@@ -77,22 +82,15 @@ Put these environment definitions in your shell environment startup file e.g. .b
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
 Julia is necessary for fast QM/MM functionality inside ASH.
 
- i) Download appropriate binaries from the official Julia website. Extract archive.
+ i) Download appropriate binaries from the official Julia website. Version 1.4 or higher. Extract archive.
  ii) Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
- iii) Launch Julia to install PyCall:
+ iii) Run Julia using the ASH sourcefile julia-packages-setup.jl (inside ASH source directory) as input to download and install the  required Julia packages. Currently: PyCall, Hungarian, Distances
 
 .. code-block:: shell
 
-    julia  #This launches the julia interpreter
+    julia julia-packages-setup.jl  #This launches the julia interpreter and requests installation of required Julia packages for ASH.
 
-Inside the Julia interpreter do:
-
-.. code-block:: julia
-
-        using Pkg  # activate Pkg manager
-        Pkg.add("PyCall")  #Install PyCall library
-        exit()
-
+This will download and install required Julia packages.
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
 Then execute in shell: rm -rf ~/.julia/registries/General
@@ -121,21 +119,8 @@ Inside the Python interpreter do:
     import julia
     julia.install()
 
-    #If this is successful then the python-jl binary (installed by PyJulia) should be available.
+    #If this is successful then the python-jl binary (installed by PyJulia) should become available.
 
-**Step 6.**
-...TO BE REMOVED....
-Compile Fortran library. When inside ash dir, compile the LJCoulombv1 code using either gfortran or ifort:
-The Fortran library is necessary for fast QM/MM functionality inside ASH.
-
-.. code-block:: shell
-
-    f2py -c -m LJCoulombv1 LJCoulombv1.f90 --fcompiler=gfortran
-    #f2py -c -m LJCoulombv1 LJCoulombv1.f90 --fcompiler=intel
-
-The f2py command (`Fortran to Python Interface <https://numpy.org/doc/stable/f2py/>`_) is available if Python3 and numpy has been installed correctly.
-Rename the compiled library file (something like LJCoulombv1.cpython-36m-x86_64-linux-gnu.so) to LJCoulombv1.so
-and move to lib dir: /path/to/ash/lib
 
 **Step 7a.** Install desired QM program(s):
 
@@ -181,7 +166,7 @@ It can be installed using conda.
 
 * If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
 
-* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment).
+* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment). python-jl can always be used.
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
