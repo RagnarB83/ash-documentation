@@ -37,9 +37,9 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
-
+#Disabled "sphinxcontrib.asciinema". does not work with readthedocs
 extensions = [
-    "sphinx_rtd_theme", "sphinxcontrib.asciinema",
+    "sphinx_rtd_theme", ,
 ]
 
 
