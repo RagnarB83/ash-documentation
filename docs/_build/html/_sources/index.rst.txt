@@ -8,6 +8,9 @@ Ash: Documentation
 
 These are the documentation pages of Ash.
 
+.. asciinema:: pRswe64h98Qq9dGNkLDprggQ3
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

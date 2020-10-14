@@ -39,7 +39,7 @@
 
 
 extensions = [
-    "sphinx_rtd_theme",
+    "sphinx_rtd_theme", "sphinxcontrib.asciinema",
 ]
 
 

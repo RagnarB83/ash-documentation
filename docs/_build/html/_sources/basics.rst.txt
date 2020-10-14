@@ -89,6 +89,16 @@ The output will be written to standard output (i.e. your shell). You can redirec
 
     python3 ashtest.py >& ashtest.out
 
+#####################################################
+Interactive ASH in a REPL or iPython environment
+#####################################################
+It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
+This allows for interactive use of ASH. See video below for an example.
+
+.. asciinema:: pRswe64h98Qq9dGNkLDprggQ3
+
+If ASH has been set up correctly (PYTHONPATH etc.) then ASH within iPython should be straightforward.
+Make sure to use the iPython that uses the same Python as ASH.
 
 #####################
 Submitting job

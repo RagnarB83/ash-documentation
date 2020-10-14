@@ -25,6 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script src="_static/asciinema-player_2.6.1.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -34,6 +35,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/asciinema-player_2.6.1.css" type="text/css" />
+  <link rel="stylesheet" href="_static/asciinema-custom.css" type="text/css" />
   <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -97,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#input-structure">Input structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-script">Example script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-script-directly">Running script directly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-ash-in-a-repl-or-ipython-environment">Interactive ASH in a REPL or iPython environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#submitting-job">Submitting job</a></li>
 </ul>
 </li>
@@ -243,6 +247,13 @@ defines variables related to the ORCA-interface , creates an ORCA-theory object
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py &gt;<span class="p">&amp;</span> ashtest.out
 </pre></div>
 </div>
+</div>
+<div class="section" id="interactive-ash-in-a-repl-or-ipython-environment">
+<h2>Interactive ASH in a REPL or iPython environment<a class="headerlink" href="#interactive-ash-in-a-repl-or-ipython-environment" title="Permalink to this headline">¶</a></h2>
+<p>It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
+This allows for interactive use of ASH. See video below for an example.</p>
+<script id="asciicast-pRswe64h98Qq9dGNkLDprggQ3"  src="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js" async></script><p>If ASH has been set up correctly (PYTHONPATH etc.) then ASH within iPython should be straightforward.
+Make sure to use the iPython that uses the same Python as ASH.</p>
 </div>
 <div class="section" id="submitting-job">
 <h2>Submitting job<a class="headerlink" href="#submitting-job" title="Permalink to this headline">¶</a></h2>
