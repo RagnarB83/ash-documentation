@@ -10,7 +10,7 @@ These are the documentation pages of Ash.
 
 .. raw:: html
 
-   <script id="asciicast-pRswe64h98Qq9dGNkLDprggQ3" src="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js" async></script>
+   <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
 
 .. toctree::
    :maxdepth: 2
