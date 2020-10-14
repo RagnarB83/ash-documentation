@@ -8,8 +8,9 @@ Ash: Documentation
 
 These are the documentation pages of Ash.
 
-<script id="asciicast-pRswe64h98Qq9dGNkLDprggQ3" src="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js" async></script>
+.. raw:: html
 
+   <script id="asciicast-pRswe64h98Qq9dGNkLDprggQ3" src="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js" async></script>
 
 .. toctree::
    :maxdepth: 2
