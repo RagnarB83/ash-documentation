@@ -39,7 +39,7 @@
 
 #Disabled "sphinxcontrib.asciinema". does not work with readthedocs
 extensions = [
-    "sphinx_rtd_theme", ,
+    "sphinx_rtd_theme",
 ]
 
 

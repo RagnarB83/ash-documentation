@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PES: PhotoElectron/PhotoEmission Spectrum &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Workflows in ASH" href="workflows.html" />
+    <link rel="prev" title="MOLCRYS: Automatic QM/MM for Molecular Crystals" href="molcrys.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PES: PhotoElectron/PhotoEmission Spectrum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#photoelectronspectrum-function">PhotoElectronSpectrum function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plot-spectrum">Plot spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-tddft-on-h2o">Example: TDDFT on H<sub>2</sub>O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>PES: PhotoElectron/PhotoEmission Spectrum</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/pes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pes-photoelectron-photoemission-spectrum">
+<h1>PES: PhotoElectron/PhotoEmission Spectrum<a class="headerlink" href="#pes-photoelectron-photoemission-spectrum" title="Permalink to this headline">¶</a></h1>
+<p>Workflow to calculate photoelectron/photoemission spectra of molecules using either TDDFT, CASSCF, MRCI+Q or EOM-IP-CCSD state energies combined
+with a Dyson-orbital norm approach for intensities.</p>
+<ul class="simple">
+<li><p>The TDDFT workflow combines an SCF-calculation of the initial state and an SCF+TDDFT calculation of the first ionized state (of each ionized-state multiplicity) to get the full ionization energy spectrum for each spin multiplicity. Dyson orbital norms are then calculated as approximate intensities for both SCF-type and TDDFT-type states by parsing theORCA TDDFT output files.</p></li>
+<li><p>The CASSCF workflow performs a CASSCF calculation of the initial state and the uses the initial-state orbitals in a CAS-CI calculation of the ionized states of both spin multiplicities. Both regular CASSCF and ICE-CASSCF in ORCA is possible.</p></li>
+<li><p>The MRCI+Q workflow is similar to the CASSCF workflow but on top of the CASSCF orbital optimization of the initial state an MRCI+Q calculation is performed and for the ionized state the initial-state orbitals are used as before. For CASSCF and MRCI+Q, determinant-printing of the wavefunction is requested (printed in the output) which is parsed by the code and fed to the Wfoverlap program.</p></li>
+<li><p>The IP-EOM-CCSD approach calculates the ionized states directly via the IP-EOM approach from the CCSD wavefunction of the initial state. Approximate Dyson norms are used here, i.e. the dominant coefficient of the singles eigenvector.</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>ORCA is the only supported QM-code for now.</p></li>
+<li><p>Requires <a class="reference external" href="https://sharc-md.org/?page_id=309">Wfoverlap</a> program to calculate Dyson orbital norms via determinant-based wavefunctions.</p></li>
+<li><p>Plotting option requires installation of Matplotlib.</p></li>
+</ul>
+<p>Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
+libraries is in your LD_LIBRARY_PATH.</p>
+<div class="section" id="photoelectronspectrum-function">
+<h2>PhotoElectronSpectrum function<a class="headerlink" href="#photoelectronspectrum-function" title="Permalink to this headline">¶</a></h2>
+<p>The PES.PhotoElectronSpectrum function takes the following keyword arguments:</p>
+<p><strong>Necessary:</strong></p>
+<ul class="simple">
+<li><p>theory: An ASH Theory object (only ORCATheory supported at the moment)</p></li>
+<li><p>fragment: An ASH fragment object</p></li>
+<li><p>InitialState_charge : integer</p></li>
+<li><p>InitialState_mult : integer</p></li>
+<li><p>Ionizedstate_charge: integer</p></li>
+<li><p>Ionizedstate_mult: integer or list of integers, e.g. [5,7]</p></li>
+<li><p>path_wfoverlap: string</p></li>
+<li><p>numionstates : integer (default: 50)</p></li>
+</ul>
+<p><strong>Optional:</strong></p>
+<ul class="simple">
+<li><p>memory: integer (in MB), (memory used by Wfoverlap, default: 40000)</p></li>
+<li><p>numcores: integer (number of cores used in WFOverlap, default: 1) Note: ORCA parallelization is handled by ORCA object.</p></li>
+<li><p>noDyson : Boolean(True/False), (whether to skip Dyson-norm computation, default: False)</p></li>
+<li><p>tda : Boolean (default: True)</p></li>
+<li><p>brokensym: Boolean (default: False)</p></li>
+<li><p>HSmult : integer (for brokensym feature, default: None)</p></li>
+<li><p>atomstoflip : list of integers (for brokensym feature, default: None)</p></li>
+<li><p>initialorbitalfiles : list of filename-strings (for reading in orbital guesses, default : None)</p></li>
+<li><p>Densities: String-option (‘SCF’, ‘All’, ‘None’). For calculating SCF densities, SCF+TDDFT densities or none.</p></li>
+<li><p>densgridvalue : integer (gridpoints for densities, default: 100)</p></li>
+<li><p>CAS : Boolean (True/False), (CASSCF-PES option, default: False)</p></li>
+<li><p>CAS_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>CAS_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>CASCI : Boolean(True/False), (whether to skip CASSCF-orbital optimization for Ionized states, default: False)</p></li>
+<li><p>MRCI : Boolean (True/False), (MRCI-PES option, default: False)</p></li>
+<li><p>MRCI_Initial : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>MRCI_Final : list of active space numbers (electrons,orbitals), (e.g. [3,2] for 3-el/2orb active space, default : None)</p></li>
+<li><p>MRCI_CASCI_Final: Boolean (True/False), (whether to do CAS-CI for ionized states instead of CASSCF, default: True)</p></li>
+<li><p>tprintwfvalue : Float (threshold for determinant printing, default: 1e-6)</p></li>
+<li><p>EOM:  Boolean (True/False), (IP-EOM-CCSD-PES option, default: False)</p></li>
+</ul>
+<p>By default a TDDFT-TDA approach is used and a functional keyword should then be provided, a basis set and any other SCF-related settings.
+For a CASSCF PES, use CAS=True, for MRCI PES, use MRCI=True and set the respective additional arguments (CAS_Initial,CAS_Final  or MRCI_Initial/MRCI_Final).
+Also provide a basis set in the ORCA object.
+For IP-EOM-CCSD, use EOM=True and provide a basis set keyword in the ORCA object.</p>
+<p>The output of the function are lists of IPs, Dyson-norms. MO energies are also printed.</p>
+<p>To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF (in CASSCF and MRCI+Q jobs ) calculations converge to the desired initial state or final state one can:
+- request a stability analysis. Add %scf stabperform true end in the ORCA-object.
+- read in previously converged orbital files for each state: initialorbitalfiles keyword.
+- read in a previously converged orbital file. Provide a “orca-input.gbw” file in the same dir as the inputfile (and make sure it gets copied to scratch).
+- For CASSCF: switch to orbstep DIIS and switchstep DIIS to preserve the chosen active space. See FeS2 example below.</p>
+<p><strong>TDDFT</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mncl2</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>CASSCF</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mncl2</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+                          <span class="n">CAS</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">CAS_Initial</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">CAS_Final</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>MRCI+Q</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mncl2</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+                          <span class="n">MRCI</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">MRCI_Initial</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">MRCI_Final</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>IP-EOM-CCSD</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mncl2</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">EOM</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plot-spectrum">
+<h2>Plot spectrum<a class="headerlink" href="#plot-spectrum" title="Permalink to this headline">¶</a></h2>
+<p>To plot the spectrum one can use the plotting.plot_Spectrum function (see <a class="reference internal" href="plotting.html"><span class="doc">Plotting options</span></a>)</p>
+<p>Just provide as x and y values the list of ionization energies (in eVs) and the list of dysonnorms and the function will create broadened
+spectra. Typically you would run this in th same job as the PES.PhotoElectronSpectrum function, using the respective output as input.</p>
+<p>The ionization energy range can be controlled (via the range keyword, provide a list of start and end values),
+number of points and broadening factor (eV) and the name of the plot. A PNG image file of the broadened spectrum and a stick-spectrum is created as well
+as files contained broadened spectrum (.dat files) and stick-spectrum (.stk files).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_B3LYP&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The plot_Spectrum function can be run on its own or as part of the PhotoElectronSpectrum job.
+If a previous PES.PhotoElectronSpectrum job is available, the respective Results file (“PES-Results.txt”) can be conveniently read in like below.
+Make sure the PES-Results.txt is available in the same directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Read in old results</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span><span class="p">,</span> <span class="n">mos_alpha</span><span class="p">,</span> <span class="n">mos_beta</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">Read_old_results</span><span class="p">()</span>
+
+<span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_TPSSh&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note: The plotting part (requires Matplotlib)  that creates the final image file can be turned off by setting matplotlib=False</p>
+</div>
+<div class="section" id="example-tddft-on-h2o">
+<h2>Example: TDDFT on H<sub>2</sub>O<a class="headerlink" href="#example-tddft-on-h2o" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="n">h2ostring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">O        0.222646668      0.000000000     -0.752205128</span>
+<span class="s2">H        0.222646668      0.759337000     -0.156162128</span>
+<span class="s2">H        0.222646668     -0.759337000     -0.156162128</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">h2o</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2ostring</span><span class="p">)</span>
+
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! B3LYP def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">maxiter 200</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Define ORCA theory. Does not need charge/mult keywords.</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2o</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numionstates</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+
+<span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_B3LYP&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">
+<h2>Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q<a class="headerlink" href="#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q" title="Permalink to this headline">¶</a></h2>
+<p>This example of the FeS<sub>2</sub> <sup>-</sup>- anion accounts for multiple Finalstate spin-multiplicities as we go from:</p>
+<p>Initial state: FeS<sub>2</sub> <sup>-</sup>- S=5/2 to  Final state: FeS<sub>2</sub>S=2 and S=3</p>
+<p><strong>TDDFT example</strong>
+Here we show how results with multiple functionals can be obtained at the same time. SCF convergence aids and grid settings can be provided.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
+
+<span class="n">functionals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;BLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSSh&#39;</span><span class="p">,</span> <span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">,</span> <span class="s1">&#39;BHLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM-B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;wB97M-D3BJ&#39;</span><span class="p">,</span> <span class="s1">&#39;HF&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="n">functionals</span><span class="p">:</span>
+    <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-&quot;</span><span class="o">+</span><span class="n">functional</span>
+    <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP RIJCOSX def2/J GridX5 Grid5 Finalgrid6 tightscf slowconv &quot;</span> <span class="o">+</span> <span class="n">functional</span>
+    <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    </span><span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">    maxiter 1500</span>
+<span class="s2">    directresetfreq 1</span>
+<span class="s2">    diismaxeq 20</span>
+<span class="s2">    end</span>
+
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#Define ORCA theory. Does not need charge/mult keywords.</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+    <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                          <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span>
+                            <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+
+    <span class="c1">#Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.</span>
+    <span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_&#39;</span><span class="o">+</span><span class="n">functional</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+        <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="n">PES</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A table is printed out:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>-------------------------------------------------------------------------
+FINAL RESULTS
+-------------------------------------------------------------------------
+Initial state:
+State no.    Mult     TotalE <span class="o">(</span>Eh<span class="o">)</span>      State-type
+    <span class="m">0</span>       <span class="m">6</span>    -2060.29687303000      SCF
+
+Final ionized states:
+State no.    Mult     TotalE <span class="o">(</span>Eh<span class="o">)</span>      IE <span class="o">(</span>eV<span class="o">)</span>  Dyson-norm State-type TDDFT Exc.E. <span class="o">(</span>eV<span class="o">)</span>
+    <span class="m">0</span>       <span class="m">5</span>    -2060.17646751000      <span class="m">3</span>.276    <span class="m">0</span>.94885        SCF             <span class="m">0</span>.000
+    <span class="m">1</span>       <span class="m">5</span>    -2060.16669219030      <span class="m">3</span>.542    <span class="m">0</span>.93627        TDA             <span class="m">0</span>.266
+    <span class="m">2</span>       <span class="m">5</span>    -2060.15438116737      <span class="m">3</span>.877    <span class="m">0</span>.63286        TDA             <span class="m">0</span>.601
+    <span class="m">3</span>       <span class="m">5</span>    -2060.14129840868      <span class="m">4</span>.233    <span class="m">0</span>.00679        TDA             <span class="m">0</span>.957
+    <span class="m">4</span>       <span class="m">5</span>    -2060.14063692088      <span class="m">4</span>.251    <span class="m">0</span>.02222        TDA             <span class="m">0</span>.975
+    <span class="m">5</span>       <span class="m">5</span>    -2060.13957119054      <span class="m">4</span>.280    <span class="m">0</span>.61628        TDA             <span class="m">1</span>.004
+    <span class="m">6</span>       <span class="m">5</span>    -2060.13832171358      <span class="m">4</span>.314    <span class="m">0</span>.87886        TDA             <span class="m">1</span>.038
+    <span class="m">7</span>       <span class="m">5</span>    -2060.12435697115      <span class="m">4</span>.694    <span class="m">0</span>.00113        TDA             <span class="m">1</span>.418
+    <span class="m">8</span>       <span class="m">5</span>    -2060.12395272861      <span class="m">4</span>.705    <span class="m">0</span>.28032        TDA             <span class="m">1</span>.429
+    <span class="m">9</span>       <span class="m">5</span>    -2060.12185801725      <span class="m">4</span>.762    <span class="m">0</span>.01219        TDA             <span class="m">1</span>.486
+   <span class="m">10</span>       <span class="m">5</span>    -2060.11877107418      <span class="m">4</span>.846    <span class="m">0</span>.00003        TDA             <span class="m">1</span>.570
+   <span class="m">11</span>       <span class="m">5</span>    -2060.11634561892      <span class="m">4</span>.912    <span class="m">0</span>.01243        TDA             <span class="m">1</span>.636
+   <span class="m">12</span>       <span class="m">5</span>    -2060.11590462705      <span class="m">4</span>.924    <span class="m">0</span>.00225        TDA             <span class="m">1</span>.648
+   <span class="m">13</span>       <span class="m">5</span>    -2060.11583112841      <span class="m">4</span>.926    <span class="m">0</span>.05664        TDA             <span class="m">1</span>.650
+   <span class="m">14</span>       <span class="m">5</span>    -2060.11042897805      <span class="m">5</span>.073    <span class="m">0</span>.03065        TDA             <span class="m">1</span>.797
+   <span class="m">15</span>       <span class="m">5</span>    -2060.10917950110      <span class="m">5</span>.107    <span class="m">0</span>.00467        TDA             <span class="m">1</span>.831
+   <span class="m">16</span>       <span class="m">5</span>    -2060.10851801330      <span class="m">5</span>.125    <span class="m">0</span>.81624        TDA             <span class="m">1</span>.849
+   <span class="m">17</span>       <span class="m">5</span>    -2060.10238087649      <span class="m">5</span>.292    <span class="m">0</span>.05319        TDA             <span class="m">2</span>.016
+   <span class="m">18</span>       <span class="m">5</span>    -2060.10102115157      <span class="m">5</span>.329    <span class="m">0</span>.00405        TDA             <span class="m">2</span>.053
+   <span class="m">19</span>       <span class="m">5</span>    -2060.09738296868      <span class="m">5</span>.428    <span class="m">0</span>.00923        TDA             <span class="m">2</span>.152
+   <span class="m">20</span>       <span class="m">5</span>    -2060.09598649444      <span class="m">5</span>.466    <span class="m">0</span>.00326        TDA             <span class="m">2</span>.190
+   <span class="m">21</span>       <span class="m">5</span>    -2060.09367128714      <span class="m">5</span>.529    <span class="m">0</span>.00756        TDA             <span class="m">2</span>.253
+   <span class="m">22</span>       <span class="m">5</span>    -2060.09231156222      <span class="m">5</span>.566    <span class="m">0</span>.00653        TDA             <span class="m">2</span>.290
+   <span class="m">23</span>       <span class="m">5</span>    -2060.09080484001      <span class="m">5</span>.607    <span class="m">0</span>.00949        TDA             <span class="m">2</span>.331
+   <span class="m">24</span>       <span class="m">5</span>    -2060.09076809069      <span class="m">5</span>.608    <span class="m">0</span>.00402        TDA             <span class="m">2</span>.332
+   <span class="m">25</span>       <span class="m">5</span>    -2060.08507194575      <span class="m">5</span>.763    <span class="m">0</span>.01869        TDA             <span class="m">2</span>.487
+   <span class="m">26</span>       <span class="m">5</span>    -2060.08264649049      <span class="m">5</span>.829    <span class="m">0</span>.01427        TDA             <span class="m">2</span>.553
+   <span class="m">27</span>       <span class="m">5</span>    -2060.06949023315      <span class="m">6</span>.187    <span class="m">0</span>.01436        TDA             <span class="m">2</span>.911
+   <span class="m">28</span>       <span class="m">5</span>    -2060.06419833075      <span class="m">6</span>.331    <span class="m">0</span>.00118        TDA             <span class="m">3</span>.055
+   <span class="m">29</span>       <span class="m">5</span>    -2060.05736295683      <span class="m">6</span>.517    <span class="m">0</span>.07555        TDA             <span class="m">3</span>.241
+   <span class="m">30</span>       <span class="m">7</span>    -2060.17162372000      <span class="m">3</span>.408    <span class="m">0</span>.94915        SCF             <span class="m">0</span>.000
+   <span class="m">31</span>       <span class="m">7</span>    -2060.15927594775      <span class="m">3</span>.744    <span class="m">0</span>.93597        TDA             <span class="m">0</span>.336
+   <span class="m">32</span>       <span class="m">7</span>    -2060.14637693567      <span class="m">4</span>.095    <span class="m">0</span>.93261        TDA             <span class="m">0</span>.687
+   <span class="m">33</span>       <span class="m">7</span>    -2060.12476833423      <span class="m">4</span>.683    <span class="m">0</span>.26773        TDA             <span class="m">1</span>.275
+   <span class="m">34</span>       <span class="m">7</span>    -2060.12440084100      <span class="m">4</span>.693    <span class="m">0</span>.30968        TDA             <span class="m">1</span>.285
+   <span class="m">35</span>       <span class="m">7</span>    -2060.11852094946      <span class="m">4</span>.853    <span class="m">0</span>.61496        TDA             <span class="m">1</span>.445
+   <span class="m">36</span>       <span class="m">7</span>    -2060.11705097657      <span class="m">4</span>.893    <span class="m">0</span>.00015        TDA             <span class="m">1</span>.485
+   <span class="m">37</span>       <span class="m">7</span>    -2060.11525025978      <span class="m">4</span>.942    <span class="m">0</span>.30531        TDA             <span class="m">1</span>.534
+   <span class="m">38</span>       <span class="m">7</span>    -2060.11447852402      <span class="m">4</span>.963    <span class="m">0</span>.00146        TDA             <span class="m">1</span>.555
+   <span class="m">39</span>       <span class="m">7</span>    -2060.10429896177      <span class="m">5</span>.240    <span class="m">0</span>.00888        TDA             <span class="m">1</span>.832
+   <span class="m">40</span>       <span class="m">7</span>    -2060.10220425041      <span class="m">5</span>.297    <span class="m">0</span>.09174        TDA             <span class="m">1</span>.889
+   <span class="m">41</span>       <span class="m">7</span>    -2060.09805157700      <span class="m">5</span>.410    <span class="m">0</span>.00040        TDA             <span class="m">2</span>.002
+   <span class="m">42</span>       <span class="m">7</span>    -2060.09441339411      <span class="m">5</span>.509    <span class="m">0</span>.00172        TDA             <span class="m">2</span>.101
+   <span class="m">43</span>       <span class="m">7</span>    -2060.09224518410      <span class="m">5</span>.568    <span class="m">0</span>.02113        TDA             <span class="m">2</span>.160
+   <span class="m">44</span>       <span class="m">7</span>    -2060.08875399849      <span class="m">5</span>.663    <span class="m">0</span>.03280        TDA             <span class="m">2</span>.255
+   <span class="m">45</span>       <span class="m">7</span>    -2060.08787201476      <span class="m">5</span>.687    <span class="m">0</span>.49869        TDA             <span class="m">2</span>.279
+   <span class="m">46</span>       <span class="m">7</span>    -2060.08695328171      <span class="m">5</span>.712    <span class="m">0</span>.00422        TDA             <span class="m">2</span>.304
+   <span class="m">47</span>       <span class="m">7</span>    -2060.08151438203      <span class="m">5</span>.860    <span class="m">0</span>.02956        TDA             <span class="m">2</span>.452
+   <span class="m">48</span>       <span class="m">7</span>    -2060.07890518015      <span class="m">5</span>.931    <span class="m">0</span>.00197        TDA             <span class="m">2</span>.523
+   <span class="m">49</span>       <span class="m">7</span>    -2060.07677371946      <span class="m">5</span>.989    <span class="m">0</span>.03448        TDA             <span class="m">2</span>.581
+   <span class="m">50</span>       <span class="m">7</span>    -2060.07269454470      <span class="m">6</span>.100    <span class="m">0</span>.02572        TDA             <span class="m">2</span>.692
+   <span class="m">51</span>       <span class="m">7</span>    -2060.06953410300      <span class="m">6</span>.186    <span class="m">0</span>.37580        TDA             <span class="m">2</span>.778
+   <span class="m">52</span>       <span class="m">7</span>    -2060.06912986045      <span class="m">6</span>.197    <span class="m">0</span>.00396        TDA             <span class="m">2</span>.789
+   <span class="m">53</span>       <span class="m">7</span>    -2060.05487112345      <span class="m">6</span>.585    <span class="m">0</span>.03873        TDA             <span class="m">3</span>.177
+   <span class="m">54</span>       <span class="m">7</span>    -2060.05420963565      <span class="m">6</span>.603    <span class="m">0</span>.14670        TDA             <span class="m">3</span>.195
+   <span class="m">55</span>       <span class="m">7</span>    -2060.04469156121      <span class="m">6</span>.862    <span class="m">0</span>.00065        TDA             <span class="m">3</span>.454
+   <span class="m">56</span>       <span class="m">7</span>    -2060.03822368050      <span class="m">7</span>.038    <span class="m">0</span>.01066        TDA             <span class="m">3</span>.630
+   <span class="m">57</span>       <span class="m">7</span>    -2060.03579822524      <span class="m">7</span>.104    <span class="m">0</span>.00271        TDA             <span class="m">3</span>.696
+   <span class="m">58</span>       <span class="m">7</span>    -2060.01514510618      <span class="m">7</span>.666    <span class="m">0</span>.00638        TDA             <span class="m">4</span>.258
+   <span class="m">59</span>       <span class="m">7</span>    -2060.01429987177      <span class="m">7</span>.689    <span class="m">0</span>.00952        TDA             <span class="m">4</span>.281
+</pre></div>
+</div>
+<p><strong>IP-EOM-CCSD</strong>
+For IP-EOM-CCSD, only EOM=True is required and the desired basis set. SCF keywords can be provided to aid HF convergence.
+Warning: Dysonnorms are approximate as they are simply the dominant coefficient of the singles eigenvector.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-IPEOMCCSD&quot;</span>
+
+<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
+<span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">%maxcore</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">maxiter 500</span>
+<span class="s2">directresetfreq 1</span>
+<span class="s2">diismaxeq 20</span>
+<span class="s2">end</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Define ORCA theory. No charge/mult keywords</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                      <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">EOM</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span>
+                        <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+
+<span class="c1">#Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_&#39;</span><span class="o">+</span><span class="n">joblabel</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">PES</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>CASSCF</strong></p>
+<p>For CASSCF one neads to provide the CAS, CAS_Initial and CAS_Final keywords.
+It is possible to provide a %casscf block in the ORCA-object-blocks in order to modify the default.
+Below we use the ICE-CI CASSCF variant and we switch from the default convergers to DIIS in order to preserve the chosen active space.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">6</span>
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-CASSCF&quot;</span>
+
+<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
+<span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">%maxcore 9000</span>
+<span class="si">%c</span><span class="s2">asscf</span>
+<span class="s2">cistep ice</span>
+<span class="s2">orbstep diis</span>
+<span class="s2">switchstep diis</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Define ORCA theory. No charge/mult keywords</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                      <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span>
+                        <span class="n">CAS</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">CAS_Initial</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">CAS_Final</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+                        <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+
+<span class="c1">#Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_&#39;</span><span class="o">+</span><span class="n">joblabel</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">PES</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>MRCI+Q</strong></p>
+<p>For MRCI+Q one neads to provide the MRCI, MRCI_Initial and MRCI_Final keywords.
+It is possible to provide a %casscf block in the ORCA-object-blocks in order to control the default settings of the CASSCF-orbital optimization
+performed for the initial state.
+Below we switch from the default convergers to DIIS in order to preserve the chosen active space.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">PES</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">6</span>
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-MRCI+Q&quot;</span>
+
+<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
+<span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">%maxcore</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Define ORCA theory. No charge/mult keywords</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
+<span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                      <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span>
+                        <span class="n">MRCI</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">MRCI_Initial</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">MRCI_Final</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span>
+                        <span class="n">path_wfoverlap</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/sharc-master/bin/wfoverlap.x&quot;</span> <span class="p">)</span>
+
+<span class="c1">#Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">plot_Spectrum</span><span class="p">(</span><span class="n">xvalues</span><span class="o">=</span><span class="n">IPs</span><span class="p">,</span> <span class="n">yvalues</span><span class="o">=</span><span class="n">dysonnorms</span><span class="p">,</span> <span class="n">plotname</span><span class="o">=</span><span class="s1">&#39;PES_spectrum_&#39;</span><span class="o">+</span><span class="n">joblabel</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;eV&#39;</span><span class="p">,</span>
+    <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">PES</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="workflows.html" class="btn btn-neutral float-right" title="Workflows in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="molcrys.html" class="btn btn-neutral float-left" title="MOLCRYS: Automatic QM/MM for Molecular Crystals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ragnar Bjornsson
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

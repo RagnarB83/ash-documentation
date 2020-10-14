@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic usage &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Coordinates and fragments" href="coordinate-input.html" />
+    <link rel="prev" title="Setup" href="setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input-structure">Input structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-script">Example script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-script-directly">Running script directly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-ash-in-a-repl-or-ipython-environment">Interactive ASH in a REPL or iPython environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submitting-job">Submitting job</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Basic usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/basics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basic-usage">
+<h1>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="input-structure">
+<h2>Input structure<a class="headerlink" href="#input-structure" title="Permalink to this headline">¶</a></h2>
+<p>You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
+Make sure you have already set in the shell (part of Setup):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
+</pre></div>
+</div>
+<p>You usually also want to run the settings_ash.init() function which displays the ASH banner and sets the initial time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified.
+Current available options are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">use_ANSI_color</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#Whether to use ANSI escape sequences for displaying color.</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Scales connectivity</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># Adds connectivity tolerance. See Coordinates and fragments.</span>
+</pre></div>
+</div>
+<p>More user-defined settings will be available in settings_ash.py later on.</p>
+<p>You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
+of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
+See  <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for various ways of dealing with coordinates and fragments.</p>
+</div>
+<div class="section" id="example-script">
+<h2>Example script<a class="headerlink" href="#example-script" title="Permalink to this headline">¶</a></h2>
+<p>Here is a basic Ash Python script, e.g. named: ashtest.py</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1">#Setting numcores. Used by ORCA.</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+<span class="c1">#Create fragment</span>
+<span class="n">Ironhexacyanide</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;fecn6.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1">#Defining ORCA-related variables</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Geometry Optimization using geomeTRIC</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
+defines variables related to the ORCA-interface , creates an ORCA-theory object
+(see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), and runs a geometry optimization using the SimpleOpt optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other better options).</p>
+</div>
+<div class="section" id="running-script-directly">
+<h2>Running script directly<a class="headerlink" href="#running-script-directly" title="Permalink to this headline">¶</a></h2>
+<p>For a simple job we can just run the script directly</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
+</pre></div>
+</div>
+<p>The output will be written to standard output (i.e. your shell). You can redirect the output to a file.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py &gt;<span class="p">&amp;</span> ashtest.out
+</pre></div>
+</div>
+</div>
+<div class="section" id="interactive-ash-in-a-repl-or-ipython-environment">
+<h2>Interactive ASH in a REPL or iPython environment<a class="headerlink" href="#interactive-ash-in-a-repl-or-ipython-environment" title="Permalink to this headline">¶</a></h2>
+<p>It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
+This allows for interactive use of ASH. See video below for an example.</p>
+<p>If ASH has been set up correctly (PYTHONPATH etc.) then ASH within iPython should be straightforward.
+Make sure to use the iPython that uses the same Python as ASH.</p>
+<script id="asciicast-pRswe64h98Qq9dGNkLDprggQ3" src="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js" async></script></div>
+<div class="section" id="submitting-job">
+<h2>Submitting job<a class="headerlink" href="#submitting-job" title="Permalink to this headline">¶</a></h2>
+<p>For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
+dealing with local scratch, copy files back when done etc.
+Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
+local scratch, set the correct PATH variables, load modules etc.</p>
+<p>Use like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sbatch -J ashtest.py jobscript.sh
+</pre></div>
+</div>
+<p>where jobscript.sh is:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
+
+<span class="c1">#SBATCH -N 1</span>
+<span class="c1">#SBATCH --tasks-per-node=1</span>
+<span class="c1">#SBATCH --time=8760:00:00</span>
+<span class="c1">#SBATCH -p compute</span>
+<span class="c1">#SBATCH --mem-per-cpu=3000</span>
+
+<span class="c1">#Use like this:</span>
+<span class="c1">#sbatch -J inputfile.py jobscript.sh</span>
+
+<span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="nv">$SLURM_JOB_NAME</span>
+<span class="nb">export</span> <span class="nv">job</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="si">${</span><span class="nv">job</span><span class="p">%%.*</span><span class="si">}</span><span class="k">)</span>
+<span class="nv">outputname</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$job</span><span class="s2">.out&quot;</span>
+
+<span class="c1">#Controlling threading</span>
+<span class="nb">export</span> <span class="nv">MKL_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span> <span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span> <span class="nv">OMP_STACKSIZE</span><span class="o">=</span>1G
+<span class="nb">export</span> <span class="nv">OMP_MAX_ACTIVE_LEVELS</span><span class="o">=</span><span class="m">1</span>
+
+<span class="c1">#Create scratch directory on local scratch</span>
+<span class="nv">path_to_scratch</span><span class="o">=</span>/scratch
+<span class="k">if</span> <span class="o">[</span> ! -d <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span> <span class="o">]</span>
+<span class="k">then</span>
+  mkdir -p <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span>
+<span class="k">fi</span>
+<span class="nv">tdir</span><span class="o">=</span><span class="k">$(</span>mktemp -d <span class="nv">$path_to_scratch</span>/<span class="nv">$USER</span>/ashjob__<span class="nv">$SLURM_JOB_ID</span>-XXXX<span class="k">)</span>
+chmod +xr <span class="nv">$tdir</span>
+
+
+<span class="c1">#Copy all relevant inputfiles for ASH: python scripts, CIF-files, XYZ files etc.</span>
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.py <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.cif <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.xyz <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.xtl <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.ff <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.ygg <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.pdb <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.hess <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/*.info <span class="nv">$tdir</span>/
+cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$tdir</span>/
+
+<span class="c1"># cd to scratch</span>
+<span class="nb">cd</span> <span class="nv">$tdir</span>
+<span class="nb">echo</span> <span class="s2">&quot;tdir is </span><span class="nv">$tdir</span><span class="s2">&quot;</span>
+
+<span class="c1"># Copy job and node info to beginning of outputfile</span>
+<span class="nb">echo</span> <span class="s2">&quot;Starting job in scratch dir: </span><span class="nv">$tdir</span><span class="s2">&quot;</span> &gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+<span class="nb">echo</span> <span class="s2">&quot;Job execution start: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+<span class="nb">echo</span> <span class="s2">&quot;Shared library path: </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+<span class="nb">echo</span> <span class="s2">&quot;Slurm Job ID is: </span><span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+<span class="nb">echo</span> <span class="s2">&quot;Slurm Job name is: </span><span class="si">${</span><span class="nv">SLURM_JOB_NAME</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+<span class="nb">echo</span> <span class="nv">$SLURM_NODELIST</span> &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span>
+
+<span class="c1">#Python and ASH environment</span>
+
+<span class="c1">#Load necessary modules.</span>
+<span class="c1">#If using modules for Python/OpenMPI/ORCA etc. then that all should be loaded here.</span>
+
+<span class="c1"># Load or set Python environment here:</span>
+<span class="c1"># e.g. module load python37  or:</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/python/bin:<span class="nv">$PATH</span>
+<span class="c1"># If using Conda, activate desired Conda environment.</span>
+<span class="c1"># May have to add conda bin directory to $PATH first.</span>
+<span class="c1">#conda activate ashpy37</span>
+
+
+
+<span class="c1">#Add path to Julia</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/julia/bin:<span class="nv">$PATH</span>
+
+<span class="c1">#Put ASH in PYTHONPATH and LD_LIBRARY_PATH</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+
+<span class="c1">#Print out environment variables for debuggin.</span>
+<span class="nb">echo</span> <span class="s2">&quot;PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;PYTHONPATH is </span><span class="nv">$PYTHONPATH</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;Running Ash  job&quot;</span>
+
+<span class="c1">#Put ORCA in PATH and LD_LIBRARY_PATH</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/orca:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/orca:<span class="nv">$LD_LIBRARY_PATH</span>
+
+<span class="c1">#OpenMPI path for ORCA</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/opt/openmpi-2.1.5/bin:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/opt/openmpi-2.1.5/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+
+
+<span class="c1">#Start Ash job from scratch dir.  Output file is written directly to submit directory</span>
+<span class="nb">export</span> <span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
+python-jl <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+
+<span class="c1"># Ash has finished. Now copy important stuff back.</span>
+<span class="nv">outputdir</span><span class="o">=</span><span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="si">${</span><span class="nv">job</span><span class="si">}</span>_<span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span>
+cp -r <span class="nv">$tdir</span> <span class="nv">$outputdir</span>
+
+<span class="c1"># Removing scratch folder</span>
+rm -rf <span class="nv">$tdir</span>
+</pre></div>
+</div>
+<p>For even more convenient job-submissions one can utilize a <strong>subash</strong> wrapper script that copies the jobscript.sh file (above)
+to the current directory, modifies the number of cores requested and then submits.
+The number of cores can be provided in the command-line (should match the number of cores requested in the ASH Python script, e.g. as in ashtest.py above)
+or alternatively it can read the numcores variable in ashtest.py (if present). For the latter: make sure to have a line containing:
+“numcores=X”
+in the Python script (as in ashtest.py above).
+Make sure to change path_to_jobscript variable in line 5.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>subash ashtest.py
+<span class="c1"># or:</span>
+subash ashtest.py -p <span class="m">8</span>  <span class="c1">#for requesting an 8-core job.</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/zsh</span>
+<span class="c1">#subash</span>
+<span class="c1">#Wrapper script for ASH job-script</span>
+
+<span class="nv">path_to_jobscript</span><span class="o">=</span>/home/bjornsson/jobscripts/job-ash.sh
+
+<span class="nv">green</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">2</span><span class="sb">`</span>
+<span class="nv">yellow</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">3</span><span class="sb">`</span>
+<span class="nv">normal</span><span class="o">=</span><span class="sb">`</span>tput sgr0<span class="sb">`</span>
+<span class="nv">cyan</span><span class="o">=</span><span class="sb">`</span>tput setaf <span class="m">6</span><span class="sb">`</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span>
+<span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">green</span><span class="si">}</span><span class="s2">subash</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">yellow</span><span class="si">}</span><span class="s2">Usage: subash input.py      Dir should contain .py Python script.</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">yellow</span><span class="si">}</span><span class="s2">Or: subash input.py -p 8      Submit with 8 cores.</span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">exit</span>
+<span class="k">fi</span>
+
+<span class="nb">export</span> <span class="nv">file</span><span class="o">=</span><span class="nv">$1</span>
+
+
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;-p&quot;</span> <span class="o">]]</span>
+<span class="k">then</span>
+  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="nv">$3</span>
+<span class="k">else</span>
+  <span class="c1">#Grabbing numcores from input-file.py if not using -p flag</span>
+  <span class="nb">echo</span> <span class="s2">&quot;No -p N provided. Grabbing cores from Python script (searches for line beginning with numcores= )&quot;</span>
+  <span class="nv">var</span><span class="o">=</span><span class="k">$(</span>grep <span class="s1">&#39;^numcores&#39;</span> <span class="nv">$file</span><span class="k">)</span>
+  <span class="nb">export</span> <span class="nv">NPROC</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$var</span> <span class="p">|</span> awk -F<span class="s1">&#39;=&#39;</span> <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+  <span class="c1">#export NPROC=$(grep -m 1 numcores $file | awk -F&#39;=&#39; &#39;{print $2}&#39;)</span>
+  <span class="k">if</span> <span class="o">((</span><span class="si">${#</span><span class="nv">NPROC</span><span class="si">}</span> <span class="o">==</span> <span class="m">0</span><span class="o">))</span>
+  <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;No numcores variable in Python script found. Exiting...&quot;</span>
+    <span class="nb">exit</span>
+  <span class="k">fi</span>
+<span class="k">fi</span>
+
+<span class="c1">#Copying job-script to dir:</span>
+cp <span class="nv">$path_to_jobscript</span> .
+<span class="c1">#Note: jobscript should have tasks-per-node set to 1 for the sed substitution to work</span>
+sed -i <span class="s2">&quot;s/#SBATCH --tasks-per-node=1/#SBATCH --tasks-per-node=</span><span class="nv">$NPROC</span><span class="s2">/g&quot;</span> job-ash.sh
+
+<span class="c1">#Submit job.</span>
+sbatch -J <span class="nv">$file</span> job-ash.sh
+<span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">cyan</span><span class="si">}</span><span class="s2">ASH job submitted using </span><span class="nv">$NPROC</span><span class="s2"> cores using file </span><span class="nv">$file</span><span class="s2">.</span><span class="nv">$mult</span><span class="s2"> </span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="coordinate-input.html" class="btn btn-neutral float-right" title="Coordinates and fragments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ragnar Bjornsson
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

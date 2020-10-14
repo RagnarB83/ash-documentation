@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ash: Documentation &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About ASH" href="About.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Ash: Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ash-documentation">
+<h1>Ash: Documentation<a class="headerlink" href="#ash-documentation" title="Permalink to this headline">¶</a></h1>
+<p>These are the documentation pages of Ash.</p>
+<p>&lt;script id=”asciicast-pRswe64h98Qq9dGNkLDprggQ3” src=”<a class="reference external" href="https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js">https://asciinema.org/a/pRswe64h98Qq9dGNkLDprggQ3.js</a>” async&gt;&lt;/script&gt;</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="About.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#installation-and-configuration">Installation and Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#input-structure">Input structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#example-script">Example script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#running-script-directly">Running script directly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#interactive-ash-in-a-repl-or-ipython-environment">Interactive ASH in a REPL or iPython environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#submitting-job">Submitting job</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="coordinate-input.html#creating-modifying-fragment-objects">Creating/modifying fragment objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#single-point-calculation">Single-point calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#geometry-optimization">Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#numerical-frequencies-hessian">Numerical frequencies (Hessian)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#nudged-elastic-band-calculations">Nudged Elastic Band Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#surface-scans">Surface scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#saddle-point-optimization">Saddle-point optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job-types.html#molecular-dynamics">Molecular Dynamics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#orcatheory">ORCATheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#psi4theory">Psi4Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#pyscftheory">PySCFTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#xtbtheory">xTBTheory</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MM-interfaces.html#nonbondedtheory">NonBondedTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MM-interfaces.html#openmm-interface">OpenMM interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-function-creating-a-cluster">MOLCRYS function: Creating a cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-qm-mm-geometry-optimization">MOLCRYS: QM/MM Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-expanded-qm-region-calculation">MOLCRYS: Expanded QM region calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-property-calculation">MOLCRYS: Property calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-reaction-path-and-saddle-point-finding-via-neb-method">MOLCRYS: Reaction path and saddle-point finding via NEB method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-numerical-qm-mm-frequencies">MOLCRYS: Numerical QM/MM frequencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-fragment-identification-connectivity-issues">MOLCRYS: Fragment identification/Connectivity issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-molecular-dynamics">MOLCRYS: Molecular Dynamics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pes.html#photoelectronspectrum-function">PhotoElectronSpectrum function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pes.html#plot-spectrum">Plot spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pes.html#example-tddft-on-h2o">Example: TDDFT on H<sub>2</sub>O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pes.html#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">Example 3a : Running multiple single-point energies with different functionals (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#the-run-benchmark-function">The run_benchmark function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#running-a-test-set-with-a-chosen-qmtheory">Running a test set with a chosen QMtheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#running-a-test-set-with-a-workflow">Running a test set with a workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#creating-or-modifying-a-test-set">Creating or modifying a test set</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#thermochemprotocol-automatic-opt-freq-hl-theory">thermochemprotocol: Automatic Opt+Freq+HL-theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#available-high-level-singlepoint-protocols">Available High-level SinglePoint Protocols</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plotting.html#plot-spectrum-plotting-broadened-spectrum">plot_Spectrum: Plotting broadened spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotting.html#reaction-profile">Reaction_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotting.html#contour-plot">Contour_plot</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is Ash version 0.1. Use at your own risk!</p>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="About.html" class="btn btn-neutral float-right" title="About ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ragnar Bjornsson
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>
