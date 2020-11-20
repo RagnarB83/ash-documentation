@@ -1,4 +1,4 @@
-Plotting options
+Plotting results
 ======================================
 
 ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.

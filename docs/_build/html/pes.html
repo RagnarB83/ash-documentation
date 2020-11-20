@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Axx</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -111,7 +111,11 @@
 <li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a></li>
 </ul>
 
             
@@ -281,7 +285,7 @@ For IP-EOM-CCSD, use EOM=True and provide a basis set keyword in the ORCA object
 </div>
 <div class="section" id="plot-spectrum">
 <h2>Plot spectrum<a class="headerlink" href="#plot-spectrum" title="Permalink to this headline">¶</a></h2>
-<p>To plot the spectrum one can use the plotting.plot_Spectrum function (see <a class="reference internal" href="plotting.html"><span class="doc">Plotting options</span></a>)</p>
+<p>To plot the spectrum one can use the plotting.plot_Spectrum function (see <a class="reference internal" href="plotting.html"><span class="doc">Plotting results</span></a>)</p>
 <p>Just provide as x and y values the list of ionization energies (in eVs) and the list of dysonnorms and the function will create broadened
 spectra. Typically you would run this in th same job as the PES.PhotoElectronSpectrum function, using the respective output as input.</p>
 <p>The ionization energy range can be controlled (via the range keyword, provide a list of start and end values),

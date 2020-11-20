@@ -100,8 +100,9 @@ Make sure to use the iPython that uses the same Python as ASH.
 
 .. raw:: html
 
+    <div align=center>
    <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
-
+    </div>
 
 #####################
 Submitting job

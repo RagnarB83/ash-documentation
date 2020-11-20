@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Axx</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -114,7 +114,11 @@
 <li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting options</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a></li>
 </ul>
 
             
@@ -466,7 +470,7 @@ The results is a dictionary like before.</p>
 <p><strong>Plotting</strong></p>
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above) and can be easily
 plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
-See <a class="reference internal" href="plotting.html"><span class="doc">Plotting options</span></a>) page.</p>
+See <a class="reference internal" href="plotting.html"><span class="doc">Plotting results</span></a>) page.</p>
 <p>The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
 where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.</p>
 <p>A dictionary using data from a previous job (stored e.g. in surface_results.txt) can be created via the <strong>read_surfacedict_from_file</strong> function:</p>

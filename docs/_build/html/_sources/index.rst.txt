@@ -10,11 +10,13 @@ These are the documentation pages of Ash.
 
 .. raw:: html
 
+    <div align=center>
    <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
+    </div>
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Axx
 
    About
    setup
@@ -30,8 +32,14 @@ These are the documentation pages of Ash.
    benchmarking
    thermochemistry
    ash-classes
-   plotting
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tools
+
+   coordinate-tools
+   plotting
 
 .. role:: underline
     :class: underline

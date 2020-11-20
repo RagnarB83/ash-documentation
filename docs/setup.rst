@@ -26,7 +26,7 @@ Strict dependencies:
 Strongly recommended:
 
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
-* `Julia 1.X <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
+* `Julia 1.5.2 <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 
 Useful:

@@ -110,7 +110,7 @@ Optional keyword arguments.
     Cluster = molcrys(cif_file="cif_filename.cif", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
         clusterradius=32, chargemodel='CM5', shortrangemodel='UFF_all')
     # From XTL-file:
-    Cluster = molcrys(xtk_file="xtl_filename.xtl", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
+    Cluster = molcrys(xtl_file="xtl_filename.xtl", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
         clusterradius=32, chargemodel='CM5', shortrangemodel='UFF')
     # From XYZ-file:
     Cluster = molcrys(xyz_file="xyz_filename.xyz", cell_length=[10.1,12.2,10.1], cell_angles=[90,90,90],
