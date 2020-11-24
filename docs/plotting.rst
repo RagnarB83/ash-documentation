@@ -26,6 +26,7 @@ Options:
 - **imageformat** : string-option (Matplotlib image format, e.g. png, svg; default: png)
 - **dpi** : integer (resolution of image, default:200)
 - **matplotlib** : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
+- **CSV** : Boolean(True/False) (whether to comma-separate values or not in dat and stk files, default: True)
 
 .. code-block:: python
 
