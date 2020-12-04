@@ -186,7 +186,7 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
     ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
     #Chargemodel. Options: CHELPG, Hirshfeld, CM5, NPA, Mulliken
-    chargemodel='Hirshfeld'
+    chargemodel='CM5'
     #Shortrange model. Usually Lennard-Jones. Options: UFF_all, UFF_modH
     shortrangemodel='UFF_modH'
 
@@ -217,7 +217,7 @@ when running ORCA calculations.
 
 
 The chargemodel and shortrangemodel variables are used to define keywords that **molcrys** will recognize.
-The chargemodel defines how to derive the pointcharges for the MM cluster for the QM-MM electrostatic interaction. Available chargemodels are: CHELPG, Hirshfeld, CM5, NPA, Mulliken
+The chargemodel defines how to derive the pointcharges for the MM cluster for the QM-MM electrostatic interaction. Available chargemodels are: CM5, CHELPG, Hirshfeld, NPA, Mulliken
 
 The shortrangemodel defines the short-range interactions between QM and MM atoms (other than the electrostatic).
 Currently, only the UFF Lennard-Jones model is available that uses element-specific parameters (from the Universal Forcefield, UFF) to set up Lennard-Jones potentials between

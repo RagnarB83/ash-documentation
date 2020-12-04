@@ -16,7 +16,7 @@ These are the documentation pages of Ash.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Axx
+   :caption: ASH
 
    About
    setup
