@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -276,7 +276,7 @@ using cell_length and cell_angles keywords.</p>
 <span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="s2">&quot;cif_filename.cif&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
     <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_all&#39;</span><span class="p">)</span>
 <span class="c1"># From XTL-file:</span>
-<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">xtk_file</span><span class="o">=</span><span class="s2">&quot;xtl_filename.xtl&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">xtl_file</span><span class="o">=</span><span class="s2">&quot;xtl_filename.xtl&quot;</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterion</span><span class="p">],</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span>
     <span class="n">clusterradius</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF&#39;</span><span class="p">)</span>
 <span class="c1"># From XYZ-file:</span>
 <span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">xyz_file</span><span class="o">=</span><span class="s2">&quot;xyz_filename.xyz&quot;</span><span class="p">,</span> <span class="n">cell_length</span><span class="o">=</span><span class="p">[</span><span class="mf">10.1</span><span class="p">,</span><span class="mf">12.2</span><span class="p">,</span><span class="mf">10.1</span><span class="p">],</span> <span class="n">cell_angles</span><span class="o">=</span><span class="p">[</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">],</span>
@@ -335,7 +335,7 @@ The variables are then passed as keyword arguments to the  <strong>molcrys</stro
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Chargemodel. Options: CHELPG, Hirshfeld, CM5, NPA, Mulliken</span>
-<span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;Hirshfeld&#39;</span>
+<span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span>
 <span class="c1">#Shortrange model. Usually Lennard-Jones. Options: UFF_all, UFF_modH</span>
 <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_modH&#39;</span>
 
@@ -364,7 +364,7 @@ The variables are then passed as keyword arguments to the  <strong>molcrys</stro
 Next, an ORCA theory object is defined where we set the path to ORCA and define the structure of the inputfile used
 when running ORCA calculations.</p>
 <p>The chargemodel and shortrangemodel variables are used to define keywords that <strong>molcrys</strong> will recognize.
-The chargemodel defines how to derive the pointcharges for the MM cluster for the QM-MM electrostatic interaction. Available chargemodels are: CHELPG, Hirshfeld, CM5, NPA, Mulliken</p>
+The chargemodel defines how to derive the pointcharges for the MM cluster for the QM-MM electrostatic interaction. Available chargemodels are: CM5, CHELPG, Hirshfeld, NPA, Mulliken</p>
 <p>The shortrangemodel defines the short-range interactions between QM and MM atoms (other than the electrostatic).
 Currently, only the UFF Lennard-Jones model is available that uses element-specific parameters (from the Universal Forcefield, UFF) to set up Lennard-Jones potentials between
 all atoms. The “UFF_modH” keyword is currently recommended that uses available parameters for all elements except the LJ

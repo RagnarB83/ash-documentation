@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -228,22 +228,58 @@ The available high-level single-point calculations are defined below.</p>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">ORCAobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">simpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
-<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">Opt_theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">SPprotocol</span><span class="o">=</span><span class="s1">&#39;DLPNO-W1&#39;</span><span class="p">,</span> <span class="n">fraglist</span><span class="o">=</span><span class="p">[</span><span class="n">H2</span><span class="p">],</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">Opt_theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">SPprotocol</span><span class="o">=</span><span class="s1">&#39;DLPNO-W1&#39;</span><span class="p">,</span> <span class="n">workflow_args</span><span class="o">=</span><span class="n">fraglist</span><span class="o">=</span><span class="p">[</span><span class="n">H2</span><span class="p">],</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example with additional SPprotocol workflow arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;h2.xyz&#39;</span><span class="p">)</span>
+<span class="c1">#Defining theory for Opt+Freq step in thermochemprotocol</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
+<span class="n">simpleinput</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6&quot;</span>
+<span class="n">blockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf maxiter 200 end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">ORCAobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">simpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">DLPNO_CC_CBS_SP_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cardinals&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;basisfamily&quot;</span> <span class="p">:</span> <span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="s1">&#39;stabilityanalysis&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;pnosetting&#39;</span> <span class="p">:</span> <span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="s1">&#39;pnoextrapolation&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;CVSR&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;memory&#39;</span> <span class="p">:</span> <span class="mi">5112</span><span class="p">,</span> <span class="s1">&#39;extrablocks&#39;</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf</span><span class="se">\n</span><span class="s2">directresetfreq 1</span><span class="se">\n</span><span class="s2">end</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;extrainputkeyword&#39;</span> <span class="p">:</span> <span class="s1">&#39;Slowconv&#39;</span><span class="p">}</span>
+<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">Opt_theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">SPprotocol</span><span class="o">=</span><span class="s1">&#39;DLPNO-W1&#39;</span><span class="p">,</span> <span class="n">workflow_args</span><span class="o">=</span><span class="n">DLPNO_CC_CBS_SP_args</span><span class="p">,</span> <span class="n">fraglist</span><span class="o">=</span><span class="p">[</span><span class="n">H2</span><span class="p">],</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="available-high-level-singlepoint-protocols">
 <h2>Available High-level SinglePoint Protocols<a class="headerlink" href="#available-high-level-singlepoint-protocols" title="Permalink to this headline">¶</a></h2>
+<p>These high-level singlepoint energy protocols can either be called on their own (see below) or used in the SPprotocol keyword argument in thermochemprotocol (see above).</p>
 <p>Available protocols are (all use ORCA):</p>
-<p>TO BE DOCUMENTED</p>
+<p><strong>DLPNO_CC_CBS_SP</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">DLPNO_CC_CBS_SP</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNO&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span>
+    <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;h2.xyz&#39;</span><span class="p">)</span>
+<span class="n">DLPNO_CC_CBS_SP</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span> <span class="n">orcadir</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">orca_4</span><span class="o">.</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The code above defines an H2 fragment (from h2.xyz) and runs a single-point DLPNO-CCSD(T)/CBS calculation, utilizing basis-set and PNO extrapolation.
+Cardinals=[2,3] and basisfamily=”def2” means that the def2-SVP and def2-TZVPP basis sets will be used.
+pnosetting=”extrapolation” and pnoextrapolation=[5,6] means that the DLPNO-calculations will be run using 2 different TCutPNO cutoffs and then extrapolated to the PNO limit.</p>
 <ul class="simple">
-<li><p>W1theory_SP</p></li>
-<li><p>W1F12theory_SP</p></li>
-<li><p>DLPNO_W1theory_SP</p></li>
-<li><p>DLPNO_W1F12theory_SP</p></li>
-<li><p>DLPNO_F12_SP</p></li>
-<li><p>DLPNO_W2theory_SP</p></li>
-<li><p>DLPNO_CC_CBS_SP</p></li>
+<li><p>Cardinals can be set to [2,3] or [3,4].</p></li>
+<li><p>basisfamily can be set to “def2” (Ahlrichs basis sets) or “cc” (correlation consistent basis sets).</p></li>
+<li><p>If a heavy element is chosen (heavier than Kr) then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.</p></li>
+<li><p>T1 option utilizes iterative triples, i.e. DLPNO-CCSD(T1) instead (more accurate, more expensive).</p></li>
+<li><p>CVSR adds a Core-Valence-Scalar-Relativistic correction (more accurate, more expensive).</p></li>
+</ul>
+<p>TO BE DOCUMENTED:</p>
+<ul class="simple">
+<li><p><strong>W1theory_SP</strong></p></li>
+<li><p><strong>W1F12theory_SP</strong></p></li>
+<li><p><strong>DLPNO_W1theory_SP</strong></p></li>
+<li><p><strong>DLPNO_W1F12theory_SP</strong></p></li>
+<li><p><strong>DLPNO_F12_SP</strong></p></li>
+<li><p><strong>DLPNO_W2theory_SP</strong></p></li>
 </ul>
 </div>
 </div>
