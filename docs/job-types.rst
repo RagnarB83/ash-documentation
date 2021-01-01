@@ -6,7 +6,7 @@ The job-types available in ASH:
 
 - Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
-- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM).
+- Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.
 - Nudged elastic band calculations are available via an interface to the Knarr-NEB code.
 - Molecular dynamics (not ready).
 
@@ -148,6 +148,36 @@ Other optimizers:
     # Internal Cartesian-LBFGS Optimizer:
     SimpleOpt(fragment=HF_frag, theory=ORCAcalc, optimizer='KNARR-LBFGS', frozen_atoms=[])
 
+
+################################
+Analytical frequencies (Hessian)
+################################
+Analytical frequencies can be requested in some cases if supported by the theory-level interface as well as the Hamiltonian inside program.
+Currently analytical frequencies are supported in: ORCATheory
+
+
+
+.. code-block:: python
+
+    def AnFreq(fragment=None, theory=None, numcores=1, temp=298.15, pressure=1.0)
+
+
+Example:
+
+.. code-block:: python
+
+    HF_frag=Fragment(xyzfile="hf.xyz")
+    ORCAcalc = ORCATheory(orcadir='/opt/orca_4.2.1', charge=0, mult=1,
+                        orcasimpleinput='BP def2-SVP def2/J', orcablocks=", nprocs=1)
+    thermochem_dict = AnFreq(theory=ORCAcalc, fragment=HF_frag)
+
+    print("Thermochem properties dict:", thermochem_dict)
+    print("Vibrational frequencies (cm**-1) : ", thermochem_dict['freqs'])
+    print("ZPVE (Eh) : ", thermochem_dict['ZPVE'])
+    print("Gibbs energy corrections (Eh) : ", thermochem_dict['Gcorr'])
+
+A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
+(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
 
 ################################
 Numerical frequencies (Hessian)

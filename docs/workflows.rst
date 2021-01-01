@@ -153,7 +153,7 @@ See :doc:`thermochemistry` for more information.
     Opt_protocol_inputline="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
 
     #Thermochemistry protocol
-    thermochemprotocol(SPprotocol='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
+    thermochemprotocol(SP_theory='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
 
 
 Final output:

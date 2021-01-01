@@ -49,8 +49,14 @@ thermochemprotocol: Automatic Opt+Freq+HL-theory
 The thermochemprotocol function performs a geometry optimization, frequency calculation and high-level single-point protocol.
 While intended for calculation of a molecular reaction it can be used for single molecules as well.
 
+.. code-block:: python
+
+    def thermochemprotocol(Opt_theory=None, SP_theory=None, fraglist=None, stoichiometry=None, orcadir=None, numcores=None, memory=5000,
+                       pnosetting='NormalPNO', F12level='DZ', workflow_args=None, analyticHessian=False)
+
+
 The reaction is defined via a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
-and then a protocol for the high-level single-point level is chosen (SPprotocol).
+and then a protocol for the high-level single-point level is chosen (SP_theory).
 The available high-level single-point calculations are defined below.
 
 Reaction example:
@@ -82,7 +88,7 @@ Reaction example:
     """
     ORCAopt = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
 
-    thermochemprotocol(Opt_theory=ORCAopt, SPprotocol='DLPNO_CC_CBS_SP', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
+    thermochemprotocol(Opt_theory=ORCAopt, SP_theory='DLPNO_CC_CBS_SP', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
 
 Single fragment example:
 
@@ -97,10 +103,10 @@ Single fragment example:
     """
     ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
 
-    thermochemprotocol(Opt_theory=ORCAobject, SPprotocol='DLPNO_CC_CBS_SP', workflow_args=fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
+    thermochemprotocol(Opt_theory=ORCAobject, SP_theory='DLPNO_CC_CBS_SP', fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
 
 
-Example with additional SPprotocol workflow arguments:
+Example with additional SP_theory workflow arguments:
 
 .. code-block:: python
 
@@ -114,7 +120,7 @@ Example with additional SPprotocol workflow arguments:
     ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
     DLPNO_CC_CBS_SP_args = {'cardinals' : [2,3], "basisfamily" : "def2", 'stabilityanalysis' : True, 'pnosetting' : 'extrapolation', 'pnoextrapolation' : [5,6], 'CVSR' : True,
                     'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
-    thermochemprotocol(Opt_theory=ORCAobject, SPprotocol='DLPNO_CC_CBS_SP', workflow_args=DLPNO_CC_CBS_SP_args, fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
+    thermochemprotocol(Opt_theory=ORCAobject, SP_theory='DLPNO_CC_CBS_SP', workflow_args=DLPNO_CC_CBS_SP_args, fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
 
 
 
@@ -124,7 +130,7 @@ Example with additional SPprotocol workflow arguments:
 ##############################################################################
 Available High-level SinglePoint Protocols
 ##############################################################################
-These high-level singlepoint energy protocols can either be called on their own (see below) or used in the SPprotocol keyword argument in thermochemprotocol (see above).
+These high-level singlepoint energy protocols can either be called on their own (see below) or used as SP_theory keyword argument in thermochemprotocol (see above).
 All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy.
 
 

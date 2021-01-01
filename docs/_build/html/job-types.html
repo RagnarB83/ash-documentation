@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -98,6 +98,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Job Types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#single-point-calculation">Single-point calculation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#geometry-optimization">Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analytical-frequencies-hessian">Analytical frequencies (Hessian)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#numerical-frequencies-hessian">Numerical frequencies (Hessian)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#nudged-elastic-band-calculations">Nudged Elastic Band Calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#surface-scans">Surface scans</a></li>
@@ -189,7 +190,7 @@
 <ul class="simple">
 <li><p>Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.</p></li>
 <li><p>Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.</p></li>
-<li><p>Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM).</p></li>
+<li><p>Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.</p></li>
 <li><p>Nudged elastic band calculations are available via an interface to the Knarr-NEB code.</p></li>
 <li><p>Molecular dynamics (not ready).</p></li>
 </ul>
@@ -309,6 +310,28 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 <span class="n">SimpleOpt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;KNARR-LBFGS&#39;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="p">[])</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="analytical-frequencies-hessian">
+<h2>Analytical frequencies (Hessian)<a class="headerlink" href="#analytical-frequencies-hessian" title="Permalink to this headline">¶</a></h2>
+<p>Analytical frequencies can be requested in some cases if supported by the theory-level interface as well as the Hamiltonian inside program.
+Currently analytical frequencies are supported in: ORCATheory</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">AnFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;BP def2-SVP def2/J&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;, nprocs=1)</span>
+<span class="n">thermochem_dict</span> <span class="o">=</span> <span class="n">AnFreq</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Thermochem properties dict:&quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vibrational frequencies (cm**-1) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;freqs&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE (Eh) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gibbs energy corrections (Eh) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;Gcorr&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
+(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)</p>
 </div>
 <div class="section" id="numerical-frequencies-hessian">
 <h2>Numerical frequencies (Hessian)<a class="headerlink" href="#numerical-frequencies-hessian" title="Permalink to this headline">¶</a></h2>

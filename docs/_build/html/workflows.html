@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -232,13 +232,14 @@ automatically performs DFT geometry optimizations for each conformer and finally
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
 
 <span class="c1">#Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.</span>
-<span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
+<span class="n">thermochem</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
 
-<span class="c1">#Single-point HL job ussing new</span>
+<span class="c1">#Single-point HL job on optimized geometry</span>
 <span class="n">HLORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 <span class="n">HLenergy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">HLORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: &quot;</span><span class="p">,</span> <span class="n">HLenergy</span><span class="p">,</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE: &quot;</span><span class="p">,</span> <span class="n">thermochem</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">],</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DLPNO-CCSD<span class="o">(</span>T<span class="o">)</span>/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
@@ -318,7 +319,7 @@ This feature is in progress and will be made more userfriendly soon. Note that W
 <span class="n">Opt_protocol_inputline</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6&quot;</span>
 
 <span class="c1">#Thermochemistry protocol</span>
-<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">SPprotocol</span><span class="o">=</span><span class="s1">&#39;W1&#39;</span><span class="p">,</span> <span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_protocol_inputline</span><span class="o">=</span><span class="n">Opt_protocol_inputline</span><span class="p">)</span>
+<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">SP_theory</span><span class="o">=</span><span class="s1">&#39;W1&#39;</span><span class="p">,</span> <span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_protocol_inputline</span><span class="o">=</span><span class="n">Opt_protocol_inputline</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Final output:</p>
