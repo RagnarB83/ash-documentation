@@ -46,8 +46,8 @@ The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be speci
 thermochemprotocol functions: Automatic Opt+Freq+HL-theory
 ##########################################################################################
 
-The thermochemprotocol_reaction and thermochemprotocol_single functions can be used to
-performs a multi-step Opt+Freq+HL-single-point protocol.
+The **thermochemprotocol_reaction** and **thermochemprotocol_single** functions can be used to
+perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.
 
 
 The thermochemprotocol_reaction is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.
@@ -57,7 +57,7 @@ The thermochemprotocol_reaction is used for chemical reactions by giving a list 
     def thermochemprotocol_reaction(fraglist=None, stoichiometry=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
                        workflow_args=None, analyticHessian=False)
 
-while thermochemprotocol_single is used for a single fragment.
+while thermochemprotocol_single is used for a single fragment (thermochemprotocol_reaction calls thermochemprotocol_single).
 
 .. code-block:: python
 
@@ -98,7 +98,7 @@ Reaction example:
     """
     ORCAopt = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
 
-    thermochemprotocol(Opt_theory=ORCAopt, SP_theory=DLPNO_CC_CBS, fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
+    thermochemprotocol_reaction(Opt_theory=ORCAopt, SP_theory=DLPNO_CC_CBS, fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
 
 Single fragment example:
 
@@ -150,7 +150,7 @@ Atomic spin-orbit coupling is automatically included if system is an atom.
 .. code-block:: python
 
     def DLPNO_CC_CBS(fragment=None, cardinals = [2,3], basisfamily="def2", charge=None, orcadir=None, mult=None, stabilityanalysis=False,
-        numcores=1, CVSR=False, memory=5000, pnosetting='NormalPNO', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF',
+        numcores=1, CVSR=False, CVbasis="W1-mtsmall", memory=5000, pnosetting='NormalPNO', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF',
         extrainputkeyword='', extrablocks='', **kwargs):
 
 Example:
@@ -167,10 +167,10 @@ pnosetting="extrapolation" and pnoextrapolation=[5,6] means that the DLPNO-calcu
 
 - Cardinals can be set to [2,3] or [3,4].
 - basisfamily can be set to "def2" (Ahlrichs basis sets) or "cc" (correlation consistent basis sets).
-- If a heavy element is chosen (heavier than Kr) then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.
+- If a heavy element is chosen (heavier than Kr) and basisfamily="cc", then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.
 - T1 option utilizes iterative triples, i.e. DLPNO-CCSD(T1) instead (more accurate, more expensive).
 - CVSR adds a Core-Valence-Scalar-Relativistic correction (more accurate, more expensive). The correction is performed at the DLPNO-CCSD(T) level (hardcoded to NormalPNO) using the W1-mtsmall basis set.
-
+  Note: If "W1-mtsmall" is not available for the element involved you may have to provide an appropriate core-valence basis set keyword via CVbasis="basisname" .
 
 TO BE DOCUMENTED:
 
