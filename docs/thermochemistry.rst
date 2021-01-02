@@ -23,7 +23,7 @@ Thermochemistry corrections are automatically calculated (return object) when ei
     print("ZPVE (Eh) : ", thermochem_an['ZPVE'])
 
 A dictionary containing various properties is returned (dictionary keys):
-(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
+(frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
 
 Alternatively, the thermochemcalc function can be called directly.
 
