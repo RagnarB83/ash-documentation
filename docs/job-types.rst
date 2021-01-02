@@ -172,12 +172,12 @@ Example:
     thermochem_dict = AnFreq(theory=ORCAcalc, fragment=HF_frag)
 
     print("Thermochem properties dict:", thermochem_dict)
-    print("Vibrational frequencies (cm**-1) : ", thermochem_dict['freqs'])
+    print("Vibrational frequencies (cm**-1) : ", thermochem_dict['frequencies'])
     print("ZPVE (Eh) : ", thermochem_dict['ZPVE'])
     print("Gibbs energy corrections (Eh) : ", thermochem_dict['Gcorr'])
 
 A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
-(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
+(frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
 
 ################################
 Numerical frequencies (Hessian)
