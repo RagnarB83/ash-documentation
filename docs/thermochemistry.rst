@@ -42,22 +42,32 @@ The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be speci
     thermochemcalc(frequencies,3,h2o_frag, 1, temp=298.18, pressure=1.0)
 
 
-##############################################################################
-thermochemprotocol: Automatic Opt+Freq+HL-theory
-##############################################################################
+##########################################################################################
+thermochemprotocol functions: Automatic Opt+Freq+HL-theory
+##########################################################################################
 
-The thermochemprotocol function performs a geometry optimization, frequency calculation and high-level single-point protocol.
-While intended for calculation of a molecular reaction it can be used for single molecules as well.
+The thermochemprotocol_reaction and thermochemprotocol_single functions can be used to
+performs a multi-step Opt+Freq+HL-single-point protocol.
+
+
+The thermochemprotocol_reaction is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.
 
 .. code-block:: python
 
-    def thermochemprotocol(Opt_theory=None, SP_theory=None, fraglist=None, stoichiometry=None, orcadir=None, numcores=None, memory=5000,
-                       pnosetting='NormalPNO', F12level='DZ', workflow_args=None, analyticHessian=False)
+    def thermochemprotocol_reaction(fraglist=None, stoichiometry=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
+                       workflow_args=None, analyticHessian=False)
+
+while thermochemprotocol_single is used for a single fragment.
+
+.. code-block:: python
+
+    def thermochemprotocol_single(fragment=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
+                       workflow_args=None, analyticHessian=True, temp=298.15, pressure=1.0):
 
 
 The reaction is defined via a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
 and then a protocol for the high-level single-point level is chosen (SP_theory).
-The available high-level single-point calculations are defined below.
+The available high-level single-point calculations are defined later.
 
 Reaction example:
 
@@ -88,7 +98,7 @@ Reaction example:
     """
     ORCAopt = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
 
-    thermochemprotocol(Opt_theory=ORCAopt, SP_theory='DLPNO_CC_CBS_SP', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
+    thermochemprotocol(Opt_theory=ORCAopt, SP_theory=DLPNO_CC_CBS, fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
 
 Single fragment example:
 
@@ -101,9 +111,8 @@ Single fragment example:
     blockinput="""
     %scf maxiter 200 end
     """
-    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
-
-    thermochemprotocol(Opt_theory=ORCAobject, SP_theory='DLPNO_CC_CBS_SP', fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
+    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)s
+    thermochemprotocol_single(fragment=H2, Opt_theory=ORCAobject, SP_theory=DLPNO_CC_CBS, orcadir=orcadir, numcores=numcores)
 
 
 Example with additional SP_theory workflow arguments:
@@ -120,12 +129,7 @@ Example with additional SP_theory workflow arguments:
     ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
     DLPNO_CC_CBS_SP_args = {'cardinals' : [2,3], "basisfamily" : "def2", 'stabilityanalysis' : True, 'pnosetting' : 'extrapolation', 'pnoextrapolation' : [5,6], 'CVSR' : True,
                     'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
-    thermochemprotocol(Opt_theory=ORCAobject, SP_theory='DLPNO_CC_CBS_SP', workflow_args=DLPNO_CC_CBS_SP_args, fraglist=[H2], stoichiometry=[1], orcadir=orcadir, numcores=numcores)
-
-
-
-
-
+    thermochemprotocol_reaction(fraglist=[H2], stoichiometry=[1], Opt_theory=ORCAobject, SP_theory=DLPNO_CC_CBS, workflow_args=DLPNO_CC_CBS_SP_args, orcadir=orcadir, numcores=numcores)
 
 ##############################################################################
 Available High-level SinglePoint Protocols
@@ -145,7 +149,7 @@ Atomic spin-orbit coupling is automatically included if system is an atom.
 
 .. code-block:: python
 
-    def DLPNO_CC_CBS_SP(fragment=None, cardinals = [2,3], basisfamily="def2", charge=None, orcadir=None, mult=None, stabilityanalysis=False,
+    def DLPNO_CC_CBS(fragment=None, cardinals = [2,3], basisfamily="def2", charge=None, orcadir=None, mult=None, stabilityanalysis=False,
         numcores=1, CVSR=False, memory=5000, pnosetting='NormalPNO', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF',
         extrainputkeyword='', extrablocks='', **kwargs):
 
@@ -154,7 +158,7 @@ Example:
 .. code-block:: python
 
     N2=Fragment(xyzfile='n2.xyz')
-    DLPNO_CC_CBS_SP(fragment=N2, cardinals = [2,3], basisfamily="def2", charge=0, orcadir='/opt/orca_4.2.1', mult=1, stabilityanalysis=False,
+    DLPNO_CC_CBS(fragment=N2, cardinals = [2,3], basisfamily="def2", charge=0, orcadir='/opt/orca_4.2.1', mult=1, stabilityanalysis=False,
     numcores=1, CVSR=False, memory=5000, pnosetting='extrapolation', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF')
 
 The example above defines an N2 fragment (from n2.xyz) and runs multiple DLPNO-CCSD(T) calculations, utilizing basis-set and PNO extrapolation to give a final CCSD(T)/CBS estimate.
@@ -170,11 +174,11 @@ pnosetting="extrapolation" and pnoextrapolation=[5,6] means that the DLPNO-calcu
 
 TO BE DOCUMENTED:
 
-- **W1theory_SP**
-- **W1F12theory_SP**
-- **DLPNO_W1theory_SP**
-- **DLPNO_W1F12theory_SP**
-- **DLPNO_F12_SP**
-- **DLPNO_W2theory_SP**
+- **W1theory**
+- **W1F12theory**
+- **DLPNO_W1theory**
+- **DLPNO_W1F12theory**
+- **DLPNO_F12**
+- **DLPNO_W2theory**
 
 
