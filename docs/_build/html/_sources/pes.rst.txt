@@ -21,6 +21,14 @@ Notes:
 Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
 libraries is in your LD_LIBRARY_PATH.
 
+
+.. figure:: figures/pes-mncl2.png
+   :align: center
+   :width: 600
+   :alt: alternate text
+
+   Figure 1. PES-spectrum via MRCI+Q using ASH and ORCA
+
 ######################################################
 PhotoElectronSpectrum function
 ######################################################

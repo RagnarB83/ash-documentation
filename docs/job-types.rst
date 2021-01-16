@@ -352,12 +352,12 @@ Other options to calc_surface:
 
 **Working with a previous scan from collection of XYZ files**
 
-If a surface scan has already been performed, it's possible to use the created XYZ-files and calculate energies for each surfacepoint with
-e.g. a high-level of theory (CCSD(T) for instance).
+If a surface scan has already been performed, it's possible to use the created XYZ-files and calculate single-point energies or optimizations for each surfacepoint with
+any level of theory.
 
 We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from **calc_surface** already (present in surface_xyzfiles results directory).
-By providing a theory level object we can then easily perform single-point calculations for each surface point.
+By providing a theory level object we can then easily perform single-point calculations for each surface point or alternatively relax the structures employing constraints.
 The results is a dictionary like before.
 
 .. code-block:: python
@@ -366,8 +366,14 @@ The results is a dictionary like before.
     surfacedir = '/users/home/ragnarbj/Fe2S2Cl4/PES/Relaxed-Scan-test1/SP-DLPNOCC/surface_xyzfiles'
 
     #Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile="surface-results.txt")
-    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
+    #Unrelaxed single-point job
+    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Unrelaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
 
+    #Relaxed optimization job. A geometry optimization with constraints will be done for each point
+    #The RC1_type and RC1_indices (and RC2_type and RC2_indices for a 2D scan) also need to be provided
+    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt',
+                        coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None,
+                        RC1_type='bond', RC1_indices=[[0,1],[0,2]], RC2_type='angle', RC2_indices=[1,0,2])
 
 
 **Plotting**

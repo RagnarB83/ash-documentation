@@ -23,7 +23,7 @@ Thermochemistry corrections are automatically calculated (return object) when ei
     print("ZPVE (Eh) : ", thermochem_an['ZPVE'])
 
 A dictionary containing various properties is returned (dictionary keys):
-(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
+(frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
 
 Alternatively, the thermochemcalc function can be called directly.
 
@@ -150,7 +150,7 @@ Atomic spin-orbit coupling is automatically included if system is an atom.
 .. code-block:: python
 
     def DLPNO_CC_CBS(fragment=None, cardinals = [2,3], basisfamily="def2", charge=None, orcadir=None, mult=None, stabilityanalysis=False,
-        numcores=1, CVSR=False, memory=5000, pnosetting='NormalPNO', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF',
+        numcores=1, CVSR=False, CVbasis="W1-mtsmall", memory=5000, pnosetting='NormalPNO', pnoextrapolation=[5,6], T1=False, scfsetting='TightSCF',
         extrainputkeyword='', extrablocks='', **kwargs):
 
 Example:
@@ -167,10 +167,10 @@ pnosetting="extrapolation" and pnoextrapolation=[5,6] means that the DLPNO-calcu
 
 - Cardinals can be set to [2,3] or [3,4].
 - basisfamily can be set to "def2" (Ahlrichs basis sets) or "cc" (correlation consistent basis sets).
-- If a heavy element is chosen (heavier than Kr) then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.
+- If a heavy element is chosen (heavier than Kr) and basisfamily="cc", then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.
 - T1 option utilizes iterative triples, i.e. DLPNO-CCSD(T1) instead (more accurate, more expensive).
 - CVSR adds a Core-Valence-Scalar-Relativistic correction (more accurate, more expensive). The correction is performed at the DLPNO-CCSD(T) level (hardcoded to NormalPNO) using the W1-mtsmall basis set.
-
+  Note: If "W1-mtsmall" is not available for the element involved you may have to provide an appropriate core-valence basis set keyword via CVbasis="basisname" .
 
 TO BE DOCUMENTED:
 

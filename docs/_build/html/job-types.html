@@ -325,13 +325,13 @@ Currently analytical frequencies are supported in: ORCATheory</p>
 <span class="n">thermochem_dict</span> <span class="o">=</span> <span class="n">AnFreq</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Thermochem properties dict:&quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vibrational frequencies (cm**-1) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;freqs&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vibrational frequencies (cm**-1) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;frequencies&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE (Eh) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gibbs energy corrections (Eh) : &quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">[</span><span class="s1">&#39;Gcorr&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
-(freqs, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)</p>
+(frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)</p>
 </div>
 <div class="section" id="numerical-frequencies-hessian">
 <h2>Numerical frequencies (Hessian)<a class="headerlink" href="#numerical-frequencies-hessian" title="Permalink to this headline">¶</a></h2>
@@ -477,17 +477,24 @@ A future parallel runmode will become available where X surfacepoints can be run
 <li><p>convergence_setting (for geomeTRICOptimizer, same syntax as in <strong>geomeTRICOptimizer</strong>)</p></li>
 </ul>
 <p><strong>Working with a previous scan from collection of XYZ files</strong></p>
-<p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate energies for each surfacepoint with
-e.g. a high-level of theory (CCSD(T) for instance).</p>
+<p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate single-point energies or optimizations for each surfacepoint with
+any level of theory.</p>
 <p>We can use the <strong>calc_surface_fromXYZ</strong> function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from <strong>calc_surface</strong> already (present in surface_xyzfiles results directory).
-By providing a theory level object we can then easily perform single-point calculations for each surface point.
+By providing a theory level object we can then easily perform single-point calculations for each surface point or alternatively relax the structures employing constraints.
 The results is a dictionary like before.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
 <span class="n">surfacedir</span> <span class="o">=</span> <span class="s1">&#39;/users/home/ragnarbj/Fe2S2Cl4/PES/Relaxed-Scan-test1/SP-DLPNOCC/surface_xyzfiles&#39;</span>
 
 <span class="c1">#Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile=&quot;surface-results.txt&quot;)</span>
-<span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface_fromXYZ</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="n">surfacedir</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span> <span class="p">)</span>
+<span class="c1">#Unrelaxed single-point job</span>
+<span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface_fromXYZ</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="n">surfacedir</span><span class="p">,</span> <span class="n">scantype</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span> <span class="p">)</span>
+
+<span class="c1">#Relaxed optimization job. A geometry optimization with constraints will be done for each point</span>
+<span class="c1">#The RC1_type and RC1_indices (and RC2_type and RC2_indices for a 2D scan) also need to be provided</span>
+<span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface_fromXYZ</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="n">surfacedir</span><span class="p">,</span> <span class="n">scantype</span><span class="o">=</span><span class="s1">&#39;Relaxed&#39;</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span>
+                    <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;dlc&#39;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">extraconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convergence_setting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;bond&#39;</span><span class="p">,</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="n">RC2_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
 <p><strong>Plotting</strong></p>
