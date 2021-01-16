@@ -89,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -180,12 +180,14 @@
             
   <div class="section" id="mm-interfaces">
 <h1>MM Interfaces<a class="headerlink" href="#mm-interfaces" title="Permalink to this headline">¶</a></h1>
-<p>Molecular mechanics in Ash is currently quite rudimentary.
-There is no full-fledged internal forcefield code available (i.e. that handles both bonded and nonbonded terms).
-There is, however, a flexible nonbonded forcefield code (see NonBondedTheory below) that allows for Coulomb and Lennard-Jones
-energy+gradient evaluations. This allows for rigid (MM atoms frozen) MM and QM/MM (<a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects that can be used in geometry optimizations
-and molecular dynamics simulations (<a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a>).</p>
-<p>In addition, an interface to OpenMM is available.</p>
+<p>Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package.</p>
+<p>The internal NonBondedTheory can only perform nonbonded interactions: electrostatics and short-range Lennard-Jones interactions.
+The Coulomb+LJ interaction is quite fast as it is written in Julia.
+Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
+It can be used as MM code in QM/MM (<a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects.</p>
+<p>The interface to the external OpenMM code has recently become available. OpenMM is a fast C++ code with a Python API
+that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems
+and can read in multiple types of forcefield files.</p>
 <div class="section" id="nonbondedtheory">
 <h2>NonBondedTheory<a class="headerlink" href="#nonbondedtheory" title="Permalink to this headline">¶</a></h2>
 <p>Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.</p>
@@ -217,7 +219,50 @@ associated with the atomtypes.</p>
 </div>
 <div class="section" id="openmm-interface">
 <h2>OpenMM interface<a class="headerlink" href="#openmm-interface" title="Permalink to this headline">¶</a></h2>
-<p>TODO…</p>
+<p>The OpenMMTheory class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OpenMMTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">active_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">psffile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charmmprmfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">GROMACSfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gromacstopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grofile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gromacstopdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">Amberfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">xmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">customnonbondedforce</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Example creation of an OpenMMtheory object with CHARMM-files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/path/to/dir&quot;</span>
+<span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
+<span class="n">parfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
+<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;new-XPLOR-psffile.psf&quot;</span>
+<span class="c1">#Creating OpenMMobject</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
+                           <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Example creation of an OpenMMtheory object with GROMACS-files:</p>
+<blockquote>
+<div><p>gromacstopdir=”gromacstopdir”
+gromacstopfile=”gromacstopfile”
+grofile=”grofile
+#Creating OpenMMobject
+openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopfile=gromacstopfile,</p>
+<blockquote>
+<div><p>grofile=grofile, printlevel=1, platform=’CPU’ )</p>
+</div></blockquote>
+</div></blockquote>
+<p>Example creation of an OpenMMtheory object with AMBER files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">amberprmtopfile</span><span class="o">=</span><span class="s2">&quot;/path/to/amberprmtopfile&quot;</span>
+<span class="c1">#Creating OpenMMobject</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">amberprmtopfile</span><span class="p">,</span>
+                <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Example creation of an OpenMMtheory object with OpenMM XML file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;xmlfile&quot;</span>
+<span class="c1">#Creating OpenMMobject</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="n">xmlfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>An openmmtheory object can then be used to create a QM/MM theory object. See QM/MM page.</p>
 </div>
 </div>
 
