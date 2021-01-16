@@ -113,7 +113,7 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 
 Options to **geometricOptimizer**:
 
-- coordsystem (Default: 'tric', other options: 'hdlc', 'dlc', 'cartesian', 'prim', 'tric-p')
+- coordsystem (Default: 'tric', other options: 'hdlc', 'dlc', 'cart', 'prim')
 - frozenatoms (default: None, provide list of atoms to be frozen in space)
 - constraintsinputfile (default: None, provide name of constraints-inputfile according to geomeTRIC syntax.
 - constraints (default: None, provide dictionary of constraint definitions, with or without the value of the constraint. Example: constraints = { 'bond' : [[0,1]]}
