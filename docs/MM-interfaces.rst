@@ -18,9 +18,17 @@ and can read in multiple types of forcefield files.
 NonBondedTheory
 ###########################
 
+The NonBondedTheory class:
+
+.. code-block:: python
+
+
+    class NonBondedTheory:
+        def __init__(self, atomtypes=None, forcefield=None, charges = None, LJcombrule='geometric',
+                     codeversion='julia', printlevel=2):
+
+
 Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.
-
-
 A simple way is to define all information in the script itself. This requires defining the MM forcefield as a dictionary
 and then provides a list of atomtypes of the system as a minimum. In the forcefield we then define the Coulomb and Lennard-Jones parameters
 associated with the atomtypes.
@@ -30,19 +38,17 @@ Simple way (forcefield_dict and atomtypes):
 .. code-block:: python
 
     from ash import *
-    import sys
     settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.
     atomtypes =['HT', 'FX']
 
-    #MM_forcefield = {}
-    #MM_forcefield[atomtype]=AtomMMobject()
-    #MM_forcefield[atomtype].add_charge(atomcharge=charge)
-    #MM_forcefield[atomtype].add_LJparameters(LJparameters=[sigma_i,eps_i])
-    #HF_MM_forcefield= {'HT' : LJparameters}
-
+    MM_forcefield = {}
+    MM_forcefield[atomtype]=AtomMMobject()
+    MM_forcefield[atomtype].add_charge(atomcharge=charge)
+    MM_forcefield[atomtype].add_LJparameters(LJparameters=[sigma_i,eps_i])
+    HF_MM_forcefield= {'HT' : LJparameters}
 
     MMobject = NonBondedTheory(forcefield=MM_forcefield, atomtypes=atomtypes, LJcombrule='geometric')
 
@@ -50,6 +56,20 @@ Simple way (forcefield_dict and atomtypes):
 
 
 Alternative is to define the forcefield in a forcefieldfile that is read-in.
+
+.. code-block:: python
+
+    from ash import *
+    settings_ash.init() #initialize
+
+    HF_frag=Fragment(xyzfile="hf.xyz")
+    #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.
+    atomtypes =['HT', 'FX']
+    MM_forcefield=MMforcefield_read('forcefield.ff')
+
+    MMobject = NonBondedTheory(forcefield=MM_forcefield, atomtypes=atomtypes, LJcombrule='geometric')
+
+    Singlepoint(fragment=HF_frag,theory=MMobject)
 
 ###########################
 OpenMM interface
@@ -75,35 +95,27 @@ Example creation of an OpenMMtheory object with CHARMM-files:
     topfile=forcefielddir+"top_all36_prot.rtf"
     parfile=forcefielddir+"par_all36_prot.prm"
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
-    #Creating OpenMMobject
     openmmobject = OpenMMTheory(CHARMMfiles=True, psffile=psffile, charmmtopfile=topfile,
-                               charmmprmfile=parfile, printlevel=1, platform='CPU' )
+                               charmmprmfile=parfile)
 
 Example creation of an OpenMMtheory object with GROMACS-files:
 
-    gromacstopdir="gromacstopdir"
-    gromacstopfile="gromacstopfile"
-    grofile="grofile
-    #Creating OpenMMobject
-    openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopfile=gromacstopfile,
-                    grofile=grofile, printlevel=1, platform='CPU' )
+.. code-block:: python
+
+    openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopdir="/path/to/gromacstopdir",
+                    gromacstopfile="gromacstopfile.top", grofile="grofile.gro")
 
 Example creation of an OpenMMtheory object with AMBER files:
 
 .. code-block:: python
 
-    amberprmtopfile="/path/to/amberprmtopfile"
-    #Creating OpenMMobject
-    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=amberprmtopfile,
-                    printlevel=1, platform='CPU' )
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile="/path/to/amberprmtopfile")
 
 Example creation of an OpenMMtheory object with OpenMM XML file:
 
 .. code-block:: python
 
-    xmlfile="xmlfile"
-    #Creating OpenMMobject
-    openmmobject = OpenMMTheory(xmlfile=xmlfile, printlevel=1, platform='CPU' )
+    openmmobject = OpenMMTheory(xmlfile="exampl.xml")
 
 
-An openmmtheory object can then be used to create a QM/MM theory object. See QM/MM page.
+An openmmtheory object can then be used to create a QM/MM theory object. See :doc:`QM-MM` page.

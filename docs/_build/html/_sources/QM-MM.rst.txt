@@ -52,8 +52,51 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
 QM/MM with ORCA and OpenMMTheory
 ######################################
 
+Simple example:
 
-Example:
+.. code-block:: python
+
+    from ash import *
+
+    #Cores to use
+    numcores=16
+    #Forcefield files
+    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    parfile=forcefielddir+"par_all36_prot.prm"
+    psffile=forcefielddir+"new-XPLOR-psffile.psf"
+
+    #Read coordinates from XYZ-file
+    frag = Fragment(xyzfile="system.xyz", conncalc=False)
+
+    #act and qmatoms lists. Defines QM-region and Active-region
+    qmatoms = [13,14,15,20,22]
+    actatoms = [13,14,15,20,22,300,320,340]
+
+    #Creating OpenMMobject using CHARMM forcefield files
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+        charmmprmfile=parfile)
+
+    #Creating ORCATheory object
+    orcadir="/opt/orca_current"
+    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA defgrid1 tightscf slowconv notrah"
+    ORCAblocklines="""
+    %maxcore 2000
+    """
+    #Create ORCA QM object. Attaching numcores so that ORCA runs in parallel
+    orcaobject = ORCATheory(orcadir=orcadir, charge=0,mult=1, orcasimpleinput=ORCAinpline,
+                            orcablocks=ORCAblocklines, nprocs=numcores)
+
+    # Create QM/MM OBJECT by combining QM and MM objects above
+    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, printlevel=2
+                            fragment=frag, embedding="Elstat", qmatoms=qmatoms)
+
+    #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
+    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
+                        maxiter=500, coordsystem='hdlc')
+
+
+Advanced example:
 
 .. code-block:: python
 

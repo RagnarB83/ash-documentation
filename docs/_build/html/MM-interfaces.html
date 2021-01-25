@@ -190,25 +190,29 @@ that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded intera
 and can read in multiple types of forcefield files.</p>
 <div class="section" id="nonbondedtheory">
 <h2>NonBondedTheory<a class="headerlink" href="#nonbondedtheory" title="Permalink to this headline">¶</a></h2>
-<p>Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.</p>
-<p>A simple way is to define all information in the script itself. This requires defining the MM forcefield as a dictionary
+<p>The NonBondedTheory class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NonBondedTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">,</span>
+                 <span class="n">codeversion</span><span class="o">=</span><span class="s1">&#39;julia&#39;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.
+A simple way is to define all information in the script itself. This requires defining the MM forcefield as a dictionary
 and then provides a list of atomtypes of the system as a minimum. In the forcefield we then define the Coulomb and Lennard-Jones parameters
 associated with the atomtypes.</p>
 <p>Simple way (forcefield_dict and atomtypes):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#Defining atomtypes &#39;HT&#39; for hydrogen and atomtype &#39;FX&#39; for fluorine. These atomtypes can be named anything.</span>
 <span class="n">atomtypes</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span> <span class="s1">&#39;FX&#39;</span><span class="p">]</span>
 
-<span class="c1">#MM_forcefield = {}</span>
-<span class="c1">#MM_forcefield[atomtype]=AtomMMobject()</span>
-<span class="c1">#MM_forcefield[atomtype].add_charge(atomcharge=charge)</span>
-<span class="c1">#MM_forcefield[atomtype].add_LJparameters(LJparameters=[sigma_i,eps_i])</span>
-<span class="c1">#HF_MM_forcefield= {&#39;HT&#39; : LJparameters}</span>
-
+<span class="n">MM_forcefield</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">MM_forcefield</span><span class="p">[</span><span class="n">atomtype</span><span class="p">]</span><span class="o">=</span><span class="n">AtomMMobject</span><span class="p">()</span>
+<span class="n">MM_forcefield</span><span class="p">[</span><span class="n">atomtype</span><span class="p">]</span><span class="o">.</span><span class="n">add_charge</span><span class="p">(</span><span class="n">atomcharge</span><span class="o">=</span><span class="n">charge</span><span class="p">)</span>
+<span class="n">MM_forcefield</span><span class="p">[</span><span class="n">atomtype</span><span class="p">]</span><span class="o">.</span><span class="n">add_LJparameters</span><span class="p">(</span><span class="n">LJparameters</span><span class="o">=</span><span class="p">[</span><span class="n">sigma_i</span><span class="p">,</span><span class="n">eps_i</span><span class="p">])</span>
+<span class="n">HF_MM_forcefield</span><span class="o">=</span> <span class="p">{</span><span class="s1">&#39;HT&#39;</span> <span class="p">:</span> <span class="n">LJparameters</span><span class="p">}</span>
 
 <span class="n">MMobject</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
 
@@ -216,6 +220,19 @@ associated with the atomtypes.</p>
 </pre></div>
 </div>
 <p>Alternative is to define the forcefield in a forcefieldfile that is read-in.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
+
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#Defining atomtypes &#39;HT&#39; for hydrogen and atomtype &#39;FX&#39; for fluorine. These atomtypes can be named anything.</span>
+<span class="n">atomtypes</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span> <span class="s1">&#39;FX&#39;</span><span class="p">]</span>
+<span class="n">MM_forcefield</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;forcefield.ff&#39;</span><span class="p">)</span>
+
+<span class="n">MMobject</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
+
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span><span class="n">theory</span><span class="o">=</span><span class="n">MMobject</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="openmm-interface">
 <h2>OpenMM interface<a class="headerlink" href="#openmm-interface" title="Permalink to this headline">¶</a></h2>
@@ -233,36 +250,24 @@ associated with the atomtypes.</p>
 <span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
 <span class="n">parfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
 <span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;new-XPLOR-psffile.psf&quot;</span>
-<span class="c1">#Creating OpenMMobject</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-                           <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+                           <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Example creation of an OpenMMtheory object with GROMACS-files:</p>
-<blockquote>
-<div><p>gromacstopdir=”gromacstopdir”
-gromacstopfile=”gromacstopfile”
-grofile=”grofile
-#Creating OpenMMobject
-openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopfile=gromacstopfile,</p>
-<blockquote>
-<div><p>grofile=grofile, printlevel=1, platform=’CPU’ )</p>
-</div></blockquote>
-</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">GROMACSfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gromacstopdir</span><span class="o">=</span><span class="s2">&quot;/path/to/gromacstopdir&quot;</span><span class="p">,</span>
+                <span class="n">gromacstopfile</span><span class="o">=</span><span class="s2">&quot;gromacstopfile.top&quot;</span><span class="p">,</span> <span class="n">grofile</span><span class="o">=</span><span class="s2">&quot;grofile.gro&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Example creation of an OpenMMtheory object with AMBER files:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">amberprmtopfile</span><span class="o">=</span><span class="s2">&quot;/path/to/amberprmtopfile&quot;</span>
-<span class="c1">#Creating OpenMMobject</span>
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">amberprmtopfile</span><span class="p">,</span>
-                <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="s2">&quot;/path/to/amberprmtopfile&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Example creation of an OpenMMtheory object with OpenMM XML file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;xmlfile&quot;</span>
-<span class="c1">#Creating OpenMMobject</span>
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="n">xmlfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span> <span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;exampl.xml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>An openmmtheory object can then be used to create a QM/MM theory object. See QM/MM page.</p>
+<p>An openmmtheory object can then be used to create a QM/MM theory object. See <a class="reference internal" href="QM-MM.html"><span class="doc">QM/MM Theory</span></a> page.</p>
 </div>
 </div>
 
