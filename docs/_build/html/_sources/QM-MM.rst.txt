@@ -9,13 +9,22 @@ and then specifies which atoms are QM and which are MM and the type of QM-MM cou
 Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
 the QMMMTheory object can define the division of QM-region and MM-region.
 
+######################################
+QM/MM boundary treatment
+######################################
+
+If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
+In ASH this is treated by the popular linkatom method, combined with charge-shifting.
+A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
+Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
+applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.
+
 
 ######################################
 QM/MM with ORCA and NonbondedTheory
 ######################################
 
 Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
-
 Here we read in a forcefield-file (see :doc:`MM-interfaces`)
 
 .. code-block:: python

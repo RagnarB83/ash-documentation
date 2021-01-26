@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#qm-mm-with-orca-and-nonbondedtheory">QM/MM with ORCA and NonbondedTheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#qm-mm-with-orca-and-openmmtheory">QM/MM with ORCA and OpenMMTheory</a></li>
 </ul>
@@ -185,10 +186,18 @@
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
 Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
 the QMMMTheory object can define the division of QM-region and MM-region.</p>
+<div class="section" id="qm-mm-boundary-treatment">
+<h2>QM/MM boundary treatment<a class="headerlink" href="#qm-mm-boundary-treatment" title="Permalink to this headline">¶</a></h2>
+<p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
+In ASH this is treated by the popular linkatom method, combined with charge-shifting.
+A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
+Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
+applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.</p>
+</div>
 <div class="section" id="qm-mm-with-orca-and-nonbondedtheory">
 <h2>QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline">¶</a></h2>
-<p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.</p>
-<p>Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
+<p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
+Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
