@@ -88,7 +88,7 @@ Simple example:
 
     #Creating ORCATheory object
     orcadir="/opt/orca_current"
-    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA defgrid1 tightscf slowconv notrah"
+    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
     ORCAblocklines="""
     %maxcore 2000
     """
@@ -137,7 +137,7 @@ Advanced example:
 
     #ORCA
     orcadir="/opt/orca_current"
-    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA defgrid1 tightscf slowconv notrah"
+    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
     ORCAblocklines="""
     %maxcore 2000
 
