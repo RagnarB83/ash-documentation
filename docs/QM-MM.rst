@@ -19,10 +19,22 @@ A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
 applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.
 
+The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
+In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
 
-######################################
+In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual
+QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
+
+.. code-block:: python
+
+    #Excluding QM-atom 5785 from linkatom-creation.
+   qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, fragment=frag, embedding="Elstat",
+            qmatoms=qmatoms, excludeboundaryatomlist=[5785])
+
+
+#############################################
 Example: QM/MM with ORCA and NonbondedTheory
-######################################
+#############################################
 
 Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
 Here we read in a forcefield-file (see :doc:`MM-interfaces`)
@@ -35,7 +47,8 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
     #H2O...MeOH fragment defined
     H2O_MeOH = Fragment(xyzfile="h2o_MeOH.xyz")
 
-    # Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM. Note: atom indices begin at 0.
+    # Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM.
+    #IMPORTANT: atom indices begin at 0.
     qmatoms=[3,4,5,6,7,8]
 
     # Charge definitions for whole fragment.
@@ -57,9 +70,9 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
     geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8])
 
 
-######################################
+##########################################
 Example: QM/MM with ORCA and OpenMMTheory
-######################################
+##########################################
 
 Simple example:
 
@@ -79,6 +92,7 @@ Simple example:
     frag = Fragment(xyzfile="system.xyz", conncalc=False)
 
     #act and qmatoms lists. Defines QM-region and Active-region
+    #IMPORTANT: atom indices begin at 0.
     qmatoms = [13,14,15,20,22]
     actatoms = [13,14,15,20,22,300,320,340]
 
@@ -180,9 +194,6 @@ Advanced example:
     # Create QM/MM OBJECT
     qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
         fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2)
-
-    #Run Single-point job
-    Singlepoint(theory=qmmmobject, fragment=frag, Grad=True)
 
     #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates
     #Only active-region passed to optimizer

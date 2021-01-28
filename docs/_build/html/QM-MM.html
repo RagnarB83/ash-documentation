@@ -100,8 +100,8 @@
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM Theory</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#qm-mm-with-orca-and-nonbondedtheory">QM/MM with ORCA and NonbondedTheory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#qm-mm-with-orca-and-openmmtheory">QM/MM with ORCA and OpenMMTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-nonbondedtheory">Example: QM/MM with ORCA and NonbondedTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-openmmtheory">Example: QM/MM with ORCA and OpenMMTheory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
@@ -193,9 +193,18 @@ In ASH this is treated by the popular linkatom method, combined with charge-shif
 A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
 applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.</p>
+<p>The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
+In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).</p>
+<p>In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual
+QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1">#Excluding QM-atom 5785 from linkatom-creation. Note:</span>
+<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span>
+         <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="p">[</span><span class="mi">5785</span><span class="p">])</span>
+</pre></div>
 </div>
-<div class="section" id="qm-mm-with-orca-and-nonbondedtheory">
-<h2>QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example-qm-mm-with-orca-and-nonbondedtheory">
+<h2>Example: QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline">¶</a></h2>
 <p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
 Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -204,7 +213,8 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="c1">#H2O...MeOH fragment defined</span>
 <span class="n">H2O_MeOH</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_MeOH.xyz&quot;</span><span class="p">)</span>
 
-<span class="c1"># Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM. Note: atom indices begin at 0.</span>
+<span class="c1"># Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM.</span>
+<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
 
 <span class="c1"># Charge definitions for whole fragment.</span>
@@ -227,8 +237,8 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 </pre></div>
 </div>
 </div>
-<div class="section" id="qm-mm-with-orca-and-openmmtheory">
-<h2>QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-qm-mm-with-orca-and-openmmtheory">
+<h2>Example: QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline">¶</a></h2>
 <p>Simple example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -244,6 +254,7 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#act and qmatoms lists. Defines QM-region and Active-region</span>
+<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
 <span class="n">qmatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">]</span>
 <span class="n">actatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">320</span><span class="p">,</span><span class="mi">340</span><span class="p">]</span>
 
@@ -253,7 +264,7 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 
 <span class="c1">#Creating ORCATheory object</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
-<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA defgrid1 tightscf slowconv notrah&quot;</span>
+<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
 <span class="s2">&quot;&quot;&quot;</span>
@@ -299,7 +310,7 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 
 <span class="c1">#ORCA</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
-<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA defgrid1 tightscf slowconv notrah&quot;</span>
+<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
 
@@ -342,9 +353,6 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="c1"># Create QM/MM OBJECT</span>
 <span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
     <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="c1">#Run Single-point job</span>
-<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1">#Run geometry optimization using geomeTRIC optimizer and HDLC coordinates</span>
 <span class="c1">#Only active-region passed to optimizer</span>
