@@ -74,6 +74,8 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
 Example: QM/MM with ORCA and OpenMMTheory
 ##########################################
 
+See also :doc:`QM-MM-protein`.
+
 Simple example:
 
 .. code-block:: python
@@ -117,84 +119,3 @@ Simple example:
     #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
     geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
                         maxiter=500, coordsystem='hdlc')
-
-
-Advanced example:
-
-.. code-block:: python
-
-    from ash import *
-    import time
-
-    #Cores to use
-    numcores=16
-    #Forcefield files
-    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
-    topfile=forcefielddir+"top_all36_prot.rtf"
-    parfile=forcefielddir+"par_all36_prot.prm"
-    psffile=forcefielddir+"new-XPLOR-psffile.psf"
-
-    #Fragment file
-    #Read old-chemshell file
-    #frag = Fragment(chemshellfile="system.c", conncalc=False)
-    #Read XYZ-file
-    frag = Fragment(xyzfile="system.xyz", conncalc=False)
-
-    #act and qmatoms lists
-    #Reading in from qmatoms and act files. Here offsetting indices by -1 (to switch from 1-based to 0-based indexing)
-    qmatoms = read_intlist_from_file("qmatoms",offset=-1)
-    actatoms = read_intlist_from_file("act",offset=-1)
-
-    #Creating OpenMMobject via CHARMM files
-    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=parfile, printlevel=1, platform='CPU' )
-
-    #ORCA
-    orcadir="/opt/orca_current"
-    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
-    ORCAblocklines="""
-    %maxcore 2000
-
-    %basis
-    newgto Fe \"ZORA-def2-TZVP(-f)\" end
-    newgto V \"ZORA-def2-TZVP(-f)\" end
-    newgto S \"ZORA-def2-TZVP(-f)\" end
-    end
-
-    %basis
-    NewGTO Mo  \"old-ZORA-TZVP\" end
-    addGTO Mo
-    F 1
-      1   0.6554500000      1.0000000000
-    end
-    end
-
-    %scf
-    MaxIter 1500
-    diismaxeq 20
-    end
-
-    """
-    #Charge/mult
-    charge=-5
-    mult=4
-
-    #Brokensym options
-    brokensym=True
-    HSmult=36
-    #Atoms in system to flop
-    atomstoflip=[17763,17764,17766]
-    # Atoms to put special basis set on
-    extrabasisatoms=[17778]
-    #Create ORCA QM object
-    orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline, orcablocks=ORCAblocklines,
-                            brokensym=brokensym, HSmult=HSmult, atomstoflip=atomstoflip, nprocs=numcores, extrabasisatoms=extrabasisatoms,
-                            extrabasis="ZORA-def2-TZVP")
-
-    # Create QM/MM OBJECT
-    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
-        fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2)
-
-    #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates
-    #Only active-region passed to optimizer
-    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms, maxiter=500, coordsystem='hdlc')

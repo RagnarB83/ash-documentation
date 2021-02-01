@@ -33,6 +33,11 @@ These are the documentation pages of Ash.
    thermochemistry
    ash-classes
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
+   QM-MM-protein
 
 .. toctree::
    :maxdepth: 2
