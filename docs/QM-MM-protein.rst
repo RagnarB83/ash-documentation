@@ -2,7 +2,12 @@
 QM/MM on a protein
 ##########################################
 
+How to do QM/MM calculations of a protein in ASH
 This tutorial is in progress...
+
+.. image:: figures/fefeh2ase-nosolv.png
+   :align: right
+   :width: 400
 
 **1. Prepare a classical MM model of the system.**
 
@@ -16,6 +21,8 @@ Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
 
 
+
+
 There are many programs capable of setting up a classical model of the protein.
 
 ASH is currently capable of reading in :
@@ -24,6 +31,10 @@ ASH is currently capable of reading in :
 - GROMACS files, using various forcefields  (untested)
 - Amber files (PRMTOP)   (untested)
 - OpenMM files (XML-file)   (untested)
+
+.. image:: figures/fefeh2ase-solv.png
+   :align: right
+   :width: 400
 
 *Option a. GROMACS using the CHARMM forcefiled*
 
