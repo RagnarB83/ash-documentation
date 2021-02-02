@@ -2,17 +2,44 @@ Coordinates and fragment tools
 ======================================
 
 
-#############################
-Modifying ASH fragment files
-#############################
+############################################
+Modifying coordinates in ASH calculations
+############################################
 
-Convenient commands to modify the coordinates of the QM-region only can be found inside:
-/path/to/ashdir/ash/scripts
+One often needs to manually modify coordinates in QM or QM/MM calculations. While this is straightforward when working
+with small molecules and for example XYZ-files (open the coordinates in a simple molecular builder and modify) it is more
+of an issue when working with a large system (e.g. a protein or a molecular crystal cluster) and you want to modify only a few atoms buried in the center of a 40 000 atom file.
 
-Scripts are called: fragedit.py  and fragupdate.py
+- If one prefers to work with XYZ-files then it might be possible to use a program like VMD to modify certain coordinates there.
 
-TO BE DOCUMENTED...
+- If one works with ASH fragment files (recommended) then one can modify the coordinates of a group of atoms via the use of scripts. These scripts are located in: /path/to/ashdir/ash/scripts and are called: **fragedit.py**  and **fragupdate.py**
 
+**Grab and visualize part of the fragfile (fragedit.py)**
+
+If one wants to visualize or possibly modify the coordinates of a group of atoms (e.g. the QM active site of a protein) then one can use the fragedit.py script like this:
+
+.. code-block:: shell
+
+    python3 fragedit.py fragfile.ygg atomlistfile
+
+The script will then read the ASH fragfile (fragfile.ygg) and extract the coordinates corresponding to atom indices present
+in the atomlistfile. The atomlistfile should contain a list of atom indices in a single line : e.g. 1 2 3 4 5
+By default, the fragedit.py will also search for a file called qmatoms and read the list of atoms from there.
+
+This will create a file called fragment.xyz (coordinates in Å), containing only the part of the system (as defined by the atom indices).
+This file can be visualized in a molecular builder (e.g. Chemcraft) and the coordinates can also be modified.
+
+
+**Update the part of the system (fragupdate.py)**
+
+If the coordinates were modified in the molecular builder they could be copied back to the fragment.xyz file (careful not to modify the header) and use the same
+unit (Å). The fragfile (containing coordinates of the full system) can then be updated using the modified coordinates in fragment.xyz.
+
+.. code-block:: shell
+
+    python3 fragupdate.py fragfile.ygg atomlistfile
+
+This should update the coordinates of fragfile.ygg.
 
 ###########################
 Working with PDB files
@@ -30,6 +57,7 @@ or residue information. Atomtypes and residue information can be read-in via a P
 by OpenMMTheory (see :doc:`MM-interfaces`).
 
 This option should thus only be used to provide convenient starting coordinates.
+
 .. code-block:: python
 
     pdbfrag = Fragment(pdbfile="mol.pdb")

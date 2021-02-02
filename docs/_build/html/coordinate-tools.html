@@ -113,7 +113,7 @@
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Coordinates and fragment tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#modifying-ash-fragment-files">Modifying ASH fragment files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-coordinates-in-ash-calculations">Modifying coordinates in ASH calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-pdb-files">Working with PDB files</a></li>
 </ul>
 </li>
@@ -184,12 +184,32 @@
             
   <div class="section" id="coordinates-and-fragment-tools">
 <h1>Coordinates and fragment tools<a class="headerlink" href="#coordinates-and-fragment-tools" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="modifying-ash-fragment-files">
-<h2>Modifying ASH fragment files<a class="headerlink" href="#modifying-ash-fragment-files" title="Permalink to this headline">¶</a></h2>
-<p>Convenient commands to modify the coordinates of the QM-region only can be found inside:
-/path/to/ashdir/ash/scripts</p>
-<p>Scripts are called: fragedit.py  and fragupdate.py</p>
-<p>TO BE DOCUMENTED…</p>
+<div class="section" id="modifying-coordinates-in-ash-calculations">
+<h2>Modifying coordinates in ASH calculations<a class="headerlink" href="#modifying-coordinates-in-ash-calculations" title="Permalink to this headline">¶</a></h2>
+<p>One often needs to manually modify coordinates in QM or QM/MM calculations. While this is straightforward when working
+with small molecules and for example XYZ-files (open the coordinates in a simple molecular builder and modify) it is more
+of an issue when working with a large system (e.g. a protein or a molecular crystal cluster) and you want to modify only a few atoms buried in the center of a 40 000 atom file.</p>
+<ul class="simple">
+<li><p>If one prefers to work with XYZ-files then it might be possible to use a program like VMD to modify certain coordinates there.</p></li>
+<li><p>If one works with ASH fragment files (recommended) then one can modify the coordinates of a group of atoms via the use of scripts. These scripts are located in: /path/to/ashdir/ash/scripts and are called: <strong>fragedit.py</strong>  and <strong>fragupdate.py</strong></p></li>
+</ul>
+<p><strong>Grab and visualize part of the fragfile (fragedit.py)</strong></p>
+<p>If one wants to visualize or possibly modify the coordinates of a group of atoms (e.g. the QM active site of a protein) then one can use the fragedit.py script like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 fragedit.py fragfile.ygg atomlistfile
+</pre></div>
+</div>
+<p>The script will then read the ASH fragfile (fragfile.ygg) and extract the coordinates corresponding to atom indices present
+in the atomlistfile. The atomlistfile should contain a list of atom indices in a single line : e.g. 1 2 3 4 5
+By default, the fragedit.py will also search for a file called qmatoms and read the list of atoms from there.</p>
+<p>This will create a file called fragment.xyz (coordinates in Å), containing only the part of the system (as defined by the atom indices).
+This file can be visualized in a molecular builder (e.g. Chemcraft) and the coordinates can also be modified.</p>
+<p><strong>Update the part of the system (fragupdate.py)</strong></p>
+<p>If the coordinates were modified in the molecular builder they could be copied back to the fragment.xyz file (careful not to modify the header) and use the same
+unit (Å). The fragfile (containing coordinates of the full system) can then be updated using the modified coordinates in fragment.xyz.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 fragupdate.py fragfile.ygg atomlistfile
+</pre></div>
+</div>
+<p>This should update the coordinates of fragfile.ygg.</p>
 </div>
 <div class="section" id="working-with-pdb-files">
 <h2>Working with PDB files<a class="headerlink" href="#working-with-pdb-files" title="Permalink to this headline">¶</a></h2>
@@ -201,11 +221,10 @@ for coordinates).</p>
 This functionality is very basic, it will only read in the coordinates, not atom-types
 or residue information. Atomtypes and residue information can be read-in via a PSF-file
 by OpenMMTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>).</p>
-<p>This option should thus only be used to provide convenient starting coordinates.
-.. code-block:: python</p>
-<blockquote>
-<div><p>pdbfrag = Fragment(pdbfile=”mol.pdb”)</p>
-</div></blockquote>
+<p>This option should thus only be used to provide convenient starting coordinates.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pdbfrag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;mol.pdb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p><strong>Writing out PDB file</strong></p>
 <p>If you have an ASH fragment file created (loaded into memory), you can request to write out a PDB-file from it via the write_pdbfile function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">write_pdbfile</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span><span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;ASHfragment&quot;</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

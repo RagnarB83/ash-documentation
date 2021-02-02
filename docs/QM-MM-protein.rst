@@ -14,8 +14,10 @@ This tutorial is in progress...
 This step is often the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
-choosing protonation state of titratable residues, fix unphysical orientations in the structure, solvating the protein,
-minimizing the structure and finally running a simple MD simulation to check for correctness.
+choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
+minimizing the structure and finally running at the very least a simple MD simulation to check for correctness.
+This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step
+are not easily corrected later on.
 
 Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
@@ -27,7 +29,7 @@ There are many programs capable of setting up a classical model of the protein.
 
 ASH is currently capable of reading in :
 
-- CHARMM forcefield files (PSF-file, top and prm files)
+- CHARMM forcefield files (PSF-file, top and prm files, **tested**)
 - GROMACS files, using various forcefields  (untested)
 - Amber files (PRMTOP)   (untested)
 - OpenMM files (XML-file)   (untested)
