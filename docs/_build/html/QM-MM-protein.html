@@ -217,13 +217,17 @@ Note that ParMed may help here: <a class="reference external" href="https://parm
 This has the convenience of using the same MM program that ASH uses, that may already been installed as
 part of the ASH installation. A drawback is that OpenMM is not as versatile and may require other tools to set up the
 system first such as: CHARMM-GUI (<a class="reference external" href="http://www.charmm-gui.org">http://www.charmm-gui.org</a>), QwikMD (<a class="reference external" href="http://www.ks.uiuc.edu/Research/qwikmd/">http://www.ks.uiuc.edu/Research/qwikmd/</a>)</p>
-<p>Useful links:
-<a class="reference external" href="http://openmm.org/tutorials/hsp90_adp_mg/">http://openmm.org/tutorials/hsp90_adp_mg/</a>
-<a class="reference external" href="http://openmm.org/tutorials/b2ar_membrane/">http://openmm.org/tutorials/b2ar_membrane/</a>
-<a class="reference external" href="https://github.com/tdudgeon/simple-simulate-complex">https://github.com/tdudgeon/simple-simulate-complex</a>
-<a class="reference external" href="http://openmm.org/tutorials/hkmt_tip4pew/">http://openmm.org/tutorials/hkmt_tip4pew/</a></p>
+<p>Useful links:</p>
+<div class="line-block">
+<div class="line"><a class="reference external" href="http://openmm.org/tutorials/hsp90_adp_mg/">http://openmm.org/tutorials/hsp90_adp_mg/</a></div>
+<div class="line"><a class="reference external" href="http://openmm.org/tutorials/b2ar_membrane/">http://openmm.org/tutorials/b2ar_membrane/</a></div>
+<div class="line"><a class="reference external" href="https://github.com/tdudgeon/simple-simulate-complex">https://github.com/tdudgeon/simple-simulate-complex</a></div>
+<div class="line"><a class="reference external" href="http://openmm.org/tutorials/hkmt_tip4pew/">http://openmm.org/tutorials/hkmt_tip4pew/</a></div>
+</div>
 <p><strong>2. Read coordinates and forcefield into ASH</strong></p>
-<p>Here we will read in the coordinates and forcefield files from the classical system preparation.</p>
+<p>Here we will read in the coordinates and forcefield files from the classical system preparation.
+The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
+a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), or even a Chemshell fragment file (file.c).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 
@@ -237,6 +241,7 @@ system first such as: CHARMM-GUI (<a class="reference external" href="http://www
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1">#frag = Fragment(pdbfile=&quot;system.pdb&quot;, conncalc=False)</span>
 <span class="c1">#frag = Fragment(fragfile=&quot;system.ygg&quot;, conncalc=False)</span>
+<span class="c1">#frag = Fragment(chemshellfile=&quot;system.c&quot;, conncalc=False)</span>
 
 <span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
@@ -339,12 +344,15 @@ geomeTRICOptimizer like below:</p>
 </div>
 <p>If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc.
 An optimization trajectory of both the full system and the frozen system.</p>
-<p>To run a QM/MM optimizations to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
+<p>Note: it’s possible to add a command at the end where a PDB-file is written out (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files) for visualization purposes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>5. Modifying the coordinates of the QM-region</strong></p>
+<p>To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).</p>
-<p>Convenient commands to modify the coordinates of the QM-region only can be found inside:
-/path/to/ashdir/ash/scripts</p>
-<p>Scripts are called: fragedit.py  and fragupdate.py</p>
-<p><strong>5. Other QM/MM jobtypes</strong></p>
+<p>See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> for information on using fragedit.py  and fragupdate.py</p>
+<p><strong>6. Other QM/MM jobtypes</strong></p>
 <p>One can also run a numerical frequency job using the same QM/MM ASH object:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Numerical Frequencies. npoint=2 (two-point numerical differentiation). runmode=&#39;serial&#39; means that each</span>
 <span class="c1">#displacement (Energy+Gradient job on each geometry) is run sequentially. runmode=&#39;parallel&#39; currently not possible</span>

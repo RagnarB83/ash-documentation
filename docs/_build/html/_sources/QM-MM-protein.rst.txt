@@ -60,10 +60,11 @@ part of the ASH installation. A drawback is that OpenMM is not as versatile and 
 system first such as: CHARMM-GUI (http://www.charmm-gui.org), QwikMD (http://www.ks.uiuc.edu/Research/qwikmd/)
 
 Useful links:
-http://openmm.org/tutorials/hsp90_adp_mg/
-http://openmm.org/tutorials/b2ar_membrane/
-https://github.com/tdudgeon/simple-simulate-complex
-http://openmm.org/tutorials/hkmt_tip4pew/
+
+| http://openmm.org/tutorials/hsp90_adp_mg/
+| http://openmm.org/tutorials/b2ar_membrane/
+| https://github.com/tdudgeon/simple-simulate-complex
+| http://openmm.org/tutorials/hkmt_tip4pew/
 
 
 
@@ -73,6 +74,8 @@ http://openmm.org/tutorials/hkmt_tip4pew/
 **2. Read coordinates and forcefield into ASH**
 
 Here we will read in the coordinates and forcefield files from the classical system preparation.
+The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
+a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), or even a Chemshell fragment file (file.c).
 
 .. code-block:: python
 
@@ -89,6 +92,7 @@ Here we will read in the coordinates and forcefield files from the classical sys
     frag = Fragment(xyzfile="system.xyz", conncalc=False)
     #frag = Fragment(pdbfile="system.pdb", conncalc=False)
     #frag = Fragment(fragfile="system.ygg", conncalc=False)
+    #frag = Fragment(chemshellfile="system.c", conncalc=False)
 
     #Creating OpenMMobject using CHARMM forcefield files
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
@@ -206,16 +210,21 @@ geomeTRICOptimizer like below:
 If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc.
 An optimization trajectory of both the full system and the frozen system.
 
-To run a QM/MM optimizations to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
+Note: it's possible to add a command at the end where a PDB-file is written out (See :doc:`coordinate-tools` on reading/writing PDB-files) for visualization purposes:
+
+.. code-block:: python
+
+    write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+
+**5. Modifying the coordinates of the QM-region**
+
+To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).
 
-Convenient commands to modify the coordinates of the QM-region only can be found inside:
-/path/to/ashdir/ash/scripts
-
-Scripts are called: fragedit.py  and fragupdate.py
+See :doc:`coordinate-tools` for information on using fragedit.py  and fragupdate.py
 
 
-**5. Other QM/MM jobtypes**
+**6. Other QM/MM jobtypes**
 
 One can also run a numerical frequency job using the same QM/MM ASH object:
 
