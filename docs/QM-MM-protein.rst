@@ -61,6 +61,10 @@ This has the convenience of using the same MM program that ASH uses, that may al
 part of the ASH installation. A drawback is that OpenMM is not as versatile and may require other tools to set up the
 system first such as: CHARMM-GUI (http://www.charmm-gui.org), QwikMD (http://www.ks.uiuc.edu/Research/qwikmd/)
 
+Description on setting up a system in OpenMM:
+
+http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing
+
 Useful links:
 
 | http://openmm.org/tutorials/hsp90_adp_mg/
