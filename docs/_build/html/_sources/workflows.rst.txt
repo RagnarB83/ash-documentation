@@ -59,7 +59,8 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     thermochem = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job on optimized geometry
-    HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C", orcablocks="", nprocs=numcores)
+    HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C",
+                orcablocks="", nprocs=numcores)
     HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
 
     print("DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: ", HLenergy, "Eh")
@@ -153,7 +154,8 @@ See :doc:`thermochemistry` for more information.
     Opt_protocol_inputline="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
 
     #Thermochemistry protocol
-    thermochemprotocol(SP_theory='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
+    thermochemprotocol(SP_theory='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir,
+                        numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
 
 
 Final output:
