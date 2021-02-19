@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Coordinates and fragment tools" href="coordinate-tools.html" />
-    <link rel="prev" title="Ash object classes" href="ash-classes.html" /> 
+    <link rel="prev" title="CREST interface" href="crest-interface.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -106,9 +106,21 @@
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+</ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM on a protein</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM on a protein</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-a-classical-mm-model-of-the-system"><strong>1. Prepare a classical MM model of the system.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#read-coordinates-and-forcefield-into-ash"><strong>2. Read coordinates and forcefield into ASH</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation"><strong>3. Create the QM/MM model and test it by running an energy calculation</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-a-qm-mm-geometry-optimization"><strong>4. Run a QM/MM geometry optimization</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-the-coordinates-of-the-qm-region"><strong>5. Modifying the coordinates of the QM-region</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-qm-mm-jobtypes"><strong>6. Other QM/MM jobtypes</strong></a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul>
@@ -183,7 +195,8 @@
 <p>How to do QM/MM calculations of a protein in ASH
 This tutorial is in progress…</p>
 <a class="reference internal image-reference" href="_images/fefeh2ase-nosolv.png"><img alt="_images/fefeh2ase-nosolv.png" class="align-right" src="_images/fefeh2ase-nosolv.png" style="width: 400px;" /></a>
-<p><strong>1. Prepare a classical MM model of the system.</strong></p>
+<div class="section" id="prepare-a-classical-mm-model-of-the-system">
+<h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline">¶</a></h2>
 <p>This step is often the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
@@ -228,7 +241,9 @@ system first such as: CHARMM-GUI (<a class="reference external" href="http://www
 <div class="line"><a class="reference external" href="https://github.com/tdudgeon/simple-simulate-complex">https://github.com/tdudgeon/simple-simulate-complex</a></div>
 <div class="line"><a class="reference external" href="http://openmm.org/tutorials/hkmt_tip4pew/">http://openmm.org/tutorials/hkmt_tip4pew/</a></div>
 </div>
-<p><strong>2. Read coordinates and forcefield into ASH</strong></p>
+</div>
+<div class="section" id="read-coordinates-and-forcefield-into-ash">
+<h2><strong>2. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#read-coordinates-and-forcefield-into-ash" title="Permalink to this headline">¶</a></h2>
 <p>Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
 a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), or even a Chemshell fragment file (file.c).</p>
@@ -259,7 +274,9 @@ a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl MMtest.py
 </pre></div>
 </div>
-<p><strong>3. Create the QM/MM model and test it by running an energy calculation</strong></p>
+</div>
+<div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
+<h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline">¶</a></h2>
 <p>Assuming step 2 worked well, the next step is to setup the QM/MM model.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
 run a single-point energy job for testing purposes.
@@ -331,7 +348,9 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 </div>
 <p>It will run both the MM part and the QMpart using the chosen theory. Choose a small QM-region for testing purposes if
 run directly in the shell.</p>
-<p><strong>4. Run a QM/MM geometry optimization</strong></p>
+</div>
+<div class="section" id="run-a-qm-mm-geometry-optimization">
+<h2><strong>4. Run a QM/MM geometry optimization</strong><a class="headerlink" href="#run-a-qm-mm-geometry-optimization" title="Permalink to this headline">¶</a></h2>
 <p>Assuming the QM/MM single-point energy test went well then everything should be ready to run a QM/MM geometry
 optimization which is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize
 a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined
@@ -352,11 +371,15 @@ An optimization trajectory of both the full system and the frozen system.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>5. Modifying the coordinates of the QM-region</strong></p>
+</div>
+<div class="section" id="modifying-the-coordinates-of-the-qm-region">
+<h2><strong>5. Modifying the coordinates of the QM-region</strong><a class="headerlink" href="#modifying-the-coordinates-of-the-qm-region" title="Permalink to this headline">¶</a></h2>
 <p>To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).</p>
 <p>See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> for information on using fragedit.py  and fragupdate.py</p>
-<p><strong>6. Other QM/MM jobtypes</strong></p>
+</div>
+<div class="section" id="other-qm-mm-jobtypes">
+<h2><strong>6. Other QM/MM jobtypes</strong><a class="headerlink" href="#other-qm-mm-jobtypes" title="Permalink to this headline">¶</a></h2>
 <p>One can also run a numerical frequency job using the same QM/MM ASH object:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Numerical Frequencies. npoint=2 (two-point numerical differentiation). runmode=&#39;serial&#39; means that each</span>
 <span class="c1">#displacement (Energy+Gradient job on each geometry) is run sequentially. runmode=&#39;parallel&#39; currently not possible</span>
@@ -374,6 +397,7 @@ ASH (e.g. using a visualization program).</p>
 </pre></div>
 </div>
 </div>
+</div>
 
 
            </div>
@@ -386,7 +410,7 @@ ASH (e.g. using a visualization program).</p>
         <a href="coordinate-tools.html" class="btn btn-neutral float-right" title="Coordinates and fragment tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ash-classes.html" class="btn btn-neutral float-left" title="Ash object classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="crest-interface.html" class="btn btn-neutral float-left" title="CREST interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

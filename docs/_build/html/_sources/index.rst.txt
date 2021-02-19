@@ -35,6 +35,12 @@ These are the documentation pages of Ash.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Interfaces
+
+   crest-interface
+
+.. toctree::
+   :maxdepth: 2
    :caption: Tutorials
 
    QM-MM-protein

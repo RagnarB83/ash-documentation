@@ -1,6 +1,5 @@
-##########################################
 QM/MM on a protein
-##########################################
+======================================
 
 How to do QM/MM calculations of a protein in ASH
 This tutorial is in progress...
@@ -9,7 +8,9 @@ This tutorial is in progress...
    :align: right
    :width: 400
 
+######################################################
 **1. Prepare a classical MM model of the system.**
+######################################################
 
 This step is often the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
@@ -76,8 +77,9 @@ Useful links:
 
 
 
-
+######################################################
 **2. Read coordinates and forcefield into ASH**
+######################################################
 
 Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
@@ -113,8 +115,9 @@ The script above (e.g. called MMtest.py) can be run like this:
 
     python-jl MMtest.py
 
-
+############################################################################
 **3. Create the QM/MM model and test it by running an energy calculation**
+############################################################################
 
 Assuming step 2 worked well, the next step is to setup the QM/MM model.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
@@ -193,7 +196,9 @@ The script above (e.g. called QM_MMtest.py) can be run like this:
 It will run both the MM part and the QMpart using the chosen theory. Choose a small QM-region for testing purposes if
 run directly in the shell.
 
+######################################################
 **4. Run a QM/MM geometry optimization**
+######################################################
 
 Assuming the QM/MM single-point energy test went well then everything should be ready to run a QM/MM geometry
 optimization which is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize
@@ -222,15 +227,18 @@ Note: it's possible to add a command at the end where a PDB-file is written out 
 
     write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
 
+######################################################
 **5. Modifying the coordinates of the QM-region**
+######################################################
 
 To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).
 
 See :doc:`coordinate-tools` for information on using fragedit.py  and fragupdate.py
 
-
+######################################################
 **6. Other QM/MM jobtypes**
+######################################################
 
 One can also run a numerical frequency job using the same QM/MM ASH object:
 
