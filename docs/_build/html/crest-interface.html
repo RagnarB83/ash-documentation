@@ -110,7 +110,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CREST interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments">Example workflow 1. Call crest to get low-energy conformers as ASH fragments.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-workflow-2-crest-dft-opt-dlpno-ccsd-t-protocol">Example workflow 2. Crest+DFT-opt+DLPNO-CCSD(T) protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow</a></li>
 </ul>
 </li>
 </ul>
@@ -232,8 +232,19 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-workflow-2-crest-dft-opt-dlpno-ccsd-t-protocol">
-<h2>Example workflow 2. Crest+DFT-opt+DLPNO-CCSD(T) protocol<a class="headerlink" href="#example-workflow-2-crest-dft-opt-dlpno-ccsd-t-protocol" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
+<h2>confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow<a class="headerlink" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow" title="Permalink to this headline">¶</a></h2>
+<p>It is also possible to call the <strong>confsampler_protocol</strong> function that carries out an automatic multi-step workflow
+at various levels of theory.</p>
+<ol class="arabic simple">
+<li><p>conformational sampling using crest and GFN-xTB (<strong>low-level</strong> theory).</p></li>
+<li><p>Geometry optimizations for each low-energy conformer at a <strong>medium-level</strong> of theory (typically DFT using e.g. ORCATheory)</p></li>
+<li><p><strong>High-level</strong> single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. ORCATheory)</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">confsampler_protocol</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">MLtheory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">HLtheory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c1">#initialize</span>
 

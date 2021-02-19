@@ -58,9 +58,23 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
     print("Crest Conformer Searches done. Found {} conformers".format(len(xtb_energies)))
     print("xTB energies: ", xtb_energies)
 
+
 ################################################################################
-Example workflow 2. Crest+DFT-opt+DLPNO-CCSD(T) protocol
+confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow
 ################################################################################
+
+It is also possible to call the **confsampler_protocol** function that carries out an automatic multi-step workflow
+at various levels of theory.
+
+1. conformational sampling using crest and GFN-xTB (**low-level** theory).
+2. Geometry optimizations for each low-energy conformer at a **medium-level** of theory (typically DFT using e.g. ORCATheory)
+3. **High-level** single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. ORCATheory)
+
+.. code-block:: python
+
+    def confsampler_protocol(fragment=None, crestdir=None, xtbmethod='GFN2-xTB', MLtheory=None,
+                             HLtheory=None, orcadir=None, numcores=1, charge=None, mult=None):
+
 
 .. code-block:: python
 
