@@ -168,8 +168,7 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
 .. code-block:: python
 
     from ash import *
-    from molcrys import *
-    settings_ash.init()
+
     #######################
     # MOLCRYS INPUT          #
     #######################
@@ -422,7 +421,6 @@ Script below shows an example electrostatically embedded NMR calculation using O
 .. code-block:: python
 
     from ash import *
-    settings_ash.init()
 
     #Read in Cluster fragment
     Cluster=Fragment(fragfile='Cluster.ygg')
@@ -544,10 +542,8 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
 .. code-block:: python
 
     from ash import *
-    from functions_molcrys import *
-    from molcrys import *
     import interface_knarr
-    settings_ash.init()
+
     numcores=8
     #Read in reactant and product file, previously optimized.
     Reactant=Fragment(fragfile='reactant.ygg')

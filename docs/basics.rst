@@ -10,6 +10,8 @@ You create a Python3 script (e.g. called ashtest.py) and import the Ash function
 .. code-block:: python
 
     from ash import *
+    #or
+    import ash
 
 
 Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
@@ -19,22 +21,22 @@ Make sure you have already set in the shell (part of Setup):
 
     export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
-You usually also want to run the settings_ash.init() function which displays the ASH banner and sets the initial time:
 
-.. code-block:: python
+Global settings are stored in your *ash-dir/settings_ash.py* and can be modified. However, it is better to instead create
+a settings file, **ash_user_settings.ini** for your user in your home-directory that should look like below.
+Here you can set paths for e.g. orcadir, whether to use ANSI colors in output whether to print inputfile and logo etc.
 
-    settings_ash.init()
+.. code-block:: shell
 
-Global settings are stored in your *ash-dir/settings_ash.py* and can be modified.
+    [Settings]
+    orcadir = /opt/orca_4.2.1
+    scale = 1.0
+    tol = 0.2
+    use_ANSI_color = True
+    print_input = True
+    print_logo = False
+
 Current available options are:
-
-.. code-block:: python
-
-    use_ANSI_color = True #Whether to use ANSI escape sequences for displaying color.
-    scale = 1.0 # Scales connectivity
-    tol = 0.1 # Adds connectivity tolerance. See Coordinates and fragments.
-
-More user-defined settings will be available in settings_ash.py later on.
 
 You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
@@ -50,7 +52,6 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
 .. code-block:: python
 
     from ash import *
-    settings_ash.init()
 
     #Setting numcores. Used by ORCA.
     numcores=4

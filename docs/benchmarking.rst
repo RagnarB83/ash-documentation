@@ -24,6 +24,16 @@ Currently available test sets are:
 -   IE-benzenes (reference-data: experiment)
 
 #########################################
+The module_benchmarking module
+#########################################
+
+The module_benchmarking module contains :
+
+    - run_benchmark
+    - run_geobenchmark (not ready)
+
+
+#########################################
 The run_benchmark function
 #########################################
 
@@ -55,8 +65,6 @@ with a valid directory structure (see more info below).
 .. code-block:: python
 
     from ash import *
-    #Define global system settings ( scale, tol and conndepth keywords for connectivity)
-    settings_ash.init() #initialize
 
     #Some variables for ORCA
     orcadir='/Applications/orca_4.2.1'
@@ -107,43 +115,41 @@ Output:
 Running a test set with a workflow
 #########################################
 
-The test set can also be run with a workflow (multi-step theory).
-Available workflows are (all using ORCA):
+The test set can also be run with a high-level workflow (multi-step theory).
+The workflows are available inside the module: module_highlevel_workflows
 
-- W1theory_SP
-- W1F12theory_SP
-- DLPNO_W1F12theory_SP
-- DLPNO_W1theory_SP
-- DLPNO_F12_SP
-- DLPNO_W2theory_SP
-- DLPNO_CC_CBS_SP
+- W1theory
+- W1F12theory
+- DLPNO_W1F12theory
+- DLPNO_W1theory
+- DLPNO_F12
+- DLPNO_W2theory
+- DLPNO_CC_CBS
 
 When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
 
 .. code-block:: python
 
     from ash import *
-    #Define global system settings ( scale, tol and conndepth keywords for connectivity)
-    settings_ash.init() #initialize
+
     orcadir='/Applications/orca_4.2.1'
     #Running the benchmark with a workflow
-    run_benchmark(set="IE-benzenes", workflow=DLPNO_W1theory_SP, numcores=4, orcadir=orcadir)
+    run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.DLPNO_W1theory, numcores=4, orcadir=orcadir)
 
 If some of the default settings of each workflow needs to be modified this can be accomplished like this:
 
 .. code-block:: python
 
     from ash import *
-    #Define global system settings ( scale, tol and conndepth keywords for connectivity)
-    settings_ash.init() #initialize
+
     orcadir='/Applications/orca_4.2.1'
 
     #Define a dictionary containing the arguments of the workflow to be modified
-    DLPNO_CC_CBS_SP_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True,
+    DLPNO_CC_CBS_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True,
                         'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
 
     #Running the benchmark with a workflow
-    run_benchmark(set="IE-benzenes", workflow=DLPNO_CC_CBS_SP, workflow_args = DLPNO_CC_CBS_SP_args, orcadir=orcadir, numcores=numcores)
+    benchmarking.run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.DLPNO_CC_CBS, workflow_args = DLPNO_CC_CBS_args, orcadir=orcadir, numcores=numcores)
 
 
 ################################

@@ -38,7 +38,6 @@ Simple way (forcefield_dict and atomtypes):
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.
@@ -60,7 +59,6 @@ Alternative is to define the forcefield in a forcefieldfile that is read-in.
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #Defining atomtypes 'HT' for hydrogen and atomtype 'FX' for fluorine. These atomtypes can be named anything.

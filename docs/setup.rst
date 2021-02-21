@@ -186,7 +186,6 @@ first-ash-job.py:
 .. code-block:: python
 
     from ash import *
-    settings_ash.init()
 
     #Create H2O fragment
     coords="""

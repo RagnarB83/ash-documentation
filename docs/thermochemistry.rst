@@ -74,7 +74,6 @@ Reaction example:
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     orcadir='/opt/orca_4.2.1'
     numcores=4

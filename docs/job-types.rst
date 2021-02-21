@@ -31,7 +31,6 @@ function.
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -97,7 +96,6 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -228,7 +226,6 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     #the total number of CPU cores available to Ash (should match the job-script)
     Ashnumcores=8
@@ -286,8 +283,7 @@ Any QM or QM/MM Hamiltonian can be used.
 .. code-block:: python
 
     from ash import *
-    import sys
-    settings_ash.init() #initialize
+    import syss
     import interface_knarr
 
     Reactant=Fragment(xyzfile="react.xyz")

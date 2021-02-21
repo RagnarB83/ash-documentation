@@ -88,7 +88,6 @@ a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), or even a
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     # Read in forcefield files
     forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
@@ -132,7 +131,6 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     # Read in forcefield files
     forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"

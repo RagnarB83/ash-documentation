@@ -173,9 +173,7 @@ Example: TDDFT on H\ :sub:`2`\ O
 .. code-block:: python
 
     from ash import *
-    import sys
     import PES
-    settings_ash.init() #initialize
 
     h2ostring="""
     O        0.222646668      0.000000000     -0.752205128
@@ -220,9 +218,7 @@ Here we show how results with multiple functionals can be obtained at the same t
 .. code-block:: python
 
     from ash import *
-    import sys
     import PES
-    settings_ash.init() #initialize
 
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
 
@@ -338,9 +334,7 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
 .. code-block:: python
 
     from ash import *
-    import sys
     import PES
-    settings_ash.init() #initialize
 
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
     orcadir='/opt/orca_4.2.1'
@@ -382,9 +376,8 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
 .. code-block:: python
 
     from ash import *
-    import sys
     import PES
-    settings_ash.init() #initialize
+
     numcores=6
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
     orcadir='/opt/orca_4.2.1'
@@ -426,9 +419,8 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 .. code-block:: python
 
     from ash import *
-    import sys
     import PES
-    settings_ash.init() #initialize
+
     numcores=6
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
     orcadir='/opt/orca_4.2.1'

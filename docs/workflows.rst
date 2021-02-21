@@ -39,7 +39,6 @@ Example 1 : Optimization + Frequency + HL-singlepoint
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     #Defining molecular fragment
     molstring="""
@@ -77,7 +76,6 @@ Example 2a : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     #Defining all reaction species as ASH objects from XYZ-files
     N2=Fragment(xyzfile="n2.xyz")
@@ -131,7 +129,6 @@ See :doc:`thermochemistry` for more information.
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     #
     orcadir='/opt/orca_4.2.1'
@@ -185,7 +182,6 @@ Example 3a : Running multiple single-point energies with different functionals (
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     h2string="""
     H 0 0 0
@@ -263,7 +259,6 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
     #Fragment
     h2string="""
     H 0 0 0
@@ -294,7 +289,6 @@ Example 4a : Running single-point energies on a collection of XYZ files (sequent
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
     import glob
     #
     orcadir='/opt/orca_4.2.1'
@@ -349,7 +343,6 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
     import glob
     #
     orcadir='/opt/orca_4.2.1'
@@ -389,7 +382,6 @@ Using a collection of XYZ-files:
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
     import glob
     #
     orcadir='/opt/orca_4.2.1'
@@ -428,7 +420,6 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
     import glob
     #
     orcadir='/opt/orca_4.2.1'
@@ -472,7 +463,6 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
 
     from ash import *
     from interface_crest import *
-    settings_ash.init() #initialize
 
     orcadir='/opt/orca_4.2.1/'
     crestdir='/opt/crest'
@@ -578,7 +568,6 @@ The manually defined workflow above can also be more conveniently run like this:
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     #
     crestdir='/opt/crest'

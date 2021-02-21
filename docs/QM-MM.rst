@@ -42,7 +42,6 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
 .. code-block:: python
 
     from ash import *
-    settings_ash.init()
 
     #H2O...MeOH fragment defined
     H2O_MeOH = Fragment(xyzfile="h2o_MeOH.xyz")
