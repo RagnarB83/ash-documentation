@@ -1,11 +1,10 @@
-
 CREST interface
 ======================================
 
 ASH features a simple interface to the powerful conformational sampling program `crest <https://xtb-docs.readthedocs.io/en/latest/crest.html>`_ by the Grimme group.
 
 
-By providing an ASH fragment object to call_crest, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
+By providing an ASH fragment object to interface_crest.call_crest, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
 The output from Crest is written to standard output. If successful, Crest will create a file crest_conformers.xyz
 that can be directly read into ASH for further processing or further calculations.
 This allows one to write a multi-step workflow of which the crest-procedure is one of many steps.
@@ -13,13 +12,13 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 .. code-block:: python
 
     #Function to call crest
-    def call_crest(fragment=None, xtbmethod=None, crestdir=None,charge=None, mult=None, solvent=None, energywindow=6, numcores=1,
+    def interface_crest.call_crest(fragment=None, xtbmethod=None, crestdir=None,charge=None, mult=None, solvent=None, energywindow=6, numcores=1,
                    constrained_atoms=None, forceconstant_constraint=0.5)
     #Function to grab conformers. Returns list of conformers and list of xtb energies
-    def get_crest_conformers()
+    def interface_crest.get_crest_conformers()
 
 
-**call_crest** requires one to specify: an ASH fragment, xtbmethod (GFN1-xTB or GFN2-xTB ), location of crest directory, charge, multiplicity.
+**interface_crest.call_crest** requires one to specify: an ASH fragment, xtbmethod (GFN1-xTB or GFN2-xTB ), location of crest directory, charge, multiplicity.
 
 Optional keywords are: solvent, energywindow (default 6), numcores (default 1), constrained_atoms (list of integers) and the value of the force-consstant.
 
@@ -35,7 +34,6 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
 
     from ash import *
     from interface_crest import *
-    settings_ash.init() #initialize
 
     orcadir='/opt/orca_4.2.1/'
     crestdir='/opt/crest'
@@ -48,10 +46,10 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
 
     #1. Calling crest
     #call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, solvent='H2O', energywindow=6 )
-    call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, numcores=numcores)
+    interface_crest.call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, numcores=numcores)
 
     #2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.
-    list_conformer_frags, xtb_energies = get_crest_conformers()
+    list_conformer_frags, xtb_energies = interface_crest.get_crest_conformers()
 
     print("list_conformer_frags:", list_conformer_frags)
     print("")
@@ -79,7 +77,6 @@ at various levels of theory.
 .. code-block:: python
 
     from ash import *
-    settings_ash.init() #initialize
 
     #
     crestdir='/opt/crest'

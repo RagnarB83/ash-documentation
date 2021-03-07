@@ -2,16 +2,14 @@
 MM Interfaces
 ==========================
 
-Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package.
+Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package: :doc:`OpenMM-interface`
 
 The internal NonBondedTheory can only perform nonbonded interactions: electrostatics and short-range Lennard-Jones interactions.
 The Coulomb+LJ interaction is quite fast as it is written in Julia.
 Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
-It can be used as MM code in QM/MM (:doc:`QM-MM`) theory objects.
+It can be used as MM code in QM/MM (:doc:`module_QM-MM`) theory objects.
 
-The interface to the external OpenMM code has recently become available. OpenMM is a fast C++ code with a Python API
-that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems
-and can read in multiple types of forcefield files.
+The interface to the external OpenMM code (:doc:`OpenMM-interface`) has recently become available. OpenMM is a fast C++ code with a Python API that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems and can read in multiple types of forcefield files.
 
 
 ###########################
@@ -73,47 +71,6 @@ Alternative is to define the forcefield in a forcefieldfile that is read-in.
 OpenMM interface
 ###########################
 
-The OpenMMTheory class:
 
-.. code-block:: python
+See :doc:`OpenMM-interface`
 
-    class OpenMMTheory:
-        def __init__(self, pdbfile=None, platform='CPU', active_atoms=None, frozen_atoms=None,
-                     CHARMMfiles=False, psffile=None, charmmtopfile=None, charmmprmfile=None,
-                     GROMACSfiles=False, gromacstopfile=None, grofile=None, gromacstopdir=None,
-                     Amberfiles=False, amberprmtopfile=None, printlevel=2, nprocs=1,
-                     xmlfile=None, periodic=False, periodic_cell_dimensions=None, customnonbondedforce=False):
-
-
-Example creation of an OpenMMtheory object with CHARMM-files:
-
-.. code-block:: python
-
-    forcefielddir="/path/to/dir"
-    topfile=forcefielddir+"top_all36_prot.rtf"
-    parfile=forcefielddir+"par_all36_prot.prm"
-    psffile=forcefielddir+"new-XPLOR-psffile.psf"
-    openmmobject = OpenMMTheory(CHARMMfiles=True, psffile=psffile, charmmtopfile=topfile,
-                               charmmprmfile=parfile)
-
-Example creation of an OpenMMtheory object with GROMACS-files:
-
-.. code-block:: python
-
-    openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopdir="/path/to/gromacstopdir",
-                    gromacstopfile="gromacstopfile.top", grofile="grofile.gro")
-
-Example creation of an OpenMMtheory object with AMBER files:
-
-.. code-block:: python
-
-    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile="/path/to/amberprmtopfile")
-
-Example creation of an OpenMMtheory object with OpenMM XML file:
-
-.. code-block:: python
-
-    openmmobject = OpenMMTheory(xmlfile="exampl.xml")
-
-
-An openmmtheory object can then be used to create a QM/MM theory object. See :doc:`QM-MM` page.

@@ -25,32 +25,53 @@ These are the documentation pages of Ash.
    job-types
    QM-interfaces
    MM-interfaces
-   QM-MM
-   molcrys
-   pes
-   workflows
-   benchmarking
-   thermochemistry
-   ash-classes
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Internal modules
+
+   module_QM-MM
+   module_benchmarking
+   module_coords
+   module_dynamics
+   module_freq
+   module_workflows
+   module_highlevel_workflows
+   module_molcrys
+   module_PES
+   module_plotting
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Interfaces
 
+   ORCA-interface
+   xTB-interface
+   MRCC-interface
+   CFour-interface
+   Dalton-interface
+   PySCF-interface
+   Psi4-interface
+   Dalton-interface
    crest-interface
+   geomeTRIC-interface
+   knarr-interface
+   OpenMM-interface
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
 
    QM-MM-protein
+   workflows-examples
+   thermochemistry
 
 .. toctree::
    :maxdepth: 2
    :caption: Tools
 
    coordinate-tools
-   plotting
 
 .. role:: underline
     :class: underline

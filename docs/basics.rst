@@ -35,6 +35,7 @@ Here you can set paths for e.g. orcadir, whether to use ANSI colors in output wh
     use_ANSI_color = True
     print_input = True
     print_logo = False
+    load_julia = True
 
 Current available options are:
 

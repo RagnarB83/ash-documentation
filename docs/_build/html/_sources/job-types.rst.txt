@@ -11,14 +11,14 @@ The job-types available in ASH:
 - Molecular dynamics (not ready).
 
 The job-types can be used with any theory object available, e.g. one of the QMTheories in :doc:`QM-interfaces` or using
-a QM/MM Theory object from :doc:`QM-MM`
+a QM/MM Theory object from :doc:`module_QM-MM`
 
 ###########################
 Single-point calculation
 ###########################
 A single-point calculation is the most basic job to perform.
 After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from: :doc:`QM-interfaces` an
-MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`QM-MM`).
+MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`module_QM-MM`).
 The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
 ORCA contains a large variety of DFT and WFT methods.
 Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
@@ -31,7 +31,6 @@ function.
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -89,7 +88,7 @@ The energy and gradient from the last Energy/Energy+Gradient run is also stored 
 ###########################
 Geometry optimization
 ###########################
-Geometry optimizations are easily performed in Ash due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC)
+Geometry optimizations are easily performed in Ash due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC): :doc:`geomeTRIC-interface`
 geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
 
@@ -97,7 +96,6 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -111,29 +109,8 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
     #Geometry optimization of the ORCA using geomeTRIC optimizer
     geomeTRICOptimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
 
-Options to **geometricOptimizer**:
 
-- coordsystem (Default: 'tric', other options: 'hdlc', 'dlc', 'cart', 'prim')
-- frozenatoms (default: None, provide list of atoms to be frozen in space)
-- constraintsinputfile (default: None, provide name of constraints-inputfile according to geomeTRIC syntax.
-- constraints (default: None, provide dictionary of constraint definitions, with or without the value of the constraint. Example: constraints = { 'bond' : [[0,1]]}
-- constrainvalue (default: False, Boolean, whether constrain-value is provided in constraints dictionary or not)
-- maxiter (default: 50, maximum number of iterations)
-- ActiveRegion (default:False, whether to use an active region or not. Requires accompanying actatoms list.
-- actatoms (default: None, list of atoms that are active during optimization, all others are frozen)
-- convergence_setting (default: 'ORCA'. What type of convergence criteria to use. Valid options are: 'ORCA', 'Chemshell', 'ORCA_TIGHT', 'GAU', 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'.
-
-    - ORCA:    conv_criteria = {'convergence_energy' : 5e-6, 'convergence_grms' : 1e-4, 'convergence_gmax' : 3.0e-4, 'convergence_drms' : 2.0e-3, 'convergence_dmax' : 4.0e-3 }
-    - Chemshell:    conv_criteria = {'convergence_energy' : 1e-6, 'convergence_grms' : 3e-4, 'convergence_gmax' : 4.5e-4, 'convergence_drms' : 1.2e-3, 'convergence_dmax' : 1.8e-3 }
-    - ORCA_TIGHT:    conv_criteria = {'convergence_energy' : 1e-6, 'convergence_grms' : 3e-5, 'convergence_gmax' : 1.0e-4, 'convergence_drms' : 6.0e-4, 'convergence_dmax' : 1.0e-3 }
-    - GAU:    conv_criteria = {'convergence_energy' : 1e-6, 'convergence_grms' : 3e-4, 'convergence_gmax' : 4.5e-4, 'convergence_drms' : 1.2e-3, 'convergence_dmax' : 1.8e-3 }
-    - GAU_TIGHT:    conv_criteria = {'convergence_energy' : 1e-6, 'convergence_grms' : 1e-5, 'convergence_gmax' : 1.5e-5, 'convergence_drms' : 4.0e-5, 'convergence_dmax' : 6e-5 }
-    - GAU_VERYTIGHT:    conv_criteria = {'convergence_energy' : 1e-6, 'convergence_grms' : 1e-6, 'convergence_gmax' : 2e-6, 'convergence_drms' : 4.0e-6, 'convergence_dmax' : 6e-6 }
-    - SuperLoose:            conv_criteria = { 'convergence_energy' : 1e-1, 'convergence_grms' : 1e-1, 'convergence_gmax' : 1e-1, 'convergence_drms' : 1e-1, 'convergence_dmax' : 1e-1 }
-
-- conv_criteria (Default: see ORCA setting above. Optionally provide your own dictionary of settings using syntax above.
-
-
+See :doc:`geomeTRIC-interface` for all features.
 
 Other optimizers:
 
@@ -228,7 +205,6 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
 
     from ash import *
     import sys
-    settings_ash.init() #initialize
 
     #the total number of CPU cores available to Ash (should match the job-script)
     Ashnumcores=8
@@ -280,14 +256,14 @@ Nudged Elastic Band Calculations
 
 Through an interface to an external code, nudged elastic band (NEB) calculations are possible.
 Both regular NEB and CI-NEB calculations are possible.
+See :doc:`knarr-interface`
 
 Any QM or QM/MM Hamiltonian can be used.
 
 .. code-block:: python
 
     from ash import *
-    import sys
-    settings_ash.init() #initialize
+    import syss
     import interface_knarr
 
     Reactant=Fragment(xyzfile="react.xyz")
@@ -380,7 +356,7 @@ The results is a dictionary like before.
 
 The final result of the scan is stored in a dictionary (named 'surfacedictionary' in the examples above) and can be easily
 plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
-See :doc:`plotting`) page.
+See :doc:`module_plotting`) page.
 
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
 where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total energy as a float.

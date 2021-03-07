@@ -1,44 +1,45 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Coordinates and fragment tools &mdash; Ash 0.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Plotting results" href="plotting.html" />
-    <link rel="prev" title="QM/MM on a protein" href="QM-MM-protein.html" /> 
+    <link rel="prev" title="High-level Thermochemistry in ASH" href="thermochemistry.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,17 +100,40 @@
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul class="current">
@@ -117,12 +142,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#working-with-pdb-files">Working with PDB files</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -157,18 +182,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Coordinates and fragment tools</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/coordinate-tools.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -269,29 +296,28 @@ Note: the atomnames column differs from conventional CHARMM usage. Instead OpenM
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="plotting.html" class="btn btn-neutral float-right" title="Plotting results" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="QM-MM-protein.html" class="btn btn-neutral float-left" title="QM/MM on a protein" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="thermochemistry.html" class="btn btn-neutral float-left" title="High-level Thermochemistry in ASH" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Ragnar Bjornsson
+        &#169; Copyright 2020, Ragnar Bjornsson.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -299,7 +325,6 @@ Note: the atomnames column differs from conventional CHARMM usage. Instead OpenM
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -318,6 +343,7 @@ Note: the atomnames column differs from conventional CHARMM usage. Instead OpenM
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 

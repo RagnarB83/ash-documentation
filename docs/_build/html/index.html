@@ -1,40 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Ash: Documentation &mdash; Ash 0.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="About ASH" href="About.html" /> 
@@ -81,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,31 +100,50 @@
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Interfaces</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -156,18 +178,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
       <li>Ash: Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -225,6 +249,9 @@
 <li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#psi4theory">Psi4Theory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#pyscftheory">PySCFTheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#xtbtheory">xTBTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#daltontheory">DaltonTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#cfourtheory">CFourTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QM-interfaces.html#mrcctheory">MRCCTheory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a><ul>
@@ -232,67 +259,86 @@
 <li class="toctree-l2"><a class="reference internal" href="MM-interfaces.html#openmm-interface">OpenMM interface</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="QM-MM.html#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="QM-MM.html#example-qm-mm-with-orca-and-nonbondedtheory">Example: QM/MM with ORCA and NonbondedTheory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="QM-MM.html#example-qm-mm-with-orca-and-openmmtheory">Example: QM/MM with ORCA and OpenMMTheory</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_QM-MM.html#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_QM-MM.html#example-qm-mm-with-orca-and-nonbondedtheory">Example: QM/MM with ORCA and NonbondedTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_QM-MM.html#example-qm-mm-with-orca-and-openmmtheory">Example: QM/MM with ORCA and OpenMMTheory</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-function-creating-a-cluster">MOLCRYS function: Creating a cluster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-qm-mm-geometry-optimization">MOLCRYS: QM/MM Geometry optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-expanded-qm-region-calculation">MOLCRYS: Expanded QM region calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-property-calculation">MOLCRYS: Property calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-reaction-path-and-saddle-point-finding-via-neb-method">MOLCRYS: Reaction path and saddle-point finding via NEB method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-numerical-qm-mm-frequencies">MOLCRYS: Numerical QM/MM frequencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-fragment-identification-connectivity-issues">MOLCRYS: Fragment identification/Connectivity issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molcrys.html#molcrys-molecular-dynamics">MOLCRYS: Molecular Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_benchmarking.html#the-module-benchmarking-module">The module_benchmarking module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_benchmarking.html#the-run-benchmark-function">The run_benchmark function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_benchmarking.html#running-a-test-set-with-a-chosen-qmtheory">Running a test set with a chosen QMtheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_benchmarking.html#running-a-test-set-with-a-workflow">Running a test set with a workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_benchmarking.html#creating-or-modifying-a-test-set">Creating or modifying a test set</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pes.html#photoelectronspectrum-function">PhotoElectronSpectrum function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pes.html#plot-spectrum">Plot spectrum</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pes.html#example-tddft-on-h2o">Example: TDDFT on H<sub>2</sub>O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pes.html#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_workflows.html#thermochemprotocols">Thermochemprotocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_workflows.html#high-level-single-point-workflows">High-level single-point workflows</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">Example 3a : Running multiple single-point energies with different functionals (sequential)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflows.html#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-function-creating-a-cluster">MOLCRYS function: Creating a cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-qm-mm-geometry-optimization">MOLCRYS: QM/MM Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-expanded-qm-region-calculation">MOLCRYS: Expanded QM region calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-property-calculation">MOLCRYS: Property calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-reaction-path-and-saddle-point-finding-via-neb-method">MOLCRYS: Reaction path and saddle-point finding via NEB method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-numerical-qm-mm-frequencies">MOLCRYS: Numerical QM/MM frequencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-fragment-identification-connectivity-issues">MOLCRYS: Fragment identification/Connectivity issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_molcrys.html#molcrys-molecular-dynamics">MOLCRYS: Molecular Dynamics</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#the-run-benchmark-function">The run_benchmark function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#running-a-test-set-with-a-chosen-qmtheory">Running a test set with a chosen QMtheory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#running-a-test-set-with-a-workflow">Running a test set with a workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="benchmarking.html#creating-or-modifying-a-test-set">Creating or modifying a test set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_PES.html#photoelectronspectrum-function">PhotoElectronSpectrum function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_PES.html#plot-spectrum">Plot spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_PES.html#example-tddft-on-h2o">Example: TDDFT on H<sub>2</sub>O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_PES.html#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#thermochemistry-corrections">thermochemistry corrections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#thermochemprotocol-functions-automatic-opt-freq-hl-theory">thermochemprotocol functions: Automatic Opt+Freq+HL-theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#available-high-level-singlepoint-protocols">Available High-level SinglePoint Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_plotting.html#plot-spectrum-plotting-broadened-spectrum">plot_Spectrum: Plotting broadened spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_plotting.html#reaction-profile">Reaction_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_plotting.html#contour-plot">Contour_plot</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Interfaces</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ORCA-interface.html#parallelization">Parallelization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="xTB-interface.html#troubleshooting">Troubleshooting:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="crest-interface.html#example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments">Example workflow 1. Call crest to get low-energy conformers as ASH fragments.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="crest-interface.html#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -307,6 +353,23 @@
 <li class="toctree-l2"><a class="reference internal" href="QM-MM-protein.html#other-qm-mm-jobtypes"><strong>6. Other QM/MM jobtypes</strong></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">Example 3a : Running multiple single-point energies with different functionals (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows-examples.html#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#thermochemistry-corrections">thermochemistry corrections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html#thermochemprotocol-functions-automatic-opt-freq-hl-theory">thermochemprotocol functions: Automatic Opt+Freq+HL-theory</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -315,12 +378,6 @@
 <li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="coordinate-tools.html#modifying-coordinates-in-ash-calculations">Modifying coordinates in ASH calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="coordinate-tools.html#working-with-pdb-files">Working with PDB files</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plotting.html#plot-spectrum-plotting-broadened-spectrum">plot_Spectrum: Plotting broadened spectrum</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotting.html#reaction-profile">Reaction_profile</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plotting.html#contour-plot">Contour_plot</a></li>
 </ul>
 </li>
 </ul>
@@ -344,27 +401,28 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="About.html" class="btn btn-neutral float-right" title="About ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
+        <a href="About.html" class="btn btn-neutral float-right" title="About ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Ragnar Bjornsson
+        &#169; Copyright 2020, Ragnar Bjornsson.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -372,7 +430,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -391,6 +448,7 @@
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 

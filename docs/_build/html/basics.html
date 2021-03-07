@@ -1,40 +1,42 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Basic usage &mdash; Ash 0.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Coordinates and fragments" href="coordinate-input.html" />
@@ -82,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -89,7 +92,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Axx</span></p>
+              <p class="caption"><span class="caption-text">ASH</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
@@ -105,23 +108,50 @@
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="QM-MM.html">QM/MM Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pes.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmarking.html">Benchmarking in ASH</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ash-classes.html">Ash object classes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting results</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -156,18 +186,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Basic usage</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/basics.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -187,6 +219,8 @@
 <h2>Input structure<a class="headerlink" href="#input-structure" title="Permalink to this headline">¶</a></h2>
 <p>You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1">#or</span>
+<span class="kn">import</span> <span class="nn">ash</span>
 </pre></div>
 </div>
 <p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
@@ -194,18 +228,20 @@ Make sure you have already set in the shell (part of Setup):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
-<p>You usually also want to run the settings_ash.init() function which displays the ASH banner and sets the initial time:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<p>Global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified. However, it is better to instead create
+a settings file, <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
+Here you can set paths for e.g. orcadir, whether to use ANSI colors in output whether to print inputfile and logo etc.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Settings<span class="o">]</span>
+<span class="nv">orcadir</span> <span class="o">=</span> /opt/orca_4.2.1
+<span class="nv">scale</span> <span class="o">=</span> <span class="m">1</span>.0
+<span class="nv">tol</span> <span class="o">=</span> <span class="m">0</span>.2
+<span class="nv">use_ANSI_color</span> <span class="o">=</span> True
+<span class="nv">print_input</span> <span class="o">=</span> True
+<span class="nv">print_logo</span> <span class="o">=</span> False
+<span class="nv">load_julia</span> <span class="o">=</span> True
 </pre></div>
 </div>
-<p>Global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified.
-Current available options are:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">use_ANSI_color</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#Whether to use ANSI escape sequences for displaying color.</span>
-<span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Scales connectivity</span>
-<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># Adds connectivity tolerance. See Coordinates and fragments.</span>
-</pre></div>
-</div>
-<p>More user-defined settings will be available in settings_ash.py later on.</p>
+<p>Current available options are:</p>
 <p>You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
@@ -215,7 +251,6 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <h2>Example script<a class="headerlink" href="#example-script" title="Permalink to this headline">¶</a></h2>
 <p>Here is a basic Ash Python script, e.g. named: ashtest.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">settings_ash</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
 <span class="c1">#Setting numcores. Used by ORCA.</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
@@ -440,29 +475,29 @@ sbatch -J <span class="nv">$file</span> job-ash.sh
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="coordinate-input.html" class="btn btn-neutral float-right" title="Coordinates and fragments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="setup.html" class="btn btn-neutral float-left" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="coordinate-input.html" class="btn btn-neutral float-right" title="Coordinates and fragments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Ragnar Bjornsson
+        &#169; Copyright 2020, Ragnar Bjornsson.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -470,7 +505,6 @@ sbatch -J <span class="nv">$file</span> job-ash.sh
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
@@ -489,6 +523,7 @@ sbatch -J <span class="nv">$file</span> job-ash.sh
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-XXXXXXX-1', 'auto');
+    
     ga('send', 'pageview');
     </script>
 

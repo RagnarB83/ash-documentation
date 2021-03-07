@@ -42,200 +42,49 @@ This would be done via the internal cleanup function of the object as shown.
 ###########################
 ORCATheory
 ###########################
-To be done: ORCATheory Class definition and arguments
 
-The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
-argument when creating object. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided
-and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by Ash.
-Functionality such as adding to inputfile what orbitals to read and parallelization block would be handled by Ash as well.
+See :doc:`ORCA-interface`
 
-
-.. code-block:: python
-
-    #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
-    #ORCA
-    orcadir='/opt/orca_4.2.1'
-    input="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
-    blocks="""
-    %scf
-    maxiter 200
-    end
-    %basis
-    newgto F "ma-def2-SVP" end
-    end
-    """
-
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input, orcablocks=blocks, nprocs=8)
-
-    #Run a single-point energy job
-    Singlepoint(theory=ORCAcalc, fragment=HF_frag)
-    #An Energy+Gradient calculation
-    Singlepoint(theory=ORCAcalc, fragment=HF_frag, Grad=True)
-
-
-
-Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the Singlepoint function along with an
-ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
-are charge and spin multiplicity. By default, the ORCA autostart feature is active, meaning that if an inputfile with name "orca-input.inp" is run, ORCA will
-try to read orbitals from "orca-input.gbw" file if present. This is utilized automatically during geometry optimizations, numerical frequencies as well
-as multiple single-point calculations sequentially. It is possible to turn this off by adding "!Noautostart" in the simple-inputline of the orcasimpleinput variable.
-It is also possible to have each ORCA-calculation read in orbitals from another source by using the: moreadfile keyword argument option:
-
-.. code-block:: python
-
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input,
-                        orcablocks=blocks, nprocs=8, moreadfile="orbitals.gbw")
-
-
-The ORCA object is then used by passing it to a function: e.g. Singlepoint, an optimizer, a QM/MM object, NumFreq function etc.
-When the ORCA object is run (e.g. by the Singlepoint function, an optimizer etc.) it will create an ORCA inputfile
-that will always be called orca-input.inp. This inputfile will look familiar to any ORCA user as it will contain a "Simpleinput line", Block-input
-a coordinate block etc. (cordinates in Å). ASH will then tell ORCA to run the inputfile and an outputfile called orca-input.out will be created.
-Once the ORCA calculation is done the outputfile (or other files) is read for information (usually the energy and gradient) by ASH
-and ASH will continue. The ORCA inputfile , "orca-input.inp" may be replaced later (e.g. if an optimization job" and ORCA
-will be run again.
-
-
-**Parallelization**
-
-ORCA parallelization is handled by OpenMPI. By specifying the nprocs=X, a *%pal nprocs X end block* will be added to the
-ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
-correct OpenMPI version to be available.
-Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires
-setting:
-
-export PATH=/path/to/openmpi/bin:$PATH and export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH
-
-or alternatively loading the appropriate module. Set these variables in the job-script (see :doc:`basics`) that you are using
 
 
 ###########################
 Psi4Theory
 ###########################
-The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
-The library interface means that Ash will load Psi4 Python libraries that have to be part of the same Python installation.
-In the inputfile-based interface (Psithon), ASH will create a Psi4 inputfile in Psithon syntax and will then call
-a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).
 
-Both interfaces are quite flexible. Most Psi4 settings are controlled by setting the psi4settings dictionary.
-The Psi4 method is controlled by the psi4method argument. It can be set to a functional name : e.g. 'B3LYP', 'B3LYP-D3BJ'
-or even 'CCSD'  and 'CCSD(T)'. Analytical gradients are available in Psi4 for both CCSD and CCSD(T).
+See :doc:`Psi4-interface`
 
-Todo:
-- Allow to pass dictionaries for other modules
-
-Polarizable Embedding via Psi4 and the CPPE library is possible (described later).
-Set pe=True and give path to potfile to use.
-
-.. code-block:: python
-
-    #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
-    #Psi4 variables defined as a dictionary:
-    psi4settings={'scf_type': 'pk', 'soscf': True, 'basis' : 'def2-SVP' }
-    psi4method='b3lyp'
-
-    #Psi4: Input-file based interface: using psi4dir to set path
-    psi4dir='/path/to/psi4_install/bin/psi4'
-    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings=psi4settings, psi4method=psi4method, runmode='psithon',
-                                psi4dir=psi4dir, pe=False, outputname='psi4output.dat', label='psi4input',
-                                 psi4memory=3000, prinsetting=False)
-    #Psi4: Library-based interface
-    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings=psi4settings, psi4method=psi4method, runmode='library',
-                                pe=False, outputname='psi4output.dat', label='psi4input', psi4memory=3000)
-
-    #Run a single-point energy job
-    Singlepoint(theory=Psi4calc, fragment=HF_frag)
-    #An Energy+Gradient calculation
-    Singlepoint(theory=Psi4calc, fragment=HF_frag, Grad=True)
-
-**Parallelization**
-
-The Psi4 parallelization is thread-based. The nprocs keyword provided to the Psi4-interface is used to specify the number
-of threads available to Psi4 when the job is run (command-line argument for Psithon and environment variable for library).
 
 ###########################
 PySCFTheory
 ###########################
-The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
-At the moment, the interface is not very flexible and only allows for simple DFT calculations with a specific basis set.
 
-Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, nprocs, outputname and printsetting.
-Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).
-
-The interface will become more flexible in the future.
-
-.. code-block:: python
-
-    #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
-    #PySCF
-    PySCFcalc = PySCFTheory(pyscfbasis="def2-SVP", pyscffunctional="B3LYP", nprocs=2,
-    charge=0, mult=1, pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
-
-    #Run a single-point energy job
-    Singlepoint(theory=PySCFcalc, fragment=HF_frag)
-    #An Energy+Gradient calculation
-    Singlepoint(theory=PySCFcalc, fragment=HF_frag, Grad=True)
+See :doc:`PySCF-interface`
 
 
-
-**Parallelization**
-
-The PySCF parallelization is OpenMP thread-based. The nprocs keyword is used to specify the number of threads available
-to PySCF.
 
 ###########################
 xTBTheory
 ###########################
-The xTB interface comes in two forms, a shared-library interface and a file-based interface.
-The shared-library interface is recommended as no disk I/O is required while running xTB. ASH and xTB communicate via a Python C-API.
-As no files are written to disk, this makes the interface faster than the file-based interface, useful for e.g. fast MD.
-The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by ASH.
-For regular jobs, e.g. geometry optimizations, the speed-difference between interfaces will probably not matter.
 
-To use either interface is quite simple, when an xTB object is created, charge and multiplicity keywords should be provided
-as well as the xtbmethod keyword argument that takes values: "GFN2", "GFN1" for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
-An optional fragment object can also be associated with the xTB-object (makes only sense for single-point jobs).
-An optional runmode argument is also available: runmode='library' or runmode='inputfile'.
-
-The runmode='library' option is used by default and requires the shell environment variable LD_LIBRARY_PATH to include the xtb library dir.
-e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH
-
-The runmode='inputfile' option requires an additional xtbdir variable to be set that points to the dir containing the xtb executable, e.g. xtbdir=/path/to/xtb_6_2_3/bin .
-
-.. code-block:: python
-
-    #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
-    xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2')
-    #xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2', runmode='inputfile', xtbdir='/path/to/xtb_6_2_3/bin')
-
-    #Run a single-point energy job on the fragment associated with the xtb-object
-    Singlepoint(theory=xTBcalc, fragment=HF_frag)
-    #An Energy+Gradient calculation running on 8 cores
-    Singlepoint(theory=xTBcalc, fragment=HF_frag, Grad=True)
+See :doc:`xTB-interface`
 
 
-**Parallelization**
+###########################
+DaltonTheory
+###########################
 
-The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the nprocs keyword.
-Currently OMP threads are set equal to nprocs and MKL threads are set equal to 1.
-Todo: confirm that this actually works
-
-Troubleshooting:
-==================
-
-- If the library-interface is not working, the reason is likely that something is missing from the LD_LIBRARY_PATH environment variable,  Make sure the lib64 dir of xtb is part of the LD_LIBRARY_PATH in the shell from which you are running (or in the jobscript you are submitting). e.g. export LD_LIBRARY_PATH=/path/to/your/xtb_6_2_3/lib64:$LD_LIBRARY_PATH
-- Fortran libraries may also be missing for xTB. Make sure to load the necessary libraries (e.g. loading a module or  sourcing the Intel compilervars.sh script)
-- If the problem is not resolved, try to load the Ash xtb-interface directly in a script:
+See :doc:`Dalton-interface`
 
 
+###########################
+CFourTheory
+###########################
 
-.. code-block:: python
+See :doc:`CFour-interface`
 
-    import xtb_interface_library
-    test = xtb_interface_library.XTBLibrary()
 
-That should reveal what libraries are not found.
+###########################
+MRCCTheory
+###########################
+
+See :doc:`MRCC-interface`
