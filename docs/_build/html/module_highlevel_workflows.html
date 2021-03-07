@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Highlevel workflows module &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MOLCRYS: Automatic QM/MM for Molecular Crystals" href="module_molcrys.html" />
+    <link rel="prev" title="Workflows module" href="module_workflows.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">ASH</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Highlevel workflows module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module_highlevel_workflows.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="highlevel-workflows-module">
+<h1>Highlevel workflows module<a class="headerlink" href="#highlevel-workflows-module" title="Permalink to this headline">¶</a></h1>
+<p>These high-level workflows (singlepoint energy protocols) can either be called on their own (see below) or used as SP_theory keyword argument in thermochemprotocol (see above).
+All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy.</p>
+<p><strong>DLPNO_CC_CBS_SP</strong></p>
+<p>This workflow carries out multiple ORCA calculations for the given geometry and extrapolates to the DLPNO-CCSD(T)/CBS limit.
+This workflow is flexible and features multiple ways of approaching the CBS limit and the PNO limit.
+Various options affecting the accuracy, efficiency and robustness of the protocol can be chosen.
+The basis set families: cc-pVnZ (‘cc’) and Ahlrichs def2 (‘def2’) can be chosen that are available for most of the periodic table (cc-pVnZ-PP for heavy elements).
+A corevalence+scalar-relativistic correction (CVSR option) can be included upon request (important for high-accuracy atomization energies).
+Atomic spin-orbit coupling is automatically included if system is an atom.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">DLPNO_CC_CBS</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNO&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span>
+    <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;n2.xyz&#39;</span><span class="p">)</span>
+<span class="n">DLPNO_CC_CBS</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example above defines an N2 fragment (from n2.xyz) and runs multiple DLPNO-CCSD(T) calculations, utilizing basis-set and PNO extrapolation to give a final CCSD(T)/CBS estimate.
+Cardinals=[2,3] and basisfamily=”def2” means that the def2-SVP and def2-TZVPP basis sets will be used and extrapolated to the basis set limit.
+pnosetting=”extrapolation” and pnoextrapolation=[5,6] means that the DLPNO-calculations will be run using 2 different TCutPNO cutoffs and then extrapolated to the PNO limit.</p>
+<ul class="simple">
+<li><p>Cardinals can be set to [2,3] or [3,4].</p></li>
+<li><p>basisfamily can be set to “def2” (Ahlrichs basis sets) or “cc” (correlation consistent basis sets).</p></li>
+<li><p>If a heavy element is chosen (heavier than Kr) and basisfamily=”cc”, then the cc-pVnZ-PP and corresponding ECP will be used for the heavy element.</p></li>
+<li><p>T1 option utilizes iterative triples, i.e. DLPNO-CCSD(T1) instead (more accurate, more expensive).</p></li>
+<li><p>CVSR adds a Core-Valence-Scalar-Relativistic correction (more accurate, more expensive). The correction is performed at the DLPNO-CCSD(T) level (hardcoded to NormalPNO) using the W1-mtsmall basis set.
+Note: If “W1-mtsmall” is not available for the element involved you may have to provide an appropriate core-valence basis set keyword via CVbasis=”basisname” .</p></li>
+</ul>
+<p>TO BE DOCUMENTED:</p>
+<ul class="simple">
+<li><p><strong>W1theory</strong></p></li>
+<li><p><strong>W1F12theory</strong></p></li>
+<li><p><strong>DLPNO_W1theory</strong></p></li>
+<li><p><strong>DLPNO_W1F12theory</strong></p></li>
+<li><p><strong>DLPNO_F12</strong></p></li>
+<li><p><strong>DLPNO_W2theory</strong></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="module_molcrys.html" class="btn btn-neutral float-right" title="MOLCRYS: Automatic QM/MM for Molecular Crystals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="module_workflows.html" class="btn btn-neutral float-left" title="Workflows module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Ragnar Bjornsson.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

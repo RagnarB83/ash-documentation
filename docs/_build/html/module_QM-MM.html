@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>QM/MM Theory &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Benchmarking in ASH" href="module_benchmarking.html" />
+    <link rel="prev" title="MM Interfaces" href="MM-interfaces.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">ASH</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-nonbondedtheory">Example: QM/MM with ORCA and NonbondedTheory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-openmmtheory">Example: QM/MM with ORCA and OpenMMTheory</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>QM/MM Theory</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module_QM-MM.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="qm-mm-theory">
+<h1>QM/MM Theory<a class="headerlink" href="#qm-mm-theory" title="Permalink to this headline">¶</a></h1>
+<p>QM/MM in ASH is flexible as one can in principle combine various QM-theories with either NonbondedTheory or OpenMMTHeory.</p>
+<p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
+and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
+Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
+the QMMMTheory object can define the division of QM-region and MM-region.</p>
+<div class="section" id="qm-mm-boundary-treatment">
+<h2>QM/MM boundary treatment<a class="headerlink" href="#qm-mm-boundary-treatment" title="Permalink to this headline">¶</a></h2>
+<p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
+In ASH this is treated by the popular linkatom method, combined with charge-shifting.
+A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
+Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
+applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.</p>
+<p>The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
+In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).</p>
+<p>In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual
+QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1">#Excluding QM-atom 5785 from linkatom-creation.</span>
+<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span>
+         <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="p">[</span><span class="mi">5785</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-qm-mm-with-orca-and-nonbondedtheory">
+<h2>Example: QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline">¶</a></h2>
+<p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
+Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#H2O...MeOH fragment defined</span>
+<span class="n">H2O_MeOH</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_MeOH.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1"># Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM.</span>
+<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
+<span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+
+<span class="c1"># Charge definitions for whole fragment.</span>
+<span class="n">atomcharges</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="c1">#Defining atomtypes for whole system</span>
+<span class="n">atomtypes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;OT&#39;</span><span class="p">,</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span><span class="s1">&#39;CX&#39;</span><span class="p">,</span><span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;OT&#39;</span><span class="p">,</span> <span class="s1">&#39;HT&#39;</span><span class="p">]</span>
+
+<span class="c1">#Read forcefield (LJ-part only) from file</span>
+<span class="n">MM_forcefield</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;MeOH_H2O.ff&#39;</span><span class="p">)</span>
+
+<span class="c1">#QM and MM objects</span>
+<span class="n">ORCAQMpart</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+<span class="n">MMpart</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">charges</span> <span class="o">=</span> <span class="n">atomcharges</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
+<span class="n">QMMMobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">ORCAQMpart</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">MMpart</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span>
+                        <span class="n">charges</span><span class="o">=</span><span class="n">atomcharges</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">)</span>
+
+<span class="c1">#Geometry optimzation of QM/MM object</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMobject</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-qm-mm-with-orca-and-openmmtheory">
+<h2>Example: QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline">¶</a></h2>
+<p>See also <a class="reference internal" href="QM-MM-protein.html"><span class="doc">QM/MM on a protein</span></a>.</p>
+<p>Simple example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Cores to use</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">16</span>
+<span class="c1">#Forcefield files</span>
+<span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/&quot;</span>
+<span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
+<span class="n">parfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
+<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;new-XPLOR-psffile.psf&quot;</span>
+
+<span class="c1">#Read coordinates from XYZ-file</span>
+<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#act and qmatoms lists. Defines QM-region and Active-region</span>
+<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
+<span class="n">qmatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">]</span>
+<span class="n">actatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">320</span><span class="p">,</span><span class="mi">340</span><span class="p">]</span>
+
+<span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+
+<span class="c1">#Creating ORCATheory object</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
+<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
+<span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">%maxcore 2000</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="c1">#Create ORCA QM object. Attaching numcores so that ORCA runs in parallel</span>
+<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
+                        <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1"># Create QM/MM OBJECT by combining QM and MM objects above</span>
+<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span>
+                        <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">)</span>
+
+<span class="c1">#Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatoms</span><span class="p">,</span>
+                    <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;hdlc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="module_benchmarking.html" class="btn btn-neutral float-right" title="Benchmarking in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MM-interfaces.html" class="btn btn-neutral float-left" title="MM Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Ragnar Bjornsson.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

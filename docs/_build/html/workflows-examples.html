@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Workflow examples in ASH &mdash; Ash 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="High-level Thermochemistry in ASH" href="thermochemistry.html" />
+    <link rel="prev" title="QM/MM on a protein" href="QM-MM-protein.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ash
+          
+
+          
+            
+            <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">ASH</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MRCC-interface.html">MRCC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CFour-interface.html">CFour interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dalton-interface.html">Dalton interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Workflow examples in ASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-1-optimization-frequency-hl-singlepoint">Example 1 : Optimization + Frequency + HL-singlepoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">Example 3a : Running multiple single-point energies with different functionals (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">Example 3b : Running multiple single-point energies with different functionals (in parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">Example 4a : Running single-point energies on a collection of XYZ files (sequential)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">Example 4b : Running single-point energies on a collection of XYZ files (parallel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ash</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Workflow examples in ASH</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/workflows-examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="workflow-examples-in-ash">
+<h1>Workflow examples in ASH<a class="headerlink" href="#workflow-examples-in-ash" title="Permalink to this headline">¶</a></h1>
+<p>As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
+call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.</p>
+<p>As a basic example, a geometry optimization of a structure with a QM method can easily be combined with a subsequent frequency job and this
+can be followed by a subsequent higher-level single-point energy job (even with different QM programs).</p>
+<ul class="simple">
+<li><p>See Example 1 for such a workflow.</p></li>
+</ul>
+<p>Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result.</p>
+<ul class="simple">
+<li><p>Example 2a shows an example of this using a simple for-loop.</p></li>
+<li><p>Example 2b shows how the reaction energy could be calculated with a high-level thermochemistry protocol (thermochemprotocol function).</p></li>
+</ul>
+<p>It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)</p>
+<ul class="simple">
+<li><p>Example 3a shows how multiple single-point energies with different functionals on 1 geometry can be easily run.</p></li>
+<li><p>Example 3b shows how the same can be accomplished in a completely parallel fashion (Singlepoint_parallel)</p></li>
+<li><p>Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.</p></li>
+<li><p>Example 4b shows how the same can be accomplished in a completely fashion (Singlepoint_parallel)</p></li>
+<li><p>Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file.</p></li>
+</ul>
+<p>An even more advanced workflow combines metadynamics-based conformational sampling (Crest procedure by Grimme) from a starting structure,
+automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.</p>
+<ul class="simple">
+<li><p>See Example 6.</p></li>
+</ul>
+<div class="section" id="example-1-optimization-frequency-hl-singlepoint">
+<h2>Example 1 : Optimization + Frequency + HL-singlepoint<a class="headerlink" href="#example-1-optimization-frequency-hl-singlepoint" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Defining molecular fragment</span>
+<span class="n">molstring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">N 0 0 0</span>
+<span class="s2">N 0 0 0.9</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">molstring</span><span class="p">)</span>
+<span class="c1">#Defining ORCA object for optimization</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Geometry optimization of molecule and ORCAcalc theory object.</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+
+<span class="c1">#Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.</span>
+<span class="n">thermochem</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
+
+<span class="c1">#Single-point HL job on optimized geometry</span>
+<span class="n">HLORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C&quot;</span><span class="p">,</span>
+            <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">HLenergy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">HLORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: &quot;</span><span class="p">,</span> <span class="n">HLenergy</span><span class="p">,</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE: &quot;</span><span class="p">,</span> <span class="n">thermochem</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">],</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DLPNO-CCSD<span class="o">(</span>T<span class="o">)</span>/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
+<h2>Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Defining all reaction species as ASH objects from XYZ-files</span>
+<span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;n2.xyz&quot;</span><span class="p">)</span>
+<span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2.xyz&quot;</span><span class="p">)</span>
+<span class="n">NH3</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;nh3.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1">##Defining reaction##</span>
+<span class="c1"># List of species from reactant to product</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#Use same order as stoichiometry</span>
+
+<span class="c1">#Equation stoichiometry : negative integer for reactant, positive integer for product</span>
+<span class="c1"># Example: N2 + 3H2 -&gt; 2NH3  reaction should be:  [-1,-3,2]</span>
+<span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1">#Use same order as specieslist</span>
+<span class="c1">##</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+
+<span class="n">FinalEnergies</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">molecule</span> <span class="ow">in</span> <span class="n">specieslist</span><span class="p">:</span>
+    <span class="c1">#Defining ORCA object.</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+    <span class="c1">#Storing energy as list. Energy is also stored as part of fragment.</span>
+    <span class="n">FinalEnergies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+<span class="c1">#Reaction Energy via list of total energies:</span>
+<span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">list_of_energies</span><span class="o">=</span><span class="n">FinalEnergies</span><span class="p">)</span>
+
+<span class="c1">##Reaction Energy via internal energies of fragment objects:</span>
+<span class="c1">#ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Reaction_energy: -65.12668956189346 kcalpermol
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">
+<h2>Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol<a class="headerlink" href="#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol" title="Permalink to this headline">¶</a></h2>
+<p>A more advanced feature is to run each fragment with a high-level thermochemistry protocol (using ORCA) and get the final
+reaction energy with chemical accuracy. Here the coupled-cluster based W1 method is used as part of the
+thermochemprotocol function. The protocol will run a DFT opt+Freq job (as defined via the ORCA-inputline string shown)
+and then do the high-level W1 theory protocol on top (multiple CCSD, CCSD(T) jobs with extrapolation, core-valence, scalar relativistic and atomic spin-orbit corrections etc.)
+This feature is in progress and will be made more userfriendly soon. Note that W1 is only doable for really small molecules (1-4 heavy atom systems are doable).</p>
+<p>See <a class="reference internal" href="thermochemistry.html"><span class="doc">High-level Thermochemistry in ASH</span></a> for more information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+
+<span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;n2.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">NH3</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;nh3.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">##Defining reaction##</span>
+<span class="c1"># List of species from reactant to product</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#Use same order as stoichiometry</span>
+
+<span class="c1">#Equation stoichiometry : negative integer for reactant, positive integer for product</span>
+<span class="c1"># Example: N2 + 3H2 -&gt; 2NH3  reaction should be:  [1,3,-2]</span>
+<span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1">#Use same order as specieslist</span>
+<span class="c1">##</span>
+
+<span class="c1">#ORCA theory inputline for Opt+Freq</span>
+<span class="n">Opt_protocol_inputline</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6&quot;</span>
+
+<span class="c1">#Thermochemistry protocol</span>
+<span class="n">thermochemprotocol</span><span class="p">(</span><span class="n">SP_theory</span><span class="o">=</span><span class="s1">&#39;W1&#39;</span><span class="p">,</span> <span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span>
+                    <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_protocol_inputline</span><span class="o">=</span><span class="n">Opt_protocol_inputline</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Final output:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span> Reaction_energy<span class="o">(</span>ΔSCF<span class="o">)</span>:  -33.980155385058865
+ Reaction_energy<span class="o">(</span>ΔCCSD<span class="o">)</span>:  -6.937247193220541
+ Reaction_energy<span class="o">(</span>Δ<span class="o">(</span>T<span class="o">))</span>:  <span class="m">1</span>.4333499904116154
+ Reaction_energy<span class="o">(</span>ΔCV+SR<span class="o">)</span>:  -0.07653672690344188
+ Reaction_energy<span class="o">(</span>ΔSO<span class="o">)</span>:  <span class="m">0</span>.0
+ Reaction_energy<span class="o">(</span>ΔZPVE<span class="o">)</span>:  <span class="m">20</span>.455727327700334
+----------------------------------------------
+ Reaction_energy<span class="o">(</span>Total ΔE<span class="o">)</span>:  -19.104861987083417
+</pre></div>
+</div>
+<p>The output shows the total reaction energy (0 K enthalpy) and the contribution from Hartree-Fock (SCF), singles-doubles excitations (ΔCCSD),
+perturbative triples (Δ(T)), core-valence + scalar-relativistics (CV+SR), atomic spin-orbit coupling (ΔSO, here none), and zero-point
+vibrational energy (ΔZPVE).
+The agreement with experiment (-18.4 kcal/mol) is excellent.</p>
+</div>
+<div class="section" id="example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">
+<h2>Example 3a : Running multiple single-point energies with different functionals (sequential)<a class="headerlink" href="#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">h2string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">H 0 0 0</span>
+<span class="s2">H 0 0 0.7</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">h2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2string</span><span class="p">)</span>
+
+<span class="c1">#List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.</span>
+<span class="n">functionals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSSh&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">,</span> <span class="s1">&#39;BHLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM-B3LYP&#39;</span><span class="p">]</span>
+
+<span class="c1">#Dictionary to keep track of energies</span>
+<span class="n">energies_dict</span><span class="o">=</span><span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="n">functionals</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FUNCTIONAL: &quot;</span><span class="p">,</span> <span class="n">functional</span><span class="p">)</span>
+    <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+    <span class="c1">#Appending functional keyword to the string-variable that contains the ORCA inputline</span>
+    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-SVP Grid5 Finalgrid6 tightscf slowconv &quot;</span> <span class="o">+</span> <span class="n">functional</span>
+    <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    </span><span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">    maxiter 200</span>
+<span class="s2">    end</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="c1">#Defining/redefining ORCA theory. Does not need charge/mult keywords.</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Run single-point job</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2</span><span class="p">)</span>
+
+    <span class="c1">#Keep ORCA outputfile for each functional</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.out&#39;</span><span class="p">,</span> <span class="n">functional</span><span class="o">+</span><span class="s1">&#39;_orcajob.out&#39;</span><span class="p">)</span>
+
+    <span class="c1">#Adding energy to dictionary</span>
+    <span class="n">energies_dict</span><span class="p">[</span><span class="n">functional</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
+
+    <span class="c1">#Cleaning up after each job (not always necessary)</span>
+    <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dictionary with results:&quot;</span><span class="p">,</span> <span class="n">energies_dict</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#Pretty formatted printing:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Functional   Energy (Eh)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">energies_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">e</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Producing a nice table of results:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span> Functional   Energy <span class="o">(</span>Eh<span class="o">)</span>
+----------------------------
+BP86       -1.1689426849
+B3LYP      -1.1642632249
+TPSS       -1.1734355861
+TPSSh      -1.1729787552
+PBE0       -1.1610065506
+BHLYP      -1.1624650247
+CAM-B3LYP  -1.1625896338
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">
+<h2>Example 3b : Running multiple single-point energies with different functionals (in parallel)<a class="headerlink" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel" title="Permalink to this headline">¶</a></h2>
+<p>The example in 3a ran each job sequentially, one after the other, according to the list of functional strings.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1">#Fragment</span>
+<span class="n">h2string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">H 0 0 0</span>
+<span class="s2">H 0 0 0.7</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">h2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2string</span><span class="p">)</span>
+
+<span class="c1">#Single-point job parallelization</span>
+<span class="c1">#Case: Multiple theories</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="c1">#Creating multiple ORCA objects and storing in list: orcaobjects</span>
+<span class="c1">#Important: use a label (here functional-name)for the created ORCA object to distinguish jobs</span>
+<span class="n">orcaobjects</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">]:</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! def2-SVP def2/J &quot;</span><span class="o">+</span><span class="n">functional</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">functional</span><span class="p">)</span>
+    <span class="n">orcaobjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ORCAcalc</span><span class="p">)</span>
+
+<span class="c1">#Calling the Singlepoint_parallel function and providing list of fragments and list of theories:</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="p">[</span><span class="n">h2</span><span class="p">],</span> <span class="n">theories</span><span class="o">=</span><span class="n">orcaobjects</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#results is a dictionary of energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">
+<h2>Example 4a : Running single-point energies on a collection of XYZ files (sequential)<a class="headerlink" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
+<span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;./xyz_files&#39;</span>
+<span class="c1">#Changing to dir</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+
+<span class="n">energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.xyz&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XYZ-file:&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="n">mol</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mol</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy of file </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> Eh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">energy</span><span class="p">))</span>
+    <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#Pretty print</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; XYZ-file             Energy (Eh)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------------------------------&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">xyzfile</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.xyz&#39;</span><span class="p">),</span><span class="n">energies</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:20}</span><span class="s2"> </span><span class="si">{:&gt;13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyzfile</span><span class="p">,</span><span class="n">e</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">XYZ</span><span class="o">-</span><span class="n">file</span>             <span class="n">Energy</span> <span class="p">(</span><span class="n">Eh</span><span class="p">)</span>
+<span class="o">-----------------------------------------------</span>
+<span class="n">h2</span><span class="o">.</span><span class="n">xyz</span>               <span class="o">-</span><span class="mf">1.1715257797</span>
+<span class="n">h2o_MeOH</span><span class="o">.</span><span class="n">xyz</span>         <span class="o">-</span><span class="mf">192.0023991603</span>
+<span class="n">O</span><span class="o">-</span><span class="n">O</span><span class="o">-</span><span class="n">dimer</span><span class="o">.</span><span class="n">xyz</span>        <span class="o">-</span><span class="mf">149.8555328055</span>
+<span class="n">butane</span><span class="o">.</span><span class="n">xyz</span>           <span class="o">-</span><span class="mf">158.3248873844</span>
+<span class="n">nh3</span><span class="o">.</span><span class="n">xyz</span>              <span class="o">-</span><span class="mf">56.5093301286</span>
+<span class="n">n2</span><span class="o">.</span><span class="n">xyz</span>               <span class="o">-</span><span class="mf">109.4002969311</span>
+<span class="n">hi</span><span class="o">.</span><span class="n">xyz</span>               <span class="o">-</span><span class="mf">298.3735362292</span>
+<span class="n">h2o_strained</span><span class="o">.</span><span class="n">xyz</span>     <span class="o">-</span><span class="mf">76.2253312246</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">
+<h2>Example 4b : Running single-point energies on a collection of XYZ files (parallel)<a class="headerlink" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel" title="Permalink to this headline">¶</a></h2>
+<p>The example in 4a ran each job sequentially, one after the other, according to the list of XYZ-files available.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of XYZ-files.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized.
+In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;./xyz_files&#39;</span>
+
+<span class="n">molecules</span><span class="o">=</span><span class="p">[]</span>
+<span class="c1">#Creating list of ASH fragments from XYZ files. Using filename as label</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span><span class="o">+</span><span class="s1">&#39;/*.xyz&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XYZ-file:&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="n">basename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">label</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">basename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">file</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+
+<span class="c1">#Calling the Singlepoint_parallel function and providing list of fragments and list of theories:</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="n">molecules</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="p">[</span><span class="n">ORCAcalc</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">#results is a dictionary of energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">
+<h2>Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory<a class="headerlink" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory" title="Permalink to this headline">¶</a></h2>
+<p>Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or a trajectory (optimization or MD)
+can be useful to understand the nature of the reaction. The code below shows how this can be accomplished in ASH
+via a workflow involving single-point DFT, orbital localization and Cube-file creation (via orca_plot).</p>
+<p>TODO: Add centroid analysis</p>
+<p>Using a collection of XYZ-files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
+<span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/home/bjornsson/ASH-DEV_GIT/testsuite/localized-orbital-IRC-workflow/calcs/images&#39;</span>
+<span class="c1">#Changing to dir</span>
+<span class="c1">#os.chdir(dir)</span>
+<span class="c1">#Localization block in ORCA inputfile</span>
+<span class="n">blockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%lo</span><span class="s2">c</span>
+<span class="s2">LocMet IAOIBO</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Looping over XYZ-files in directory, creating ASH fragments, running ORCA and calling orca_plot</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span><span class="o">+</span><span class="s1">&#39;/*.xyz&#39;</span><span class="p">)):</span>
+    <span class="n">basefile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XYZ-file:&quot;</span><span class="p">,</span> <span class="n">basefile</span><span class="p">)</span>
+    <span class="n">mol</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">mol</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy of file </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> Eh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basefile</span><span class="p">,</span> <span class="n">energy</span><span class="p">))</span>
+    <span class="n">locfile</span><span class="o">=</span><span class="n">basefile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_calc.loc&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.loc&#39;</span><span class="p">,</span> <span class="n">locfile</span><span class="p">)</span>
+    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17</span>
+    <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+    <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+
+    <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using a multi-XYZ file containing multiple sets of geometries (could be a NEB path, MD/Opt trajectory, XYZ animation etc.)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="c1">#Name of trajectory file containing multiple geometries (could be optimization traj, MD traj, NEB-path traj, Hessian XYZ animation etc.)</span>
+<span class="c1">#File should be in dir</span>
+<span class="n">trajectoryfile</span><span class="o">=</span><span class="s2">&quot;neb-ts_MEP_trj.xyz&quot;</span>
+
+<span class="n">blockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%lo</span><span class="s2">c</span>
+<span class="s2">LocMet IAOIBO</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">fraglist</span> <span class="o">=</span> <span class="n">get_molecules_from_trajectory</span><span class="p">(</span><span class="n">trajectoryfile</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">frag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fraglist</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Frag :&quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy of frag </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> Eh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">energy</span><span class="p">))</span>
+    <span class="n">locfile</span><span class="o">=</span><span class="s1">&#39;frag</span><span class="si">{}</span><span class="s1">_calc.loc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;orca-input.loc&#39;</span><span class="p">,</span> <span class="n">locfile</span><span class="p">)</span>
+    <span class="c1">#Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17</span>
+    <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+    <span class="n">run_orca_plot</span><span class="p">(</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">locfile</span><span class="p">,</span> <span class="s1">&#39;mo&#39;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+
+    <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">
+<h2>Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points<a class="headerlink" href="#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points" title="Permalink to this headline">¶</a></h2>
+<p>This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
+This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
+Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">interface_crest</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1/&#39;</span>
+<span class="n">crestdir</span><span class="o">=</span><span class="s1">&#39;/opt/crest&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">24</span>
+
+<span class="c1">#0. Starting structure and charge and mult</span>
+<span class="n">molecule</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;ethanol.xyz&quot;</span><span class="p">)</span>
+<span class="n">charge</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="c1">#1. Calling crest</span>
+<span class="c1">#call_crest(fragment=molecule, xtbmethod=&#39;GFN2-xTB&#39;, crestdir=crestdir, charge=charge, mult=mult, solvent=&#39;H2O&#39;, energywindow=6 )</span>
+<span class="n">call_crest</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="n">crestdir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.</span>
+<span class="n">list_conformer_frags</span><span class="p">,</span> <span class="n">xtb_energies</span> <span class="o">=</span> <span class="n">get_crest_conformers</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;list_conformer_frags:&quot;</span><span class="p">,</span> <span class="n">list_conformer_frags</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Crest Conformer Searches done. Found </span><span class="si">{}</span><span class="s2"> conformers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xTB energies: &quot;</span><span class="p">,</span> <span class="n">xtb_energies</span><span class="p">)</span>
+
+<span class="c1">#3. Run DFT geometry optimizations for each crest-conformer</span>
+<span class="c1">#ML Theory level. TODO: Run in ASH parallel instead of ORCA parallel?</span>
+<span class="n">MLorcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 D3 def2-TZVP def2/J Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="n">MLorcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+<span class="n">MLORCATheory</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">MLorcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">MLorcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="n">DFT_energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">conformer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_conformer_frags</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performing DFT Geometry Optimization for Conformer &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">conformer</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">MLORCATheory</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
+    <span class="n">DFT_energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conformer</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+    <span class="c1">#Saving ASH fragment and XYZ file for each DFT-optimized conformer</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;Fragment-optimized.ygg&#39;</span><span class="p">,</span> <span class="s1">&#39;Conformer</span><span class="si">{}</span><span class="s1">_DFT.ygg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;Fragment-optimized.xyz&#39;</span><span class="p">,</span> <span class="s1">&#39;Conformer</span><span class="si">{}</span><span class="s1">_DFT.xyz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DFT Geometry Optimization done&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DFT_energies: &quot;</span><span class="p">,</span> <span class="n">DFT_energies</span><span class="p">)</span>
+
+<span class="c1">#4.Run high-level DLPNO-CCSD(T). Ash should now have optimized conformers</span>
+<span class="n">HLorcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C tightscf TightPNO&quot;</span>
+<span class="n">HLorcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">maxiter 200</span>
+<span class="s2">end</span>
+<span class="s2">%mdci</span>
+<span class="s2">maxiter 100</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">HLORCATheory</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">HLorcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">HLorcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">HL_energies</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">conformer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_conformer_frags</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performing High-level calculation for DFT-optimized Conformer &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="n">HLenergy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">HLORCATheory</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">conformer</span><span class="p">)</span>
+    <span class="n">HL_energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HLenergy</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINAL RESULTS&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================&quot;</span><span class="p">)</span>
+
+<span class="c1">#Printing total energies</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Conformer   xTB-energy    DFT-energy    HL-energy (Eh)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------&quot;</span><span class="p">)</span>
+
+<span class="n">min_xtbenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)</span>
+<span class="n">min_dftenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">DFT_energies</span><span class="p">)</span>
+<span class="n">min_HLenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">HL_energies</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,(</span><span class="n">xtb_en</span><span class="p">,</span><span class="n">dft_en</span><span class="p">,</span><span class="n">HL_en</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">,</span><span class="n">DFT_energies</span><span class="p">,</span> <span class="n">HL_energies</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">xtb_en</span><span class="p">,</span> <span class="n">dft_en</span><span class="p">,</span> <span class="n">HL_en</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#Printing relative energies</span>
+<span class="n">min_xtbenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">)</span>
+<span class="n">min_dftenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">DFT_energies</span><span class="p">)</span>
+<span class="n">min_HLenergy</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">HL_energies</span><span class="p">)</span>
+<span class="n">harkcal</span> <span class="o">=</span> <span class="mf">627.50946900</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Conformer   xTB-energy    DFT-energy    HL-energy (kcal/mol)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,(</span><span class="n">xtb_en</span><span class="p">,</span><span class="n">dft_en</span><span class="p">,</span><span class="n">HL_en</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xtb_energies</span><span class="p">,</span><span class="n">DFT_energies</span><span class="p">,</span> <span class="n">HL_energies</span><span class="p">)):</span>
+    <span class="n">rel_xtb</span><span class="o">=</span><span class="p">(</span><span class="n">xtb_en</span><span class="o">-</span><span class="n">min_xtbenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="n">rel_dfT</span><span class="o">=</span><span class="p">(</span><span class="n">dft_en</span><span class="o">-</span><span class="n">min_dftenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="n">rel_HL</span><span class="o">=</span><span class="p">(</span><span class="n">HL_en</span><span class="o">-</span><span class="n">min_HLenergy</span><span class="p">)</span><span class="o">*</span><span class="n">harkcal</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">rel_xtb</span><span class="p">,</span> <span class="n">rel_dfT</span><span class="p">,</span> <span class="n">rel_HL</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Workflow done!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The manually defined workflow above can also be more conveniently run like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#</span>
+<span class="n">crestdir</span><span class="o">=</span><span class="s1">&#39;/opt/crest&#39;</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+<span class="c1">#Fragment to define</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;ethanol.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Defining MLTheory: DFT optimization</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
+<span class="n">MLsimpleinput</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6&quot;</span>
+<span class="n">MLblockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf maxiter 200 end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">ML_B3LYP</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">MLsimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">MLblockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
+<span class="c1">#Defining HLTheory: DLPNO-CCSD(T)/CBS</span>
+<span class="n">HLsimpleinput</span><span class="o">=</span><span class="s2">&quot;! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF&quot;</span>
+<span class="n">HLblockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf maxiter 200 end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">HL_CC</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">HLsimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">HLblockinput</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
+
+<span class="c1">#Call confsampler_protocol</span>
+<span class="n">confsampler_protocol</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="n">crestdir</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">MLtheory</span><span class="o">=</span><span class="n">ML_B3LYP</span><span class="p">,</span>
+                         <span class="n">HLtheory</span><span class="o">=</span><span class="n">HL_CC</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Final result table of calculated conformers at 3 different theory levels:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">=================</span>
+FINAL <span class="nv">RESULTS</span>
+<span class="o">=================</span>
+
+ Conformer   xTB-energy    DFT-energy    HL-energy <span class="o">(</span>Eh<span class="o">)</span>
+----------------------------------------------------------------
+         <span class="m">0</span> -25.8392205500 -346.2939482921 -345.2965932205
+         <span class="m">1</span> -25.8377914500 -346.2884905132 -345.2911748671
+         <span class="m">2</span> -25.8358803400 -346.2818766960 -345.2848279253
+         <span class="m">3</span> -25.8313250600 -346.2788608396 -345.2815202116
+         <span class="m">4</span> -25.8307377800 -346.2788662649 -345.2815419285
+         <span class="m">5</span> -25.8303374700 -346.2775476223 -345.2792917601
+         <span class="m">6</span> -25.8300128900 -346.2776089771 -345.2794648759
+
+ Conformer   xTB-energy    DFT-energy    HL-energy <span class="o">(</span>kcal/mol<span class="o">)</span>
+----------------------------------------------------------------
+         <span class="m">0</span>  <span class="m">0</span>.0000000000  <span class="m">0</span>.0000000000  <span class="m">0</span>.0000000000
+         <span class="m">1</span>  <span class="m">0</span>.8967737821  <span class="m">3</span>.4248079602  <span class="m">3</span>.4000680178
+         <span class="m">2</span>  <span class="m">2</span>.0960134034  <span class="m">7</span>.5750408530  <span class="m">7</span>.3828340833
+         <span class="m">3</span>  <span class="m">4</span>.9544947374  <span class="m">9</span>.4675192805  <span class="m">9</span>.4584557521
+         <span class="m">4</span>  <span class="m">5</span>.3230184983  <span class="m">9</span>.4641148891  <span class="m">9</span>.4448282319
+         <span class="m">5</span>  <span class="m">5</span>.5742168139 <span class="m">10</span>.2915756050 <span class="m">10</span>.8568301896
+         <span class="m">6</span>  <span class="m">5</span>.7778938373 <span class="m">10</span>.2530749008 <span class="m">10</span>.7481984235
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="thermochemistry.html" class="btn btn-neutral float-right" title="High-level Thermochemistry in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="QM-MM-protein.html" class="btn btn-neutral float-left" title="QM/MM on a protein" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Ragnar Bjornsson.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>
