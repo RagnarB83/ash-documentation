@@ -226,9 +226,9 @@ A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
 applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.</p>
 <p>The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
-In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).</p>
-<p>In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual
-QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.</p>
+In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
+By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). To override this add “unusualboundary=True” as keyword argument when creating QMMMTheory object.</p>
+<p>In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1">#Excluding QM-atom 5785 from linkatom-creation.</span>
 <span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span>
          <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="p">[</span><span class="mi">5785</span><span class="p">])</span>

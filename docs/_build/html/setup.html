@@ -214,9 +214,9 @@
 <p>Contact Ragnar if you want access to the code.</p>
 <p>ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version &gt;3.6 or higher) is required and as packages will have to be installed you need to be able to
-install Python packages via pip.
-We recommend Anaconda or miniconda (<a class="reference external" href="https://www.anaconda.com/distribution/">https://www.anaconda.com/distribution/</a>) for a good scientific Python distribution.
-Anaconda is inconvenient for installing Numpy, SciPy, Matplotlib.</p>
+install Python packages via pip.</p>
+<p>Scientific Python distributions like Anacond/miniconda can be convenient: <a class="reference external" href="https://www.anaconda.com/distribution/">https://www.anaconda.com/distribution/</a>
+Anaconda comes with Numpy, SciPy, Matplotlib.</p>
 <p>Treatment of large systems via QM/MM require a Julia installation (as the Python routines will be too slow).
 Future versions will make Julia a requirement.</p>
 <p>Strict dependencies:</p>
@@ -227,11 +227,12 @@ Future versions will make Julia a requirement.</p>
 <p>Strongly recommended:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/leeping/geomeTRIC">geomeTRIC</a> (Python package via pip).</p></li>
-<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.5.2</a> installation for fast routines for large system treatment.</p></li>
+<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.6.0</a> installation for fast routines for large system treatment.</p></li>
 <li><p><a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a> installation (Python package via pip).</p></li>
 </ul>
 <p>Useful:</p>
 <ul class="simple">
+<li><p><a class="reference external" href="https://matplotlib.org">Matplotlib</a> library. Used to plot graphs/surfaces.</p></li>
 <li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library. Used for interpolation routines when plotting surfaces.</p></li>
 </ul>
 <div class="section" id="installation-and-configuration">
@@ -244,7 +245,7 @@ Python packages to it using pip. If you don’t already have a suitable Python3 
 <p>Download <a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda Python3 package</a> and install in e.g. your user directory.
 <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> also works.
 Follow Anaconda installation instructions.</p>
-<p><strong>Step 2c.</strong> Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:</p>
+<p><strong>Step 2b.2.</strong> Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create -n ashpy37 <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 numpy   <span class="c1"># Alternatively you can use the default base environment</span>
 </pre></div>
 </div>
@@ -265,7 +266,7 @@ Put these environment definitions in your shell environment startup file e.g. .b
 </pre></div>
 </div>
 <p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a>.
-Julia is necessary for fast QM/MM functionality inside ASH.</p>
+Julia is necessary for fast QM/MM functionality inside ASH. Step can be skipped if you won’t be using QM/MM.</p>
 <blockquote>
 <div><ol class="lowerroman simple">
 <li><p>Download appropriate binaries from the official Julia website. Version 1.4 or higher. Extract archive.</p></li>

@@ -12,13 +12,13 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 .. code-block:: python
 
     #Function to call crest
-    def interface_crest.call_crest(fragment=None, xtbmethod=None, crestdir=None,charge=None, mult=None, solvent=None, energywindow=6, numcores=1,
+    def call_crest(fragment=None, xtbmethod=None, crestdir=None,charge=None, mult=None, solvent=None, energywindow=6, numcores=1,
                    constrained_atoms=None, forceconstant_constraint=0.5)
     #Function to grab conformers. Returns list of conformers and list of xtb energies
-    def interface_crest.get_crest_conformers()
+    def get_crest_conformers()
 
 
-**interface_crest.call_crest** requires one to specify: an ASH fragment, xtbmethod (GFN1-xTB or GFN2-xTB ), location of crest directory, charge, multiplicity.
+**call_crest** requires one to specify: an ASH fragment, xtbmethod (GFN1-xTB or GFN2-xTB ), location of crest directory, charge, multiplicity.
 
 Optional keywords are: solvent, energywindow (default 6), numcores (default 1), constrained_atoms (list of integers) and the value of the force-consstant.
 
@@ -33,7 +33,6 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
 .. code-block:: python
 
     from ash import *
-    from interface_crest import *
 
     orcadir='/opt/orca_4.2.1/'
     crestdir='/opt/crest'
@@ -45,11 +44,10 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
     mult=1
 
     #1. Calling crest
-    #call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, solvent='H2O', energywindow=6 )
-    interface_crest.call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, numcores=numcores)
+    call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, numcores=numcores)
 
     #2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.
-    list_conformer_frags, xtb_energies = interface_crest.get_crest_conformers()
+    list_conformer_frags, xtb_energies = get_crest_conformers()
 
     print("list_conformer_frags:", list_conformer_frags)
     print("")

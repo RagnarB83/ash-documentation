@@ -11,8 +11,9 @@ Contact Ragnar if you want access to the code.
 ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and as packages will have to be installed you need to be able to
 install Python packages via pip.
-We recommend Anaconda or miniconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
-Anaconda is inconvenient for installing Numpy, SciPy, Matplotlib.
+
+Scientific Python distributions like Anacond/miniconda can be convenient: https://www.anaconda.com/distribution/
+Anaconda comes with Numpy, SciPy, Matplotlib.
 
 Treatment of large systems via QM/MM require a Julia installation (as the Python routines will be too slow).
 Future versions will make Julia a requirement.
@@ -26,11 +27,12 @@ Strict dependencies:
 Strongly recommended:
 
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
-* `Julia 1.5.2 <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
+* `Julia 1.6.0 <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 
 Useful:
 
+* `Matplotlib <https://matplotlib.org>`_ library. Used to plot graphs/surfaces.
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces.
 
 
@@ -49,7 +51,7 @@ Download `Anaconda Python3 package <https://www.anaconda.com/products/individual
 `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ also works.
 Follow Anaconda installation instructions.
 
-**Step 2c.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:
+**Step 2b.2.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:
 
 .. code-block:: shell
 
@@ -80,7 +82,7 @@ Put these environment definitions in your shell environment startup file e.g. .b
     pip install geometric   (geomeTRIC optimizer)
 
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
-Julia is necessary for fast QM/MM functionality inside ASH.
+Julia is necessary for fast QM/MM functionality inside ASH. Step can be skipped if you won't be using QM/MM.
 
  i) Download appropriate binaries from the official Julia website. Version 1.4 or higher. Extract archive.
  ii) Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.

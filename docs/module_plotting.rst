@@ -46,6 +46,19 @@ Options:
 
 
 ##############################################################################
+ MOplot_vertical: Plot vertical MO diagram
+##############################################################################
+
+Input: Dictionary containing lists of molecular-orbital energies.
+Created by MolecularOrbitalgrab in ORCA interface
+Example: mos_dict= {"occ_alpha":[-1.0,-2.0,-3.0], "occ_beta":[-1.0,-2.0,-3.0], "unocc_alpha":[1.0,2.0,3.0], "unocc_beta":[1.0,2.0,3.0], "Openshell":True}
+
+.. code-block:: python
+
+  def MOplot_vertical(mos_dict, pointsize=4000, linewidth=2, label="Label", yrange=[-30,3], imageformat='png')
+
+
+##############################################################################
  Reaction_profile
 ##############################################################################
 For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **module_plotting.reactionprofile_plot** function which will visualize the

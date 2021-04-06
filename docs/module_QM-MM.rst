@@ -21,15 +21,16 @@ applied by adding additional pointcharges. These pointcharges are only visible t
 
 The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
+By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). To override this add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
 
-In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual
-QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
+In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
 
 .. code-block:: python
 
     #Excluding QM-atom 5785 from linkatom-creation.
    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, fragment=frag, embedding="Elstat",
             qmatoms=qmatoms, excludeboundaryatomlist=[5785])
+
 
 
 #############################################

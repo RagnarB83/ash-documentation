@@ -134,7 +134,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM on a protein</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-a-classical-mm-model-of-the-system"><strong>1. Prepare a classical MM model of the system.</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#read-coordinates-and-forcefield-into-ash"><strong>2. Read coordinates and forcefield into ASH</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-read-coordinates-and-forcefield-into-ash"><strong>2a. Read coordinates and forcefield into ASH</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation"><strong>3. Create the QM/MM model and test it by running an energy calculation</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-a-qm-mm-geometry-optimization"><strong>4. Run a QM/MM geometry optimization</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modifying-the-coordinates-of-the-qm-region"><strong>5. Modifying the coordinates of the QM-region</strong></a></li>
@@ -266,11 +266,13 @@ system first such as: CHARMM-GUI (<a class="reference external" href="http://www
 <div class="line"><a class="reference external" href="http://openmm.org/tutorials/hkmt_tip4pew/">http://openmm.org/tutorials/hkmt_tip4pew/</a></div>
 </div>
 </div>
-<div class="section" id="read-coordinates-and-forcefield-into-ash">
-<h2><strong>2. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#read-coordinates-and-forcefield-into-ash" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="a-read-coordinates-and-forcefield-into-ash">
+<h2><strong>2a. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#a-read-coordinates-and-forcefield-into-ash" title="Permalink to this headline">¶</a></h2>
 <p>Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
-a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), or even a Chemshell fragment file (file.c).</p>
+a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), or even a Chemshell fragment file (file.c).
+The forcefield can be read in using CHARMM files or Amber files</p>
+<p>CHARMM example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Read in forcefield files</span>
@@ -289,11 +291,32 @@ a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
     <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
 
+
+
 <span class="c1">#Run a simple energy+gradient job at the MM level to test whether everything is correct.</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The script above (e.g. called MMtest.py) can be run like this:</p>
+<p>Amber example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Amber files</span>
+<span class="n">prmtopfile</span><span class="o">=</span><span class="s2">&quot;ps2_ALL.prmtop&quot;</span>
+<span class="n">inpcrdfile</span><span class="o">=</span><span class="s2">&quot;PS2_ALL.inpcrd&quot;</span>
+
+<span class="c1">#Read coordinates from Amber INPCRD and PRMTOP FILES</span>
+<span class="n">elems</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">boxdims</span><span class="o">=</span><span class="n">module_coords</span><span class="o">.</span><span class="n">read_ambercoordinates</span><span class="p">(</span><span class="n">prmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">inpcrdfile</span><span class="o">=</span><span class="n">inpcrdfile</span><span class="p">)</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">elems</span><span class="o">=</span><span class="n">elems</span><span class="p">,</span><span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Creating OpenMMobject using AMBER forcefield files</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="n">boxdims</span><span class="p">)</span>
+
+
+<span class="c1">#Run a simple energy+gradient job at the MM level to test whether everything is correct.</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The script above (e.g. called MMtest.py) can then be executed like this:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl MMtest.py
 </pre></div>
 </div>
@@ -307,7 +330,7 @@ The division of the system into a QM-region and an MM-region is handled by defin
 QM-atoms (create a list called qmatoms) and pass that list to the qmatoms keyword argument of the QMMMTheory class.</p>
 <p>If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen)is
 automatically created.
-The linkatom coordinates are added to the QM-region coordinates when passed to the</p>
+The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Read in forcefield files</span>

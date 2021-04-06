@@ -1,5 +1,3 @@
-
-
 High-level Thermochemistry in ASH
 ======================================
 

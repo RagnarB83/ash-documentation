@@ -115,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#plot-spectrum-plotting-broadened-spectrum">plot_Spectrum: Plotting broadened spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#moplot-vertical-plot-vertical-mo-diagram">MOplot_vertical: Plot vertical MO diagram</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reaction-profile">Reaction_profile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#contour-plot">Contour_plot</a></li>
 </ul>
@@ -247,6 +248,15 @@ the latter requires Matplotlib.</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PES_spectrum_TPSSh.png"><img alt="_images/PES_spectrum_TPSSh.png" class="align-center" src="_images/PES_spectrum_TPSSh.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="moplot-vertical-plot-vertical-mo-diagram">
+<h2>MOplot_vertical: Plot vertical MO diagram<a class="headerlink" href="#moplot-vertical-plot-vertical-mo-diagram" title="Permalink to this headline">¶</a></h2>
+<p>Input: Dictionary containing lists of molecular-orbital energies.
+Created by MolecularOrbitalgrab in ORCA interface
+Example: mos_dict= {“occ_alpha”:[-1.0,-2.0,-3.0], “occ_beta”:[-1.0,-2.0,-3.0], “unocc_alpha”:[1.0,2.0,3.0], “unocc_beta”:[1.0,2.0,3.0], “Openshell”:True}</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MOplot_vertical</span><span class="p">(</span><span class="n">mos_dict</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="reaction-profile">
 <h2>Reaction_profile<a class="headerlink" href="#reaction-profile" title="Permalink to this headline">¶</a></h2>

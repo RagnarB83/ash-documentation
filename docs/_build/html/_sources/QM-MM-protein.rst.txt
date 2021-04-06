@@ -78,12 +78,16 @@ Useful links:
 
 
 ######################################################
-**2. Read coordinates and forcefield into ASH**
+**2a. Read coordinates and forcefield into ASH**
 ######################################################
 
 Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
 a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), or even a Chemshell fragment file (file.c).
+The forcefield can be read in using CHARMM files or Amber files
+
+
+CHARMM example:
 
 .. code-block:: python
 
@@ -105,10 +109,35 @@ a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), or even a
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
         charmmprmfile=parfile)
 
+
+
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
     Singlepoint(theory=openmmobject, fragment=frag)
 
-The script above (e.g. called MMtest.py) can be run like this:
+
+Amber example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Amber files
+    prmtopfile="ps2_ALL.prmtop"
+    inpcrdfile="PS2_ALL.inpcrd"
+
+    #Read coordinates from Amber INPCRD and PRMTOP FILES
+    elems,coords,boxdims=module_coords.read_ambercoordinates(prmtopfile=prmtopfile, inpcrdfile=inpcrdfile)
+    frag=Fragment(elems=elems,coords=coords, conncalc=False)
+
+    #Creating OpenMMobject using AMBER forcefield files
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, periodic=True, periodic_cell_dimensions=boxdims)
+
+
+    #Run a simple energy+gradient job at the MM level to test whether everything is correct.
+    Singlepoint(theory=openmmobject, fragment=frag)
+
+
+The script above (e.g. called MMtest.py) can then be executed like this:
 
 .. code-block:: shell
 
@@ -126,7 +155,7 @@ QM-atoms (create a list called qmatoms) and pass that list to the qmatoms keywor
 
 If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen)is
 automatically created.
-The linkatom coordinates are added to the QM-region coordinates when passed to the
+The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.
 
 .. code-block:: python
 
