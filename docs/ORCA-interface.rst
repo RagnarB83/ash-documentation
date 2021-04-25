@@ -50,6 +50,9 @@ It is also possible to have each ORCA-calculation read in orbitals from another 
                         orcablocks=blocks, nprocs=8, moreadfile="orbitals.gbw")
 
 
+Note: For parallel-ASH calculations (ASH in parallel, ORCA in serial). The full path to the moreadfile may be required.
+
+
 The ORCA object is then used by passing it to a function: e.g. Singlepoint, an optimizer, a QM/MM object, NumFreq function etc.
 When the ORCA object is run (e.g. by the Singlepoint function, an optimizer etc.) it will create an ORCA inputfile
 that will always be called orca-input.inp. This inputfile will look familiar to any ORCA user as it will contain a "Simpleinput line", Block-input
@@ -57,6 +60,9 @@ a coordinate block etc. (cordinates in Å). ASH will then tell ORCA to run the i
 Once the ORCA calculation is done the outputfile (or other files) is read for information (usually the energy and gradient) by ASH
 and ASH will continue. The ORCA inputfile , "orca-input.inp" may be replaced later (e.g. if an optimization job" and ORCA
 will be run again.
+
+
+
 
 
 ################################################################################

@@ -112,6 +112,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#thermochemprotocols">Thermochemprotocols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#high-level-single-point-workflows">High-level single-point workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-active-space-selection">Automatic active-space selection</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
@@ -233,6 +234,74 @@ The available high-level single-point calculations are defined later.</p>
 <div class="section" id="high-level-single-point-workflows">
 <h2>High-level single-point workflows<a class="headerlink" href="#high-level-single-point-workflows" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference internal" href="module_highlevel_workflows.html"><span class="doc">Highlevel workflows module</span></a></p>
+</div>
+<div class="section" id="automatic-active-space-selection">
+<h2>Automatic active-space selection<a class="headerlink" href="#automatic-active-space-selection" title="Permalink to this headline">¶</a></h2>
+<p>Workflow to guess a good active space for CASSCF calculation based on a 2-step procedure:
+1. Calcualate MP2-natural orbitals (alternative Fractional occupation DFT orbitals)
+2. ICE-CI on top of MP2-natural orbitals using a large active-space but with small tgen threshold</p>
+<p>Example on ozone:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">fragstring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">O       -2.219508975      0.000000000     -0.605320629</span>
+<span class="s2">O       -1.305999766     -0.913250049     -0.557466332</span>
+<span class="s2">O       -2.829559171      0.140210894     -1.736132689</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstring</span><span class="p">)</span>
+
+<span class="n">small</span><span class="p">,</span> <span class="n">medium</span><span class="p">,</span> <span class="n">large</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">initial_orbitals</span><span class="o">=</span><span class="s1">&#39;MP2&#39;</span><span class="p">,</span> <span class="n">tgen</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="c1">#Returns el,orbs lists for small, medium and large options</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ICE-CI step <span class="k">done</span>
+Note: New natural orbitals from ICE-CI density matrix formed!
+
+Wavefunction size:
+Tgen: <span class="m">1</span>.0
+Tvar: 1e-07
+Orbital space of CAS<span class="o">(</span><span class="m">18</span>,37<span class="o">)</span> used <span class="k">for</span> ICE-CI step
+Num generator CFGs: <span class="m">4370</span>
+Num CFGS after S+D: <span class="m">4370</span>
+
+Table of natural occupation numbers
+
+Orbital   MP2natorbs ICE-nat-occ
+----------------------------------------
+<span class="m">0</span>            <span class="m">2</span>.0000    <span class="m">2</span>.0000
+<span class="m">1</span>            <span class="m">2</span>.0000    <span class="m">2</span>.0000
+<span class="m">2</span>            <span class="m">2</span>.0000    <span class="m">2</span>.0000
+<span class="m">3</span>            <span class="m">1</span>.9859    <span class="m">1</span>.9898
+<span class="m">4</span>            <span class="m">1</span>.9809    <span class="m">1</span>.9869
+<span class="m">5</span>            <span class="m">1</span>.9747    <span class="m">1</span>.9836
+<span class="m">6</span>            <span class="m">1</span>.9637    <span class="m">1</span>.9791
+<span class="m">7</span>            <span class="m">1</span>.9607    <span class="m">1</span>.9787
+<span class="m">8</span>            <span class="m">1</span>.9360    <span class="m">1</span>.9665
+<span class="m">9</span>            <span class="m">1</span>.9223    <span class="m">1</span>.9631
+<span class="m">10</span>           <span class="m">1</span>.9197    <span class="m">1</span>.9603
+<span class="m">11</span>           <span class="m">1</span>.8522    <span class="m">1</span>.9371
+<span class="m">12</span>           <span class="m">0</span>.1868    <span class="m">0</span>.0779
+<span class="m">13</span>           <span class="m">0</span>.0680    <span class="m">0</span>.0349
+<span class="m">14</span>           <span class="m">0</span>.0612    <span class="m">0</span>.0318
+<span class="m">15</span>           <span class="m">0</span>.0241    <span class="m">0</span>.0122
+<span class="m">16</span>           <span class="m">0</span>.0171    <span class="m">0</span>.0093
+<span class="m">17</span>           <span class="m">0</span>.0146    <span class="m">0</span>.0081
+<span class="m">18</span>           <span class="m">0</span>.0117    <span class="m">0</span>.0076
+<span class="m">19</span>           <span class="m">0</span>.0106    <span class="m">0</span>.0067
+<span class="m">20</span>           <span class="m">0</span>.0105    <span class="m">0</span>.0064
+...
+
+Recommended active spaces based on ICE-CI natural occupations:
+Minimal <span class="o">(</span><span class="m">1</span>.95,0.05<span class="o">)</span>: CAS<span class="o">(</span><span class="m">3</span>,2<span class="o">)</span>
+Medium <span class="o">(</span><span class="m">1</span>.98,0.02<span class="o">)</span>: CAS<span class="o">(</span><span class="m">12</span>,9<span class="o">)</span>
+Large <span class="o">(</span><span class="m">1</span>.995,0.005<span class="o">)</span>: CAS<span class="o">(</span><span class="m">18</span>,19<span class="o">)</span>
+Orbital file to use <span class="k">for</span> future calculations: orca.gbw
+Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
+</pre></div>
+</div>
 </div>
 </div>
 
