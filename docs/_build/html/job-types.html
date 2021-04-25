@@ -481,6 +481,8 @@ A future parallel runmode will become available where X surfacepoints can be run
 <li><p>maxiter (for geomeTRICOptimizer,default : 50)</p></li>
 <li><p>extraconstraints (for geomeTRICOptimizer, default : None. dictionary of additional constraints. Same syntax as constraints in <strong>geomeTRICOptimizer</strong>)</p></li>
 <li><p>convergence_setting (for geomeTRICOptimizer, same syntax as in <strong>geomeTRICOptimizer</strong>)</p></li>
+<li><p>keepoutputfiles  (Boolean, keep outputfiles for each point. Default is True. )</p></li>
+<li><p>keepmofiles (Boolean, keep MO files for each point in a directory. Default is False.)</p></li>
 </ul>
 <p><strong>Working with a previous scan from collection of XYZ files</strong></p>
 <p>If a surface scan has already been performed, it’s possible to use the created XYZ-files and calculate single-point energies or optimizations for each surfacepoint with
@@ -503,6 +505,13 @@ The results is a dictionary like before.</p>
                     <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;bond&#39;</span><span class="p">,</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="n">RC2_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>Other options:</p>
+<ul class="simple">
+<li><p>keepoutputfiles=True  (outputfile for each point is saved in a directory. Default True)</p></li>
+<li><p>keepmofiles=False (Boolean, MO-file for each point is saved in a directory. Default False)</p></li>
+<li><p>read_mofiles=False (Boolean: Read MO-files from directory if True. Default False.)</p></li>
+<li><p>mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )</p></li>
+</ul>
 <p><strong>Plotting</strong></p>
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above) and can be easily
 plotted by giving the dictionary as input to plotting functions (based on Matplotlib).

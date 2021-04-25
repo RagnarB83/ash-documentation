@@ -41,7 +41,7 @@ Automatic active-space selection
 ###################################
 
 Workflow to guess a good active space for CASSCF calculation based on a 2-step procedure:
-1. Calcualate MP2-natural orbitals (alternative Fractional occupation DFT orbitals)
+1. Calculate MP2-natural orbitals (alternative Fractional occupation DFT orbitals)
 2. ICE-CI on top of MP2-natural orbitals using a large active-space but with small tgen threshold
 
 

@@ -326,6 +326,8 @@ Other options to calc_surface:
 - maxiter (for geomeTRICOptimizer,default : 50)
 - extraconstraints (for geomeTRICOptimizer, default : None. dictionary of additional constraints. Same syntax as constraints in **geomeTRICOptimizer**)
 - convergence_setting (for geomeTRICOptimizer, same syntax as in **geomeTRICOptimizer**)
+- keepoutputfiles  (Boolean, keep outputfiles for each point. Default is True. )
+- keepmofiles (Boolean, keep MO files for each point in a directory. Default is False.)
 
 **Working with a previous scan from collection of XYZ files**
 
@@ -352,6 +354,13 @@ The results is a dictionary like before.
                         coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None,
                         RC1_type='bond', RC1_indices=[[0,1],[0,2]], RC2_type='angle', RC2_indices=[1,0,2])
 
+
+Other options:
+
+- keepoutputfiles=True  (outputfile for each point is saved in a directory. Default True)
+- keepmofiles=False (Boolean, MO-file for each point is saved in a directory. Default False)
+- read_mofiles=False (Boolean: Read MO-files from directory if True. Default False.)
+- mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )
 
 **Plotting**
 
