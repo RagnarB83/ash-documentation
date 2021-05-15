@@ -253,7 +253,7 @@ actregiondefine.py:
     actatoms = actregiondefine(mmtheory=openmmobject, fragment=frag, radius=11, originatom=25107)
 
 
-.. warning:: while tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is redefined in each job. It's possible that the active region slightly changes in subsequent jobs due to e.g. water molecules being in or out out of the sphere-radius when function is run. This complicates energy calculations. Instead run the actregiondefine.py script only once to define the active-atoms list and use for all subsequent jobs.
+.. warning:: While tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is then redefined in each job. It's possible that the active region might slightly change in subsequent jobs due to e.g. water molecules being in or out out of the sphere-radius when the function is run. This results in an inconsistent energy surface. Instead: run the actregiondefine.py script only once to define the active-atoms list and use for all subsequent jobs.
 
 
 Once the QM-region and Active Region has been defined one can then run a geometry optimization of the full system where
@@ -354,8 +354,29 @@ ASH (e.g. using a visualization program).
 
 See :doc:`coordinate-tools` for information on using fragedit.py  and fragupdate.py
 
+
 ######################################################
-**6. Other QM/MM jobtypes**
+**6. Adding/removing atoms of the system**
+######################################################
+
+If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needss to be updated and also: if you delete e.g. atom 4556 then all atom indices >4556 change.
+
+There are two options:
+
+1. Go back to the original MM-system preparation and prepare a new MM model with the added/deleted atom(s). This is a safe option but inconvenient.
+
+2. Modify the coordinate-file (XYZ-file, YGG-file, PDB-file), the forcefield file and update atom-indices-files (e.g. active_atoms and qmatoms files).
+
+    a. CHARMM files:
+        The PSF-file has to be regenerated and the topology and parameter-files may also need modifications.
+
+        Use PSFgen to create a new PSF-file.
+
+        MORE INFORMATION TO COME...
+
+
+######################################################
+**7. Other QM/MM jobtypes**
 ######################################################
 
 One can also run a numerical frequency job using the same QM/MM ASH object:
