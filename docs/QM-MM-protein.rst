@@ -227,13 +227,37 @@ run directly in the shell.
 **4. Run a QM/MM geometry optimization**
 ######################################################
 
-Assuming the QM/MM single-point energy test went well then everything should be ready to run a QM/MM geometry
-optimization which is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize
-a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined
-similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to
-create this list via a script. Note that the QM atoms should generally be in the actatoms list.
+Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
+optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to
+create this list via a script. Note that the QM atoms are almost part of the actatoms list.
 
-SCRIPT TO DEFINE ACTIVE ATOMS BY RADIUS: CURRENTLY MISSING
+actregiondefine.py:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Forcefield files:
+    forcefielddir="/home/bjornsson/path-to-forcefield"
+    topfile=forcefielddir+"/top_all36_prot.rtf"
+    parfile=forcefielddir+"/par_all36_prot.prm"
+    psffile=forcefielddir+"/newxplor.psf"
+
+    #Fragment file
+    frag = Fragment(pdbfile="protein.pdb")
+
+    #Creating OpenMMobject
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, 
+        charmmtopfile=topfile, charmmprmfile=parfile)
+
+
+    #Define active region based on radius (IN Å) around origin-atom (atomindex).
+    #Whole residues will be included in selection.
+    actatoms = actregiondefine(mmtheory=openmmobject, fragment=frag, radius=11, originatom=25107)
+
+
+
+
 
 Once the QM-region and Active Region has been defined one can then run a geometry optimization of the full system where
 only the active region is allowed to move. Instead of calling the Singlepoint function, one would call the
