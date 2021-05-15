@@ -228,8 +228,7 @@ run directly in the shell.
 ######################################################
 
 Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
-optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to
-create this list via a script. Note that the QM atoms are almost part of the actatoms list.
+optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).
 
 actregiondefine.py:
 
@@ -251,11 +250,12 @@ actregiondefine.py:
         charmmtopfile=topfile, charmmprmfile=parfile)
 
 
-    #Define active region based on radius (IN Å) around origin-atom (atomindex).
-    #Whole residues will be included in selection.
+    #Define active region based on radius (in Å) around origin-atom (atomindex).
+    #Whole residues will be included in selection. Note: ASH counts from 0.
     actatoms = actregiondefine(mmtheory=openmmobject, fragment=frag, radius=11, originatom=25107)
 
 
+.. warning:: while tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is redefined in each job. It's possible that the active region slightly changes in subsequent jobs due to e.g. water molecules being in our out of the sphere-radius. This complicates energy calculations. Instead run the actregiondefine.py script once to define the active-atoms list and use for all subsequent jobs.
 
 
 
