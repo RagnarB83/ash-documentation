@@ -180,14 +180,12 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
     parfile=forcefielddir+"par_all36_prot.prm"
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
 
-    #Define ACTIVE region and QM region
+    #Define QM region
     #IMPORTANT: Atom indices start at 0 in ASH.
     # Define either as lists in script:
     #qmatoms = [0, 5, 6, 7, 8]
-    #actatoms = [0, 5, 6, 7, 8, 13, 14, 15, 16, 17]
-    #Or read in list from files called: qmatoms and actatoms
+    #Or read in list from file called: qmatoms (atom indices separated by space)
     qmatomlist = read_intlist_from_file("qmatoms")
-    actatomslist = read_intlist_from_file("actatoms")
 
     #Define QM-theory. Here ORCA
     orcadir="/opt/orca_current"
@@ -255,8 +253,7 @@ actregiondefine.py:
     actatoms = actregiondefine(mmtheory=openmmobject, fragment=frag, radius=11, originatom=25107)
 
 
-.. warning:: while tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is redefined in each job. It's possible that the active region slightly changes in subsequent jobs due to e.g. water molecules being in our out of the sphere-radius. This complicates energy calculations. Instead run the actregiondefine.py script once to define the active-atoms list and use for all subsequent jobs.
-
+.. warning:: while tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is redefined in each job. It's possible that the active region slightly changes in subsequent jobs due to e.g. water molecules being in or out out of the sphere-radius when function is run. This complicates energy calculations. Instead run the actregiondefine.py script only once to define the active-atoms list and use for all subsequent jobs.
 
 
 Once the QM-region and Active Region has been defined one can then run a geometry optimization of the full system where
@@ -265,18 +262,88 @@ geomeTRICOptimizer like below:
 
 .. code-block:: python
 
+    #Read in the active atoms list from file
+    actatomslist = read_intlist_from_file("active_atoms")
+
+
     #Run QM/MM geometry optimization using geomeTRIC optimizer and HDLC coordinates
     #Only active-region passed to optimizer
     geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
 
-If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc.
-An optimization trajectory of both the full system and the frozen system.
 
-Note: it's possible to add a command at the end where a PDB-file is written out (See :doc:`coordinate-tools` on reading/writing PDB-files) for visualization purposes:
+
+If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc. An optimization trajectory of both the full system and the frozen system.
+
+.. seealso:: it's possible to add a command at the end where a PDB-file is written out (See :doc:`coordinate-tools` on reading/writing PDB-files) for visualization purposes: write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+
+
+For completeness, the inputfile for a QM/MM geometry optimization should look something like this:
 
 .. code-block:: python
 
+    from ash import *
+
+    # Read in forcefield files
+    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    parfile=forcefielddir+"par_all36_prot.prm"
+    psffile=forcefielddir+"new-XPLOR-psffile.psf"
+
+    #Read coordinates from either an XYZ-file, a PDB-file, or an ASH-file (.ygg)
+    frag = Fragment(xyzfile="system.xyz", conncalc=False)
+
+    #Creating OpenMMobject using CHARMM forcefield files
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+        charmmprmfile=parfile)
+
+    #Forcefield files
+    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    parfile=forcefielddir+"par_all36_prot.prm"
+    psffile=forcefielddir+"new-XPLOR-psffile.psf"
+
+    #Define QM region
+    #IMPORTANT: Atom indices start at 0 in ASH.
+    # Define either as lists in script:
+    #qmatoms = [0, 5, 6, 7, 8]
+    #Or read in list from file called: qmatoms (atom indices separated by space)
+    qmatomlist = read_intlist_from_file("qmatoms")
+
+    #Define Active Region
+    #Read in the active atoms list from file
+    actatomslist = read_intlist_from_file("active_atoms")
+
+    #Define QM-theory. Here ORCA
+    orcadir="/opt/orca_current"
+    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
+    ORCAblocklines="""
+    %maxcore 2000
+    %scf
+    MaxIter 500
+    end
+    """
+
+    #QM-region: Charge and multiplicity
+    charge=-5
+    mult=4
+
+    #Create ORCA QM object
+    orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
+                            orcablocks=ORCAblocklines, nprocs=8)
+
+    # Create QM/MM OBJECT
+    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
+        fragment=frag, embedding="Elstat", qmatoms=qmatomlist, printlevel=2)
+
+    #Run QM/MM geometry optimization using geomeTRIC optimizer and HDLC coordinates
+    #Only active-region passed to optimizer
+    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
+
+    #Write a PDB-file of the final coordinates.
     write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+
+
+
 
 ######################################################
 **5. Modifying the coordinates of the QM-region**
