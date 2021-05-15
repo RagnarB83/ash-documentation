@@ -375,7 +375,7 @@ There are two options:
 
         Use PSFgen to create a new PSF-file.
 
-        MORE INFORMATION TO COME...
+        .. todo:: More PSFgen add/remove atoms details to come
 
 
 ######################################################
