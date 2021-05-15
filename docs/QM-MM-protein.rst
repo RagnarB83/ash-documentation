@@ -17,8 +17,7 @@ It involves finding a good starting structure (e.g. an X-ray structure), prepari
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
 choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
 minimizing the structure and finally running at the very least a simple MD simulation to check for correctness.
-This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step
-are not easily corrected later on.
+This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step are not easily corrected later on.
 
 Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
@@ -39,7 +38,10 @@ ASH is currently capable of reading in :
    :align: right
    :width: 400
 
-*Option a. GROMACS using the CHARMM forcefiled*
+
+
+
+*Option a. GROMACS using the CHARMM forcefield*
 
 GROMACS is a popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.
 
@@ -47,19 +49,20 @@ GROMACS is a popular open-source code MM code and comes with convenient tools fo
 
 - `Metalloprotein tutorial <https://sites.google.com/site/ragnarbjornsson/mm-and-qm-mm-setup>`_
 
-Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of snapshot
-from the MD trajectory (e.g. after 5 ns simulation time). The coordinates should ideally be written out in Cartesian
+Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of a snapshot from the MD trajectory (e.g. after 5 ns simulation time). The coordinates should ideally be written out in Cartesian
 coordinates in Å and prepared as an XYZ-file. While the GROMACS files can be read in by ASH, it may also be more convenient
 to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER forcefield files (if using AMBER).
 Note that ParMed may help here: https://parmed.github.io/ParmEd/html/index.html
+
+Another option is to use the PSF-create script: 
+https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh
 
 *Option b. OpenMM using the CHARMM forcefield*
 
 IN PROGRESS
 
 An alternative to GROMACS is to set up the system and run the classical simulation using OpenMM instead.
-This has the convenience of using the same MM program that ASH uses, that may already been installed as
-part of the ASH installation. A drawback is that OpenMM is not as versatile and may require other tools to set up the
+This has the convenience of using the same MM program that ASH uses for QM/MM, that you may have installed already. A drawback is that OpenMM is not as versatile and may require other tools to set up the
 system first such as: CHARMM-GUI (http://www.charmm-gui.org), QwikMD (http://www.ks.uiuc.edu/Research/qwikmd/)
 
 Description on setting up a system in OpenMM:
