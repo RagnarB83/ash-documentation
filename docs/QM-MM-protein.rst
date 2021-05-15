@@ -359,7 +359,7 @@ See :doc:`coordinate-tools` for information on using fragedit.py  and fragupdate
 **6. Adding/removing atoms of the system**
 ######################################################
 
-If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needss to be updated and also: if you delete e.g. atom 4556 then all atom indices >4556 change.
+If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices > 4556 change.
 
 There are two options:
 
