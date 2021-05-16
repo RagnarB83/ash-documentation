@@ -22,11 +22,10 @@ Strict dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
-
-
-Strongly recommended:
-
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
+
+Strongly recommended (necessary for some parts):
+
 * `Julia 1.6.0 <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 
@@ -42,14 +41,12 @@ Installation and Configuration
 **Step 1.** Clone or download an archive containing ASH and put the directory (named ash) in your home directory.
 The ash directory contains the Python source code files, named ash.py etc.
 
-**Step 2.** Check if a suitable Python3 installation is available. It needs to contain numpy and you will need to be able to install
-Python packages to it using pip. If you don't already have a suitable Python3 distribution, go to Step 2b.
+**Step 2.** Check if a suitable Python3 installation is available. It needs to contain Numpy and you will need to be able to install Python packages to it using pip. If you don't already have a suitable Python3 distribution, go to Step 2b.
 
-**Step 2b.** Anaconda Python3 setup (recommended)
+**Step 2b.** Anaconda/Miniconda Python3 setup
 
-Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ and install in e.g. your user directory.
-`Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ also works.
-Follow Anaconda installation instructions.
+Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ or `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ and install in e.g. your user directory.
+Follow Anaconda/Miniconda installation instructions.
 
 **Step 2b.2.** Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:
 
@@ -68,11 +65,13 @@ Make sure this environment is active while you finish the installation process a
 **Step 3.** To make ASH available to Python, set the environment variables:
 
 .. code-block:: shell
+    
+    export ASHPATH=/path/to/ash  # Change /path/to/ash to the ASH directory location
+    export PYTHONPATH=$ASHPATH:$ASHPATH/lib:$PYTHONPATH
+    export PATH=$ASHPATH:$PATH
+    export LD_LIBRARY_PATH=$ASHPATH/lib:$LD_LIBRARY_PATH
 
-    export PYTHONPATH=/path/to/ash:/path/to/ash/lib:$PYTHONPATH
-    export LD_LIBRARY_PATH=/path/to/ash/lib:$LD_LIBRARY_PATH
-
-where */path/to/ash* is the dir where all the ASH sourcefiles are.
+where */path/to/ash* is the dir where all the ASH sourcefiles are (e.g. ash.py) .
 Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.
 
 **Step 4.** Install the recommended Python packages via pip:
@@ -84,8 +83,8 @@ Put these environment definitions in your shell environment startup file e.g. .b
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
 Julia is necessary for fast QM/MM functionality inside ASH. Step can be skipped if you won't be using QM/MM.
 
- i) Download appropriate binaries from the official Julia website. Version 1.4 or higher. Extract archive.
- ii) Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.
+ i) Download appropriate binaries from the official Julia website. Version 1.6 or higher. Extract archive.
+ ii) Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.6.1/bin:$PATH . Put this PATH definition in your shell startup file.
  iii) Run Julia using the ASH sourcefile julia-packages-setup.jl (inside ASH source directory) as input to download and install the  required Julia packages. Currently: PyCall, Hungarian, Distances
 
 .. code-block:: shell
@@ -100,8 +99,14 @@ Then execute in shell: rm -rf ~/.julia/registries/General
 **Step 5b.** Install `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
 
-:red:`Important:` Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
-Then install using pip:
+:red:`Important:` Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding. Check that the pip or pip3 executable is available and corresponds to the Python you want:
+
+.. code-block:: shell
+
+    which pip
+    which pip3
+
+Then install using pip/pip3:
 
 .. code-block:: shell
 
@@ -120,8 +125,6 @@ Inside the Python interpreter do:
 
     import julia
     julia.install()
-
-    #If this is successful then the python-jl binary (installed by PyJulia) should become available.
 
 
 **Step 7a.** Install desired QM program(s):
@@ -152,7 +155,6 @@ Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you i
 
 **Step 7b.** Optional: Install OpenMM (if needed)
 
-Note: Not yet documented...
 
 For protein and explict solvation QM/MM in ASH, then the `OpenMM program <http://openmm.org>`_ is used as MM code.
 It can be installed using conda.
@@ -166,9 +168,9 @@ It can be installed using conda.
 
 * Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).
 
-* If not doing QM/MM: The regular Python3 executable, *python3*  can be used to run all ASH scripts.
+The regular Python3 executable, *python3*  can be used to run all ASH scripts. There may, however, be a warning about the Julia-interface not working that can be ignored. For large systems or when using MolCrys, this is not a good option, however.
 
-* If doing QM/MM: The Python-Julia executable, *python-jl* should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment). python-jl can always be used.
+* If doing large systems or using MolCrys: The ASH python3 executable, *python3_ash* should always be used (required for the PyJulia interface to work) to run ASH Python scripts. The python3_ash is present in the main ASH dir, the ASH dir needs to be in PATH and python3_ash needs to be made executable: chmod o+x /path/to/ash/python3_ash
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
@@ -179,8 +181,8 @@ Example ASH script to try out (geometry optimization of H2O using ORCA):
 or:
 
 .. code-block:: shell
-
-    python-jl first-ash-job.py
+    ##Note: python3_ash is present in main ASH directory (make sure that it is in PATH). You have make it executable first: chmod o+x python3_ash before.
+    python3_ash first-ash-job.py 
 
 
 first-ash-job.py:
@@ -208,21 +210,22 @@ first-ash-job.py:
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
 
 
-If you get error message when launching python-jl or something similar:
+If you get error message when launching python3_ash or something similar:
 
 .. code-block:: shell
 
-    File "/path/to/envs/ashpy37/bin/python-jl", line 8, in <module>
+    File "/home/bjornsson/ash/python3_ash", line 9, in <module>
     sys.exit(main())
-    File "/path/to/miniconda3/envs/ashpy37/lib/python3.7/site-packages/julia/python_jl.py", line 114, in main
+    File "/home/bjornsson/.local/lib/python3.8/site-packages/julia/python_jl.py", line 114, in main
     execprog([julia, "-e", script_jl, "--"] + unused_args)
+    ...
     FileNotFoundError: [Errno 2] No such file or directory
 
-This means that the Python-Julia interface is not completely active yet.
+This means that the Python-Julia interface is not completely working.
 Check the following:
 
-1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.
-2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.
+1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set: export PATH=/path/to/julia/bin:$PATH See Step 5a-ii.
+2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b. Go through these steps again.
 3. Make sure you are using the same Python-conda environment you used when you installed things.
-4. Setup PyCall for each Julia user environment (updates ~/.julia)
+4. Set up PyCall for each Julia user environment (this updates ~/.julia dir)
 
