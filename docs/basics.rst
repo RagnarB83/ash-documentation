@@ -9,9 +9,9 @@ You create a Python3 script (e.g. called ashtest.py) and import the Ash function
 
 .. code-block:: python
 
-    from ash import *
+    from ash import *   # This will import the most important ASH functionality into your namespace
     #or
-    import ash
+    import ash   # If you use this option you will have to add the "ash." prefix in front of ASH functions/classes.
 
 
 Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
@@ -22,26 +22,42 @@ Make sure you have already set in the shell (part of Setup):
     export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
 
-Global settings are stored in your *ash-dir/settings_ash.py* and can be modified. However, it is better to instead create
-a settings file, **ash_user_settings.ini** for your user in your home-directory that should look like below.
-Here you can set paths for e.g. orcadir, whether to use ANSI colors in output whether to print inputfile and logo etc.
+Global settings are stored in your *ash-dir/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file, **ash_user_settings.ini** for your user in your home-directory that should look like below.
+Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
 
 .. code-block:: shell
 
     [Settings]
-    orcadir = /opt/orca_4.2.1
     scale = 1.0
     tol = 0.2
     use_ANSI_color = True
     print_input = True
-    print_logo = False
+    print_logo = True
     load_julia = True
+    debugflag = False
+    print_exit_footer = True
+    print_full_timings = True
+    nonbondedMM_code = "julia"
+    connectivity_code = "julia"
+    orcadir = '/path/to/orcadir'
 
-Current available options are:
+In addition to options above it is also possible to specify the paths to various external codes.
+If these paths are set in the settings file, one can avoid setting them in the inputfiles.
+
+.. code-block:: shell
+
+    [Settings]
+    orcadir = '/path/to/orcadir'
+    daltondir = '/path/to/daltondir'
+    xtbdir = '/path/to/xtbdir'
+    psi4dir = '/path/to/psi4dir'
+    cfourdir = '/path/to/cfourdir'
+    crestdir = '/path/to/crestdir'
+
 
 You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
-object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
+object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
 See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
 
 #####################
@@ -88,6 +104,8 @@ For a simple job we can just run the script directly
 .. code-block:: shell
 
     python3 ashtest.py
+    #or (for full Python-Julia support)
+    python3_ash ashtest.py
 
 The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
 
@@ -224,7 +242,7 @@ where jobscript.sh is:
 
     #Start Ash job from scratch dir.  Output file is written directly to submit directory
     export PYTHONUNBUFFERED=1
-    python-jl $job.py >> $SLURM_SUBMIT_DIR/$outputname 2>&1
+    python3_ash $job.py >> $SLURM_SUBMIT_DIR/$outputname 2>&1
 
     # Ash has finished. Now copy important stuff back.
     outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}
