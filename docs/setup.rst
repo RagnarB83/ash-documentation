@@ -161,21 +161,6 @@ Then install using pip/pip3:
 
     pip3 install julia
 
-Activate PyJulia by opening up the python3 interpreter, import julia library and install:
-
-.. code-block:: shell
-
-    python3 #This launches the python3 interpreter
-
-Inside the Python interpreter do:
-
-.. code-block:: python
-
-
-    import julia
-    julia.install()
-
-
 **Step 6a.** Install desired QM program(s):
 
 * `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
@@ -210,26 +195,30 @@ It can be installed using conda.
     conda install -c omnia openmm
 
 
-**Step 7.** Try it out.
+**Step 7.** Activate python3_ash
 
-* Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).
+Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
 
-The regular Python3 executable, *python3*  can be used to run all ASH scripts. There will, however, be a warning about the Julia-interface not working. This warning can be ignored. For large systems or when using MolCrys, this is not a good option, however. Instead it is preferred to use : *python3_ash*  (see below).
+* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work which is important for treating large systems.
 
-* If doing large systems or using MolCrys: The ASH python3 executable, *python3_ash*   must be used (required for the PyJulia interface to work) to run ASH Python scripts. The *python3_ash* executable is present in the main ASH dir, the ASH dir needs to be in PATH and python3_ash needs to be made executable: chmod o+x /path/to/ash/python3_ash
+* Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c). Otherwise ASH will not work.
 
-Example ASH script to try out (geometry optimization of H2O using ORCA):
+* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used.
+
+
+**Step 8.** 
+
+Test if things work in general:
+
+python3_ash /path/to/ash/test_ash.py   #This runs a basic test job.
+
+
+
+Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):
 
 .. code-block:: shell
 
-    python3 first-ash-job.py
-
-or:
-
-.. code-block:: shell
-
-    #Note: python3_ash is present in main ASH directory (make sure that it is in PATH). You have make it executable first: chmod o+x python3_ash before.
-    python3_ash first-ash-job.py 
+    python3_ash first-ash-job.py
 
 
 first-ash-job.py:
@@ -253,7 +242,7 @@ first-ash-job.py:
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
                                 orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
 
-    #Basic Cartesian optimization with KNARR-LBFGS
+    #Geometry optimization
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
 
 

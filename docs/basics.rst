@@ -2,9 +2,11 @@
 Basic usage
 ==========================
 
+
 #####################
 Input structure
 #####################
+
 You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:
 
 .. code-block:: python
@@ -22,7 +24,88 @@ Make sure you have already set in the shell (part of Setup):
     export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
 
 
-Global settings are stored in your *ash-dir/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file, **ash_user_settings.ini** for your user in your home-directory that should look like below.
+You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
+of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
+object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
+See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
+
+#####################
+Example script
+#####################
+
+Here is a basic Ash Python script, e.g. named: ashtest.py
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining a numcores variable with the number of available CPU cores. Will be given to ORCA object.
+    numcores=4
+    #Create fragment
+    fragstring="""
+    H 0.0 0.0 0.0
+    F 0.0 0.0 1.0
+    """
+    molecule = Fragment(coordsstring=fragstring)
+
+    #Defining ORCA-related variables
+    orcadir='/opt/orca_4.2.1'
+    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
+    orcablocks="%scf maxiter 200 end"
+
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
+                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
+
+    #Geometry Optimization using geomeTRIC
+    geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
+
+
+The script above loads Ash, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
+defines variables related to the ORCA-interface , creates an ORCA-theory object
+(see :doc:`QM-interfaces`), and runs a geometry optimization using the SimpleOpt optimizer function  (see :doc:`job-types` for other better options).
+
+
+######################################
+Running script directly in the shell
+######################################
+
+For a simple job we can just run the script directly
+
+.. code-block:: shell
+
+    python3 ashtest.py
+    #or (for full Python-Julia support)
+    python3_ash ashtest.py
+
+The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
+
+.. code-block:: shell
+
+    python3 ashtest.py >& ashtest.out
+
+#####################################################
+Interactive ASH in a REPL or iPython environment
+#####################################################
+It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
+This allows for interactive use of ASH. See video below for an example.
+
+If ASH has been set up correctly (PYTHONPATH etc.) and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
+Make sure to use the iPython that uses the same Python as ASH.
+
+.. raw:: html
+
+    <div align=center>
+   <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
+    </div>
+
+
+
+
+#####################
+ASH settings
+#####################
+
+Global settings are stored in  */path/to/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
 
 .. code-block:: shell
@@ -55,78 +138,17 @@ If these paths are set in the settings file, one can avoid setting them in the i
     crestdir = '/path/to/crestdir'
 
 
-You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
-of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
-object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
-See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
+###############################
+Use of colors in ASH output
+###############################
 
-#####################
-Example script
-#####################
+ASH can display ANSI colors in output if  use_ANSI_color = True   is used in the settings file (see above). 
+This makes the output more readable.
 
-Here is a basic Ash Python script, e.g. named: ashtest.py
+Note, however, that colors will only display properly if using a text reader that supports it:
+- less may require the -R flag: less -R outputfile. Or setting: export LESS=-R
+- vim and emacs require plugins
 
-.. code-block:: python
-
-    from ash import *
-
-    #Setting numcores. Used by ORCA.
-    numcores=4
-    #Create fragment
-    fragstring="""
-    H 0.0 0.0 0.0
-    F 0.0 0.0 1.0
-    """
-    molecule = Fragment(coordsstring=fragstring)
-
-    #Defining ORCA-related variables
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
-    orcablocks="%scf maxiter 200 end"
-
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
-
-    #Geometry Optimization using geomeTRIC
-    geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
-
-
-The script above loads Ash, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
-defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces`), and runs a geometry optimization using the SimpleOpt optimizer function  (see :doc:`job-types` for other better options).
-
-########################
-Running script directly
-########################
-
-For a simple job we can just run the script directly
-
-.. code-block:: shell
-
-    python3 ashtest.py
-    #or (for full Python-Julia support)
-    python3_ash ashtest.py
-
-The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
-
-.. code-block:: shell
-
-    python3 ashtest.py >& ashtest.out
-
-#####################################################
-Interactive ASH in a REPL or iPython environment
-#####################################################
-It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
-This allows for interactive use of ASH. See video below for an example.
-
-If ASH has been set up correctly (PYTHONPATH etc.) then ASH within iPython should be straightforward.
-Make sure to use the iPython that uses the same Python as ASH.
-
-.. raw:: html
-
-    <div align=center>
-   <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
-    </div>
 
 #####################
 Submitting job
