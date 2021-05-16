@@ -57,7 +57,11 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
     #Setting numcores. Used by ORCA.
     numcores=4
     #Create fragment
-    Ironhexacyanide = Fragment(xyzfile="fecn6.xyz")
+    fragstring="""
+    H 0.0 0.0 0.0
+    F 0.0 0.0 1.0
+    """
+    molecule = Fragment(coordsstring=fragstring)
 
     #Defining ORCA-related variables
     orcadir='/opt/orca_4.2.1'
@@ -68,10 +72,10 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
                                 orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
     #Geometry Optimization using geomeTRIC
-    geomeTRICOptimizer(fragment=Ironhexacyanide, theory=ORCAcalc, coordsystem='tric')
+    geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
 
 
-The script above loads Ash, creates a new fragment from an XYZ file (see :doc:`coordinate-input` for other ways),
+The script above loads Ash, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
 (see :doc:`QM-interfaces`), and runs a geometry optimization using the SimpleOpt optimizer function  (see :doc:`job-types` for other better options).
 
