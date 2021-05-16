@@ -38,8 +38,7 @@ Useful:
 ###############################
 Installation and Configuration
 ###############################
-**Step 1.** Clone or download an archive containing ASH and put the directory (named ash) in your home directory.
-The ash directory contains the Python source code files, named ash.py etc.
+**Step 1.** Clone or download an archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
 
 **Step 2.** Check if a suitable Python3 installation is available. It needs to contain Numpy and you will need to be able to install Python packages to it using pip. If you don't already have a suitable Python3 distribution, go to Step 2b.
 
@@ -168,9 +167,9 @@ It can be installed using conda.
 
 * Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).
 
-The regular Python3 executable, *python3*  can be used to run all ASH scripts. There may, however, be a warning about the Julia-interface not working that can be ignored. For large systems or when using MolCrys, this is not a good option, however.
+The regular Python3 executable, *python3*  can be used to run all ASH scripts. There may, however, be a warning about the Julia-interface not working that can be ignored. For large systems or when using MolCrys, this is not a good option, however. Instead it is preferred to use : *python3_ash*  instead (see below).
 
-* If doing large systems or using MolCrys: The ASH python3 executable, *python3_ash* should always be used (required for the PyJulia interface to work) to run ASH Python scripts. The python3_ash is present in the main ASH dir, the ASH dir needs to be in PATH and python3_ash needs to be made executable: chmod o+x /path/to/ash/python3_ash
+* If doing large systems or using MolCrys: The ASH python3 executable, *python3_ash*   must be used (required for the PyJulia interface to work) to run ASH Python scripts. The *python3_ash* executable is present in the main ASH dir, the ASH dir needs to be in PATH and python3_ash needs to be made executable: chmod o+x /path/to/ash/python3_ash
 
 Example ASH script to try out (geometry optimization of H2O using ORCA):
 
@@ -181,7 +180,8 @@ Example ASH script to try out (geometry optimization of H2O using ORCA):
 or:
 
 .. code-block:: shell
-    ##Note: python3_ash is present in main ASH directory (make sure that it is in PATH). You have make it executable first: chmod o+x python3_ash before.
+
+    #Note: python3_ash is present in main ASH directory (make sure that it is in PATH). You have make it executable first: chmod o+x python3_ash before.
     python3_ash first-ash-job.py 
 
 
@@ -210,7 +210,7 @@ first-ash-job.py:
     geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
 
 
-If you get error message when launching python3_ash or something similar:
+If you get an error message when launching python3_ash that looks like the following:
 
 .. code-block:: shell
 
