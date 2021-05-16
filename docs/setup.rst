@@ -38,10 +38,14 @@ Useful:
 ###############################
 Installation and Configuration
 ###############################
-**Step 1.** Clone or download an archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
+**Step 1.** 
+
+Clone or download an archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
 The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual loction on your machine).
 
-**Step 2.** Check if a suitable Python3 installation is available (globally available or maybe via a module on your cluster). It needs to be relatively new (version 3.6 and above) contain Numpy and you will need to be able to install Python packages to it using the package manager pip. 
+**Step 2.** 
+
+Check if a suitable Python3 installation is available (globally available or maybe via a module on your cluster). It needs to be relatively new (version 3.6 and above) contain Numpy and you will need to be able to install Python packages to it using the package manager pip. 
 
 .. code-block:: shell
 
@@ -63,6 +67,7 @@ If you don't already have a suitable Python3 distribution, go to Step 2b.
 **Step 2b. Install Python if required** 
 
 *Option 1: Python3 via system package manager*
+
 Linux: Install Python3 via a Linux package manager (Centos: yum -y install python3, Ubuntu: apt install python3).
 Installing via a package manager is prefereable than compiling from source (see python.org for options).
 Mac OS X: TODO
@@ -122,6 +127,7 @@ This step will be necessary for each user on the cluster.
     pip3 install geometric   (geomeTRIC optimizer)
 
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
+
 Julia is necessary for some fast QM/MM functionality inside ASH (e.g. MolCrys). Step can be skipped if you won't be using QM/MM.
 
  i) Download appropriate binaries from the official Julia website. Version 1.6 or higher. Extract archive.
@@ -170,7 +176,7 @@ Inside the Python interpreter do:
     julia.install()
 
 
-**Step 7a.** Install desired QM program(s):
+**Step 6a.** Install desired QM program(s):
 
 * `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
 * `xTB <https://xtb-docs.readthedocs.io>`_ needs to be in PATH and later your jobscript.
@@ -194,8 +200,7 @@ Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you i
     conda install psi4 psi4-rt -c psi4
 
 
-**Step 7b.** Optional: Install OpenMM (if needed)
-
+**Step 6b.** Optional: Install OpenMM (if needed)
 
 For protein and explict solvation QM/MM in ASH, then the `OpenMM program <http://openmm.org>`_ is used as MM code.
 It can be installed using conda.
@@ -205,7 +210,7 @@ It can be installed using conda.
     conda install -c omnia openmm
 
 
-**Step 8.** Try it out.
+**Step 7.** Try it out.
 
 * Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).
 
