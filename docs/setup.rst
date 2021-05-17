@@ -42,28 +42,28 @@ Clone or download the archive containing ASH and put the directory (named ash) i
 
 
 ##################################################
-Installation and Configuration
+B. Installation and Configuration
 ##################################################
 
 
 *****************************************************
-B1. Semi-Automatic Installation and Configuration
+B1. Semi-Automatic
 *****************************************************
 
 (Experimental feature)
 
 This uses the install_ash.sh script inside the ASH directory.
-The script downloads and installs Python packages as well as Julia and packages.
+The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages.
 It requires a working Python3 installation.
 
-**Step 1.** Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use. Note: You need to be able to install packages to this installation via pip3.
+**Step 1.** Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use. Note: You need to be able to install packages to this installation via pip.
 
 **Step 2.** cd to ASH directory and run: ./install_ash.sh
 
 **Step 3.** Run: source ./set_environment_ash.sh
 
 *****************************************************
-B2. Manual Installation and Configuration
+B2. Manual
 *****************************************************
 
 **Step 1.** 
