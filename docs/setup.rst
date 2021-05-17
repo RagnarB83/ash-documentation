@@ -35,9 +35,33 @@ Useful:
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces.
 
 
-###############################
-Installation and Configuration
-###############################
+##############################################
+A. Download ASH
+##############################################
+Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
+
+
+##################################################
+B1. Semi-Automatic Installation and Configuration
+##################################################
+(Experimental feature)
+
+This uses the install_ash.sh script inside the ASH directory.
+The script downloads and installs Python packages as well as Julia and packages.
+It requires a working Python3 installation.
+
+1. Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use.
+Note: You need to be able to install packages to this installation via pip3.
+
+2. cd to ASH directory and run: ./install_ash.sh
+
+3. Run: source ./set_environment_ash.sh
+
+
+##########################################
+B2. Manual Installation and Configuration
+##########################################
+
 **Step 1.** 
 
 Clone or download an archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
@@ -164,7 +188,24 @@ Then install using pip/pip3:
 
     pip3 install julia
 
-**Step 6a.** Install desired QM program(s):
+
+**Step 6.** Activate python3_ash
+
+Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
+
+* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work
+properly. The PyJulia interface is needed for treating large systems.
+
+* Make sure the correct Python3 environment is active. Otherwise ASH will not work.
+
+* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used.
+
+
+#########################################
+C. Install External Programs
+#########################################
+
+**Step 1.** Install desired QM program(s):
 
 * `ORCA <https://orcaforum.kofo.mpg.de>`_ is a recommended QM code (flexible interface in ASH). See installation instructions on the `ORCA Input Library <https://sites.google.com/site/orcainputlibrary/setting-up-orca>`_. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.
 * `xTB <https://xtb-docs.readthedocs.io>`_ needs to be in PATH and later your jobscript.
@@ -188,7 +229,7 @@ Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you i
     conda install psi4 psi4-rt -c psi4
 
 
-**Step 6b.** Optional: Install OpenMM (if needed)
+**Step 2.** Optional: Install OpenMM (if needed)
 
 For protein and explict solvation QM/MM in ASH, then the `OpenMM program <http://openmm.org>`_ is used as MM code.
 It can be installed using conda.
@@ -198,18 +239,10 @@ It can be installed using conda.
     conda install -c omnia openmm
 
 
-**Step 7.** Activate python3_ash
 
-Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
-
-* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work which is important for treating large systems.
-
-* Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c). Otherwise ASH will not work.
-
-* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used.
-
-
-**Step 8.** 
+#########################################
+D. Test ASH
+#########################################
 
 Test if things work in general:
 
@@ -263,8 +296,8 @@ If you get an error message when launching python3_ash that looks like the follo
 This means that the Python-Julia interface is not completely working.
 Check the following:
 
-1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set: export PATH=/path/to/julia/bin:$PATH See Step 5a-ii.
-2. Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b. Go through these steps again.
-3. Make sure you are using the same Python-conda environment you used when you installed things.
+1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set: export PATH=/path/to/julia/bin:$PATH
+2. Something went wrong in the installation of Julia or PyJulia. Go through these steps again.
+3. Make sure you are using the same Python environment you used when you installed things.
 4. Set up PyCall for each Julia user environment (this updates ~/.julia dir)
 
