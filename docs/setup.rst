@@ -68,8 +68,10 @@ If you don't already have a suitable Python3 distribution, go to Step 2b.
 
 *Option 1: Python3 via system package manager*
 
-Linux: Install Python3 via a Linux package manager (Centos: yum -y install python3, Ubuntu: apt install python3).
-Installing via a package manager is prefereable than compiling from source (see python.org for options).
+.. note:: This option is preferred if installing on a cluster for multiple users.
+
+Linux: Install Python3 via a Linux package manager (e.g. Centos: yum -y install python3, Ubuntu: apt install python3).
+Installing via a package manager is prefereable than compiling from source (see python.org for compile options).
 Mac OS X: TODO
 Windows: TODO
 
@@ -139,7 +141,8 @@ Julia is necessary for some fast QM/MM functionality inside ASH (e.g. MolCrys). 
     julia julia-packages-setup.jl  #This launches the julia interpreter and requests installation of required Julia packages for ASH.
 
 This will download and install required Julia packages.
-This step is likely required for each new user on a computing cluster.
+
+.. note:: To avoid having to setup the Julia packages for each user on a computing cluster, one can specify a global Julia package-store-location: export JULIA_DEPOT_PATH=/path/to/julia-packages-dir  before running :  julia julia-packages-setup.jl
 
 
 If there is an error like this: ERROR: SystemError: opening file "/path/to/.julia/registries/General/Registry.toml": No such file or directory
