@@ -50,12 +50,11 @@ This uses the install_ash.sh script inside the ASH directory.
 The script downloads and installs Python packages as well as Julia and packages.
 It requires a working Python3 installation.
 
-1. Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use.
-Note: You need to be able to install packages to this installation via pip3.
+**Step 1.** Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use. Note: You need to be able to install packages to this installation via pip3.
 
-2. cd to ASH directory and run: ./install_ash.sh
+**Step 2.** cd to ASH directory and run: ./install_ash.sh
 
-3. Run: source ./set_environment_ash.sh
+**Step 3.** Run: source ./set_environment_ash.sh
 
 
 ##########################################
@@ -117,21 +116,8 @@ Make sure that the Python3 that you have installed is in your PATH environment w
 *Option 2: Anaconda/Miniconda Python3 setup*
 
 Download `Anaconda Python3 package <https://www.anaconda.com/products/individual>`_ or `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ and install in e.g. your user directory.
-Follow Anaconda/Miniconda installation instructions. Install numpy unless already installed.
+Follow Anaconda/Miniconda installation instructions. Install numpy unless already installed. It could be a good idea to create your own conda environment for ASH but this is not strictly necessary.
 
-Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:
-
-.. code-block:: shell
-
-    conda create -n ashpy37 python=3.7 numpy   # Alternatively you can use the default base environment
-
-Select the environment:
-
-.. code-block:: shell
-
-    conda activate ashpy37 # or use base environment if preferred
-
-Make sure this environment is active while you finish the installation process and use this same environment when running ASH.
 
 **Step 3.** To make ASH available to Python3, set the environment variables:
 
