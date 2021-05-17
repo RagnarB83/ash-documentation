@@ -42,8 +42,14 @@ Clone or download the archive containing ASH and put the directory (named ash) i
 
 
 ##################################################
-B1. Semi-Automatic Installation and Configuration
+Installation and Configuration
 ##################################################
+
+
+*****************************************************
+B1. Semi-Automatic Installation and Configuration
+*****************************************************
+
 (Experimental feature)
 
 This uses the install_ash.sh script inside the ASH directory.
@@ -56,10 +62,9 @@ It requires a working Python3 installation.
 
 **Step 3.** Run: source ./set_environment_ash.sh
 
-
-##########################################
+*****************************************************
 B2. Manual Installation and Configuration
-##########################################
+*****************************************************
 
 **Step 1.** 
 
