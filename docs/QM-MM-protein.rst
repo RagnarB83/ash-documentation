@@ -368,11 +368,11 @@ There are two options:
 
 1. Go back to the original MM-system preparation and prepare a new MM model with the added/deleted atom(s). This is a safe option but inconvenient.
 
-2. Modify the coordinate-file (XYZ-file, YGG-file, PDB-file), the forcefield file and update atom-indices-files (e.g. active_atoms and qmatoms files).
+2. Modify the coordinate-file (XYZ-file, YGG-file, PDB-file), the forcefield file (e.g. PSF-file, topology file) and update atom-indices-files (e.g. active_atoms and qmatoms files).
 
     a. CHARMM files:
-        The PSF-file has to be regenerated and the topology and parameter-files may also need modifications.
-        PSFgen is needed to create a new PSF-file.
+        The PSF-file has to be regenerated and the topology and parameter-files may also need modifications/additions.
+        PSFgen is the best option for creating a new PSF-file.
 
         **Delete atoms (CHARMM)**
 
