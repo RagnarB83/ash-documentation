@@ -398,6 +398,12 @@ There are two options:
             #Delete atoms from system
             remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir)
 
+        The script will delete the selected atoms (here 18840; note: ASH counts from zero) and create new fragmentfiles: 
+        newfragment.xyz and newfragment.ygg
+        and create the new PSF file named: newsystem_XPLOR.psf  . Also created is a PDB-file: new-system.pdb
+
+
+
         **Add atoms to system (CHARMM)**
                 
                 To add systems....TODO
