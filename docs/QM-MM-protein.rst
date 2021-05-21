@@ -372,10 +372,32 @@ There are two options:
 
     a. CHARMM files:
         The PSF-file has to be regenerated and the topology and parameter-files may also need modifications.
+        PSFgen is needed to create a new PSF-file.
 
-        Use PSFgen to create a new PSF-file.
+        **Delete atoms**
+        
+        Both the coordinate-deletion and PSF-file update can be performed with an ASH script like this:
 
-        .. note:: More PSFgen add/remove atoms details to come
+.. code-block:: python
+
+    from ash import *
+
+    #Path to dir containing PSFgen executable
+    psfgendir="/home/bjornsson/QM-MM-Chemshell-scripts"
+
+    #CHARMM Forcefield files
+    topfile="top_all36_prot.rtf"
+    psffile="newxplor.psf"
+
+    #Reading coordinates into a fragment
+    fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
+
+    #What atoms to delete
+    deletionlist=[18840]
+
+    #Delete atoms from system
+    remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir)
+
 
 
 ######################################################
