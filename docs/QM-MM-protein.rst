@@ -402,6 +402,8 @@ There are two options:
         newfragment.xyz and newfragment.ygg
         and create the new PSF file named: newsystem_XPLOR.psf  . Also created is a PDB-file: new-system.pdb
 
+        Remember that when you delete atoms from a system atom indices will have changed. 
+        Remember to update the QM-region and Active-Region definitions! 
 
 
         **Add atoms to system (CHARMM)**
