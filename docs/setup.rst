@@ -38,7 +38,7 @@ Useful:
 ##############################################
 A. Download ASH
 ##############################################
-Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
+Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, e.g. ash.py and several directories.
 
 
 ##################################################
@@ -50,25 +50,34 @@ B. Installation and Configuration
 B1. Semi-Automatic
 *****************************************************
 
-(Experimental feature)
+(RECOMMENDED)
 
 This uses the install_ash.sh script inside the ASH directory.
-The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages.
-It requires a working Python3 installation.
+The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.
 
-**Step 1.** Set path_to_python3_dir in ./install_ash.sh script to the Python3 installation you want to use. Note: You need to be able to install packages to this installation via pip.
+**Step 1.** Make sure the desired python3 is in your environment ('which python3' in the shell) or set path_to_python3_dir in the ./install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
+Note: You need to be able to install packages to this installation via pip 
 
-**Step 2.** cd to ASH directory and run: ./install_ash.sh
+**Step 2.** cd to ASH directory, make install_ash executable and run: 
+chmod +x ./install_ash.sh
+./install_ash.sh
 
-**Step 3.** Run: source ./set_environment_ash.sh
+**Step 3.** If installation is successful: source ./set_environment_ash.sh    to activate ASH environment.
+
+Common problems:
+
+
+
 
 *****************************************************
 B2. Manual
 *****************************************************
 
+(Use only if semi-automatic approach does not work)
+
 **Step 1.** 
 
-Clone or download an archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, named ash.py etc.
+Make sure ASH has been downloaded and moved to some location where it will stay.
 The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual loction on your machine).
 
 **Step 2.** 
@@ -88,6 +97,7 @@ Check if a suitable Python3 installation is available (globally available or may
 
 
 If you have a suitable Python3 with numpy then make sure it is loaded in your environment when using ASH.
+An Anaconda/miniconda distribution can be used. Make sure the conda environment is loaded.
 
 If you don't already have a suitable Python3 distribution, go to Step 2b.
 
@@ -96,7 +106,7 @@ If you don't already have a suitable Python3 distribution, go to Step 2b.
 
 *Option 1: Python3 via system package manager*
 
-.. note:: This option is preferred if installing on a cluster for multiple users.
+.. note:: This option might be preferred if installing on a cluster for multiple users.
 
 Linux: Install Python3 via a Linux package manager (e.g. Centos: yum -y install python3, Ubuntu: apt install python3).
 Installing via a package manager is prefereable than compiling from source (see python.org for compile options).
@@ -142,6 +152,11 @@ This step will be necessary for each user on the cluster.
 .. code-block:: shell
 
     pip3 install geometric   (geomeTRIC optimizer)
+
+This requires you to be able ot install packages to your Python installation. It may also be possible to install Python packages
+locally to your user's home directory by the "--user" option:  pip3 install geometric --user
+
+
 
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
 
@@ -189,7 +204,7 @@ properly. The PyJulia interface is needed for treating large systems.
 
 * Make sure the correct Python3 environment is active. Otherwise ASH will not work.
 
-* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used.
+* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.
 
 
 #########################################
