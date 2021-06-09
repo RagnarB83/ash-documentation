@@ -30,7 +30,6 @@ function.
 .. code-block:: python
 
     from ash import *
-    import sys
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -95,7 +94,6 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 .. code-block:: python
 
     from ash import *
-    import sys
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     #ORCA
@@ -145,7 +143,7 @@ Example:
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     ORCAcalc = ORCATheory(orcadir='/opt/orca_4.2.1', charge=0, mult=1,
-                        orcasimpleinput='BP def2-SVP def2/J', orcablocks=", nprocs=1)
+                        orcasimpleinput='BP def2-SVP def2/J', orcablocks="", nprocs=1)
     thermochem_dict = AnFreq(theory=ORCAcalc, fragment=HF_frag)
 
     print("Thermochem properties dict:", thermochem_dict)
@@ -204,10 +202,9 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
 .. code-block:: python
 
     from ash import *
-    import sys
 
     #the total number of CPU cores available to Ash (should match the job-script)
-    Ashnumcores=8
+    numcores=8
 
     orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! HF-3c "
@@ -223,7 +220,7 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     Reactant=Fragment(coordsstring=reactstring)
 
     #Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=Ashnumcores)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
 
     #Geometry optimization of Reactant object and ORCAcalc theory object.
     #Each Energy+Grad step is parallelized by ORCA.
@@ -238,7 +235,7 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     #Serial mode:
     freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='serial')
     #Parallel mode:
-    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=Ashnumcores)
+    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
 
     print("freqresult:", freqresult)
     #The resulting object from a NumFreq calculation is a dictionary (here called freqresult)
@@ -263,7 +260,6 @@ Any QM or QM/MM Hamiltonian can be used.
 .. code-block:: python
 
     from ash import *
-    import syss
     import interface_knarr
 
     Reactant=Fragment(xyzfile="react.xyz")
@@ -300,7 +296,7 @@ Default name : 'surface_results.txt'
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', 
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
     runmode='serial', RC1_range=[180,110,-10], RC1_type='angle', RC1_indices=[1,0,2], keepoutputfiles=True)
 
 **2D scan:**
@@ -309,7 +305,7 @@ If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
         RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[[0,1],[0,2]], RC2_range=[180,110,-10], 
         RC2_type='angle', RC2_indices=[1,0,2], keepoutputfiles=True)
 
@@ -361,6 +357,8 @@ Other options:
 - keepmofiles=False (Boolean, MO-file for each point is saved in a directory. Default False)
 - read_mofiles=False (Boolean: Read MO-files from directory if True. Default False.)
 - mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )
+- ActiveRegion= True/False
+- actatoms=list  (list of active atoms if doing relaxed scan)
 
 **Plotting**
 

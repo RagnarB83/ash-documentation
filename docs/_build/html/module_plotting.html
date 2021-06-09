@@ -269,7 +269,7 @@ The output is an imagefile (PNG by default).</p>
 <li><p>The x-axis label or y-axis label of the plot can be changed via: <em>x_axislabel</em> =’String’ or <em>y_axislabel</em> =’String’.</p></li>
 <li><p>The <em>label</em> keyword is used to named the file saved: e.g.: PlotXX.png</p></li>
 <li><p>The <em>imageformat</em> and <em>dpi</em> keywords can be used to specify the image format: default is PNG and 200.</p></li>
-<li><p><em>pointsize</em>, <em>scatter_linewidth</em>, <em>linewidth</em> and <em>color</em> keywords can be used to modify the plot.</p></li>
+<li><p><em>pointsize</em>, <em>scatter_linewidth</em>, <em>line_linewidth</em> and <em>color</em> keywords can be used to modify the plot.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ash</span>
 <span class="kn">import</span> <span class="nn">module_plotting</span>
@@ -278,7 +278,7 @@ The output is an imagefile (PNG by default).</p>
 <span class="c1">#Specifying options</span>
 
 <span class="n">module_plotting</span><span class="o">.</span><span class="n">reactionprofile_plot</span><span class="p">(</span><span class="n">surfacedictionary</span><span class="p">,</span> <span class="n">finalunit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;Angle&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy&#39;</span><span class="p">,</span>
-    <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">RelativeEnergy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+    <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">RelativeEnergy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>

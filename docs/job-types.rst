@@ -296,7 +296,7 @@ Default name : 'surface_results.txt'
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', 
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
     runmode='serial', RC1_range=[180,110,-10], RC1_type='angle', RC1_indices=[1,0,2], keepoutputfiles=True)
 
 **2D scan:**
@@ -305,7 +305,7 @@ If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, type='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
         RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[[0,1],[0,2]], RC2_range=[180,110,-10], 
         RC2_type='angle', RC2_indices=[1,0,2], keepoutputfiles=True)
 
@@ -357,6 +357,8 @@ Other options:
 - keepmofiles=False (Boolean, MO-file for each point is saved in a directory. Default False)
 - read_mofiles=False (Boolean: Read MO-files from directory if True. Default False.)
 - mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )
+- ActiveRegion= True/False
+- actatoms=list  (list of active atoms if doing relaxed scan)
 
 **Plotting**
 

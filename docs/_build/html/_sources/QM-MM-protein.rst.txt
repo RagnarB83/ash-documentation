@@ -17,8 +17,7 @@ It involves finding a good starting structure (e.g. an X-ray structure), prepari
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
 choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
 minimizing the structure and finally running at the very least a simple MD simulation to check for correctness.
-This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step
-are not easily corrected later on.
+This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step are not easily corrected later on.
 
 Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
@@ -39,7 +38,10 @@ ASH is currently capable of reading in :
    :align: right
    :width: 400
 
-*Option a. GROMACS using the CHARMM forcefiled*
+
+
+
+*Option a. GROMACS using the CHARMM forcefield*
 
 GROMACS is a popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.
 
@@ -47,19 +49,20 @@ GROMACS is a popular open-source code MM code and comes with convenient tools fo
 
 - `Metalloprotein tutorial <https://sites.google.com/site/ragnarbjornsson/mm-and-qm-mm-setup>`_
 
-Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of snapshot
-from the MD trajectory (e.g. after 5 ns simulation time). The coordinates should ideally be written out in Cartesian
+Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of a snapshot from the MD trajectory (e.g. after 5 ns simulation time). The coordinates should ideally be written out in Cartesian
 coordinates in Å and prepared as an XYZ-file. While the GROMACS files can be read in by ASH, it may also be more convenient
 to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER forcefield files (if using AMBER).
 Note that ParMed may help here: https://parmed.github.io/ParmEd/html/index.html
+
+Another option is to use the PSF-create script: 
+https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh
 
 *Option b. OpenMM using the CHARMM forcefield*
 
 IN PROGRESS
 
 An alternative to GROMACS is to set up the system and run the classical simulation using OpenMM instead.
-This has the convenience of using the same MM program that ASH uses, that may already been installed as
-part of the ASH installation. A drawback is that OpenMM is not as versatile and may require other tools to set up the
+This has the convenience of using the same MM program that ASH uses for QM/MM, that you may have installed already. A drawback is that OpenMM is not as versatile and may require other tools to set up the
 system first such as: CHARMM-GUI (http://www.charmm-gui.org), QwikMD (http://www.ks.uiuc.edu/Research/qwikmd/)
 
 Description on setting up a system in OpenMM:
@@ -180,14 +183,12 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
     parfile=forcefielddir+"par_all36_prot.prm"
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
 
-    #Define ACTIVE region and QM region
+    #Define QM region
     #IMPORTANT: Atom indices start at 0 in ASH.
     # Define either as lists in script:
     #qmatoms = [0, 5, 6, 7, 8]
-    #actatoms = [0, 5, 6, 7, 8, 13, 14, 15, 16, 17]
-    #Or read in list from files called: qmatoms and actatoms
+    #Or read in list from file called: qmatoms (atom indices separated by space)
     qmatomlist = read_intlist_from_file("qmatoms")
-    actatomslist = read_intlist_from_file("actatoms")
 
     #Define QM-theory. Here ORCA
     orcadir="/opt/orca_current"
@@ -227,13 +228,36 @@ run directly in the shell.
 **4. Run a QM/MM geometry optimization**
 ######################################################
 
-Assuming the QM/MM single-point energy test went well then everything should be ready to run a QM/MM geometry
-optimization which is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize
-a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined
-similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to
-create this list via a script. Note that the QM atoms should generally be in the actatoms list.
+Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
+optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).
 
-SCRIPT TO DEFINE ACTIVE ATOMS BY RADIUS: CURRENTLY MISSING
+actregiondefine.py:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Forcefield files:
+    forcefielddir="/home/bjornsson/path-to-forcefield"
+    topfile=forcefielddir+"/top_all36_prot.rtf"
+    parfile=forcefielddir+"/par_all36_prot.prm"
+    psffile=forcefielddir+"/newxplor.psf"
+
+    #Fragment file
+    frag = Fragment(pdbfile="protein.pdb")
+
+    #Creating OpenMMobject
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, 
+        charmmtopfile=topfile, charmmprmfile=parfile)
+
+
+    #Define active region based on radius (in Å) around origin-atom (atomindex).
+    #Whole residues will be included in selection. Note: ASH counts from 0.
+    actatoms = actregiondefine(mmtheory=openmmobject, fragment=frag, radius=11, originatom=25107)
+
+
+.. warning:: While tempting to use the actregiondefine function within your regular ASH QM/MM geometry optimization job, this is typically not a good idea as the active region is then redefined in each job. It's possible that the active region might slightly change in subsequent jobs due to e.g. water molecules being in or out out of the sphere-radius when the function is run. This results in an inconsistent energy surface. Instead: run the actregiondefine.py script only once to define the active-atoms list and use for all subsequent jobs.
+
 
 Once the QM-region and Active Region has been defined one can then run a geometry optimization of the full system where
 only the active region is allowed to move. Instead of calling the Singlepoint function, one would call the
@@ -241,18 +265,88 @@ geomeTRICOptimizer like below:
 
 .. code-block:: python
 
+    #Read in the active atoms list from file
+    actatomslist = read_intlist_from_file("active_atoms")
+
+
     #Run QM/MM geometry optimization using geomeTRIC optimizer and HDLC coordinates
     #Only active-region passed to optimizer
     geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
 
-If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc.
-An optimization trajectory of both the full system and the frozen system.
 
-Note: it's possible to add a command at the end where a PDB-file is written out (See :doc:`coordinate-tools` on reading/writing PDB-files) for visualization purposes:
+
+If the optimization finishes successfully, the optimized coordinates will be written to disk as both XYZ-file, ASH fragfile etc. An optimization trajectory of both the full system and the frozen system.
+
+.. seealso:: it's possible to add a command at the end where a PDB-file is written out (See :doc:`coordinate-tools` on reading/writing PDB-files) for visualization purposes: write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+
+
+For completeness, the inputfile for a QM/MM geometry optimization should look something like this:
 
 .. code-block:: python
 
+    from ash import *
+
+    # Read in forcefield files
+    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    parfile=forcefielddir+"par_all36_prot.prm"
+    psffile=forcefielddir+"new-XPLOR-psffile.psf"
+
+    #Read coordinates from either an XYZ-file, a PDB-file, or an ASH-file (.ygg)
+    frag = Fragment(xyzfile="system.xyz", conncalc=False)
+
+    #Creating OpenMMobject using CHARMM forcefield files
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+        charmmprmfile=parfile)
+
+    #Forcefield files
+    forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    parfile=forcefielddir+"par_all36_prot.prm"
+    psffile=forcefielddir+"new-XPLOR-psffile.psf"
+
+    #Define QM region
+    #IMPORTANT: Atom indices start at 0 in ASH.
+    # Define either as lists in script:
+    #qmatoms = [0, 5, 6, 7, 8]
+    #Or read in list from file called: qmatoms (atom indices separated by space)
+    qmatomlist = read_intlist_from_file("qmatoms")
+
+    #Define Active Region
+    #Read in the active atoms list from file
+    actatomslist = read_intlist_from_file("active_atoms")
+
+    #Define QM-theory. Here ORCA
+    orcadir="/opt/orca_current"
+    ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
+    ORCAblocklines="""
+    %maxcore 2000
+    %scf
+    MaxIter 500
+    end
+    """
+
+    #QM-region: Charge and multiplicity
+    charge=-5
+    mult=4
+
+    #Create ORCA QM object
+    orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
+                            orcablocks=ORCAblocklines, nprocs=8)
+
+    # Create QM/MM OBJECT
+    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
+        fragment=frag, embedding="Elstat", qmatoms=qmatomlist, printlevel=2)
+
+    #Run QM/MM geometry optimization using geomeTRIC optimizer and HDLC coordinates
+    #Only active-region passed to optimizer
+    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
+
+    #Write a PDB-file of the final coordinates.
     write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+
+
+
 
 ######################################################
 **5. Modifying the coordinates of the QM-region**
@@ -263,8 +357,95 @@ ASH (e.g. using a visualization program).
 
 See :doc:`coordinate-tools` for information on using fragedit.py  and fragupdate.py
 
+
 ######################################################
-**6. Other QM/MM jobtypes**
+**6. Adding/removing atoms of the system**
+######################################################
+
+If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices > 4556 change.
+
+There are two options:
+
+1. Go back to the original MM-system preparation and prepare a new MM model with the added/deleted atom(s). This is a safe option but inconvenient.
+
+2. Modify the coordinate-file (XYZ-file, YGG-file, PDB-file), the forcefield file (e.g. PSF-file, topology file) and update atom-indices-files (e.g. active_atoms and qmatoms files).
+
+    a. CHARMM files:
+        The PSF-file has to be regenerated and the topology and parameter-files may also need modifications/additions.
+        PSFgen is the best option for creating a new PSF-file.
+
+        **Delete atoms (CHARMM)**
+
+        Both the coordinate-deletion and PSF-file update can be performed with an ASH script like this:
+
+        .. code-block:: python
+
+            from ash import *
+
+            #Path to dir containing PSFgen executable
+            psfgendir="/home/bjornsson/QM-MM-Chemshell-scripts"
+
+            #CHARMM Forcefield files
+            topfile="top_all36_prot.rtf"
+            psffile="newxplor.psf"
+
+            #Reading coordinates into a fragment
+            fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
+
+            #What atoms to delete
+            deletionlist=[18840]
+
+            #Delete atoms from system
+            remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir)
+
+        The script will delete the selected atoms (here 18840; note: ASH counts from zero) and create new fragmentfiles: 
+        newfragment.xyz and newfragment.ygg
+        and create the new PSF file named: newsystem_XPLOR.psf  . Also created is a PDB-file: new-system.pdb
+
+        Remember that when you delete atoms from a system atom indices will have changed. 
+        Remember to update the QM-region and Active-Region definitions! 
+
+
+        **Add atoms to system (CHARMM)**
+                
+        Both the coordinates and the PSF-file needs to be updated. 
+        This can be performed with an ASH script like this:
+
+        .. code-block:: python
+
+            from ash import *
+
+            #Path to dir containing PSFgen executable
+            psfgendir="/home/bjornsson/QM-MM-Chemshell-scripts"
+
+            #CHARMM Forcefield files
+            topfile="top_all36_prot.rtf"
+            psffile="newxplor.psf"
+
+            #Reading coordinates into a fragment
+            fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
+
+            #Defining the added coordinates as a string
+            addition_string="""
+            C        1.558526678      0.000000000     -0.800136464
+            O        2.110366050     -0.126832008      0.222773815
+            O        1.006687306      0.126832008     -1.823046743
+            """
+            #Name of resgroup to be added (this needs to be present in topfile!)
+            resgroup='CO2'
+            #Adding atoms
+            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, psffile=psffile, topfile=topfile, psfgendir=psfgendir)
+
+        The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
+        newfragment.xyz and newfragment.ygg
+        and add the chosen resgroup to a PSF file named: newsystem_XPLOR.psf  . 
+        Also created is a PDB-file: new-system.pdb
+
+        Remember to add the new atom indices to QM-region and Active-Region definitions!
+
+
+######################################################
+**7. Other QM/MM jobtypes**
 ######################################################
 
 One can also run a numerical frequency job using the same QM/MM ASH object:
