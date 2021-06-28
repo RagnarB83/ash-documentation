@@ -94,6 +94,9 @@ There are two options:
         Remember that when you delete atoms from a system atom indices will have changed. 
         This means that you either have to update the qmatoms and actatoms list manually or do as in example above where the qmatoms and actatoms lists are provided to the remove_atoms_from_system_CHARMM function. These lists will then be updated.
 
+.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to remove_atoms_from_system_CHARMM  that will preserve the 1-based indexing.
+
+
 
         **Add atoms to system (CHARMM)**
                 
@@ -113,7 +116,7 @@ There are two options:
 
             #Reading coordinates into a fragment
             fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
-            
+
             # Define qmatoms and actatoms lists
             qmatoms = read_intlist_from_file("qmatoms")
             actatoms = read_intlist_from_file("actatoms")
@@ -135,6 +138,8 @@ There are two options:
         Also created is a PDB-file: new-system.pdb
 
         Remember to add the new atom indices to QM-region and Active-Region definitions or provide the lists to the add_atoms_to_system_CHARMM function as above.
+
+.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to add_atoms_to_system_CHARMM  that will preserve the 1-based indexing.
 
 
 ###########################

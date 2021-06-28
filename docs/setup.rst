@@ -59,10 +59,13 @@ The script downloads and installs Python packages (numpy, geometric,pyjulia) as 
 Note: You need to be able to install packages to this installation via pip 
 
 **Step 2.** cd to ASH directory, make install_ash executable and run: 
-chmod +x ./install_ash.sh
-./install_ash.sh
 
-**Step 3.** If installation is successful: source ./set_environment_ash.sh    to activate ASH environment.
+- chmod +x ./install_ash.sh
+- ./install_ash.sh
+
+**Step 3.** If installation is successful:
+
+- source ./set_environment_ash.sh    to activate ASH environment.
 
 Common problems:
 

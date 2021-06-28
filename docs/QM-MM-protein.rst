@@ -411,6 +411,7 @@ There are two options:
         If you provide the qmatoms and actatoms list to the remove_atoms_from_system_CHARMM function as above then the lists will be update.
         Otherwise, remember to update the QM-region and Active-Region definitions yourself! 
 
+        .. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to remove_atoms_from_system_CHARMM  that will preserve the 1-based indexing.
 
         **Add atoms to system (CHARMM)**
                 
@@ -444,7 +445,8 @@ There are two options:
             #Name of resgroup to be added (this needs to be present in topfile!)
             resgroup='CO2'
             #Adding atoms
-            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
+            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, 
+                                psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
         The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
         newfragment.xyz and newfragment.ygg
@@ -453,6 +455,7 @@ There are two options:
 
         Remember to add the new atom indices to QM-region and Active-Region definitions or provide the qmatoms and actatoms lists to the function!
 
+        .. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to add_atoms_to_system_CHARMM  that will preserve the 1-based indexing.
 
 ######################################################
 **7. Other QM/MM jobtypes**
