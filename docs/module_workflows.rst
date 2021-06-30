@@ -59,9 +59,9 @@ Example on ozone:
 
 	fragment=Fragment(coordsstring=fragstring)
 
-	small, medium, large = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
+	activespace_dictionary = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
 	    initial_orbitals='MP2', tgen=1.0)
-	#Returns el,orbs lists for small, medium and large options
+	#Returns dictionary with various active_spaces based on thresholds
 
 Output:
 
@@ -71,11 +71,11 @@ Output:
 	Note: New natural orbitals from ICE-CI density matrix formed!
 
 	Wavefunction size:
-	Tgen: 1.0
-	Tvar: 1e-07
-	Orbital space of CAS(18,37) used for ICE-CI step
-	Num generator CFGs: 4370
-	Num CFGS after S+D: 4370
+	Tgen: 0.01
+	Tvar: 1e-09
+	Orbital space of CAS(25,37) used for ICE-CI step
+	Num generator CFGs: 28982
+	Num CFGS after S+D: 29197
 
 	Table of natural occupation numbers
 
@@ -84,30 +84,42 @@ Output:
 	0            2.0000    2.0000
 	1            2.0000    2.0000
 	2            2.0000    2.0000
-	3            1.9859    1.9898
-	4            1.9809    1.9869
-	5            1.9747    1.9836
-	6            1.9637    1.9791
-	7            1.9607    1.9787
-	8            1.9360    1.9665
-	9            1.9223    1.9631
-	10           1.9197    1.9603
-	11           1.8522    1.9371
-	12           0.1868    0.0779
-	13           0.0680    0.0349
-	14           0.0612    0.0318
-	15           0.0241    0.0122
-	16           0.0171    0.0093
-	17           0.0146    0.0081
-	18           0.0117    0.0076
-	19           0.0106    0.0067
-	20           0.0105    0.0064
+	3            2.0000    2.0000
+	4            1.9854    1.9901
+	5            1.9825    1.9882
+	6            1.9791    1.9866
+	7            1.9756    1.9845
+	8            1.9720    1.9820
+	9            1.9696    1.9810
+	10           1.9666    1.9786
+	11           1.9662    1.9777
+	12           1.9639    1.9764
+	13           1.9626    1.9754
+	14           1.9584    1.9732
+	15           1.9560    1.9723
+	16           0.9950    0.9988
+	17           0.0270    0.0197
+	18           0.0249    0.0184
+	19           0.0231    0.0176
+	20           0.0210    0.0161
+	21           0.0200    0.0158
+	22           0.0174    0.0145
+	23           0.0172    0.0142
+	24           0.0166    0.0137
+	25           0.0162    0.0136
+	26           0.0143    0.0126
+	27           0.0133    0.0120
+	28           0.0119    0.0089
+	29           0.0099    0.0060
 	...
 
 	Recommended active spaces based on ICE-CI natural occupations:
-	Minimal (1.95,0.05): CAS(3,2)
-	Medium (1.98,0.02): CAS(12,9)
-	Large (1.995,0.005): CAS(18,19)
+	Minimal (1.95,0.05): CAS(1,1)
+	Medium1 (1.98,0.02): CAS(13,7)
+	Medium2 (1.985,0.015): CAS(19,15)
+	Medium3 (1.99,0.01): CAS(23,23)
+	Medium4 (1.992,0.008): CAS(25,25)
+	Large (1.995,0.005): CAS(25,30)
 	Orbital file to use for future calculations: orca.gbw
 	Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
 
