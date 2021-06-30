@@ -113,8 +113,8 @@ Example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], do_energy_composition=True,
-        applyconstraints=False, dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
+        dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
         PMEparameters=[1.0/0.34, 90, 90, 90])
 
     #Launching a molecular dynamics simulation
