@@ -255,10 +255,15 @@ Future versions will make Julia a requirement.</p>
 The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.</p>
 <p><strong>Step 1.</strong> Make sure the desired python3 is in your environment (‘which python3’ in the shell) or set path_to_python3_dir in the ./install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
 Note: You need to be able to install packages to this installation via pip</p>
-<p><strong>Step 2.</strong> cd to ASH directory, make install_ash executable and run:
-chmod +x ./install_ash.sh
-./install_ash.sh</p>
-<p><strong>Step 3.</strong> If installation is successful: source ./set_environment_ash.sh    to activate ASH environment.</p>
+<p><strong>Step 2.</strong> cd to ASH directory, make install_ash executable and run:</p>
+<ul class="simple">
+<li><p>chmod +x ./install_ash.sh</p></li>
+<li><p>./install_ash.sh</p></li>
+</ul>
+<p><strong>Step 3.</strong> If installation is successful:</p>
+<ul class="simple">
+<li><p>source ./set_environment_ash.sh    to activate ASH environment.</p></li>
+</ul>
 <p>Common problems:</p>
 </div>
 <div class="section" id="b2-manual">
@@ -351,10 +356,7 @@ which pip3
 <p><strong>Step 6.</strong> Activate python3_ash</p>
 <p>Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash</p>
 <ul class="simple">
-<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used. It is required for the PyJulia interface to work</p></li>
-</ul>
-<p>properly. The PyJulia interface is needed for treating large systems.</p>
-<ul class="simple">
+<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.</p></li>
 <li><p>Make sure the correct Python3 environment is active. Otherwise ASH will not work.</p></li>
 <li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
 </ul>

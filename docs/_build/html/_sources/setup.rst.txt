@@ -59,10 +59,13 @@ The script downloads and installs Python packages (numpy, geometric,pyjulia) as 
 Note: You need to be able to install packages to this installation via pip 
 
 **Step 2.** cd to ASH directory, make install_ash executable and run: 
-chmod +x ./install_ash.sh
-./install_ash.sh
 
-**Step 3.** If installation is successful: source ./set_environment_ash.sh    to activate ASH environment.
+- chmod +x ./install_ash.sh
+- ./install_ash.sh
+
+**Step 3.** If installation is successful:
+
+- source ./set_environment_ash.sh    to activate ASH environment.
 
 Common problems:
 
@@ -199,8 +202,7 @@ Then install using pip/pip3:
 
 Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
 
-* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work
-properly. The PyJulia interface is needed for treating large systems.
+* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.
 
 * Make sure the correct Python3 environment is active. Otherwise ASH will not work.
 

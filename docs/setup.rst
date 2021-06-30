@@ -202,8 +202,7 @@ Then install using pip/pip3:
 
 Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
 
-* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work
-properly. The PyJulia interface is needed for treating large systems.
+* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.
 
 * Make sure the correct Python3 environment is active. Otherwise ASH will not work.
 

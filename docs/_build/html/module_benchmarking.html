@@ -322,7 +322,7 @@ The workflows are available inside the module: module_highlevel_workflows</p>
 <li><p>DLPNO_W1theory</p></li>
 <li><p>DLPNO_F12</p></li>
 <li><p>DLPNO_W2theory</p></li>
-<li><p>DLPNO_CC_CBS</p></li>
+<li><p>CC_CBS</p></li>
 </ul>
 <p>When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -338,11 +338,11 @@ The workflows are available inside the module: module_highlevel_workflows</p>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/Applications/orca_4.2.1&#39;</span>
 
 <span class="c1">#Define a dictionary containing the arguments of the workflow to be modified</span>
-<span class="n">DLPNO_CC_CBS_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cardinals&#39;</span> <span class="p">:</span> <span class="s1">&#39;2/3&#39;</span><span class="p">,</span> <span class="s2">&quot;basisfamily&quot;</span> <span class="p">:</span> <span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="s1">&#39;stabilityanalysis&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="n">CC_CBS_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cardinals&#39;</span> <span class="p">:</span> <span class="s1">&#39;2/3&#39;</span><span class="p">,</span> <span class="s2">&quot;basisfamily&quot;</span> <span class="p">:</span> <span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="s1">&#39;stabilityanalysis&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;DLPNO&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="s1">&#39;memory&#39;</span> <span class="p">:</span> <span class="mi">5112</span><span class="p">,</span> <span class="s1">&#39;extrablocks&#39;</span> <span class="p">:</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf</span><span class="se">\n</span><span class="s2">directresetfreq 1</span><span class="se">\n</span><span class="s2">end</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;extrainputkeyword&#39;</span> <span class="p">:</span> <span class="s1">&#39;Slowconv&#39;</span><span class="p">}</span>
 
 <span class="c1">#Running the benchmark with a workflow</span>
-<span class="n">benchmarking</span><span class="o">.</span><span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">module_highlevel_workflows</span><span class="o">.</span><span class="n">DLPNO_CC_CBS</span><span class="p">,</span> <span class="n">workflow_args</span> <span class="o">=</span> <span class="n">DLPNO_CC_CBS_args</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">benchmarking</span><span class="o">.</span><span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">module_highlevel_workflows</span><span class="o">.</span><span class="n">CC_CBS</span><span class="p">,</span> <span class="n">workflow_args</span> <span class="o">=</span> <span class="n">DLPNO_CC_CBS_args</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

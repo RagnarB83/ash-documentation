@@ -47,6 +47,7 @@ This should update the coordinates of fragfile.ygg.
 ######################################################
 
 If you need to add or remove atoms to your MM or QM/MM system this is a bit more involved than just modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices > 4556 change.
+This requires updating of forcefield files, coordinate files as well as atom lists (qmatoms and active atoms) that reference atom indices of the system.
 
 There are two options:
 
@@ -76,18 +77,25 @@ There are two options:
             #Reading coordinates into a fragment
             fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
 
+            # Define qmatoms and actatoms lists
+            qmatoms = read_intlist_from_file("qmatoms")
+            actatoms = read_intlist_from_file("actatoms")
+
             #What atoms to delete
             deletionlist=[18840]
 
             #Delete atoms from system
-            remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir)
+            remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
         The script will delete the selected atoms (here 18840; note: ASH counts from zero) and create new fragmentfiles: 
         newfragment.xyz and newfragment.ygg
         and create the new PSF file named: newsystem_XPLOR.psf  . Also created is a PDB-file: new-system.pdb
 
         Remember that when you delete atoms from a system atom indices will have changed. 
-        Remember to update the QM-region and Active-Region definitions! 
+        This means that you either have to update the qmatoms and actatoms list manually or do as in example above where the qmatoms and actatoms lists are provided to the remove_atoms_from_system_CHARMM function. These lists will then be updated.
+
+.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to remove_atoms_from_system_CHARMM  that will preserve the 1-based indexing.
+
 
 
         **Add atoms to system (CHARMM)**
@@ -109,6 +117,10 @@ There are two options:
             #Reading coordinates into a fragment
             fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
 
+            # Define qmatoms and actatoms lists
+            qmatoms = read_intlist_from_file("qmatoms")
+            actatoms = read_intlist_from_file("actatoms")
+
             #Defining the added coordinates as a string
             addition_string="""
             C        1.558526678      0.000000000     -0.800136464
@@ -118,14 +130,16 @@ There are two options:
             #Name of resgroup to be added (this needs to be present in topfile!)
             resgroup='CO2'
             #Adding atoms
-            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, psffile=psffile, topfile=topfile, psfgendir=psfgendir)
+            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
         The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
         newfragment.xyz and newfragment.ygg
         and add the chosen resgroup to a PSF file named: newsystem_XPLOR.psf  . 
         Also created is a PDB-file: new-system.pdb
 
-        Remember to add the new atom indices to QM-region and Active-Region definitions!
+        Remember to add the new atom indices to QM-region and Active-Region definitions or provide the lists to the add_atoms_to_system_CHARMM function as above.
+
+.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to add_atoms_to_system_CHARMM  that will preserve the 1-based indexing.
 
 
 ###########################
