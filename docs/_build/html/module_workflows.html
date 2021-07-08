@@ -251,9 +251,9 @@ The available high-level single-point calculations are defined later.</p>
 
 <span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstring</span><span class="p">)</span>
 
-<span class="n">small</span><span class="p">,</span> <span class="n">medium</span><span class="p">,</span> <span class="n">large</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">activespace_dictionary</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">initial_orbitals</span><span class="o">=</span><span class="s1">&#39;MP2&#39;</span><span class="p">,</span> <span class="n">tgen</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="c1">#Returns el,orbs lists for small, medium and large options</span>
+<span class="c1">#Returns dictionary with various active_spaces based on thresholds</span>
 </pre></div>
 </div>
 <p>Output:</p>
@@ -295,8 +295,11 @@ Orbital   MP2natorbs ICE-nat-occ
 ...
 
 Recommended active spaces based on ICE-CI natural occupations:
-Minimal <span class="o">(</span><span class="m">1</span>.95,0.05<span class="o">)</span>: CAS<span class="o">(</span><span class="m">3</span>,2<span class="o">)</span>
-Medium <span class="o">(</span><span class="m">1</span>.98,0.02<span class="o">)</span>: CAS<span class="o">(</span><span class="m">12</span>,9<span class="o">)</span>
+Minimal <span class="o">(</span><span class="m">1</span>.95,0.05<span class="o">)</span>: CAS<span class="o">(</span><span class="m">2</span>,2<span class="o">)</span>
+Medium1 <span class="o">(</span><span class="m">1</span>.98,0.02<span class="o">)</span>: CAS<span class="o">(</span><span class="m">12</span>,9<span class="o">)</span>
+Medium2 <span class="o">(</span><span class="m">1</span>.985,0.015<span class="o">)</span>: CAS<span class="o">(</span><span class="m">14</span>,10<span class="o">)</span>
+Medium3 <span class="o">(</span><span class="m">1</span>.99,0.01<span class="o">)</span>: CAS<span class="o">(</span><span class="m">18</span>,13<span class="o">)</span>
+Medium4 <span class="o">(</span><span class="m">1</span>.992,0.008<span class="o">)</span>: CAS<span class="o">(</span><span class="m">18</span>,15<span class="o">)</span>
 Large <span class="o">(</span><span class="m">1</span>.995,0.005<span class="o">)</span>: CAS<span class="o">(</span><span class="m">18</span>,19<span class="o">)</span>
 Orbital file to use <span class="k">for</span> future calculations: orca.gbw
 Note: orbitals are new natural orbitals formed from the ICE-CI density matrix

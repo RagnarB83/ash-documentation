@@ -30,8 +30,8 @@ There are many programs capable of setting up a classical model of the protein.
 ASH is currently capable of reading in :
 
 - CHARMM forcefield files (PSF-file, top and prm files, **tested**)
-- GROMACS files, using various forcefields  (untested)
-- Amber files (PRMTOP)   (untested)
+- GROMACS files, using various forcefields   **tested**
+- Amber files (PRMTOP)    **tested**
 - OpenMM files (XML-file)   (untested)
 
 .. image:: figures/fefeh2ase-solv.png

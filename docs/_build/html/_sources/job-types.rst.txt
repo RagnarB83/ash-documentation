@@ -389,4 +389,9 @@ Not yet ready
 Molecular Dynamics
 ###########################
 
-Not yet ready
+Native molecular dynamics has not yet been implemented in ASH.
+However, it is possible to do conveniently do classical molecular dynamics via OpenMM if a system has been set up using OpenMMTheory.
+See :doc:`OpenMM-interface`
+
+
+
