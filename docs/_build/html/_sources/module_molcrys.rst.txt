@@ -329,7 +329,7 @@ In that case, the code below can simply be appended to the previous script.
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 
@@ -346,7 +346,7 @@ Finally we call the optimizer program, here the geomeTRICoptimizer:
 
 .. code-block:: python
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 We provide a theory argument to the optimizer (our QM/MM object), the Cluster fragment, we specify the coordinate
@@ -533,7 +533,7 @@ Optimization of product geometry:
     QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 **2. Running NEB-CI job.**
