@@ -378,8 +378,8 @@ The variables are then passed as keyword arguments to the  <strong>molcrys</stro
 <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[</span><span class="n">mainfrag</span><span class="p">,</span><span class="n">counterfrag1</span><span class="p">]</span>
 
 <span class="c1">#Modify global connectivity settings (scale and tol keywords)</span>
-<span class="n">settings_ash</span><span class="o">.</span><span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span>
-<span class="n">settings_ash</span><span class="o">.</span><span class="n">tol</span><span class="o">=</span><span class="mf">0.3</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="n">settings_ash</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s2">&quot;tol&quot;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.3</span>
 <span class="c1"># Modified radii to assist with connectivity.</span>
 <span class="c1">#Setting radius of Na to almost 0. Na will then not bond</span>
 <span class="n">eldict_covrad</span><span class="p">[</span><span class="s1">&#39;Na&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.0001</span>
@@ -387,7 +387,7 @@ The variables are then passed as keyword arguments to the  <strong>molcrys</stro
 
 
 <span class="c1">#Calling molcrys function and define Cluster object</span>
-<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="n">cif_file</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="n">fragmentobjects</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">auto_connectivity</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">Cluster</span> <span class="o">=</span> <span class="n">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="n">cif_file</span><span class="p">,</span> <span class="n">fragmentobjects</span><span class="o">=</span><span class="n">fragmentobjects</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">auto_connectivity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">clusterradius</span><span class="o">=</span><span class="n">sphereradius</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="n">chargemodel</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="n">shortrangemodel</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -423,7 +423,7 @@ For the Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub>] <sup>-</sup> crystal, howev
 In the script above, we thus have to set the tol parameter to 0.3 and change the radius of the Na<sup>+</sup> ion to a small value.
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.</p>
-<p>Unlike the other variables, the <em>settings_ash.scale</em>, <em>settings_ash.tol</em> and <em>eldict_covrad</em> are
+<p>Unlike the other variables, the <em>settings_ash.settings_dict[“scale”]</em>, <em>settings_ash.settings_dict[“tol”]</em> and <em>eldict_covrad</em> are
 global variables (already defined but can be modified) that <strong>molcrys</strong> and <strong>ASH</strong> will have access to.</p>
 <p>June 2020: New Automatic Connectivity feature: auto_connectivity=True.
 When this feature is used, Molcrys scans through different tolerances (0.1 to 0.7 in 0.1 steps) until it finds a connectivity that gives complete assignment.

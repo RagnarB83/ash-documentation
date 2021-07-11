@@ -2,11 +2,15 @@
 OpenMM interface
 ======================================
 
+OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU godes.
+
 
 
 ######################################
 The OpenMMTheory theory level
 ######################################
+
+OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: 'CPU', 'OpenCL' or 'CUDA' depending on whether there is a GPU available on the computer. For platform='CPU' the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.
 
 The OpenMMTheory class:
 
@@ -24,6 +28,8 @@ The OpenMMTheory class:
                      switching_function_distance=10,
                      ewalderrortolerance=1e-5, PMEparameters=None,
                      delete_QM1_MM1_bonded=False, applyconstraints=False):
+
+
 
 
 It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or OpenMMXMLFile.
@@ -89,9 +95,7 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 
 .. code-block:: python
 
-    def OpenMM_MD(fragment=None, openmmobject=None, timestep=0.001, simulation_steps=None, simulation_time=None,
-     temperature=300, integrator=None, coupling_frequency=None, barostat=None, anderson_thermostat=None, 
-     trajectory_file_option='PDB', traj_frequency=1000):
+    def OpenMM_MD(fragment=None, openmmobject=None, timestep=0.001, simulation_steps=None, simulation_time=None, traj_frequency=1000, temperature=300, integrator=None, barostat=None, trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False, enforcePeriodicBox=False, frozen_atoms=None):
 
 Options:
 
@@ -107,8 +111,10 @@ Options:
 - anderson_thermostat: Boolean (default: False)
 - trajectory_file_option: 'PDB' or 'DCD'. Creates an ASCII PDB-trajectory or a compressed DCD trajectory.
 - traj_frequency: integer (default: 1000). How often to write coordinates to trajectory file (every nth step)
-
-
+- enforcePeriodicBox: Boolean (default: False). Option to fix PBC-image artifacts in trajectory.
+- frozen_atoms: list (default: None). What atom indices to freeze in simulation (masses = zero). Note: ASH counts from zero.
+- constraints: list of lists (default: None). [[atom_i,atom_j,distance]] Each list defines an atom-pair that is constrained with optionally the bond distance specified.   Example: constraints=[[827,830], [830,833, 1.010]].  Only bond constraints available for now.
+- restraints: list of lists (default: None). [[atom_i,atom_j,distance,force_constant]] Example: restraints=[[830,833, 1.010, 1000.0]]  where 830,833 are atom indices, 1.010 is the distance in Å and 1000.0 is the force-constant in kcal/mol \*Å^-2. Only bond restraints available for now.
 
 Example:
 
