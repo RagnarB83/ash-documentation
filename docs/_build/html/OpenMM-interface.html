@@ -252,18 +252,19 @@ Note: In rare cases OpenMM fails to read in the files correctly. In those cases 
 </pre></div>
 </div>
 <p>Example creation of an OpenMMtheory object with OpenMM XML file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;exampl.xml&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;example.xml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>An openmmtheory object can then be used to create a QM/MM theory object. See <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a> page.
-If platform is ‘CPU’ (default) then the number of cores can be controlled by the numcores keyword (highest preference) or alternatively by the shell variable OPENMM_CPU_THREADS. If neither option is set then OpenMM will use the number of physical cores present (not always desired).</p>
-<p>Periodic boundary conditions:
-- If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions
-- PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z]
-- The ewalderrortolerance can be modified (default: 1e-5)
-- The periodic nonbonded cutoff can be modified. Default: 12 Å
-- Long-range dispersion correction can be turned on or off.
-- The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.</p>
+<p>An openmmtheory object can then be used to create a QM/MM theory object. See <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a> page.</p>
+<p>Periodic boundary conditions:</p>
+<ul class="simple">
+<li><p>If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions</p></li>
+<li><p>PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z]</p></li>
+<li><p>The ewalderrortolerance can be modified (default: 1e-5)</p></li>
+<li><p>The periodic nonbonded cutoff can be modified. Default: 12 Å</p></li>
+<li><p>Long-range dispersion correction can be turned on or off.</p></li>
+<li><p>The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.</p></li>
+</ul>
 </div>
 <div class="section" id="molecular-dynamics-via-openmm">
 <h2>Molecular Dynamics via OpenMM<a class="headerlink" href="#molecular-dynamics-via-openmm" title="Permalink to this headline">¶</a></h2>
@@ -277,7 +278,10 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <li><p>Available Barostat: MonteCarloBarostat</p></li>
 <li><p>Optional additional thermostat: Anderson</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>Options:</p>
@@ -298,6 +302,8 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <li><p>frozen_atoms: list (default: None). What atom indices to freeze in simulation (masses = zero). Note: ASH counts from zero.</p></li>
 <li><p>constraints: list of lists (default: None). [[atom_i,atom_j,distance]] Each list defines an atom-pair that is constrained with optionally the bond distance specified.   Example: constraints=[[827,830], [830,833, 1.010]].  Only bond constraints available for now.</p></li>
 <li><p>restraints: list of lists (default: None). [[atom_i,atom_j,distance,force_constant]] Example: restraints=[[830,833, 1.010, 1000.0]]  where 830,833 are atom indices, 1.010 is the distance in Å and 1000.0 is the force-constant in kcal/mol *Å^-2. Only bond restraints available for now.</p></li>
+<li><p>autoconstraints: string (default: None) Options: ‘HBonds’ (X-H bonds constrained), ‘AllBonds’ (all bonds constrained), ‘HAngles’ (all bonds and H-X-H and H-O-X angles constrained) or None (default).  Only affects OpenMM_MD runs.</p></li>
+<li><p>hydrogenmass: integer (default: None) Mass of hydrogens (e.g. set to 2 for deuterium). Only affects OpenMM_MD runs.</p></li>
 </ul>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -317,6 +323,35 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
     <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
     <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">PMEparameters</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">0.34</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+
+<span class="c1">#Launching a molecular dynamics simulation</span>
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>General constraints or H-mass modification:</strong></p>
+<ul class="simple">
+<li><p>In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory rather than OpenMM_MD). autoconstraints can be set to: ‘HBonds’ (X-H bonds constrained), ‘AllBonds’ (all bonds constrained), ‘HAngles’ (all bonds and H-X-H and H-O-X angles constrained) or None (default)</p></li>
+<li><p>An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=None is default (no changes to hydrogen masses).</p></li>
+</ul>
+<p>General X-H constraints and deuterium-mass example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Forcefield parameters</span>
+<span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-DEV_GIT/testsuite/OpenMM-files-for-tests/dhfr/charmm/&quot;</span>
+<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;step3_pbcsetup.psf&quot;</span>
+<span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
+<span class="n">prmfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
+
+<span class="c1">#Defining fragment</span>
+<span class="n">xyzfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;file.xyz&quot;</span>
+<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">xyzfile</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+    <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">PMEparameters</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">0.34</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1">#Launching a molecular dynamics simulation</span>
 <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>

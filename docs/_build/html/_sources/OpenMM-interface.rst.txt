@@ -63,14 +63,13 @@ Example creation of an OpenMMtheory object with OpenMM XML file:
 
 .. code-block:: python
 
-    openmmobject = OpenMMTheory(xmlfile="exampl.xml")
+    openmmobject = OpenMMTheory(xmlfile="example.xml")
 
 
 An openmmtheory object can then be used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
-If platform is 'CPU' (default) then the number of cores can be controlled by the numcores keyword (highest preference) or alternatively by the shell variable OPENMM_CPU_THREADS. If neither option is set then OpenMM will use the number of physical cores present (not always desired).
-
 
 Periodic boundary conditions:
+
 - If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions
 - PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
 - The ewalderrortolerance can be modified (default: 1e-5)
@@ -95,7 +94,10 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 
 .. code-block:: python
 
-    def OpenMM_MD(fragment=None, openmmobject=None, timestep=0.001, simulation_steps=None, simulation_time=None, traj_frequency=1000, temperature=300, integrator=None, barostat=None, trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False, enforcePeriodicBox=False, frozen_atoms=None):
+    def OpenMM_MD(fragment=None, openmmobject=None, timestep=0.001, simulation_steps=None, 
+    simulation_time=None, traj_frequency=1000, temperature=300, integrator=None, barostat=None, 
+    trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False, 
+    enforcePeriodicBox=False, frozen_atoms=None):
 
 Options:
 
@@ -115,6 +117,9 @@ Options:
 - frozen_atoms: list (default: None). What atom indices to freeze in simulation (masses = zero). Note: ASH counts from zero.
 - constraints: list of lists (default: None). [[atom_i,atom_j,distance]] Each list defines an atom-pair that is constrained with optionally the bond distance specified.   Example: constraints=[[827,830], [830,833, 1.010]].  Only bond constraints available for now.
 - restraints: list of lists (default: None). [[atom_i,atom_j,distance,force_constant]] Example: restraints=[[830,833, 1.010, 1000.0]]  where 830,833 are atom indices, 1.010 is the distance in Å and 1000.0 is the force-constant in kcal/mol \*Å^-2. Only bond restraints available for now.
+- autoconstraints: string (default: None) Options: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default).  Only affects OpenMM_MD runs.
+- hydrogenmass: integer (default: None) Mass of hydrogens (e.g. set to 2 for deuterium). Only affects OpenMM_MD runs.
+
 
 Example:
 
@@ -143,6 +148,38 @@ Example:
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
+**General constraints or H-mass modification:**
+
+- In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory rather than OpenMM_MD). autoconstraints can be set to: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default)
+- An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=None is default (no changes to hydrogen masses).
+
+
+
+General X-H constraints and deuterium-mass example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Forcefield parameters
+    forcefielddir="/home/bjornsson/ASH-DEV_GIT/testsuite/OpenMM-files-for-tests/dhfr/charmm/"
+    psffile=forcefielddir+"step3_pbcsetup.psf"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    prmfile=forcefielddir+"par_all36_prot.prm"
+
+    #Defining fragment
+    xyzfile=forcefielddir+"file.xyz"
+    frag = Fragment(xyzfile=xyzfile, conncalc=False)
+
+    #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
+        dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
+        PMEparameters=[1.0/0.34, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
+
+    #Launching a molecular dynamics simulation
+    OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
 
