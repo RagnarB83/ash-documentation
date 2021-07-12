@@ -139,7 +139,7 @@ Example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
+        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
         dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
         PMEparameters=[1.0/0.34, 90, 90, 90])
 
@@ -173,15 +173,74 @@ General X-H constraints and deuterium-mass example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
-        dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
-        PMEparameters=[1.0/0.34, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
+        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
 
     #Launching a molecular dynamics simulation
     OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
+
+######################################
+Simple minimization via OpenMM
+######################################
+
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Forcefield parameters
+    forcefielddir="/home/bjornsson/ASH-DEV_GIT/testsuite/OpenMM-files-for-tests/dhfr/charmm/"
+    psffile=forcefielddir+"step3_pbcsetup.psf"
+    topfile=forcefielddir+"top_all36_prot.rtf"
+    prmfile=forcefielddir+"par_all36_prot.prm"
+
+    #Defining fragment
+    xyzfile=forcefielddir+"file.xyz"
+    frag = Fragment(xyzfile=xyzfile, conncalc=False)
+
+    #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
+    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90])
+
+    #Launching a minimization
+    OpenMM_Opt(fragment=frag, openmmobject=openmmobject, maxiter=1000, tolerance=1)
+    #After minimization, the ASH fragment is updated, a PDB-file is written out: frag-minimized.pdb
+    #Alternative XYZ write-out:
+    frag.write_xyzfile(xyzfilename="frag_afteropt.xyz")
+
+
+If you want to do a simple minimization of only the H-atoms of your system (e.g. your protein with newly added H-atoms),
+you can do this by freezing all non-H atoms. An ASH fragment can conveniently give you lists of atom indices by the built-in functions:
+
+- fragment.get_atomindices_for_element('C') #List of atom-indices for carbon atoms in the system
+- fragment.get_atomindices_except_element('H') #List of atom-indices for all atoms except the chosen element (here H).
+
+Note: all constraints in the OpenMM object needs to be turned off for (autoconstraints=None, rigidwater=False) for this many frozen atoms (frozen atoms can not have constraints).
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores = 4
+
+    pdbfile = "ash_inp.pdb"
+    prmtopfile = "prmtop"
+
+    frag = Fragment(pdbfile=pdbfile)
+
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, periodic=True,
+            platform='CPU', autoconstraints=None, rigidwater=False)
+
+    #List of all non-H atoms
+    allnonHatoms=frag.get_atomindices_except_element('H')
+
+    OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=100,
+            traj_frequency=1, temperature=300, integrator="LangevinIntegrator",
+            coupling_frequency=1, trajectory_file_option="PDB", frozen_atoms=allnonHatoms,)
 
 
 

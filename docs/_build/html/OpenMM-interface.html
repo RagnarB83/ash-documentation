@@ -131,6 +131,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenMM interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-openmmtheory-theory-level">The OpenMMTheory theory level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics-via-openmm">Molecular Dynamics via OpenMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-minimization-via-openmm">Simple minimization via OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -320,7 +321,7 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 
 <span class="c1">#Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
     <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">PMEparameters</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">0.34</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
 
@@ -349,13 +350,65 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 
 <span class="c1">#Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
-    <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">PMEparameters</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">0.34</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1">#Launching a molecular dynamics simulation</span>
 <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
     <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simple-minimization-via-openmm">
+<h2>Simple minimization via OpenMM<a class="headerlink" href="#simple-minimization-via-openmm" title="Permalink to this headline">¶</a></h2>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Forcefield parameters</span>
+<span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-DEV_GIT/testsuite/OpenMM-files-for-tests/dhfr/charmm/&quot;</span>
+<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;step3_pbcsetup.psf&quot;</span>
+<span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
+<span class="n">prmfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
+
+<span class="c1">#Defining fragment</span>
+<span class="n">xyzfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;file.xyz&quot;</span>
+<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">xyzfile</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+
+<span class="c1">#Launching a minimization</span>
+<span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#After minimization, the ASH fragment is updated, a PDB-file is written out: frag-minimized.pdb</span>
+<span class="c1">#Alternative XYZ write-out:</span>
+<span class="n">frag</span><span class="o">.</span><span class="n">write_xyzfile</span><span class="p">(</span><span class="n">xyzfilename</span><span class="o">=</span><span class="s2">&quot;frag_afteropt.xyz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to do a simple minimization of only the H-atoms of your system (e.g. your protein with newly added H-atoms),
+you can do this by freezing all non-H atoms. An ASH fragment can conveniently give you lists of atom indices by the built-in functions:</p>
+<ul class="simple">
+<li><p>fragment.get_atomindices_for_element(‘C’) #List of atom-indices for carbon atoms in the system</p></li>
+<li><p>fragment.get_atomindices_except_element(‘H’) #List of atom-indices for all atoms except the chosen element (here H).</p></li>
+</ul>
+<p>Note: all constraints in the OpenMM object needs to be turned off for (autoconstraints=None, rigidwater=False) for this many frozen atoms (frozen atoms can not have constraints).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">pdbfile</span> <span class="o">=</span> <span class="s2">&quot;ash_inp.pdb&quot;</span>
+<span class="n">prmtopfile</span> <span class="o">=</span> <span class="s2">&quot;prmtop&quot;</span>
+
+<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">)</span>
+
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#List of all non-H atoms</span>
+<span class="n">allnonHatoms</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">get_atomindices_except_element</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s2">&quot;LangevinIntegrator&quot;</span><span class="p">,</span>
+        <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s2">&quot;PDB&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">allnonHatoms</span><span class="p">,)</span>
 </pre></div>
 </div>
 </div>
