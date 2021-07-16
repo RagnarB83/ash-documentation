@@ -59,9 +59,9 @@ Example on ozone:
 
 	fragment=Fragment(coordsstring=fragstring)
 
-	small, medium, large = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
+	activespace_dictionary = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
 	    initial_orbitals='MP2', tgen=1.0)
-	#Returns el,orbs lists for small, medium and large options
+	#Returns dictionary with various active_spaces based on thresholds
 
 Output:
 
@@ -105,12 +105,14 @@ Output:
 	...
 
 	Recommended active spaces based on ICE-CI natural occupations:
-	Minimal (1.95,0.05): CAS(3,2)
-	Medium (1.98,0.02): CAS(12,9)
+	Minimal (1.95,0.05): CAS(2,2)
+	Medium1 (1.98,0.02): CAS(12,9)
+	Medium2 (1.985,0.015): CAS(14,10)
+	Medium3 (1.99,0.01): CAS(18,13)
+	Medium4 (1.992,0.008): CAS(18,15)
 	Large (1.995,0.005): CAS(18,19)
 	Orbital file to use for future calculations: orca.gbw
 	Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
-
 
 
 

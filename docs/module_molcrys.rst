@@ -196,8 +196,8 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
     fragmentobjects=[mainfrag,counterfrag1]
 
     #Modify global connectivity settings (scale and tol keywords)
-    settings_ash.scale=1.0
-    settings_ash.tol=0.3
+    settings_ash.settings_dict["scale"]=1.0
+    settings_ash.settings_dict["tol"]=0.3
     # Modified radii to assist with connectivity.
     #Setting radius of Na to almost 0. Na will then not bond
     eldict_covrad['Na']=0.0001
@@ -205,7 +205,7 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
 
 
     #Calling molcrys function and define Cluster object
-    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc, auto_connectivity=True
+    Cluster = molcrys(cif_file=cif_file, fragmentobjects=fragmentobjects, theory=ORCAcalc, auto_connectivity=True,
             numcores=numcores, clusterradius=sphereradius, chargemodel=chargemodel, shortrangemodel=shortrangemodel)
 
 
@@ -251,7 +251,9 @@ In the script above, we thus have to set the tol parameter to 0.3 and change the
 The covalent radii of the elements are stored in a global Python dictionary, eldict_covrad which can be easily modified as shown
 and its contents printed. In the future, the radius of the Na may by default be set to a small number.
 
-Unlike the other variables, the *settings_ash.scale*, *settings_ash.tol* and *eldict_covrad* are
+
+
+Unlike the other variables, the *settings_ash.settings_dict["scale"]*, *settings_ash.settings_dict["tol"]* and *eldict_covrad* are
 global variables (already defined but can be modified) that **molcrys** and **ASH** will have access to.
 
 June 2020: New Automatic Connectivity feature: auto_connectivity=True.
@@ -327,7 +329,7 @@ In that case, the code below can simply be appended to the previous script.
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 
@@ -344,7 +346,7 @@ Finally we call the optimizer program, here the geomeTRICoptimizer:
 
 .. code-block:: python
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 We provide a theory argument to the optimizer (our QM/MM object), the Cluster fragment, we specify the coordinate
@@ -531,7 +533,7 @@ Optimization of product geometry:
     QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', nprocs=numcores)
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, coordsystem='tric', maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 **2. Running NEB-CI job.**

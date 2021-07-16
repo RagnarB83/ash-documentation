@@ -70,7 +70,7 @@ The output is an imagefile (PNG by default).
 - The x-axis label or y-axis label of the plot can be changed via: *x_axislabel* ='String' or *y_axislabel* ='String'.
 - The *label* keyword is used to named the file saved: e.g.: PlotXX.png
 - The *imageformat* and *dpi* keywords can be used to specify the image format: default is PNG and 200.
-- *pointsize*, *scatter_linewidth*, *linewidth* and *color* keywords can be used to modify the plot.
+- *pointsize*, *scatter_linewidth*, *line_linewidth* and *color* keywords can be used to modify the plot.
 
 .. code-block:: python
 
@@ -81,7 +81,7 @@ The output is an imagefile (PNG by default).
     #Specifying options
 
     module_plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy',
-        imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, linewidth=1, color='blue')
+        imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
 
 .. image:: figures/PlotTPSS.png
    :align: center

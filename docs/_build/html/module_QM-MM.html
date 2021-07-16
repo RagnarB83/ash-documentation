@@ -271,32 +271,28 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <div class="section" id="example-qm-mm-with-orca-and-openmmtheory">
 <h2>Example: QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline">¶</a></h2>
 <p>See also <a class="reference internal" href="QM-MM-protein.html"><span class="doc">QM/MM on a protein</span></a>.</p>
-<p>Simple example:</p>
+<p>The files for this example (DHFR protein) are available in the examples/QM-MM-CHARMM-example directory in the main ASH directory</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="c1">#Cores to use</span>
-<span class="n">numcores</span><span class="o">=</span><span class="mi">16</span>
-<span class="c1">#Forcefield files</span>
-<span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/&quot;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span>
+<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;step3_pbcsetup.psf&quot;</span>
 <span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
-<span class="n">parfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
-<span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;new-XPLOR-psffile.psf&quot;</span>
+<span class="n">prmfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;par_all36_prot.prm&quot;</span>
+<span class="n">xyzfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;coordinates.xyz&quot;</span>
 
 <span class="c1">#Read coordinates from XYZ-file</span>
-<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="n">xyzfile</span><span class="p">)</span>
 
-<span class="c1">#act and qmatoms lists. Defines QM-region and Active-region</span>
-<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
-<span class="n">qmatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">]</span>
-<span class="n">actatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">320</span><span class="p">,</span><span class="mi">340</span><span class="p">]</span>
-
-<span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
+<span class="c1">#Creating OpenMM object</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span> <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1">#Creating ORCATheory object</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
-<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/Applications/orca_4_2_1_macosx_openmpi314&quot;</span>
+<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! HF-3c tightscf&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
 <span class="s2">&quot;&quot;&quot;</span>
@@ -304,8 +300,15 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
                         <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
+<span class="c1">#act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)</span>
+<span class="c1">#IMPORTANT: atom indices begin at 0.</span>
+<span class="c1">#Here selecting the side-chain of threonine</span>
+<span class="n">qmatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">569</span><span class="p">,</span><span class="mi">570</span><span class="p">,</span><span class="mi">571</span><span class="p">,</span><span class="mi">572</span><span class="p">,</span><span class="mi">573</span><span class="p">,</span><span class="mi">574</span><span class="p">,</span><span class="mi">575</span><span class="p">,</span><span class="mi">576</span><span class="p">]</span>
+<span class="n">actatoms</span> <span class="o">=</span> <span class="n">qmatoms</span>
+
+
 <span class="c1"># Create QM/MM OBJECT by combining QM and MM objects above</span>
-<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                         <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">)</span>
 
 <span class="c1">#Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.</span>

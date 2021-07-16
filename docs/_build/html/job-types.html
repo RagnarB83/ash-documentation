@@ -240,7 +240,6 @@ Below, ORCAobject is created from the ORCATheory class, passing various ORCA-spe
 <p>For a single-point calculation only then simply passes the Theory object and the Fragment object to the <strong>Singlepoint</strong>
 function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
@@ -288,7 +287,6 @@ temporary files (e.g. so they don’t interfere with a future job), one can use 
 geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
@@ -327,7 +325,7 @@ Currently analytical frequencies are supported in: ORCATheory</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;BP def2-SVP def2/J&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;, nprocs=1)</span>
+                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;BP def2-SVP def2/J&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">thermochem_dict</span> <span class="o">=</span> <span class="n">AnFreq</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Thermochem properties dict:&quot;</span><span class="p">,</span> <span class="n">thermochem_dict</span><span class="p">)</span>
@@ -375,10 +373,9 @@ A normal mode composition factor analysis is automatically performed (NOT READY)
 <p>Example script below demonstrates a combined geometry optimization (using geomeTRIC).
 The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="c1">#the total number of CPU cores available to Ash (should match the job-script)</span>
-<span class="n">Ashnumcores</span><span class="o">=</span><span class="mi">8</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">8</span>
 
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! HF-3c &quot;</span>
@@ -394,7 +391,7 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">reactstring</span><span class="p">)</span>
 
 <span class="c1">#Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">Ashnumcores</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Geometry optimization of Reactant object and ORCAcalc theory object.</span>
 <span class="c1">#Each Energy+Grad step is parallelized by ORCA.</span>
@@ -409,7 +406,7 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="c1">#Serial mode:</span>
 <span class="n">freqresult</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
 <span class="c1">#Parallel mode:</span>
-<span class="n">freqresult</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">Ashnumcores</span><span class="p">)</span>
+<span class="n">freqresult</span> <span class="o">=</span> <span class="n">NumFreq</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">npoint</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;freqresult:&quot;</span><span class="p">,</span> <span class="n">freqresult</span><span class="p">)</span>
 <span class="c1">#The resulting object from a NumFreq calculation is a dictionary (here called freqresult)</span>
@@ -429,7 +426,6 @@ Both regular NEB and CI-NEB calculations are possible.
 See <a class="reference internal" href="knarr-interface.html"><span class="doc">knarr interface</span></a></p>
 <p>Any QM or QM/MM Hamiltonian can be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">syss</span>
 <span class="kn">import</span> <span class="nn">interface_knarr</span>
 
 <span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">)</span>
@@ -459,13 +455,13 @@ Default name : ‘surface_results.txt’</p>
 <p><strong>calc_surface</strong> returns a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
 (RC1value,RC2value) : energy</p>
 <p><strong>1D scan:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">scantype</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span>
 <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span> <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mi">180</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">keepoutputfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>2D scan:</strong></p>
 <p>If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surfacedictionary</span> <span class="o">=</span> <span class="n">calc_surface</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">scantype</span><span class="o">=</span><span class="s1">&#39;Unrelaxed&#39;</span><span class="p">,</span> <span class="n">resultfile</span><span class="o">=</span><span class="s1">&#39;surface_results.txt&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span>
     <span class="n">RC1_type</span><span class="o">=</span><span class="s1">&#39;bond&#39;</span><span class="p">,</span> <span class="n">RC1_range</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">2.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">],</span> <span class="n">RC1_indices</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span> <span class="n">RC2_range</span><span class="o">=</span><span class="p">[</span><span class="mi">180</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span>
     <span class="n">RC2_type</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">RC2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">keepoutputfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -511,6 +507,8 @@ The results is a dictionary like before.</p>
 <li><p>keepmofiles=False (Boolean, MO-file for each point is saved in a directory. Default False)</p></li>
 <li><p>read_mofiles=False (Boolean: Read MO-files from directory if True. Default False.)</p></li>
 <li><p>mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )</p></li>
+<li><p>ActiveRegion= True/False</p></li>
+<li><p>actatoms=list  (list of active atoms if doing relaxed scan)</p></li>
 </ul>
 <p><strong>Plotting</strong></p>
 <p>The final result of the scan is stored in a dictionary (named ‘surfacedictionary’ in the examples above) and can be easily
@@ -529,7 +527,9 @@ where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total ener
 </div>
 <div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h2>
-<p>Not yet ready</p>
+<p>Native molecular dynamics has not yet been implemented in ASH.
+However, it is possible to do conveniently do classical molecular dynamics via OpenMM if a system has been set up using OpenMMTheory.
+See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
 </div>
 </div>
 

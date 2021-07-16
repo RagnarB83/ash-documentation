@@ -124,7 +124,7 @@ The workflows are available inside the module: module_highlevel_workflows
 - DLPNO_W1theory
 - DLPNO_F12
 - DLPNO_W2theory
-- DLPNO_CC_CBS
+- CC_CBS
 
 When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
 
@@ -145,11 +145,11 @@ If some of the default settings of each workflow needs to be modified this can b
     orcadir='/Applications/orca_4.2.1'
 
     #Define a dictionary containing the arguments of the workflow to be modified
-    DLPNO_CC_CBS_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True,
+    CC_CBS_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True, 'DLPNO' : True,
                         'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
 
     #Running the benchmark with a workflow
-    benchmarking.run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.DLPNO_CC_CBS, workflow_args = DLPNO_CC_CBS_args, orcadir=orcadir, numcores=numcores)
+    benchmarking.run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.CC_CBS, workflow_args = DLPNO_CC_CBS_args, orcadir=orcadir, numcores=numcores)
 
 
 ################################

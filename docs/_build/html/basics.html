@@ -99,8 +99,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basic usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#input-structure">Input structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-script">Example script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-script-directly">Running script directly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-script-directly-in-the-shell">Running script directly in the shell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#interactive-ash-in-a-repl-or-ipython-environment">Interactive ASH in a REPL or iPython environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ash-settings">ASH settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-of-colors-in-ash-output">Use of colors in ASH output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#submitting-job">Submitting job</a></li>
 </ul>
 </li>
@@ -218,9 +220,9 @@
 <div class="section" id="input-structure">
 <h2>Input structure<a class="headerlink" href="#input-structure" title="Permalink to this headline">¶</a></h2>
 <p>You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>   <span class="c1"># This will import the most important ASH functionality into your namespace</span>
 <span class="c1">#or</span>
-<span class="kn">import</span> <span class="nn">ash</span>
+<span class="kn">import</span> <span class="nn">ash</span>   <span class="c1"># If you use this option you will have to add the &quot;ash.&quot; prefix in front of ASH functions/classes.</span>
 </pre></div>
 </div>
 <p>Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
@@ -228,23 +230,9 @@ Make sure you have already set in the shell (part of Setup):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash_dir:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
-<p>Global settings are stored in your <em>ash-dir/settings_ash.py</em> and can be modified. However, it is better to instead create
-a settings file, <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
-Here you can set paths for e.g. orcadir, whether to use ANSI colors in output whether to print inputfile and logo etc.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Settings<span class="o">]</span>
-<span class="nv">orcadir</span> <span class="o">=</span> /opt/orca_4.2.1
-<span class="nv">scale</span> <span class="o">=</span> <span class="m">1</span>.0
-<span class="nv">tol</span> <span class="o">=</span> <span class="m">0</span>.2
-<span class="nv">use_ANSI_color</span> <span class="o">=</span> True
-<span class="nv">print_input</span> <span class="o">=</span> True
-<span class="nv">print_logo</span> <span class="o">=</span> False
-<span class="nv">load_julia</span> <span class="o">=</span> True
-</pre></div>
-</div>
-<p>Current available options are:</p>
 <p>You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
-object and then call a specific job-module (an optimizer, numerical-frequencies, MD).
+object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
 See  <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for various ways of dealing with coordinates and fragments.</p>
 </div>
 <div class="section" id="example-script">
@@ -252,10 +240,14 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <p>Here is a basic Ash Python script, e.g. named: ashtest.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="c1">#Setting numcores. Used by ORCA.</span>
+<span class="c1">#Defining a numcores variable with the number of available CPU cores. Will be given to ORCA object.</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
 <span class="c1">#Create fragment</span>
-<span class="n">Ironhexacyanide</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;fecn6.xyz&quot;</span><span class="p">)</span>
+<span class="n">fragstring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">H 0.0 0.0 0.0</span>
+<span class="s2">F 0.0 0.0 1.0</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">molecule</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstring</span><span class="p">)</span>
 
 <span class="c1">#Defining ORCA-related variables</span>
 <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
@@ -266,17 +258,19 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
                             <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Geometry Optimization using geomeTRIC</span>
-<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Ironhexacyanide</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The script above loads Ash, creates a new fragment from an XYZ file (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
+<p>The script above loads Ash, creates a new fragment from a string (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
 (see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>), and runs a geometry optimization using the SimpleOpt optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for other better options).</p>
 </div>
-<div class="section" id="running-script-directly">
-<h2>Running script directly<a class="headerlink" href="#running-script-directly" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-script-directly-in-the-shell">
+<h2>Running script directly in the shell<a class="headerlink" href="#running-script-directly-in-the-shell" title="Permalink to this headline">¶</a></h2>
 <p>For a simple job we can just run the script directly</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
+<span class="c1">#or (for full Python-Julia support)</span>
+python3_ash ashtest.py
 </pre></div>
 </div>
 <p>The output will be written to standard output (i.e. your shell). You can redirect the output to a file.</p>
@@ -288,11 +282,50 @@ defines variables related to the ORCA-interface , creates an ORCA-theory object
 <h2>Interactive ASH in a REPL or iPython environment<a class="headerlink" href="#interactive-ash-in-a-repl-or-ipython-environment" title="Permalink to this headline">¶</a></h2>
 <p>It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
 This allows for interactive use of ASH. See video below for an example.</p>
-<p>If ASH has been set up correctly (PYTHONPATH etc.) then ASH within iPython should be straightforward.
+<p>If ASH has been set up correctly (PYTHONPATH etc.) and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
 Make sure to use the iPython that uses the same Python as ASH.</p>
  <div align=center>
 <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
  </div></div>
+<div class="section" id="ash-settings">
+<h2>ASH settings<a class="headerlink" href="#ash-settings" title="Permalink to this headline">¶</a></h2>
+<p>Global settings are stored in  <em>/path/to/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
+Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Settings<span class="o">]</span>
+<span class="nv">scale</span> <span class="o">=</span> <span class="m">1</span>.0
+<span class="nv">tol</span> <span class="o">=</span> <span class="m">0</span>.2
+<span class="nv">use_ANSI_color</span> <span class="o">=</span> True
+<span class="nv">print_input</span> <span class="o">=</span> True
+<span class="nv">print_logo</span> <span class="o">=</span> True
+<span class="nv">load_julia</span> <span class="o">=</span> True
+<span class="nv">debugflag</span> <span class="o">=</span> False
+<span class="nv">print_exit_footer</span> <span class="o">=</span> True
+<span class="nv">print_full_timings</span> <span class="o">=</span> True
+<span class="nv">nonbondedMM_code</span> <span class="o">=</span> <span class="s2">&quot;julia&quot;</span>
+<span class="nv">connectivity_code</span> <span class="o">=</span> <span class="s2">&quot;julia&quot;</span>
+<span class="nv">orcadir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/orcadir&#39;</span>
+</pre></div>
+</div>
+<p>In addition to options above it is also possible to specify the paths to various external codes.
+If these paths are set in the settings file, one can avoid setting them in the inputfiles.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Settings<span class="o">]</span>
+<span class="nv">orcadir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/orcadir&#39;</span>
+<span class="nv">daltondir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/daltondir&#39;</span>
+<span class="nv">xtbdir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/xtbdir&#39;</span>
+<span class="nv">psi4dir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/psi4dir&#39;</span>
+<span class="nv">cfourdir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/cfourdir&#39;</span>
+<span class="nv">crestdir</span> <span class="o">=</span> <span class="s1">&#39;/path/to/crestdir&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-of-colors-in-ash-output">
+<h2>Use of colors in ASH output<a class="headerlink" href="#use-of-colors-in-ash-output" title="Permalink to this headline">¶</a></h2>
+<p>ASH can display ANSI colors in output if  use_ANSI_color = True   is used in the settings file (see above).
+This makes the output more readable.</p>
+<p>Note, however, that colors will only display properly if using a text reader that supports it:
+| - less may require the -R flag: less -R outputfile. Or setting: export LESS=-R
+| - vim and emacs require plugins</p>
+</div>
 <div class="section" id="submitting-job">
 <h2>Submitting job<a class="headerlink" href="#submitting-job" title="Permalink to this headline">¶</a></h2>
 <p>For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
@@ -398,7 +431,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 
 <span class="c1">#Start Ash job from scratch dir.  Output file is written directly to submit directory</span>
 <span class="nb">export</span> <span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
-python-jl <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+python3_ash <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 
 <span class="c1"># Ash has finished. Now copy important stuff back.</span>
 <span class="nv">outputdir</span><span class="o">=</span><span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="si">${</span><span class="nv">job</span><span class="si">}</span>_<span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span>

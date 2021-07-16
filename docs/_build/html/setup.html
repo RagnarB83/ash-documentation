@@ -96,7 +96,14 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation-and-configuration">Installation and Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-download-ash">A. Download ASH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#b-installation-and-configuration">B. Installation and Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#b1-semi-automatic">B1. Semi-Automatic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#b2-manual">B2. Manual</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#c-install-external-programs">C. Install External Programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d-test-ash">D. Test ASH</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
@@ -223,11 +230,11 @@ Future versions will make Julia a requirement.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.python.org">Python version 3.6</a> &gt;=</p></li>
 <li><p><a class="reference external" href="https://numpy.org">Numpy</a> library.</p></li>
-</ul>
-<p>Strongly recommended:</p>
-<ul class="simple">
 <li><p><a class="reference external" href="https://github.com/leeping/geomeTRIC">geomeTRIC</a> (Python package via pip).</p></li>
-<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.6.0</a> installation for fast routines for large system treatment.</p></li>
+</ul>
+<p>Strongly recommended (necessary for some parts):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.6</a> installation for fast routines for large system treatment.</p></li>
 <li><p><a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a> installation (Python package via pip).</p></li>
 </ul>
 <p>Useful:</p>
@@ -235,42 +242,94 @@ Future versions will make Julia a requirement.</p>
 <li><p><a class="reference external" href="https://matplotlib.org">Matplotlib</a> library. Used to plot graphs/surfaces.</p></li>
 <li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library. Used for interpolation routines when plotting surfaces.</p></li>
 </ul>
-<div class="section" id="installation-and-configuration">
-<h2>Installation and Configuration<a class="headerlink" href="#installation-and-configuration" title="Permalink to this headline">¶</a></h2>
-<p><strong>Step 1.</strong> Clone or download an archive containing ASH and put the directory (named ash) in your home directory.
-The ash directory contains the Python source code files, named ash.py etc.</p>
-<p><strong>Step 2.</strong> Check if a suitable Python3 installation is available. It needs to contain numpy and you will need to be able to install
-Python packages to it using pip. If you don’t already have a suitable Python3 distribution, go to Step 2b.</p>
-<p><strong>Step 2b.</strong> Anaconda Python3 setup (recommended)</p>
-<p>Download <a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda Python3 package</a> and install in e.g. your user directory.
-<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> also works.
-Follow Anaconda installation instructions.</p>
-<p><strong>Step 2b.2.</strong> Create a new conda Python3.7 virtual environment (here called ashpy37) that will be used for ASH:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create -n ashpy37 <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 numpy   <span class="c1"># Alternatively you can use the default base environment</span>
+<div class="section" id="a-download-ash">
+<h2>A. Download ASH<a class="headerlink" href="#a-download-ash" title="Permalink to this headline">¶</a></h2>
+<p>Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, e.g. ash.py and several directories.</p>
+</div>
+<div class="section" id="b-installation-and-configuration">
+<h2>B. Installation and Configuration<a class="headerlink" href="#b-installation-and-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="b1-semi-automatic">
+<h3>B1. Semi-Automatic<a class="headerlink" href="#b1-semi-automatic" title="Permalink to this headline">¶</a></h3>
+<p>(RECOMMENDED)</p>
+<p>This uses the install_ash.sh script inside the ASH directory.
+The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.</p>
+<p><strong>Step 1.</strong> Make sure the desired python3 is in your environment (‘which python3’ in the shell) or set path_to_python3_dir in the ./install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
+Note: You need to be able to install packages to this installation via pip</p>
+<p><strong>Step 2.</strong> cd to ASH directory, make install_ash executable and run:</p>
+<ul class="simple">
+<li><p>chmod +x ./install_ash.sh</p></li>
+<li><p>./install_ash.sh</p></li>
+</ul>
+<p><strong>Step 3.</strong> If installation is successful:</p>
+<ul class="simple">
+<li><p>source ./set_environment_ash.sh    to activate ASH environment.</p></li>
+</ul>
+<p>Common problems:</p>
+</div>
+<div class="section" id="b2-manual">
+<h3>B2. Manual<a class="headerlink" href="#b2-manual" title="Permalink to this headline">¶</a></h3>
+<p>(Use only if semi-automatic approach does not work)</p>
+<p><strong>Step 1.</strong></p>
+<p>Make sure ASH has been downloaded and moved to some location where it will stay.
+The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual loction on your machine).</p>
+<p><strong>Step 2.</strong></p>
+<p>Check if a suitable Python3 installation is available (globally available or maybe via a module on your cluster). It needs to be relatively new (version 3.6 and above) contain Numpy and you will need to be able to install Python packages to it using the package manager pip.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">#Check where python3 is:</span>
+which python3
+<span class="c1">#Check Python3 version</span>
+python3 --version
+<span class="c1">#Check that pip/pip3 is available (sometimes pip3 should be called instead of pip)</span>
+which pip3  <span class="c1">#Make sure the pip path is the same as python3 path)</span>
+<span class="c1">#Check that numpy is available inside the Python3 installation</span>
+pip3 list <span class="p">|</span> grep numpy
 </pre></div>
 </div>
-<p>Select the environment:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate ashpy37 <span class="c1"># or use base environment if preferred</span>
+<p>If you have a suitable Python3 with numpy then make sure it is loaded in your environment when using ASH.
+An Anaconda/miniconda distribution can be used. Make sure the conda environment is loaded.</p>
+<p>If you don’t already have a suitable Python3 distribution, go to Step 2b.</p>
+<p><strong>Step 2b. Install Python if required</strong></p>
+<p><em>Option 1: Python3 via system package manager</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option might be preferred if installing on a cluster for multiple users.</p>
+</div>
+<p>Linux: Install Python3 via a Linux package manager (e.g. Centos: yum -y install python3, Ubuntu: apt install python3).
+Installing via a package manager is prefereable than compiling from source (see python.org for compile options).
+Mac OS X: TODO
+Windows: TODO</p>
+<p>Install numpy via pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install numpy
 </pre></div>
 </div>
-<p>Make sure this environment is active while you finish the installation process and use this same environment when running ASH.</p>
-<p><strong>Step 3.</strong> To make ASH available to Python, set the environment variables:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$PYTHONPATH</span>
-<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+<p>Make sure that the Python3 that you have installed is in your PATH environment while finishing the setup process and when using ASH:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/python3/bin:<span class="nv">$PATH</span>
 </pre></div>
 </div>
-<p>where <em>/path/to/ash</em> is the dir where all the ASH sourcefiles are.
-Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.</p>
-<p><strong>Step 4.</strong> Install the recommended Python packages via pip:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install geometric   <span class="o">(</span>geomeTRIC optimizer<span class="o">)</span>
+<p><em>Option 2: Anaconda/Miniconda Python3 setup</em></p>
+<p>Download <a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda Python3 package</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> and install in e.g. your user directory.
+Follow Anaconda/Miniconda installation instructions. Install numpy unless already installed. It could be a good idea to create your own conda environment for ASH but this is not strictly necessary.</p>
+<p><strong>Step 3.</strong> To make ASH available to Python3, set the environment variables:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">ASHPATH</span><span class="o">=</span>/path/to/ash  <span class="c1"># Change /path/to/ash to the actual ASH directory location on your machine</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$ASHPATH</span>:<span class="nv">$ASHPATH</span>/lib:<span class="nv">$PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$ASHPATH</span>:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$ASHPATH</span>/lib:<span class="nv">$LD_LIBRARY_PATH</span>
 </pre></div>
 </div>
-<p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a>.
-Julia is necessary for fast QM/MM functionality inside ASH. Step can be skipped if you won’t be using QM/MM.</p>
+<p>where <em>/path/to/ash</em> is the dir where all the ASH sourcefiles are (e.g. ash.py) .
+Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.
+This step will be necessary for each user on the cluster.</p>
+<p><strong>Step 4.</strong> Install the recommended Python packages via pip/pip3:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install geometric   <span class="o">(</span>geomeTRIC optimizer<span class="o">)</span>
+</pre></div>
+</div>
+<p>This requires you to be able ot install packages to your Python installation. It may also be possible to install Python packages
+locally to your user’s home directory by the “–user” option:  pip3 install geometric –user</p>
+<p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a>.</p>
+<p>Julia is necessary for some fast QM/MM functionality inside ASH (e.g. MolCrys). Step can be skipped if you won’t be using QM/MM.</p>
 <blockquote>
 <div><ol class="lowerroman simple">
-<li><p>Download appropriate binaries from the official Julia website. Version 1.4 or higher. Extract archive.</p></li>
-<li><p>Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.4.1/bin:$PATH . Put PATH definition to your shell startup file.</p></li>
+<li><p>Download appropriate binaries from the official Julia website. Version 1.6 or higher. Extract archive.</p></li>
+<li><p>Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.6.1/bin:$PATH . Put this PATH definition in your shell startup file.</p></li>
 <li><p>Run Julia using the ASH sourcefile julia-packages-setup.jl (inside ASH source directory) as input to download and install the  required Julia packages. Currently: PyCall, Hungarian, Distances</p></li>
 </ol>
 </div></blockquote>
@@ -278,64 +337,64 @@ Julia is necessary for fast QM/MM functionality inside ASH. Step can be skipped 
 </pre></div>
 </div>
 <p>This will download and install required Julia packages.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To avoid having to setup the Julia packages for each user on a computing cluster, one can specify a global Julia package-store-location: export JULIA_DEPOT_PATH=/path/to/julia-packages-dir  before running :  julia julia-packages-setup.jl</p>
+</div>
 <p>If there is an error like this: ERROR: SystemError: opening file “/path/to/.julia/registries/General/Registry.toml”: No such file or directory
 Then execute in shell: rm -rf ~/.julia/registries/General</p>
 <p><strong>Step 5b.</strong> Install <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a></p>
-<p><span class="red">Important:</span> Make sure the correct Python environment (e.g. your ashpy37 conda environment) is active before proceeding.
-Then install using pip:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install julia
+<p><span class="red">Important:</span> Make sure the correct Python environment is active before proceeding. Check that the pip or pip3 executable is available and corresponds to the Python you want:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>which pip
+which pip3
 </pre></div>
 </div>
-<p>Activate PyJulia by opening up the python3 interpreter, import julia library and install:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 <span class="c1">#This launches the python3 interpreter</span>
+<p>Then install using pip/pip3:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install julia
 </pre></div>
 </div>
-<p>Inside the Python interpreter do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">julia</span>
-<span class="n">julia</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
-
-<span class="c1">#If this is successful then the python-jl binary (installed by PyJulia) should become available.</span>
-</pre></div>
+<p><strong>Step 6.</strong> Activate python3_ash</p>
+<p>Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash</p>
+<ul class="simple">
+<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.</p></li>
+<li><p>Make sure the correct Python3 environment is active. Otherwise ASH will not work.</p></li>
+<li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
+</ul>
 </div>
-<p><strong>Step 7a.</strong> Install desired QM program(s):</p>
+</div>
+<div class="section" id="c-install-external-programs">
+<h2>C. Install External Programs<a class="headerlink" href="#c-install-external-programs" title="Permalink to this headline">¶</a></h2>
+<p><strong>Step 1.</strong> Install desired QM program(s):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://orcaforum.kofo.mpg.de">ORCA</a> is a recommended QM code (flexible interface in ASH). See installation instructions on the <a class="reference external" href="https://sites.google.com/site/orcainputlibrary/setting-up-orca">ORCA Input Library</a>. The path to ORCA needs to be in PATH and LD_LIBRARY_PATH of your shell and later your jobscript.</p></li>
 <li><p><a class="reference external" href="https://xtb-docs.readthedocs.io">xTB</a> needs to be in PATH and later your jobscript.</p></li>
 </ul>
-<p>Optional Python packages to install via pip (depends on whether you will use the interfaces to PyBerny, PySCF and PyFrame):</p>
+<p>Optional Python packages to install via pip (depends on whether you will use the interfaces to PySCF and PyFrame):</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://jan.hermann.name/pyberny/index.html">PyBerny</a></p></li>
 <li><p><a class="reference external" href="http://www.pyscf.org/">PySCF</a></p></li>
 <li><p><a class="reference external" href="https://gitlab.com/FraME-projects/PyFraME">PyFrame</a>:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install pyberny     <span class="c1">#pyBerny geometry optimizer</span>
-pip install pyscf       <span class="c1">#PySCF QM program</span>
-pip install pyframe     <span class="c1">#polarizable embedding helper tool</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install pyscf       <span class="c1">#PySCF QM program</span>
+pip3 install pyframe     <span class="c1">#polarizable embedding helper tool</span>
 </pre></div>
 </div>
 <p>Optional installation of the <a class="reference external" href="http://www.psicode.org/">Psi4</a> QM code (if you intend to use it), best done via Conda:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4 psi4-rt -c psi4
 </pre></div>
 </div>
-<p><strong>Step 7b.</strong> Optional: Install OpenMM (if needed)</p>
-<p>Note: Not yet documented…</p>
+<p><strong>Step 2.</strong> Optional: Install OpenMM (if needed)</p>
 <p>For protein and explict solvation QM/MM in ASH, then the <a class="reference external" href="http://openmm.org">OpenMM program</a> is used as MM code.
 It can be installed using conda.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c omnia openmm
 </pre></div>
 </div>
-<p><strong>Step 8.</strong> Try it out.</p>
-<ul class="simple">
-<li><p>Make sure the correct Python3 environment is active (e.g. switch to the conda environment you created in Step2c).</p></li>
-<li><p>If not doing QM/MM: The regular Python3 executable, <em>python3</em>  can be used to run all ASH scripts.</p></li>
-<li><p>If doing QM/MM: The Python-Julia executable, <em>python-jl</em> should always be used (for fast treatment of large systems via Julia) to run scripts. The python-jl executable was installed in the same dir as the python3 executable (e.g. in the conda environment). python-jl can always be used.</p></li>
-</ul>
-<p>Example ASH script to try out (geometry optimization of H2O using ORCA):</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 first-ash-job.py
-</pre></div>
 </div>
-<p>or:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl first-ash-job.py
+<div class="section" id="d-test-ash">
+<h2>D. Test ASH<a class="headerlink" href="#d-test-ash" title="Permalink to this headline">¶</a></h2>
+<p>Test if things work in general:</p>
+<p>python3_ash /path/to/ash/test_ash.py   #This runs a basic test job.</p>
+<p>Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3_ash first-ash-job.py
 </pre></div>
 </div>
 <p>first-ash-job.py:</p>
@@ -356,25 +415,26 @@ It can be installed using conda.</p>
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
 
-<span class="c1">#Basic Cartesian optimization with KNARR-LBFGS</span>
+<span class="c1">#Geometry optimization</span>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2Ofragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you get error message when launching python-jl or something similar:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>File <span class="s2">&quot;/path/to/envs/ashpy37/bin/python-jl&quot;</span>, line <span class="m">8</span>, <span class="k">in</span> &lt;module&gt;
+<p>If you get an error message when launching python3_ash that looks like the following:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>File <span class="s2">&quot;/home/bjornsson/ash/python3_ash&quot;</span>, line <span class="m">9</span>, <span class="k">in</span> &lt;module&gt;
 sys.exit<span class="o">(</span>main<span class="o">())</span>
-File <span class="s2">&quot;/path/to/miniconda3/envs/ashpy37/lib/python3.7/site-packages/julia/python_jl.py&quot;</span>, line <span class="m">114</span>, <span class="k">in</span> main
+File <span class="s2">&quot;/home/bjornsson/.local/lib/python3.8/site-packages/julia/python_jl.py&quot;</span>, line <span class="m">114</span>, <span class="k">in</span> main
 execprog<span class="o">([</span>julia, <span class="s2">&quot;-e&quot;</span>, script_jl, <span class="s2">&quot;--&quot;</span><span class="o">]</span> + unused_args<span class="o">)</span>
+...
 FileNotFoundError: <span class="o">[</span>Errno <span class="m">2</span><span class="o">]</span> No such file or directory
 </pre></div>
 </div>
-<p>This means that the Python-Julia interface is not completely active yet.
+<p>This means that the Python-Julia interface is not completely working.
 Check the following:</p>
 <ol class="arabic simple">
-<li><p>Is Julia accessible from the shell?, i.e. does typing <em>julia</em> in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set.</p></li>
-<li><p>Something went wrong in the installation of Julia or PyJulia in Step 5a or 5b.</p></li>
-<li><p>Make sure you are using the same Python-conda environment you used when you installed things.</p></li>
-<li><p>Setup PyCall for each Julia user environment (updates ~/.julia)</p></li>
+<li><p>Is Julia accessible from the shell?, i.e. does typing <em>julia</em> in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set: export PATH=/path/to/julia/bin:$PATH</p></li>
+<li><p>Something went wrong in the installation of Julia or PyJulia. Go through these steps again.</p></li>
+<li><p>Make sure you are using the same Python environment you used when you installed things.</p></li>
+<li><p>Set up PyCall for each Julia user environment (this updates ~/.julia dir)</p></li>
 </ol>
 </div>
 </div>
