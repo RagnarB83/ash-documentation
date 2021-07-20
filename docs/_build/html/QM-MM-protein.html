@@ -140,6 +140,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#modifying-the-coordinates-of-the-qm-region"><strong>5. Modifying the coordinates of the QM-region</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-removing-atoms-of-the-system"><strong>6. Adding/removing atoms of the system</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#other-qm-mm-jobtypes"><strong>7. Other QM/MM jobtypes</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-protein-setup-opt-md-qm-mm-all-in-one-script"><strong>8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script</strong></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
@@ -222,7 +223,7 @@ This tutorial is in progress…</p>
 <a class="reference internal image-reference" href="_images/fefeh2ase-nosolv.png"><img alt="_images/fefeh2ase-nosolv.png" class="align-right" src="_images/fefeh2ase-nosolv.png" style="width: 400px;" /></a>
 <div class="section" id="prepare-a-classical-mm-model-of-the-system">
 <h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline">¶</a></h2>
-<p>This step is often the most time-consuming part of setting up a new QM/MM model of a protein.
+<p>This step cam be the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
 choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
@@ -230,17 +231,51 @@ minimizing the structure and finally running at the very least a simple MD simul
 This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step are not easily corrected later on.</p>
 <p>Some useful reading:
 <a class="reference external" href="https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf">https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf</a></p>
-<p>There are many programs capable of setting up a classical model of the protein.</p>
-<p>ASH is currently capable of reading in :</p>
+<p>There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.</p>
+<p>ASH is currently capable of reading in (via OpenMM library):</p>
+<a class="reference internal image-reference" href="_images/fefeh2ase-solv.png"><img alt="_images/fefeh2ase-solv.png" class="align-right" src="_images/fefeh2ase-solv.png" style="width: 300px;" /></a>
 <ul class="simple">
-<li><p>CHARMM forcefield files (PSF-file, top and prm files, <strong>tested</strong>)</p></li>
-<li><p>GROMACS files, using various forcefields   <strong>tested</strong></p></li>
-<li><p>Amber files (PRMTOP)    <strong>tested</strong></p></li>
-<li><p>OpenMM files (XML-file)   (untested)</p></li>
+<li><p>CHARMM forcefield files (PSF-file, top and prm files)</p></li>
+<li><p>GROMACS files, using various forcefields</p></li>
+<li><p>Amber files (PRMTOP)</p></li>
+<li><p>OpenMM files (XML-file)</p></li>
 </ul>
-<a class="reference internal image-reference" href="_images/fefeh2ase-solv.png"><img alt="_images/fefeh2ase-solv.png" class="align-right" src="_images/fefeh2ase-solv.png" style="width: 400px;" /></a>
-<p><em>Option a. GROMACS using the CHARMM forcefield</em></p>
-<p>GROMACS is a popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.</p>
+<p><em>Option a. OpenMM using the CHARMM forcefield</em></p>
+<p>The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
+This has the convenience of using the same MM program that ASH uses for QM/MM.
+See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
+<p>Example on lysozyme:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Original raw PDB-file (no hydrogens, nosolvent)</span>
+<span class="c1">#Download from https://www.rcsb.org/structure/1AKI</span>
+<span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;1aki.pdb&quot;</span>
+
+
+<span class="c1">#Defining residues with special user-wanted protonation states</span>
+<span class="c1">#Example: residue_variants={0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39; }</span>
+<span class="c1">#residue 0: neutral LYS, residue 17: deprotonated CYS, residue 18: protonated ASP, residue 19: epsilon-protonated HIS.</span>
+<span class="c1">#Other residues are determined based on the rules in the OpenMM modeller program</span>
+<span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
+
+<span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
+<span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
+
+<span class="c1">#Creating new OpenMM object from forcefield, topology and and fragment</span>
+<span class="n">openmmobject</span> <span class="o">=</span><span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#MM minimization for 1000 steps</span>
+<span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Classical MD simulation for 1000 ps</span>
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Option b. GROMACS using the CHARMM forcefield</em></p>
+<p>GROMACS is another popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.mdtutorials.com/gmx/lysozyme/index.html">Basic tutorial (lysozyme)</a></p></li>
 <li><p><a class="reference external" href="https://sites.google.com/site/ragnarbjornsson/mm-and-qm-mm-setup">Metalloprotein tutorial</a></p></li>
@@ -251,47 +286,12 @@ to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER for
 Note that ParMed may help here: <a class="reference external" href="https://parmed.github.io/ParmEd/html/index.html">https://parmed.github.io/ParmEd/html/index.html</a></p>
 <p>Another option is to use the PSF-create script:
 <a class="reference external" href="https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh">https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh</a></p>
-<p><em>Option b. OpenMM using the CHARMM forcefield</em></p>
-<p>An alternative to GROMACS is to set the system and run the classical simulation using ASH and OpenMM instead.
-This has the convenience of using the same MM program that ASH uses for QM/MM.
-See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
-<p>Lysozyme example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c1">#Original raw PDB-file (no hydrogens, nosolvent)</span>
-<span class="c1">#Download from https://www.rcsb.org/structure/1AKI</span>
-<span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;1aki.pdb&quot;</span>
-
-
-<span class="c1">#Defining residues with special user-wanted protonation states</span>
-<span class="c1">#Example: residue_variants={0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39; }</span>
-<span class="c1">#residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.</span>
-<span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
-
-<span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
-<span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
-    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
-
-<span class="c1">#Creating new OpenMM object from forcefield, topology and and fragment</span>
-<span class="n">openmmobject</span> <span class="o">=</span><span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">,</span>
-                 <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1">#MM minimization for 100 steps</span>
-<span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="c1">#Classical MD simulation for 10 ps</span>
-<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="a-read-coordinates-and-forcefield-into-ash">
 <h2><strong>2a. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#a-read-coordinates-and-forcefield-into-ash" title="Permalink to this headline">¶</a></h2>
 <p>Here we will read in the coordinates and forcefield files from the classical system preparation.
-The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
-a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), or even a Chemshell fragment file (file.c).
-The forcefield can be read in using CHARMM files or Amber files</p>
+The coordinates can be read-in in multiple ways: e.g. a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), an XYZ-file (XMol format, file.xyz), from a previous ASH-file on disk (file.ygg), or  a Chemshell fragment file (file.c).
+The forcefield can be read in using CHARMM files,Amber files, GROMACS files or OpenMM XML format.</p>
 <p>CHARMM example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -358,6 +358,7 @@ The forcefield can be read in using CHARMM files or Amber files</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl MMtest.py
 </pre></div>
 </div>
+<p>It should finish in just a few seconds (or 1-2 minutes at most)þ</p>
 </div>
 <div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
 <h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline">¶</a></h2>
@@ -369,6 +370,8 @@ QM-atoms (create a list called qmatoms) and pass that list to the qmatoms keywor
 <p>If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen)is
 automatically created.
 The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.</p>
+<p>Note: Example below uses CHARMM. To use Amber or OpenMM files, modify the creation of the OpenMMTheory object like before.</p>
+<p>CHARMM example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Read in forcefield files</span>
@@ -398,7 +401,7 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 <span class="n">qmatomlist</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;qmatoms&quot;</span><span class="p">)</span>
 
 <span class="c1">#Define QM-theory. Here ORCA</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_500&quot;</span>
 <span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
@@ -660,6 +663,61 @@ Also created is a PDB-file: new-system.pdb</p>
 <span class="n">Saddlepoint</span> <span class="o">=</span> <span class="n">interface_knarr</span><span class="o">.</span><span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">fragA</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">fragB</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">CI</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomslist</span><span class="p">,</span> <span class="n">idpp_maxiter</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
 <span class="n">Saddlepoint</span><span class="o">.</span><span class="n">print_system</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;saddlepoint.ygg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-protein-setup-opt-md-qm-mm-all-in-one-script">
+<h2><strong>8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script</strong><a class="headerlink" href="#example-protein-setup-opt-md-qm-mm-all-in-one-script" title="Permalink to this headline">¶</a></h2>
+<p>The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
+The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system, there will be problems to deal with.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Cores to use for OpenMM and QM/MM</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+
+<span class="c1">#Original raw PDB-file (no hydrogens, nosolvent). Lysozyme example</span>
+<span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;1aki.pdb&quot;</span>
+
+
+<span class="c1">#Defining residues with special user-wanted protonation states</span>
+<span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
+
+<span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
+<span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
+
+<span class="c1">#Creating new OpenMM object from forcefield, topology and and fragment</span>
+<span class="n">openmmobject</span> <span class="o">=</span><span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">,</span>
+                 <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#MM minimization for 100 steps</span>
+<span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Classical MD simulation for 10 ps</span>
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">)</span>
+
+<span class="c1">#Setting up QM/MM model with QM-region: side-chain of ASP66</span>
+<span class="n">qmatomlist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1013</span><span class="p">,</span><span class="mi">1014</span><span class="p">,</span><span class="mi">1015</span><span class="p">,</span><span class="mi">1016</span><span class="p">,</span><span class="mi">1017</span><span class="p">,</span><span class="mi">1018</span><span class="p">]</span>
+
+<span class="c1">#Define QM-theory. Here ORCA and r2SCAN-3c</span>
+<span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! r2SCAN-3c tightscf&quot;</span>
+<span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">%maxcore 2000</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">MaxIter 500</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/Applications/orca_500&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
+                        <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Create QM/MM OBJECT</span>
+<span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
+    <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># QM/MM geometry optimization</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

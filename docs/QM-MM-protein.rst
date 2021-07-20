@@ -23,21 +23,29 @@ Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
 
 
+
 There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
 
+
+
 ASH is currently capable of reading in (via OpenMM library):
+
+.. image:: figures/fefeh2ase-solv.png
+   :align: right
+   :width: 300
 
 - CHARMM forcefield files (PSF-file, top and prm files)
 - GROMACS files, using various forcefields
 - Amber files (PRMTOP)
 - OpenMM files (XML-file)
 
-.. image:: figures/fefeh2ase-solv.png
-   :align: right
-   :width: 400
+
+
+
 
 
 *Option a. OpenMM using the CHARMM forcefield*
+
 
 The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
 This has the convenience of using the same MM program that ASH uses for QM/MM.
@@ -527,7 +535,7 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
 
 
 ####################################################################
-**8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script **
+**8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script**
 ####################################################################
 
 The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
