@@ -524,3 +524,67 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
     Saddlepoint = interface_knarr.NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
         ActiveRegion=True, actatoms=qmatomslist, idpp_maxiter=800)
     Saddlepoint.print_system(filename='saddlepoint.ygg')
+
+
+####################################################################
+**8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script **
+####################################################################
+
+The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
+The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system, there will be problems to deal with.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Cores to use for OpenMM and QM/MM
+    numcores=4
+
+    #Original raw PDB-file (no hydrogens, nosolvent). Lysozyme example
+    pdbfile="1aki.pdb"
+
+
+    #Defining residues with special user-wanted protonation states
+    residue_variants={}
+
+    #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
+    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
+                     pdbfile=None, do_energy_decomposition=True, periodic=True,
+                     autoconstraints='HBonds', rigidwater=True)
+
+    #MM minimization for 100 steps
+    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
+
+    #Classical MD simulation for 10 ps
+    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
+
+    #Setting up QM/MM model with QM-region: side-chain of ASP66
+    qmatomlist = [1013,1014,1015,1016,1017,1018]
+
+    #Define QM-theory. Here ORCA and r2SCAN-3c
+    ORCAinpline="! r2SCAN-3c tightscf"
+    ORCAblocklines="""
+    %maxcore 2000
+    %scf
+    MaxIter 500
+    end
+    """
+    orcaobject = ORCATheory(orcadir="/Applications/orca_500", charge=-1,mult=1, orcasimpleinput=ORCAinpline,
+                            orcablocks=ORCAblocklines, nprocs=1)
+
+    # Create QM/MM OBJECT
+    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
+        fragment=ashfragment, embedding="Elstat", qmatoms=qmatomlist, printlevel=2)
+
+    # QM/MM geometry optimization
+    geomeTRICOptimizer(theory=qmmmobject, fragment=ashfragment, ActiveRegion=True, actatoms=qmatomlist, maxiter=500)
+
+
+
+
+
