@@ -244,7 +244,7 @@ It can be installed using conda.
 
 .. code-block:: shell
 
-    conda install -c omnia openmm
+    conda install -c conda-forge openmm
 
 
 
