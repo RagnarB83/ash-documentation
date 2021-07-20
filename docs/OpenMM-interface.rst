@@ -266,8 +266,7 @@ System setup via OpenMM: Modeller
 ######################################
 
 OpenMM features a convenient PDBfixer program (https://github.com/openmm/pdbfixer) and a Modeller tool (http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html)
-that is capable of setting up a new biomolecular system from scratch. See also: http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing
-ASH features a highly convenient interface to these programs and allows near-automatic system-setup for favorable systems.
+that is capable of setting up a new biomolecular system from scratch. See also: http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing . ASH features a highly convenient interface to these programs and allows near-automatic system-setup for favorable systems.
 
 .. code-block:: python
 
@@ -298,9 +297,7 @@ Lysozyme example (simple, no modifications required):
         solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
 
     #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
-                     pdbfile=None, do_energy_decomposition=True, periodic=True,
-                     autoconstraints='HBonds', rigidwater=True)
+    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True, autoconstraints='HBonds', rigidwater=True)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
@@ -311,7 +308,7 @@ Lysozyme example (simple, no modifications required):
 
 
 
-If the protein contains nonstandard residues (e.g. metalcofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
+If the protein contains nonstandard residues (e.g. metallocofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
 then these need to be provided using the extraxmlfile option.
 
 .. code-block:: python

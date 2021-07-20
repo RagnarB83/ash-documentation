@@ -12,7 +12,7 @@ This tutorial is in progress...
 **1. Prepare a classical MM model of the system.**
 ######################################################
 
-This step is often the most time-consuming part of setting up a new QM/MM model of a protein.
+This step cam be the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
 choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
@@ -23,27 +23,63 @@ Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
 
 
+There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
 
+ASH is currently capable of reading in (via OpenMM library):
 
-There are many programs capable of setting up a classical model of the protein.
-
-ASH is currently capable of reading in :
-
-- CHARMM forcefield files (PSF-file, top and prm files, **tested**)
-- GROMACS files, using various forcefields   **tested**
-- Amber files (PRMTOP)    **tested**
-- OpenMM files (XML-file)   (untested)
+- CHARMM forcefield files (PSF-file, top and prm files)
+- GROMACS files, using various forcefields
+- Amber files (PRMTOP)
+- OpenMM files (XML-file)
 
 .. image:: figures/fefeh2ase-solv.png
    :align: right
    :width: 400
 
 
+*Option a. OpenMM using the CHARMM forcefield*
+
+The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
+This has the convenience of using the same MM program that ASH uses for QM/MM.
+See :doc:`OpenMM-interface` for details.
+
+Example on lysozyme:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Original raw PDB-file (no hydrogens, nosolvent)
+    #Download from https://www.rcsb.org/structure/1AKI
+    pdbfile="1aki.pdb"
 
 
-*Option a. GROMACS using the CHARMM forcefield*
+    #Defining residues with special user-wanted protonation states
+    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
+    #residue 0: neutral LYS, residue 17: deprotonated CYS, residue 18: protonated ASP, residue 19: epsilon-protonated HIS.
+    #Other residues are determined based on the rules in the OpenMM modeller program
+    residue_variants={}
 
-GROMACS is a popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.
+    #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
+    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True,
+                     autoconstraints='HBonds', rigidwater=True)
+
+    #MM minimization for 1000 steps
+    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=1000, tolerance=1)
+
+    #Classical MD simulation for 1000 ps
+    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=1000, traj_frequency=1000, temperature=300,
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
+
+
+
+*Option b. GROMACS using the CHARMM forcefield*
+
+GROMACS is another popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.
 
 - `Basic tutorial (lysozyme) <http://www.mdtutorials.com/gmx/lysozyme/index.html>`_
 
@@ -57,44 +93,6 @@ Note that ParMed may help here: https://parmed.github.io/ParmEd/html/index.html
 Another option is to use the PSF-create script: 
 https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh
 
-*Option b. OpenMM using the CHARMM forcefield*
-
-An alternative to GROMACS is to set the system and run the classical simulation using ASH and OpenMM instead.
-This has the convenience of using the same MM program that ASH uses for QM/MM.
-See :doc:`OpenMM-interface` for details.
-
-Lysozyme example:
-
-.. code-block:: python
-
-    from ash import *
-
-    #Original raw PDB-file (no hydrogens, nosolvent)
-    #Download from https://www.rcsb.org/structure/1AKI
-    pdbfile="1aki.pdb"
-
-
-    #Defining residues with special user-wanted protonation states
-    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
-    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.
-    residue_variants={}
-
-    #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
-
-    #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
-                     pdbfile=None, do_energy_decomposition=True, periodic=True,
-                     autoconstraints='HBonds', rigidwater=True)
-
-    #MM minimization for 100 steps
-    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
-
-    #Classical MD simulation for 10 ps
-    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
-
 
 
 
@@ -103,9 +101,8 @@ Lysozyme example:
 ######################################################
 
 Here we will read in the coordinates and forcefield files from the classical system preparation.
-The coordinates can be read-in in multiple ways: e.g. from a previous ASH-file on disk (file.ygg), an XYZ-file (XMol format, file.xyz),
-a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), or even a Chemshell fragment file (file.c).
-The forcefield can be read in using CHARMM files or Amber files
+The coordinates can be read-in in multiple ways: e.g. a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), an XYZ-file (XMol format, file.xyz), from a previous ASH-file on disk (file.ygg), or  a Chemshell fragment file (file.c).
+The forcefield can be read in using CHARMM files,Amber files, GROMACS files or OpenMM XML format.
 
 
 CHARMM example:
@@ -186,6 +183,8 @@ The script above (e.g. called MMtest.py) can then be executed like this:
 
     python-jl MMtest.py
 
+It should finish in just a few seconds (or 1-2 minutes at most)þ
+
 ############################################################################
 **3. Create the QM/MM model and test it by running an energy calculation**
 ############################################################################
@@ -199,6 +198,10 @@ QM-atoms (create a list called qmatoms) and pass that list to the qmatoms keywor
 If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen)is
 automatically created.
 The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.
+
+Note: Example below uses CHARMM. To use Amber or OpenMM files, modify the creation of the OpenMMTheory object like before.
+
+CHARMM example:
 
 .. code-block:: python
 
@@ -231,7 +234,7 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
     qmatomlist = read_intlist_from_file("qmatoms")
 
     #Define QM-theory. Here ORCA
-    orcadir="/opt/orca_current"
+    orcadir="/opt/orca_500"
     ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
     ORCAblocklines="""
     %maxcore 2000
