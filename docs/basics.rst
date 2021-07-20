@@ -146,6 +146,7 @@ ASH can display ANSI colors in output if  use_ANSI_color = True   is used in the
 This makes the output more readable.
 
 Note, however, that colors will only display properly if using a text reader that supports it:
+
 | - less may require the -R flag: less -R outputfile. Or setting: export LESS=-R
 | - vim and emacs require plugins
 
