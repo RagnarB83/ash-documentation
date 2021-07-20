@@ -2,7 +2,7 @@
 OpenMM interface
 ======================================
 
-OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU godes.
+OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU codes.
 
 
 
@@ -27,13 +27,14 @@ The OpenMMTheory class:
                      periodic_nonbonded_cutoff=12, dispersion_correction=True, 
                      switching_function_distance=10,
                      ewalderrortolerance=1e-5, PMEparameters=None,
-                     delete_QM1_MM1_bonded=False, applyconstraints=False):
+                     delete_QM1_MM1_bonded=False, applyconstraints=True,
+                     autoconstraints=None, hydrogenmass=None, rigidwater=True):
 
 
 
 
-It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or OpenMMXMLFile.
-Note: In rare cases OpenMM fails to read in the files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed (pip install parmed).
+It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or an OpenMM XML forcefieldfile.
+Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed (pip install parmed).
 
 Example creation of an OpenMMtheory object with CHARMM-files:
 
@@ -181,6 +182,23 @@ General X-H constraints and deuterium-mass example:
 
 
 
+Dealing with PBC image problems in trajectory. See https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work
+To obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory afterwards using the program mdtraj (requires installation of mdtraj: pip install mdtraj)
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+    #Provide trajectory file, PDB topology file and final format of trajectory
+    MDtraj_imagetraj("output_traj.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+    
+    #If periodic box info is missing from trajectory file (can happen with CHARMM files):
+    MDtraj_imagetraj("out", pdbtopology, format='DCD', unitcell_lengths=[100.0,100.0,100.0], unitcell_angles=[90.0,90.0,90.0])
+
+
+
+
 ######################################
 Simple minimization via OpenMM
 ######################################
@@ -216,8 +234,8 @@ Example:
 If you want to do a simple minimization of only the H-atoms of your system (e.g. your protein with newly added H-atoms),
 you can do this by freezing all non-H atoms. An ASH fragment can conveniently give you lists of atom indices by the built-in functions:
 
-- fragment.get_atomindices_for_element('C') #List of atom-indices for carbon atoms in the system
-- fragment.get_atomindices_except_element('H') #List of atom-indices for all atoms except the chosen element (here H).
+- fragment.get_atomindices_for_element('C')   #List of atom-indices for carbon atoms in the system
+- fragment.get_atomindices_except_element('H')   #List of atom-indices for all atoms except the chosen element (here H).
 
 Note: all constraints in the OpenMM object needs to be turned off for (autoconstraints=None, rigidwater=False) for this many frozen atoms (frozen atoms can not have constraints).
 
@@ -241,6 +259,96 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
     OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=100,
             traj_frequency=1, temperature=300, integrator="LangevinIntegrator",
             coupling_frequency=1, trajectory_file_option="PDB", frozen_atoms=allnonHatoms,)
+
+
+######################################
+System setup via OpenMM: Modeller
+######################################
+
+OpenMM features a convenient PDBfixer program (https://github.com/openmm/pdbfixer) and a Modeller tool (http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html)
+that is capable of setting up a new biomolecular system from scratch. See also: http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing
+ASH features a highly convenient interface to these programs and allows near-automatic system-setup for favorable systems.
+
+.. code-block:: python
+
+    def OpenMM_Modeller(pdbfile=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0, 
+                    solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
+                    ionicstrength=0.1, iontype='K+'):
+
+
+
+Lysozyme example (simple, no modifications required):
+
+.. code-block:: python
+
+    from ash import *
+
+    #Original raw PDB-file (no hydrogens, nosolvent)
+    #Download from https://www.rcsb.org/structure/1AKI
+    pdbfile="1aki.pdb"
+
+
+    #Defining residues with special user-wanted protonation states
+    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
+    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.
+    residue_variants={}
+
+    #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
+    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
+                     pdbfile=None, do_energy_decomposition=True, periodic=True,
+                     autoconstraints='HBonds', rigidwater=True)
+
+    #MM minimization for 100 steps
+    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
+
+    #Classical MD simulation for 10 ps
+    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
+
+
+
+If the protein contains nonstandard residues (e.g. metalcofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
+then these need to be provided using the extraxmlfile option.
+
+.. code-block:: python
+
+    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants, extraxmlfile="cofactor.xml")
+
+
+The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue. 
+Here defining a dummy molybdenum ion:
+
+.. code-block:: 
+
+    <ForceField>
+    <AtomTypes>
+    <Type name="MOX" class="Mo" element="Mo" mass="99.0"/>
+    </AtomTypes>
+    <Residues>
+    <Residue name="FEM">
+    <Atom name="MOD" type="MOX"/>
+    </Residue>
+    </Residues>
+    <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
+    <Atom type="MOX" charge="3" sigma="0.375" epsilon="0.439"/>
+    </NonbondedForce>
+    </ForceField>
+
+
+Advanced example (additional forcefield parameters required):
+
+.. code-block:: python
+
+    from ash import *
+
+
+    #TODO
+
 
 
 

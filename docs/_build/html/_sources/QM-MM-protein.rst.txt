@@ -59,23 +59,41 @@ https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.
 
 *Option b. OpenMM using the CHARMM forcefield*
 
-IN PROGRESS
+An alternative to GROMACS is to set the system and run the classical simulation using ASH and OpenMM instead.
+This has the convenience of using the same MM program that ASH uses for QM/MM.
+See :doc:`OpenMM-interface` for details.
 
-An alternative to GROMACS is to set up the system and run the classical simulation using OpenMM instead.
-This has the convenience of using the same MM program that ASH uses for QM/MM, that you may have installed already. A drawback is that OpenMM is not as versatile and may require other tools to set up the
-system first such as: CHARMM-GUI (http://www.charmm-gui.org), QwikMD (http://www.ks.uiuc.edu/Research/qwikmd/)
+Lysozyme example:
 
-Description on setting up a system in OpenMM:
+.. code-block:: python
 
-http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing
+    from ash import *
 
-Useful links:
+    #Original raw PDB-file (no hydrogens, nosolvent)
+    #Download from https://www.rcsb.org/structure/1AKI
+    pdbfile="1aki.pdb"
 
-| http://openmm.org/tutorials/hsp90_adp_mg/
-| http://openmm.org/tutorials/b2ar_membrane/
-| https://github.com/tdudgeon/simple-simulate-complex
-| http://openmm.org/tutorials/hkmt_tip4pew/
 
+    #Defining residues with special user-wanted protonation states
+    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
+    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.
+    residue_variants={}
+
+    #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
+    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
+                     pdbfile=None, do_energy_decomposition=True, periodic=True,
+                     autoconstraints='HBonds', rigidwater=True)
+
+    #MM minimization for 100 steps
+    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
+
+    #Classical MD simulation for 10 ps
+    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
 
@@ -133,11 +151,33 @@ Amber example:
     frag=Fragment(elems=elems,coords=coords, conncalc=False)
 
     #Creating OpenMMobject using AMBER forcefield files
-    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, periodic=True, periodic_cell_dimensions=boxdims)
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, periodic=True)
 
 
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
     Singlepoint(theory=openmmobject, fragment=frag)
+
+OpenMM example:
+
+If the system has been set up using OpenMM or using ASH OpenMM_Modeller then you would do something like this:
+
+.. code-block:: python
+
+    from ash import *
+
+
+    #Read coordinates from PDB-file. Using e.g. last snapshot from MD simulation.
+    frag=Fragment(pdbfile="final_MDfrag_laststep.pdb")
+
+    #Creating OpenMMobject using PDB topology and built-in CHARMM36 protein and TIP3P water XMLfiles. 
+    #Also providing cofactor.xml file for nonstandard residues.
+    openmmobject = OpenMMTheory(pdbfile="final_MDfrag_laststep.pdb", xmlfiles=["charmm36.xml","charmm36/water.xml","cofactor.xml"],
+                     periodic=True)
+
+
+    #Run a simple energy+gradient job at the MM level to test whether everything is correct.
+    Singlepoint(theory=openmmobject, fragment=frag)
+
 
 
 The script above (e.g. called MMtest.py) can then be executed like this:
