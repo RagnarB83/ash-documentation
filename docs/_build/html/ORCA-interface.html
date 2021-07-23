@@ -119,6 +119,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ORCA interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#parallelization">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-orca-functions">Useful ORCA functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
@@ -211,11 +212,38 @@
             
   <div class="section" id="orca-interface">
 <h1>ORCA interface<a class="headerlink" href="#orca-interface" title="Permalink to this headline">¶</a></h1>
-<p>To be done: ORCATheory Class definition and arguments</p>
+<p>ORCATheory class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCATheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">extrabasisatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrabasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">TDDFT</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TDDFTroots</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">FollowRoot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">extraline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Options:
+- orcadir: string. Path to ORCA
+- fragment: ASH Fragment object.
+- charge: integer. Charge of molecule.
+- mult: integer. Spin multiplicity of molecule
+- orcasimpleinput: string. Definition of the ORCA simple-input line
+- orcablocks: string (can be multiline). Used for block-input in the ORCA inputfile.
+- extraline: string. Additional inputfile-option for ORCA.
+- printlevel: integer. how much output by the ORCA module.
+- extrabasisatoms: list. What atomindices should have a different basis set (gets added to coordinate block)
+- extrabasis: string. What the basis set on extrabasisatoms should be
+- TDDFT: Boolean. Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.
+- TDDFTroots: integer. How many TDDFT roots to calculate.
+- FollowRoot: integer. What excited state root to calculate gradient for.
+- brokensym: Boolean. Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.
+- HSmult: integer. What high-spin multiplicity to use in a Flipspin job.
+- atomstoflip: list. What atom indices to spin-flip.
+- moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation
+- autostart: Boolean. Whether to turn Autostart on or off (default: True)
+- nprocs: integer. Number of cores to use for ORCA
+- label: string. Label for ORCA object. Useful if working with many.
+- propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.</p>
 <p>The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
-argument when creating object. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided
-and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by Ash.
-Functionality such as adding to inputfile what orbitals to read and parallelization block would be handled by Ash as well.</p>
+argument when creating object (alternatively it can be set in the ~/ash_user_settings.ini file). orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by ASH.
+Functionality such as telling ORCA what orbitals to read and parallelization would be handled by ASH as well.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
@@ -238,11 +266,11 @@ Functionality such as adding to inputfile what orbitals to read and parallelizat
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here a fragment (here called HF_frag) is defined (from XYZ file) and passed to the Singlepoint function along with an
+<p>Here a fragment (here called HF_frag) is defined (from an XYZ file) and passed to the Singlepoint function along with an
 ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
 are charge and spin multiplicity. By default, the ORCA autostart feature is active, meaning that if an inputfile with name “orca-input.inp” is run, ORCA will
 try to read orbitals from “orca-input.gbw” file if present. This is utilized automatically during geometry optimizations, numerical frequencies as well
-as multiple single-point calculations sequentially. It is possible to turn this off by adding “!Noautostart” in the simple-inputline of the orcasimpleinput variable.
+as multiple single-point calculations sequentially. It is possible to turn this off by adding “!Noautostart” in the simple-inputline of the orcasimpleinput variable or by setting autostart=False when defining ORCATheory object.
 It is also possible to have each ORCA-calculation read in orbitals from another source by using the: moreadfile keyword argument option:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
                     <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="s2">&quot;orbitals.gbw&quot;</span><span class="p">)</span>
@@ -262,9 +290,38 @@ will be run again.</p>
 ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
 correct OpenMPI version to be available.
 Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires
-setting:</p>
+setting (in the shell or jobscript):</p>
 <p>export PATH=/path/to/openmpi/bin:$PATH and export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH</p>
-<p>or alternatively loading the appropriate module. Set these variables in the job-script (see <a class="reference internal" href="basics.html"><span class="doc">Basic usage</span></a>) that you are using</p>
+<p>or alternatively loading the appropriate module. Set these variables in the job-script (see <a class="reference internal" href="basics.html"><span class="doc">Basic usage</span></a>) that you are using.</p>
+</div>
+<div class="section" id="useful-orca-functions">
+<h2>Useful ORCA functions<a class="headerlink" href="#useful-orca-functions" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
+To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
+To be documented:</p>
+<p>grab_EFG_from_ORCA_output(filename)</p>
+<p>ICE_WF_size(filename)</p>
+<p>QRO_occ_energies_grab(filename)</p>
+<p>CASSCF_natocc_grab(filename)</p>
+<p>SCF_FODocc_grab(filename)</p>
+<p>MP2_natocc_grab(filename)</p>
+<p>check_stability_in_output(file)</p>
+<p>grabEOMIPs(file)</p>
+<p>run_orca_plot(orcadir, filename, option, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None)</p>
+<p>grabatomcharges_ORCA(chargemodel,outputfile)</p>
+<p>chargemodel_select(chargemodel)</p>
+<p>read_ORCA_Hessian(hessfile)</p>
+<p>ORCAfrequenciesgrab(hessfile)</p>
+<p>write_ORCA_Hessfile(hessian, coords, elems, masses, hessatoms,outputname)</p>
+<p>grab_spin_expect_values_ORCA(file)</p>
+<p>MolecularOrbitalGrab(file)</p>
+<p>grabtrajenergies(filename)</p>
+<p>tddftgrab(file)</p>
+<p>xesgrab(file)</p>
+<p>grab_HF_and_corr_energies(file, DLPNO=False, F12=False)</p>
+<p>scfenergygrab(file)</p>
+<p>finalenergiesgrab(file)</p>
+<p>checkORCAfinished(file)</p>
 </div>
 </div>
 

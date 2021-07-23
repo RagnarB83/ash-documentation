@@ -561,7 +561,7 @@ The example below (can also be found in examples directory)  shows how this can 
 
     #Creating new OpenMM object from forcefield, topology and and fragment
     openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
-                     pdbfile=None, do_energy_decomposition=True, periodic=True,
+                     do_energy_decomposition=True, periodic=True,
                      autoconstraints='HBonds', rigidwater=True)
 
     #MM minimization for 100 steps

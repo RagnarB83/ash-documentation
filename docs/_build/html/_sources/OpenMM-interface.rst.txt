@@ -337,6 +337,8 @@ Here defining a dummy molybdenum ion:
     </ForceField>
 
 
+See e.g. https://education.molssi.org/mm-tools/01-introduction/index.html for information on the format of the XML file.
+
 Advanced example (additional forcefield parameters required):
 
 .. code-block:: python
