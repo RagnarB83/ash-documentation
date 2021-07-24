@@ -54,7 +54,7 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
     orcablocks="%scf maxiter 200 end"
 
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
+                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Geometry Optimization using geomeTRIC
     geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')

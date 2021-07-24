@@ -40,5 +40,5 @@ Set pe=True and give path to potfile to use.
 
 **Parallelization**
 
-The Psi4 parallelization is thread-based. The nprocs keyword provided to the Psi4-interface is used to specify the number
+The Psi4 parallelization is thread-based. The numcores keyword provided to the Psi4-interface is used to specify the number
 of threads available to Psi4 when the job is run (command-line argument for Psithon and environment variable for library).

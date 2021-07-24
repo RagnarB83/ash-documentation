@@ -257,7 +257,7 @@ CHARMM example:
 
     #Create ORCA QM object
     orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
-                            orcablocks=ORCAblocklines, nprocs=8)
+                            orcablocks=ORCAblocklines, numcores=8)
 
     # Create QM/MM OBJECT
     qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
@@ -383,7 +383,7 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
 
     #Create ORCA QM object
     orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
-                            orcablocks=ORCAblocklines, nprocs=8)
+                            orcablocks=ORCAblocklines, numcores=8)
 
     # Create QM/MM OBJECT
     qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,
@@ -583,7 +583,7 @@ The example below (can also be found in examples directory)  shows how this can 
     end
     """
     orcaobject = ORCATheory(orcadir="/Applications/orca_500", charge=-1,mult=1, orcasimpleinput=ORCAinpline,
-                            orcablocks=ORCAblocklines, nprocs=1)
+                            orcablocks=ORCAblocklines, numcores=1)
 
     # Create QM/MM OBJECT
     qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,

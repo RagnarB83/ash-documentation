@@ -191,7 +191,7 @@ Example: TDDFT on H\ :sub:`2`\ O
     """
 
     #Define ORCA theory. Does not need charge/mult keywords.
-    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=1)
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=1)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
     IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=h2o, InitialState_charge=0, Initialstate_mult=1,
@@ -237,7 +237,7 @@ Here we show how results with multiple functionals can be obtained at the same t
         """
 
         #Define ORCA theory. Does not need charge/mult keywords.
-        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4)
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
         #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
         IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
@@ -352,7 +352,7 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
     """
 
     #Define ORCA theory. No charge/mult keywords
-    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4)
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
     IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
@@ -394,7 +394,7 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
     """
 
     #Define ORCA theory. No charge/mult keywords
-    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4)
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
     IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
@@ -433,7 +433,7 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
     """
 
     #Define ORCA theory. No charge/mult keywords
-    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4)
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
     IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,

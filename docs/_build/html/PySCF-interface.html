@@ -210,13 +210,13 @@
 <h1>PySCF interface<a class="headerlink" href="#pyscf-interface" title="Permalink to this headline">¶</a></h1>
 <p>The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
 At the moment, the interface is not very flexible and only allows for simple DFT calculations with a specific basis set.</p>
-<p>Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, nprocs, outputname and printsetting.
+<p>Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, numcores, outputname and printsetting.
 Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).</p>
 <p>The interface will become more flexible in the future.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
 <span class="c1">#PySCF</span>
-<span class="n">PySCFcalc</span> <span class="o">=</span> <span class="n">PySCFTheory</span><span class="p">(</span><span class="n">pyscfbasis</span><span class="o">=</span><span class="s2">&quot;def2-SVP&quot;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s2">&quot;B3LYP&quot;</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="n">PySCFcalc</span> <span class="o">=</span> <span class="n">PySCFTheory</span><span class="p">(</span><span class="n">pyscfbasis</span><span class="o">=</span><span class="s2">&quot;def2-SVP&quot;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s2">&quot;B3LYP&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s1">&#39;pyscf.out&#39;</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
@@ -226,7 +226,7 @@ Printsetting controls whether to write pyscf-output to a file (False) or to stdo
 </pre></div>
 </div>
 <p><strong>Parallelization</strong></p>
-<p>The PySCF parallelization is OpenMP thread-based. The nprocs keyword is used to specify the number of threads available
+<p>The PySCF parallelization is OpenMP thread-based. The numcores keyword is used to specify the number of threads available
 to PySCF.</p>
 </div>
 

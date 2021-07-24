@@ -89,13 +89,13 @@ at various levels of theory.
     MLblockinput="""
     %scf maxiter 200 end
     """
-    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
     HLsimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF"
     HLblockinput="""
     %scf maxiter 200 end
     """
-    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
 
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,

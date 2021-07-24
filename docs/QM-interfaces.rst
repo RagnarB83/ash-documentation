@@ -8,12 +8,12 @@ The QM-interface Classes available are: ORCATheory, PySCFTheory, Psi4Theory, xTB
 
 When defining a QMtheory object you are creating an instance of one of the QMTheory classes.
 When defining the object, a few keyword arguments are required, that differs between classes.
-Parallelization of the QM codes differs behind the scenes but is controlled by a nprocs=X keyword for all interfaces.
+Parallelization of the QM codes differs behind the scenes but is controlled by a numcores=X keyword for all interfaces.
 
 Example:
 
-Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and nprocs keyword (available for all QM theories).
-nprocs=1 is the default and the keyword can be skipped if one wants a serial calculation.
+Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and numcores keyword (available for all QM theories).
+numcores=1 is the default and the keyword can be skipped if one wants a serial calculation.
 One would also add other keywords that are specific to the QMtheory used (that define the QM method and basis etc.).
 We can then run a single-point calculation of a fragment using the object.
 This is done using the Singlepoint function that requires both theory and fragment keyword arguments.
@@ -24,7 +24,7 @@ Additionally an Energy+Gradient calculation can be requested.
     #Create fragment object from XYZ-file
     HF_frag=Fragment(xyzfile='hf.xyz')
     # Defining an object of the (dummy) class QMTheory
-    QMcalc = QMTheory(charge=0, mult=1, nprocs=8)
+    QMcalc = QMTheory(charge=0, mult=1, numcores=8)
 
     #Run a single-point energy job
     Singlepoint(theory=QMcalc, fragment=HF_frag)

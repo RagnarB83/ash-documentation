@@ -31,6 +31,6 @@ The runmode='inputfile' option requires an additional xtbdir variable to be set 
 
 **Parallelization**
 
-The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the nprocs keyword.
-Currently OMP threads are set equal to nprocs and MKL threads are set equal to 1.
+The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the numcores keyword.
+Currently OMP threads are set equal to numcores and MKL threads are set equal to 1.
 Todo: confirm that this actually works

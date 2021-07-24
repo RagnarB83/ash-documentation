@@ -37,7 +37,7 @@ function.
     orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
     orcablocks="%scf maxiter 200 end"
     ORCAobject = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                        orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=4)
+                        orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=4)
 
     #Simple Energy SP calc. Energy will be printed to output
     Singlepoint(theory=ORCAobject, fragment=HF_frag)
@@ -143,7 +143,7 @@ Example:
 
     HF_frag=Fragment(xyzfile="hf.xyz")
     ORCAcalc = ORCATheory(orcadir='/opt/orca_4.2.1', charge=0, mult=1,
-                        orcasimpleinput='BP def2-SVP def2/J', orcablocks="", nprocs=1)
+                        orcasimpleinput='BP def2-SVP def2/J', orcablocks="", numcores=1)
     thermochem_dict = AnFreq(theory=ORCAcalc, fragment=HF_frag)
 
     print("Thermochem properties dict:", thermochem_dict)
@@ -173,7 +173,7 @@ The displacement step can be chosen if wanted. The default setting is: 0.0005 Å
 *Serial or parallel*
 Two runmodes are available: 'serial' and 'parallel'. The 'serial' mode will run each displacement sequentially.
 The Energy+Gradient step can still be run in parallel if e.g. the QM or QM/MM object has this information;
-e.g. if an ORCA object has been defined with nprocs=8 then ORCA will run each Energy+Gradient evaluation with 8 cores using the OpenMPI parallelization of ORCA.
+e.g. if an ORCA object has been defined with numcores=8 then ORCA will run each Energy+Gradient evaluation with 8 cores using the OpenMPI parallelization of ORCA.
 For numerical frequencies, it is usually much more efficient, however, to run the displacement jobs simutaneously in parallel fashion.
 This is accomplished using runmode='parallel' and the parallelization will be linear scaling (almost always recommended).
 As there are almost always many more displacements available than CPUs, the parallelization of the QM or QM/MM object is turned off and instead as many displacements
@@ -219,8 +219,8 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     """
     Reactant=Fragment(coordsstring=reactstring)
 
-    #Calculator object without frag. nprocs=8 is used here for parallelizing ORCA during optimization.
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
+    #Calculator object without frag. numcores=8 is used here for parallelizing ORCA during optimization.
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Geometry optimization of Reactant object and ORCAcalc theory object.
     #Each Energy+Grad step is parallelized by ORCA.

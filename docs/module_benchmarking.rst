@@ -73,7 +73,7 @@ with a valid directory structure (see more info below).
     orcablocks="%scf maxiter 200 end"
 
     #Define theory level for benchmarks
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, nprocs=numcores)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Running the benchmark
     run_benchmark(set="IE-benzenes", theory=ORCAcalc)

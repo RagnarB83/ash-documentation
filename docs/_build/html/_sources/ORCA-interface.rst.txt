@@ -8,7 +8,7 @@ ORCATheory class:
     class ORCATheory:
         def __init__(self, orcadir=None, fragment=None, charge=None, mult=None, orcasimpleinput='', orcablocks='', 
         printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1, extraline='', 
-        brokensym=None, HSmult=None, atomstoflip=None, nprocs=1, label=None, moreadfile=None, autostart=True, propertyblock=None):
+        brokensym=None, HSmult=None, atomstoflip=None, numcores=1, label=None, moreadfile=None, autostart=True, propertyblock=None):
 
 Options:
 - orcadir: string. Path to ORCA
@@ -29,7 +29,7 @@ Options:
 - atomstoflip: list. What atom indices to spin-flip.
 - moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation
 - autostart: Boolean. Whether to turn Autostart on or off (default: True)
-- nprocs: integer. Number of cores to use for ORCA
+- numcores: integer. Number of cores to use for ORCA
 - label: string. Label for ORCA object. Useful if working with many.
 - propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.
 
@@ -54,7 +54,7 @@ Functionality such as telling ORCA what orbitals to read and parallelization wou
     end
     """
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input, orcablocks=blocks, nprocs=8)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input, orcablocks=blocks, numcores=8)
 
     #Run a single-point energy job
     Singlepoint(theory=ORCAcalc, fragment=HF_frag)
@@ -73,7 +73,7 @@ It is also possible to have each ORCA-calculation read in orbitals from another 
 .. code-block:: python
 
     ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input,
-                        orcablocks=blocks, nprocs=8, moreadfile="orbitals.gbw")
+                        orcablocks=blocks, numcores=8, moreadfile="orbitals.gbw")
 
 
 Note: For parallel-ASH calculations (ASH in parallel, ORCA in serial). The full path to the moreadfile may be required.
@@ -92,7 +92,7 @@ will be run again.
 Parallelization
 ################################################################################
 
-ORCA parallelization is handled by OpenMPI. By specifying the nprocs=X, a *%pal nprocs X end block* will be added to the
+ORCA parallelization is handled by OpenMPI. By specifying the numcores=X, a *%pal numcores X end block* will be added to the
 ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
 correct OpenMPI version to be available.
 Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires

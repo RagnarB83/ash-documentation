@@ -70,7 +70,7 @@ Reaction example:
     blockinput="""
     %scf maxiter 200 end
     """
-    ORCAopt = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
+    ORCAopt = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, numcores=numcores)
 
     thermochemprotocol_reaction(Opt_theory=ORCAopt, SP_theory=DLPNO_CC_CBS, 
     fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir, numcores=numcores)
@@ -86,7 +86,7 @@ Single fragment example:
     blockinput="""
     %scf maxiter 200 end
     """
-    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)s
+    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, numcores=numcores)s
     thermochemprotocol_single(fragment=H2, Opt_theory=ORCAobject, SP_theory=DLPNO_CC_CBS, orcadir=orcadir, numcores=numcores)
 
 
@@ -101,7 +101,7 @@ Example with additional SP_theory workflow arguments:
     blockinput="""
     %scf maxiter 200 end
     """
-    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, nprocs=numcores)
+    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, numcores=numcores)
     DLPNO_CC_CBS_SP_args = {'cardinals' : [2,3], "basisfamily" : "def2", 'stabilityanalysis' : True, 
     'pnosetting' : 'extrapolation', 'pnoextrapolation' : [5,6], 'CVSR' : True,
                     'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 

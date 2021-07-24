@@ -222,10 +222,10 @@ To use the interfaces you define a QMtheory object of the appropriate Class.
 The QM-interface Classes available are: ORCATheory, PySCFTheory, Psi4Theory, xTBTheory</p>
 <p>When defining a QMtheory object you are creating an instance of one of the QMTheory classes.
 When defining the object, a few keyword arguments are required, that differs between classes.
-Parallelization of the QM codes differs behind the scenes but is controlled by a nprocs=X keyword for all interfaces.</p>
+Parallelization of the QM codes differs behind the scenes but is controlled by a numcores=X keyword for all interfaces.</p>
 <p>Example:</p>
-<p>Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and nprocs keyword (available for all QM theories).
-nprocs=1 is the default and the keyword can be skipped if one wants a serial calculation.
+<p>Below, we create a dummy QMcalc object of the dummy class QMTheory. We would always set the charge, mult and numcores keyword (available for all QM theories).
+numcores=1 is the default and the keyword can be skipped if one wants a serial calculation.
 One would also add other keywords that are specific to the QMtheory used (that define the QM method and basis etc.).
 We can then run a single-point calculation of a fragment using the object.
 This is done using the Singlepoint function that requires both theory and fragment keyword arguments.
@@ -233,7 +233,7 @@ Additionally an Energy+Gradient calculation can be requested.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
 <span class="c1"># Defining an object of the (dummy) class QMTheory</span>
-<span class="n">QMcalc</span> <span class="o">=</span> <span class="n">QMTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">QMcalc</span> <span class="o">=</span> <span class="n">QMTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>

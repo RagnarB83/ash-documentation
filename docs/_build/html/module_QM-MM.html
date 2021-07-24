@@ -298,7 +298,7 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="c1">#Create ORCA QM object. Attaching numcores so that ORCA runs in parallel</span>
 <span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
-                        <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+                        <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)</span>
 <span class="c1">#IMPORTANT: atom indices begin at 0.</span>

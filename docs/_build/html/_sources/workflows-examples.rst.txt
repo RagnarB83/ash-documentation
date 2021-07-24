@@ -47,7 +47,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     #Defining ORCA object for optimization
     numcores=2
     orcadir='/opt/orca_4.2.1'
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
 
     #Geometry optimization of molecule and ORCAcalc theory object.
     geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
@@ -57,7 +57,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
 
     #Single-point HL job on optimized geometry
     HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C",
-                orcablocks="", nprocs=numcores)
+                orcablocks="", numcores=numcores)
     HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
 
     print("DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: ", HLenergy, "Eh")
@@ -94,7 +94,7 @@ Example 2a : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`
     FinalEnergies=[]
     for molecule in specieslist:
         #Defining ORCA object.
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=numcores)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
         energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
         #Storing energy as list. Energy is also stored as part of fragment.
         FinalEnergies.append(energy)
@@ -205,7 +205,7 @@ Example 3a : Running multiple single-point energies with different functionals (
         end
         """
         #Defining/redefining ORCA theory. Does not need charge/mult keywords.
-        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, nprocs=4, charge=0, mult=1)
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4, charge=0, mult=1)
 
         # Run single-point job
         energy = Singlepoint(theory=ORCAcalc, fragment=h2)
@@ -300,7 +300,7 @@ Example 4a : Running single-point energies on a collection of XYZ files (sequent
     for file in glob.glob('*.xyz'):
         print("XYZ-file:", file)
         mol=Fragment(xyzfile=file)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=1)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=1)
         energy = Singlepoint(theory=ORCAcalc, fragment=mol)
         print("Energy of file {} : {} Eh".format(file, energy))
         ORCAcalc.cleanup()
@@ -344,7 +344,7 @@ In this case ORCA parallelization must be turned off as the parallelization stra
     import glob
     #
     orcadir='/opt/orca_4.2.1'
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", nprocs=1)
+    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=1)
     #Directory of XYZ files. Can be full path or relative path.
     dir = './xyz_files'
 
@@ -400,7 +400,7 @@ Using a collection of XYZ-files:
         basefile=os.path.basename(file)
         print("XYZ-file:", basefile)
         mol=Fragment(xyzfile=file)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, nprocs=1)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=1)
         energy = Singlepoint(theory=ORCAcalc, fragment=mol)
         print("Energy of file {} : {} Eh".format(basefile, energy))
         locfile=basefile.split('.')[0]+'_calc.loc'
@@ -437,7 +437,7 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
 
     for index,frag in enumerate(fraglist):
         print("Frag :", index)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, nprocs=1)
+        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=1)
         energy = Singlepoint(theory=ORCAcalc, fragment=frag)
         print("Energy of frag {} : {} Eh".format(index, energy))
         locfile='frag{}_calc.loc'.format(index)
@@ -488,7 +488,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     MLorcasimpleinput="! BP86 D3 def2-TZVP def2/J Grid5 Finalgrid6 tightscf"
     MLorcablocks="%scf maxiter 200 end"
     MLORCATheory = ORCATheory(orcadir=orcadir, charge=charge, mult=mult,
-                        orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, nprocs=numcores)
+                        orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, numcores=numcores)
 
     DFT_energies=[]
     print("")
@@ -517,7 +517,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     """
 
     HLORCATheory = ORCATheory(orcadir=orcadir, charge=charge, mult=mult,
-                        orcasimpleinput=HLorcasimpleinput, orcablocks=HLorcablocks, nprocs=numcores)
+                        orcasimpleinput=HLorcasimpleinput, orcablocks=HLorcablocks, numcores=numcores)
     HL_energies=[]
     for index,conformer in enumerate(list_conformer_frags):
         print("")
@@ -580,13 +580,13 @@ The manually defined workflow above can also be more conveniently run like this:
     MLblockinput="""
     %scf maxiter 200 end
     """
-    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
     HLsimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF"
     HLblockinput="""
     %scf maxiter 200 end
     """
-    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, nprocs=numcores, charge=frag.charge, mult=frag.mult)
+    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
 
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
