@@ -2,7 +2,7 @@
 Dynamics module
 =================================================
 
-Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the ASE library to be installed (simple Python pip installation). In the future, ASH will feature it's own native dynamics.
+Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the `ASE <https://wiki.fysik.dtu.dk/ase/>`_  library to be installed (simple Python pip installation). In the future, ASH will feature it's own native dynamics.
 
 
 .. note:: For pure classical forcefield-based MD it is recommended to instead run the dynamics via OpenMM (faster). This requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See :doc:`OpenMM-interface`
@@ -12,7 +12,7 @@ Molecular dynamics in ASH is currently available via an interface to the dynamic
 Dynamics via ASE
 ######################################################
 
-The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH 
+The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH using any available QM, MM or QM/MM theory.
 
 .. code-block:: python
 
@@ -20,7 +20,7 @@ The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH
 				simulation_time=None, barostat=None, trajectoryname="Trajectory_ASE", traj_frequency=1, coupling_freq=0.002, 
 				frozen_atoms=None, frozen_bonds=None, frozen_angles=None, frozen_dihedrals=None, plumed_object=None):
 
-In order to use the Dynamics_ASE function, ASE must have been installed before to the same Python that ASH uses (easiest done via: pip install ase).
+In order to use the Dynamics_ASE function, `ASE <https://wiki.fysik.dtu.dk/ase/>`_ must have been installed before to the same Python that ASH uses (easiest done via: pip install ase).
 
 Simple NVE example:
 
@@ -64,10 +64,14 @@ Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= an
 Metadynamics via ASE and Plumed
 ######################################################
 
-Due to an interface to the Plumed library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).
+Via an interface to the `Plumed <https://www.plumed.org>`_ library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).
 
+Requirements:
 
-Not yet available: multiple-walker metadynamics
+- `ASE <https://wiki.fysik.dtu.dk/ase/>`_ library (see above)
+- `Plumed <https://www.plumed.org>`_ installation (requires compilation). Alternatively it might be possible to install via `conda-forge <https://anaconda.org/conda-forge/plumed>`_ (untested)
+- Plumed Python wrappers (pip install plumed)
+
 
 .. code-block:: python
 
@@ -92,3 +96,7 @@ Not yet available: multiple-walker metadynamics
 	#Analyze the results of the metadynamics
 	MTD_analyze(path_to_plumed="/home/bjornsson/plumed-install-serial", Plot_To_Screen=False, 
 		colvar_type="Torsion", temperature=298.15, CV1atoms=[0,3,7,10])
+
+
+.. note:: Not yet available: multiple-walker metadynamics
+

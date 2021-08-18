@@ -212,20 +212,20 @@
             
   <div class="section" id="dynamics-module">
 <h1>Dynamics module<a class="headerlink" href="#dynamics-module" title="Permalink to this headline">¶</a></h1>
-<p>Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the ASE library to be installed (simple Python pip installation). In the future, ASH will feature it’s own native dynamics.</p>
+<p>Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a>  library to be installed (simple Python pip installation). In the future, ASH will feature it’s own native dynamics.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For pure classical forcefield-based MD it is recommended to instead run the dynamics via OpenMM (faster). This requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
 </div>
 <div class="section" id="dynamics-via-ase">
 <h2>Dynamics via ASE<a class="headerlink" href="#dynamics-via-ase" title="Permalink to this headline">¶</a></h2>
-<p>The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH</p>
+<p>The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH using any available QM, MM or QM/MM theory.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thermostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trajectoryname</span><span class="o">=</span><span class="s2">&quot;Trajectory_ASE&quot;</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coupling_freq</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
                         <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_bonds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_angles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_dihedrals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>In order to use the Dynamics_ASE function, ASE must have been installed before to the same Python that ASH uses (easiest done via: pip install ase).</p>
+<p>In order to use the Dynamics_ASE function, <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a> must have been installed before to the same Python that ASH uses (easiest done via: pip install ase).</p>
 <p>Simple NVE example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -248,15 +248,20 @@
         <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Thermostat options: ‘Langevin’, ‘Andersen’, ‘NoseHoover’, ‘Berendsen’.
-coupling_freq determines friction-coefficient in Langevin, collions probability in Andersen.</p>
-<p>It is possible to freeze atoms using frozen_atoms= option. Provide list of atom indices.
-Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.</p>
+<p>Thermostat options: ‘Langevin’, ‘Andersen’, ‘NoseHoover’, ‘Berendsen’.</p>
+<p>coupling_freq determines friction-coefficient in Langevin, collions probability in Andersen.</p>
+<p>It is possible to freeze atoms using frozen_atoms= option. Provide list of atom indices.</p>
+<p>Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.</p>
 </div>
 <div class="section" id="metadynamics-via-ase-and-plumed">
 <h2>Metadynamics via ASE and Plumed<a class="headerlink" href="#metadynamics-via-ase-and-plumed" title="Permalink to this headline">¶</a></h2>
-<p>Due to an interface to the Plumed library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).</p>
-<p>Not yet available: multiple-walker metadynamics</p>
+<p>Via an interface to the <a class="reference external" href="https://www.plumed.org">Plumed</a> library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).</p>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a> library (see above)</p></li>
+<li><p><a class="reference external" href="https://www.plumed.org">Plumed</a> installation (requires compilation). Alternatively it might be possible to install via <a class="reference external" href="https://anaconda.org/conda-forge/plumed">conda-forge</a> (untested)</p></li>
+<li><p>Plumed Python wrappers (pip install plumed)</p></li>
+</ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
@@ -279,6 +284,10 @@ Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= an
 <span class="n">MTD_analyze</span><span class="p">(</span><span class="n">path_to_plumed</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial&quot;</span><span class="p">,</span> <span class="n">Plot_To_Screen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;Torsion&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">CV1atoms</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not yet available: multiple-walker metadynamics</p>
 </div>
 </div>
 </div>
