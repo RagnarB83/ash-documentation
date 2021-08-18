@@ -107,7 +107,11 @@
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamics module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamics module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dynamics-via-ase">Dynamics via ASE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metadynamics-via-ase-and-plumed">Metadynamics via ASE and Plumed</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
@@ -208,7 +212,75 @@
             
   <div class="section" id="dynamics-module">
 <h1>Dynamics module<a class="headerlink" href="#dynamics-module" title="Permalink to this headline">¶</a></h1>
-<p>TODO</p>
+<p>Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the ASE library to be installed (simple Python pip installation). In the future, ASH will feature it’s own native dynamics.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For pure classical forcefield-based MD it is recommended to instead run the dynamics via OpenMM (faster). This requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
+</div>
+<div class="section" id="dynamics-via-ase">
+<h2>Dynamics via ASE<a class="headerlink" href="#dynamics-via-ase" title="Permalink to this headline">¶</a></h2>
+<p>The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thermostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trajectoryname</span><span class="o">=</span><span class="s2">&quot;Trajectory_ASE&quot;</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coupling_freq</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+                        <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_bonds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_angles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_dihedrals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>In order to use the Dynamics_ASE function, ASE must have been installed before to the same Python that ASH uses (easiest done via: pip install ase).</p>
+<p>Simple NVE example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
+<span class="c1">#Simple n-butane system</span>
+<span class="n">butane</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized. Using GFN1-xTB.</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Running NVE dynamics (initial temp=300 K) on butane using xTBTheory.</span>
+<span class="c1"># 0.001 ps timestep, 100000 steps, writing every 10th step to trajectory. A velocity Verlet algorithm is used.</span>
+<span class="n">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">butane</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Simple NVT (Langevin thermostat) example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Running NVT dynamics with a Langevin thermostat on butane using xTBTheory</span>
+<span class="c1"># 0.001 ps timestep, 100000 steps, writing every 10th step to trajectory.</span>
+<span class="n">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">butane</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">thermostat</span><span class="o">=</span><span class="s1">&#39;Langevin&#39;</span><span class="p">,</span> <span class="n">coupling_freq</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Thermostat options: ‘Langevin’, ‘Andersen’, ‘NoseHoover’, ‘Berendsen’.
+coupling_freq determines friction-coefficient in Langevin, collions probability in Andersen.</p>
+<p>It is possible to freeze atoms using frozen_atoms= option. Provide list of atom indices.
+Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.</p>
+</div>
+<div class="section" id="metadynamics-via-ase-and-plumed">
+<h2>Metadynamics via ASE and Plumed<a class="headerlink" href="#metadynamics-via-ase-and-plumed" title="Permalink to this headline">¶</a></h2>
+<p>Due to an interface to the Plumed library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).</p>
+<p>Not yet available: multiple-walker metadynamics</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
+
+<span class="c1">#Simple n-butane system</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+<span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.</span>
+<span class="n">plumed_object</span> <span class="o">=</span> <span class="n">plumed_ASH</span><span class="p">(</span><span class="n">path_to_plumed_kernel</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so&quot;</span><span class="p">,</span>
+                                <span class="n">bias_type</span><span class="o">=</span><span class="s2">&quot;1D_MTD&quot;</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;torsion&quot;</span><span class="p">,</span> <span class="n">colvar_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">hills_file</span><span class="o">=</span><span class="s2">&quot;HILLS&quot;</span><span class="p">,</span> <span class="n">colvar_file</span><span class="o">=</span><span class="s2">&quot;COLVAR&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.012437126761597656</span><span class="p">,</span>
+                <span class="n">sigma</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">biasfactor</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">stride_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pace_num</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.</span>
+<span class="n">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="n">plumed_object</span><span class="p">)</span>
+
+<span class="c1">#Analyze the results of the metadynamics</span>
+<span class="n">MTD_analyze</span><span class="p">(</span><span class="n">path_to_plumed</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial&quot;</span><span class="p">,</span> <span class="n">Plot_To_Screen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;Torsion&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">CV1atoms</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

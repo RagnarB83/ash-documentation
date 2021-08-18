@@ -8,11 +8,11 @@ Modifying coordinates in ASH calculations
 
 One often needs to manually modify coordinates in QM or QM/MM calculations. While this is straightforward when working
 with small molecules and for example XYZ-files (open the coordinates in a simple molecular builder and modify) it is more
-of an issue when working with a large system (e.g. a protein or a molecular crystal cluster) and you want to modify only a few atoms buried in the center of a 40 000 atom file.
+of an issue when working with a large system (e.g. a protein or a molecular crystal cluster) and you want to modify only a few atoms buried in the center of a 100 000 atom file.
 
 - If one prefers to work with XYZ-files then it might be possible to use a program like VMD to modify certain coordinates there.
 
-- If one works with ASH fragment files (recommended) then one can modify the coordinates of a group of atoms via the use of scripts. These scripts are located in: /path/to/ashdir/ash/scripts and are called: **fragedit.py**  and **fragupdate.py**
+- If one works with ASH fragment files (.ygg) or XYZ files then one can modify the coordinates of a group of atoms via the use of scripts. These scripts are located in: /path/to/ashdir/ash/scripts and are called: **fragedit.py**  and **fragupdate.py**
 
 **Grab and visualize part of the fragfile (fragedit.py)**
 
@@ -20,14 +20,19 @@ If one wants to visualize or possibly modify the coordinates of a group of atoms
 
 .. code-block:: shell
 
-    python3 fragedit.py fragfile.ygg atomlistfile
+    fragedit.py systemfile.ygg atomlistfile
+    fragedit.py systemfile.xyz atomlistfile
 
-The script will then read the ASH fragfile (fragfile.ygg) and extract the coordinates corresponding to atom indices present
-in the atomlistfile. The atomlistfile should contain a list of atom indices in a single line : e.g. 1 2 3 4 5
-By default, the fragedit.py will also search for a file called qmatoms and read the list of atoms from there.
+
+.. note:: The script needs to be in your PATH and might need to be made executable (chmod +x fragedit.py)
+
+The script will then read the coordinate-file (.ygg or .xyz) and extract the coordinates corresponding to atom indices present
+in the atomlistfile (e.g. named qmatoms or activeatoms). The atomlistfile should contain a list of atom indices in a single line : e.g. 1 2 3 4 5
 
 This will create a file called fragment.xyz (coordinates in Å), containing only the part of the system (as defined by the atom indices).
 This file can be visualized in a molecular builder (e.g. Chemcraft) and the coordinates can also be modified.
+
+.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: index1, that will assume that the atomlistfile contains 1-based indexing instead of the default 0-based indexing.
 
 
 **Update the part of the system (fragupdate.py)**

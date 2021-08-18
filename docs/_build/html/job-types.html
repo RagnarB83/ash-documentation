@@ -218,13 +218,13 @@
             
   <div class="section" id="job-types">
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline">¶</a></h1>
-<p>The job-types available in ASH:</p>
+<p>The main job-types available in ASH:</p>
 <ul class="simple">
 <li><p>Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.</p></li>
 <li><p>Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.</p></li>
 <li><p>Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.</p></li>
 <li><p>Nudged elastic band calculations are available via an interface to the Knarr-NEB code.</p></li>
-<li><p>Molecular dynamics (not ready).</p></li>
+<li><p>Molecular dynamics.</p></li>
 </ul>
 <p>The job-types can be used with any theory object available, e.g. one of the QMTheories in <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> or using
 a QM/MM Theory object from <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a></p>
@@ -527,9 +527,13 @@ where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total ener
 </div>
 <div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h2>
-<p>Native molecular dynamics has not yet been implemented in ASH.
-However, it is possible to do conveniently do classical molecular dynamics via OpenMM if a system has been set up using OpenMMTheory.
-See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
+<p>It is possible to perform molecular dynamics in ASH in 2 ways.</p>
+<p>1. Classical molecular dynamics using a forcefield via the OpenMM.
+This is only available for a system that has been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
+<ol class="arabic simple" start="2">
+<li><p>General dynamics via an interface to ASE.
+See <a class="reference internal" href="module_dynamics.html"><span class="doc">Dynamics module</span></a></p></li>
+</ol>
 </div>
 </div>
 

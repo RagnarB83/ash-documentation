@@ -2,16 +2,17 @@
 Job Types
 ==========================
 
-The job-types available in ASH:
+The main job-types available in ASH:
 
 - Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.
 - Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
 - Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.
 - Nudged elastic band calculations are available via an interface to the Knarr-NEB code.
-- Molecular dynamics (not ready).
+- Molecular dynamics.
 
 The job-types can be used with any theory object available, e.g. one of the QMTheories in :doc:`QM-interfaces` or using
 a QM/MM Theory object from :doc:`module_QM-MM`
+
 
 ###########################
 Single-point calculation
@@ -389,9 +390,13 @@ Not yet ready
 Molecular Dynamics
 ###########################
 
-Native molecular dynamics has not yet been implemented in ASH.
-However, it is possible to do conveniently do classical molecular dynamics via OpenMM if a system has been set up using OpenMMTheory.
-See :doc:`OpenMM-interface`
+It is possible to perform molecular dynamics in ASH in 2 ways.
+
+1. Classical molecular dynamics using a forcefield via the OpenMM.
+This is only available for a system that has been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See :doc:`OpenMM-interface`
+
+2. General dynamics via an interface to ASE. 
+   See :doc:`module_dynamics`
 
 
 
