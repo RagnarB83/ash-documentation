@@ -90,7 +90,7 @@ Requirements:
 	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 
 					bias_type="MTD", fragment=frag, CV1_type="TORSION", CV1_indices=[0,3,7,10],
 	                temperature=298.15, hills_file="HILLS", colvar_file="COLVAR", height=0.012, 
-	                sigma=0.35, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
+	                sigma1=0.35, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
 
 	#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.
 	Dynamics_ASE(fragment=frag, theory=xtbcalc, timestep=0.001, simulation_steps=100000, traj_frequency=10, plumed_object=plumed_object)
@@ -117,7 +117,7 @@ Requirements:
 	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 
 					bias_type="MTD", fragment=frag, CV1_type="TORSION", CV1_indices=[0,3,7,10], CV2_type="DISTANCE", CV2_indices=[1,2],
 	                temperature=298.15, hills_file="HILLS", colvar_file="COLVAR", height=0.012, 
-	                sigma=0.35, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
+	                sigma1=0.35, sigma2=0.5, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
 
 	#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.
 	Dynamics_ASE(fragment=frag, theory=xtbcalc, timestep=0.001, simulation_steps=100000, traj_frequency=10, plumed_object=plumed_object)
@@ -138,7 +138,7 @@ ASH Plumed class keywords:
 - hills_file (string). Name of HILLS-file (default HILLS).
 - colvar_file (string). Name of COLVAR-file (default COLVAR). 
 - height (float). The height of the Gaussian in energy-unit eV. Default: 0.01243 eV (= 1.2 kJ/mol)
-- sigma (float). The width of the Gaussian in CV units. Depends on CV-type. Example: sigma=0.35 radians(torsion), sigma=0.5 Å (distance).
+- sigma1/sigma2 (float). The width of the Gaussian in CV units for each CV defined. Depends on CV-type. Example: sigma1=0.35 radians(torsion), sigma=0.5 Å (distance).
 - biasfactor (float). Parameter used in well-tempered metadynamics. Default: 6.0
 - timestep (float). The timestep (in ps) provided to Plumed.
 - stride_num (int). Frequency of writing to COLVAR file. Default: 10
