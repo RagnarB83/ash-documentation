@@ -289,6 +289,7 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 <li><p><a class="reference external" href="https://www.plumed.org">Plumed</a> installation (requires compilation). Alternatively it might be possible to install via <a class="reference external" href="https://anaconda.org/conda-forge/plumed">conda-forge</a> (untested)</p></li>
 <li><p>Plumed Python wrappers (pip install plumed)</p></li>
 </ul>
+<p>1D metadynamics example (torsion):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
@@ -300,9 +301,9 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 
 <span class="c1">#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.</span>
 <span class="n">plumed_object</span> <span class="o">=</span> <span class="n">plumed_ASH</span><span class="p">(</span><span class="n">path_to_plumed_kernel</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so&quot;</span><span class="p">,</span>
-                                <span class="n">bias_type</span><span class="o">=</span><span class="s2">&quot;1D_MTD&quot;</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;torsion&quot;</span><span class="p">,</span> <span class="n">colvar_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
-                <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">hills_file</span><span class="o">=</span><span class="s2">&quot;HILLS&quot;</span><span class="p">,</span> <span class="n">colvar_file</span><span class="o">=</span><span class="s2">&quot;COLVAR&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.012437126761597656</span><span class="p">,</span>
-                <span class="n">sigma</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">biasfactor</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">stride_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pace_num</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="n">bias_type</span><span class="o">=</span><span class="s2">&quot;MTD&quot;</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">CV1_type</span><span class="o">=</span><span class="s2">&quot;TORSION&quot;</span><span class="p">,</span> <span class="n">CV1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">hills_file</span><span class="o">=</span><span class="s2">&quot;HILLS&quot;</span><span class="p">,</span> <span class="n">colvar_file</span><span class="o">=</span><span class="s2">&quot;COLVAR&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.012</span><span class="p">,</span>
+                <span class="n">sigma1</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">biasfactor</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">stride_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pace_num</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.</span>
 <span class="n">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="n">plumed_object</span><span class="p">)</span>
@@ -312,6 +313,54 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
         <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;Torsion&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">CV1atoms</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>2D metadynamics example (torsion,distance):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
+
+<span class="c1">#Simple n-butane system</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+<span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.</span>
+<span class="n">plumed_object</span> <span class="o">=</span> <span class="n">plumed_ASH</span><span class="p">(</span><span class="n">path_to_plumed_kernel</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so&quot;</span><span class="p">,</span>
+                                <span class="n">bias_type</span><span class="o">=</span><span class="s2">&quot;MTD&quot;</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">CV1_type</span><span class="o">=</span><span class="s2">&quot;TORSION&quot;</span><span class="p">,</span> <span class="n">CV1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">CV2_type</span><span class="o">=</span><span class="s2">&quot;DISTANCE&quot;</span><span class="p">,</span> <span class="n">CV2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">hills_file</span><span class="o">=</span><span class="s2">&quot;HILLS&quot;</span><span class="p">,</span> <span class="n">colvar_file</span><span class="o">=</span><span class="s2">&quot;COLVAR&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.012</span><span class="p">,</span>
+                <span class="n">sigma1</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">biasfactor</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">stride_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pace_num</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.</span>
+<span class="n">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="n">plumed_object</span><span class="p">)</span>
+
+<span class="c1">#Analyze the results of the metadynamics</span>
+<span class="n">MTD_analyze</span><span class="p">(</span><span class="n">path_to_plumed</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial&quot;</span><span class="p">,</span> <span class="n">Plot_To_Screen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">colvar_type</span><span class="o">=</span><span class="s2">&quot;Torsion&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">CV1atoms</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>ASH Plumed class keywords:</p>
+<ul class="simple">
+<li><p>path_to_plumed_kernel (string). Should give full path to the libplumedKernel.so file in Plumed installation.</p></li>
+<li><p>bias_type (string). Current options: “MTD” (for metadynamics job)   (more to come…)</p></li>
+<li><p>fragment (ASH fragment). The ASH fragment for the system.</p></li>
+<li><p>CV1_type/CV2_type (string). Type of collective variable 1 (Plumed keyword). Options: TORSION, DISTANCE, ANGLE, RMSD (and more in principle)</p></li>
+<li><p>CV1_indices/CV2_indices (list). List of atom indices that defines the chosen torsion, distance, angle (note: use 0-based indexing)</p></li>
+<li><p>temperature (float). The temperature provided to Plumed (in Kelvin). Used in well-tempered MTD</p></li>
+<li><p>hills_file (string). Name of HILLS-file (default HILLS).</p></li>
+<li><p>colvar_file (string). Name of COLVAR-file (default COLVAR).</p></li>
+<li><p>height (float). The height of the Gaussian in energy-unit eV. Default: 0.01243 eV (= 1.2 kJ/mol)</p></li>
+<li><p>sigma1/sigma2 (float). The width of the Gaussian in CV units for each CV defined. Depends on CV-type. Example: sigma1=0.35 radians(torsion), sigma=0.5 Å (distance).</p></li>
+<li><p>biasfactor (float). Parameter used in well-tempered metadynamics. Default: 6.0</p></li>
+<li><p>timestep (float). The timestep (in ps) provided to Plumed.</p></li>
+<li><p>stride_num (int). Frequency of writing to COLVAR file. Default: 10</p></li>
+<li><p>pace_num (int). Frequency of writing to HILLS file. Default: 500</p></li>
+<li><p>numwalkers (int). Number of walkers used for multiple walker metadynamics. CURRENTLY INACTIVE</p></li>
+</ul>
+<p>About the ASH-Plumed interface:</p>
+<ul class="simple">
+<li><p>Well-tempered metadynamics is always specified in the current interface (regular metadynamics is a largely obsolete method).</p></li>
+<li><p>Only 1D and 2D metadynamics currently possible.</p></li>
+<li><p>ASH uses the same units for distance (Å), energy (eV) and time (ps) as the dynamics program (currently ASE). Radians are used for torsions. This is different from the default Plumed units (nm for distances and kJ/mol for energy). Keep this in mind when defining sigma (width of Gaussian in CV-unit) and height (of Gaussian in energy-unit).</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Not yet available: multiple-walker metadynamics</p>

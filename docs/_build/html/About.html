@@ -214,7 +214,7 @@
 <p>ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
 explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations,
 molecular dynamics (soon), numerical frequencies using a MM, QM or QM/MM Hamiltonian.
-Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
+Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).</p>
 <p>Requirements:</p>
 <blockquote>
@@ -224,6 +224,7 @@ can be performed using the nudged elastic band method (NEB).</p>
 <li><p>Julia installation (for faster Julia versions of MM routines)</p></li>
 <li><p>Matplotlib (for some plotting options).</p></li>
 <li><p>geomeTRIC (optimizer). Python library, easily installed via pip.</p></li>
+<li><p>OpenMM (molecular mechanics library). Only needed for QM/MM. Installed via conda.</p></li>
 </ul>
 </div></blockquote>
 <p>Optional Python modules for specific functionality (can be installed via pip or conda):</p>
@@ -234,6 +235,17 @@ can be performed using the nudged elastic band method (NEB).</p>
 <li><p>PyBerny (optimizer)</p></li>
 <li><p>PyFrame (helper tool for Polarizable Embedding functionality)</p></li>
 <li><p>Scipy package</p></li>
+<li><p>mdtraj (MD trajectory analysis)</p></li>
+</ul>
+</div></blockquote>
+<p>Optional external QM codes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>ORCA</p></li>
+<li><p>Dalton</p></li>
+<li><p>CFour</p></li>
+<li><p>MRCC</p></li>
+<li><p>xTB</p></li>
 </ul>
 </div></blockquote>
 <p>We recommend Anaconda (<a class="reference external" href="https://www.anaconda.com/distribution/">https://www.anaconda.com/distribution/</a>) for a good scientific Python distribution.
@@ -245,7 +257,11 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>coordinate string</p></li>
 <li><p>XYZ file</p></li>
 <li><p>CIF file</p></li>
+<li><p>Fractional coordinate XTL file</p></li>
 <li><p>PDB file</p></li>
+<li><p>Amber file</p></li>
+<li><p>Chemshell fragment file</p></li>
+<li><p>GROMACS gro file</p></li>
 <li><p>Python lists</p></li>
 <li><p>ASH file format</p></li>
 </ul>
@@ -255,6 +271,9 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>xTB (both as Python library and inputfile-based). OpenMP parallelization</p></li>
 <li><p>Psi4 (both as Python library and inputfile-based). Threaded parallelization.</p></li>
 <li><p>PySCF (as Python library). OpenMP parallelization.</p></li>
+<li><p>CFour</p></li>
+<li><p>MRCC</p></li>
+<li><p>Dalton</p></li>
 </ul>
 </dd>
 <dt><strong>Parallelization :</strong></dt><dd><ul class="simple">
@@ -268,14 +287,13 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p><strong>To do</strong>: PySCF</p></li>
 </ul>
 </dd>
-<dt><strong>Polarizable embedding via Psi4 and CPPE library</strong></dt><dd><ul class="simple">
-<li><p><strong>Todo</strong>: enable PySCF</p></li>
-</ul>
-</dd>
+</dl>
+<p><strong>Polarizable embedding via Psi4, PySCF and CPPE library</strong></p>
+<dl class="simple">
 <dt><strong>Nonbonded Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials</strong></dt><dd><ul class="simple">
 <li><p>Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.</p></li>
 <li><p>Both energy and gradient available.</p></li>
-<li><p>Slow Python version and fast Fortran version available (requires compilation of library).</p></li>
+<li><p>Slow Python version and fast Julia version available.</p></li>
 <li><p>Limitation: No bonded MM yet.</p></li>
 </ul>
 </dd>
@@ -287,10 +305,9 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.</p></li>
 <li><p>PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.</p></li>
 <li><p>geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.</p></li>
-<li><p><strong>To do</strong>: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.</p></li>
 </ul>
 </dd>
-<dt><strong>(Nonbonded) QM/MM Geometry optimization:</strong></dt><dd><ul class="simple">
+<dt><strong>QM/MM Geometry optimization:</strong></dt><dd><ul class="simple">
 <li><p>Possible with geomeTRIC optimizer currently, only.</p></li>
 <li><p><strong>Todo</strong>: Knarr-optimizer.</p></li>
 </ul>
@@ -299,7 +316,7 @@ Contains Python3, Numpy, SciPy, Matplotlib.</p>
 <li><p>Partial Hessian possible</p></li>
 <li><p>Full parallelization.</p></li>
 <li><p>Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.</p></li>
-<li><p><strong>Todo:</strong> Request analytical Hessian from ORCA.</p></li>
+<li><p>Request analytical Hessian from ORCA.</p></li>
 </ul>
 </dd>
 <dt><strong>Hessian analysis</strong></dt><dd><ul class="simple">

@@ -6,7 +6,7 @@ About ASH
 ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
 explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations,
 molecular dynamics (soon), numerical frequencies using a MM, QM or QM/MM Hamiltonian.
-Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF. Reaction profiles and saddlepoint optimizations
+Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 
 Requirements:
@@ -16,6 +16,7 @@ Requirements:
     - Julia installation (for faster Julia versions of MM routines)
     - Matplotlib (for some plotting options).
     - geomeTRIC (optimizer). Python library, easily installed via pip.
+    - OpenMM (molecular mechanics library). Only needed for QM/MM. Installed via conda.
 
 Optional Python modules for specific functionality (can be installed via pip or conda):
 
@@ -24,9 +25,20 @@ Optional Python modules for specific functionality (can be installed via pip or 
     - PyBerny (optimizer)
     - PyFrame (helper tool for Polarizable Embedding functionality)
     - Scipy package
+    - mdtraj (MD trajectory analysis)
+
+Optional external QM codes:
+
+    - ORCA
+    - Dalton
+    - CFour
+    - MRCC
+    - xTB
 
 We recommend Anaconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
 Contains Python3, Numpy, SciPy, Matplotlib.
+
+
 
 
 #####################
@@ -37,7 +49,11 @@ Features
     - coordinate string
     - XYZ file
     - CIF file
+    - Fractional coordinate XTL file
     - PDB file
+    - Amber file
+    - Chemshell fragment file
+    - GROMACS gro file
     - Python lists
     - ASH file format
 
@@ -47,6 +63,9 @@ Features
     - xTB (both as Python library and inputfile-based). OpenMP parallelization
     - Psi4 (both as Python library and inputfile-based). Threaded parallelization.
     - PySCF (as Python library). OpenMP parallelization.
+    - CFour
+    - MRCC
+    - Dalton
 
 **Parallelization :**
     - Parallelization via Python multiprocessing: multiple jobs and numerical frequencies.
@@ -57,13 +76,13 @@ Features
 **Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
     - **To do**: PySCF
 
-**Polarizable embedding via Psi4 and CPPE library**
-    - **Todo**: enable PySCF
+**Polarizable embedding via Psi4, PySCF and CPPE library**
+
 
 **Nonbonded Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
     - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
     - Both energy and gradient available.
-    - Slow Python version and fast Fortran version available (requires compilation of library).
+    - Slow Python version and fast Julia version available.
     - Limitation: No bonded MM yet.
 
 **Full Molecular Mechanics (MM) via OpenMM interface**
@@ -73,9 +92,8 @@ Features
     - Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
     - PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.
     - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
-    - **To do**: DL-FIND interface: powerful optimizer supporting DLC, HDLC internal coordinates, frozen atoms, constraints.
 
-**(Nonbonded) QM/MM Geometry optimization:**
+**QM/MM Geometry optimization:**
     - Possible with geomeTRIC optimizer currently, only.
     - **Todo**: Knarr-optimizer.
 
@@ -83,7 +101,7 @@ Features
     - Partial Hessian possible
     - Full parallelization.
     - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
-    - **Todo:** Request analytical Hessian from ORCA.
+    - Request analytical Hessian from ORCA.
 
 **Hessian analysis**
     - Diagonalization of Hessian (from ASH or ORCA). Print frequencies and normal modes.
