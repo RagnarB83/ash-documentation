@@ -108,6 +108,8 @@ Requirements:
 - Plumed Python wrappers (pip install plumed)
 
 
+1D metadynamics example (torsion):
+
 .. code-block:: python
 
 	from ash import *
@@ -121,9 +123,9 @@ Requirements:
 
 	#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.
 	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 
-					bias_type="1D_MTD", fragment=frag, colvar_type="torsion", colvar_indices=[0,3,7,10],
-	                temperature=298.15, hills_file="HILLS", colvar_file="COLVAR", height=0.012437126761597656, 
-	                sigma=0.35, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
+					bias_type="MTD", fragment=frag, CV1_type="TORSION", CV1_indices=[0,3,7,10],
+	                temperature=298.15, hills_file="HILLS", colvar_file="COLVAR", height=0.012, 
+	                sigma1=0.35, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
 
 	#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.
 	Dynamics_ASE(fragment=frag, theory=xtbcalc, timestep=0.001, simulation_steps=100000, traj_frequency=10, plumed_object=plumed_object)
@@ -131,6 +133,60 @@ Requirements:
 	#Analyze the results of the metadynamics
 	MTD_analyze(path_to_plumed="/home/bjornsson/plumed-install-serial", Plot_To_Screen=False, 
 		colvar_type="Torsion", temperature=298.15, CV1atoms=[0,3,7,10])
+
+
+2D metadynamics example (torsion,distance):
+
+.. code-block:: python
+
+	from ash import *
+
+	numcores=12
+
+	#Simple n-butane system
+	frag=Fragment(xyzfile="butane.xyz")
+	# Creating xTBTheory object (Note: runmode='library' runs faster) that is parallelized 
+	xtbcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN1', runmode='library', numcores=numcores)
+
+	#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.
+	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 
+					bias_type="MTD", fragment=frag, CV1_type="TORSION", CV1_indices=[0,3,7,10], CV2_type="DISTANCE", CV2_indices=[1,2],
+	                temperature=298.15, hills_file="HILLS", colvar_file="COLVAR", height=0.012, 
+	                sigma1=0.35, sigma2=0.5, biasfactor=6.0, timestep=0.001, stride_num=1, pace_num=1)
+
+	#Call ASH-ASE dynamics with plumed_object. Here running 100K steps with 1 fs timstep, writing trajectory every 10th step.
+	Dynamics_ASE(fragment=frag, theory=xtbcalc, timestep=0.001, simulation_steps=100000, traj_frequency=10, plumed_object=plumed_object)
+
+	#Analyze the results of the metadynamics
+	MTD_analyze(path_to_plumed="/home/bjornsson/plumed-install-serial", Plot_To_Screen=False, 
+		colvar_type="Torsion", temperature=298.15, CV1atoms=[0,3,7,10])
+
+
+ASH Plumed class keywords:
+
+- path_to_plumed_kernel (string). Should give full path to the libplumedKernel.so file in Plumed installation.
+- bias_type (string). Current options: "MTD" (for metadynamics job)   (more to come...)
+- fragment (ASH fragment). The ASH fragment for the system.
+- CV1_type/CV2_type (string). Type of collective variable 1 (Plumed keyword). Options: TORSION, DISTANCE, ANGLE, RMSD (and more in principle)
+- CV1_indices/CV2_indices (list). List of atom indices that defines the chosen torsion, distance, angle (note: use 0-based indexing)
+- temperature (float). The temperature provided to Plumed (in Kelvin). Used in well-tempered MTD
+- hills_file (string). Name of HILLS-file (default HILLS).
+- colvar_file (string). Name of COLVAR-file (default COLVAR). 
+- height (float). The height of the Gaussian in energy-unit eV. Default: 0.01243 eV (= 1.2 kJ/mol)
+- sigma1/sigma2 (float). The width of the Gaussian in CV units for each CV defined. Depends on CV-type. Example: sigma1=0.35 radians(torsion), sigma=0.5 Å (distance).
+- biasfactor (float). Parameter used in well-tempered metadynamics. Default: 6.0
+- timestep (float). The timestep (in ps) provided to Plumed.
+- stride_num (int). Frequency of writing to COLVAR file. Default: 10
+- pace_num (int). Frequency of writing to HILLS file. Default: 500
+- numwalkers (int). Number of walkers used for multiple walker metadynamics. CURRENTLY INACTIVE
+
+
+About the ASH-Plumed interface:
+
+- Well-tempered metadynamics is always specified in the current interface (regular metadynamics is a largely obsolete method).
+- Only 1D and 2D metadynamics currently possible.
+- ASH uses the same units for distance (Å), energy (eV) and time (ps) as the dynamics program (currently ASE). Radians are used for torsions. This is different from the default Plumed units (nm for distances and kJ/mol for energy). Keep this in mind when defining sigma (width of Gaussian in CV-unit) and height (of Gaussian in energy-unit).
+
 
 
 .. note:: Not yet available: multiple-walker metadynamics
