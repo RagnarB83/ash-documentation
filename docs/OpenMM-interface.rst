@@ -95,7 +95,7 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 
 .. code-block:: python
 
-    def OpenMM_MD(fragment=None, openmmobject=None, timestep=0.001, simulation_steps=None, 
+    def OpenMM_MD(fragment=None, theory=None, timestep=0.001, simulation_steps=None, 
     simulation_time=None, traj_frequency=1000, temperature=300, integrator=None, barostat=None, 
     trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False, 
     enforcePeriodicBox=False, frozen_atoms=None):
@@ -103,7 +103,7 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 Options:
 
 - fragment: ASH Fragment object.
-- openmmobject: ASH OpenMMTheory object. 
+- theory: must be an ASH OpenMMTheory object or an ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject)
 - timestep: float (default: 0.001 ps). Size of timestep in picoseconds.
 - simulation_steps: integer. Number of steps to take. (Use either simulation_steps or simulation_time)
 - simulation_time: integer. Length of simulation time in ps. (Use either simulation_steps or simulation_time)
@@ -145,7 +145,7 @@ Example:
         PMEparameters=[1.0/0.34, 90, 90, 90])
 
     #Launching a molecular dynamics simulation
-    OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
+    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
@@ -177,7 +177,7 @@ General X-H constraints and deuterium-mass example:
         charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
 
     #Launching a molecular dynamics simulation
-    OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
+    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
@@ -225,7 +225,7 @@ Example:
         charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90])
 
     #Launching a minimization
-    OpenMM_Opt(fragment=frag, openmmobject=openmmobject, maxiter=1000, tolerance=1)
+    OpenMM_Opt(fragment=frag, theory=openmmobject, maxiter=1000, tolerance=1)
     #After minimization, the ASH fragment is updated, a PDB-file is written out: frag-minimized.pdb
     #Alternative XYZ write-out:
     frag.write_xyzfile(xyzfilename="frag_afteropt.xyz")
@@ -256,7 +256,7 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
     #List of all non-H atoms
     allnonHatoms=frag.get_atomindices_except_element('H')
 
-    OpenMM_MD(fragment=frag, openmmobject=openmmobject, timestep=0.001, simulation_steps=100,
+    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=100,
             traj_frequency=1, temperature=300, integrator="LangevinIntegrator",
             coupling_frequency=1, trajectory_file_option="PDB", frozen_atoms=allnonHatoms,)
 
@@ -300,10 +300,10 @@ Lysozyme example (simple, no modifications required):
     openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True, autoconstraints='HBonds', rigidwater=True)
 
     #MM minimization for 100 steps
-    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
+    OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1)
 
     #Classical MD simulation for 10 ps
-    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+    OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 

@@ -2,10 +2,11 @@
 Dynamics module
 =================================================
 
-Molecular dynamics in ASH is currently available via an interface to the dynamics routines of the ASE library. This requires the `ASE <https://wiki.fysik.dtu.dk/ase/>`_  library to be installed (simple Python pip installation). In the future, ASH will feature it's own native dynamics.
+Molecular dynamics in ASH is currently available via 2 different approaches.
 
+- The more general approach make use of an interface to the dynamics routines of the ASE library. This allows molecular dynamics to be performed via any theory level in ASH: QM, MM or QM/MM theory. This requires the `ASE <https://wiki.fysik.dtu.dk/ase/>`_  library to be installed (simple Python pip installation). In the future, ASH will feature it's own native dynamics.
 
-.. note:: For pure classical forcefield-based MD it is recommended to instead run the dynamics via OpenMM (faster). This requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See :doc:`OpenMM-interface`
+- The more specialized approach uses an interface to the MM dynamics routines of OpenMM library. This is only available for theory levels: OpenMMTheory (i.e. pure classical simulations) and QMMMTheory (with mm_theory=OpenMMTheoryobject). This approach makes the most sense when a considerable amount of time is spent on calculating the MM energy+gradient via OpenMM (faster than the Dynamics_ASE approach)
 
 
 ######################################################
@@ -59,6 +60,40 @@ It is possible to freeze atoms using frozen_atoms= option. Provide list of atom 
 Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.
 
 
+######################################################
+Dynamics via OpenMM_MD
+######################################################
+
+For pure classical forcefield-based MD it is recommended to run the dynamics via the OpenMM library instead via the ASH **OpenMM_MD** function. The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE. Dynamics via OpenMM_MD requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See :doc:`OpenMM-interface` for details.
+
+**Pure MM example:**
+
+.. code-block:: python
+
+	from ash import *
+	openmmobject = OpenMMTheory(cluster_fragment=Cluster, ASH_FF_file="Cluster_forcefield.ff")
+
+	OpenMM_MD(fragment=Cluster, theory=openmmobject, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
+	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1)
+
+
+For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use OpenMM_MD to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce)
+This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See :doc:`OpenMM-interface` for details.
+
+**QM/MM example:**
+
+.. code-block:: python
+
+	from ash import *
+	xtbtheory = xTBTheory(charge=charge, mult=mult, runmode='inputfile', xtbmethod='GFN2', numcores=numcores)
+	openmmobject = OpenMMTheory(cluster_fragment=Cluster, ASH_FF_file="Cluster_forcefield.ff")
+	QMMMTheory = QMMMTheory(fragment=Cluster, qm_theory=xtbtheory, mm_theory=openmmobject,
+    qmatoms=qm_region, embedding='Elstat', numcores=numcores)
+
+	OpenMM_MD(fragment=Cluster, theory=QMMMTheory, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
+	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1)
+
+
 
 ######################################################
 Metadynamics via ASE and Plumed
@@ -99,4 +134,11 @@ Requirements:
 
 
 .. note:: Not yet available: multiple-walker metadynamics
+
+
+######################################################
+Metadynamics via OpenMM_MD and Plumed
+######################################################
+
+to be documented
 
