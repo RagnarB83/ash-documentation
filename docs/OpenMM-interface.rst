@@ -349,5 +349,68 @@ Advanced example (additional forcefield parameters required):
     #TODO
 
 
+######################################
+Small molecule solvation
+######################################
+
+ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is intended to be used for molecules for where forcefield parameters are typically not available: e.g. metal complexes. Instead of regular forcefield parameters, nonbonded parameters (charges and Lennard-Jones parameters) are defined for the solute (used for classical and QM/MM simulations) which can be used to perfrom classical MM dynamics or QM/MM dynamics.
+
+See also :doc:`Explicit-solvation` workflow page.
+
+
+.. code-block:: python
+
+    def solvate_small_molecule(fragment=None, charge=None, mult=None, watermodel=None, solvent_boxdims=[70.0,70.0,70.0], 
+                               nonbonded_pars="CM5_UFF", orcatheory=None, numcores=1):
+
+The solvate_small_molecule function reads in an ASH fragment, as well as charge and multiplicity, name of watermodel (e.g. "TIP3P"), size of solvent box, option for how the nonbonded parameters should be prepared, an optional ORCATheory object and optional numcores.
+
+Options:
+
+- watermodel (string). Can be: 'TIP3P' only for now
+- solvent_boxdims (list of floats). Cubic box dimensions in Angstrom.
+- nonbonded_pars (string). Options: 'CM5_UFF', 'DDEC3', 'DDEC6' or 'xtb_UFF'
+- orcatheory (ORCATheory object). Optional ORCAtheory object defining the theory for deriving charges/LJ parameters
+- numcores (integer). Number of cores used in ORCA/xTB calculations
+
+
+- 'CM5_UFF' derives CM5 charges (scaled Hirshfeld charges) from an ORCA calculation of the molecule and uses UFF Lennard-Jones parameters
+- 'DDEC3' and 'DDEC6' derive both charges and LJ parameters from an ORCA calculation. Uses the Chargemol program.
+- 'xtb_UFF' performs an xTB calculation to derive charges and uses UFF for LJ.
+
+
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=4
+    #Molecule definition
+    mol=Fragment(xyzfile="3fgaba.xyz")
+    mol.charge=0;mol.mult=1
+
+    #Solvate molecule (70x70x70 Å TIP3P box)
+    forcefield, topology, ashfragment = solvate_small_molecule(fragment=mol, charge=mol.charge, 
+        mult=mol.mult, watermodel='tip3p', solvent_boxdims=[70,70,70], nonbonded_pars="CM5_UFF", 
+        numcores=numcores)
+
+
+The output of the solvate_small_molecule function are files: "system_aftersolvent.pdb", "newfragment.ygg", "newfragment.xyz" that can be used to inspect the coordinates of the system.
+
+Additionally the function returns an OpenMM forcefield object, an OpenMM topology and an ASH fragment. These can be used in a next step to create an OpenMMTheory object:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, 
+                    periodic=True, autoconstraints='HBonds', rigidwater=True)
+
+
+The OpenMMTheory object can then be used on its own or can be combined with a QM theory to define a QM/MM theory object etc.
+See :doc:`Explicit-solvation` workflow for more information on how to use solvate_small_molecule in a multi-step workflow.
 
 

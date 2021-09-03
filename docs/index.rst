@@ -63,6 +63,7 @@ These are the documentation pages of Ash.
    :maxdepth: 2
    :caption: Tutorials
 
+   Explicit-solvation
    QM-MM-protein
    workflows-examples
    thermochemistry
