@@ -28,6 +28,7 @@ Strongly recommended (necessary for some parts):
 
 * `Julia 1.6 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
+* `OpenMM <http://openmm.org>`_ version 7.6 or later
 
 Useful:
 
