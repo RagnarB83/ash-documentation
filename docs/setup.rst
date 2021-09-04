@@ -26,13 +26,15 @@ Strict dependencies:
 
 Strongly recommended (necessary for some parts):
 
-* `Julia 1.6 <https://julialang.org/downloads>`_ installation for fast routines for large system treatment.
+* `Julia 1.6 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_ installation (Python package via pip).
 
 Useful:
 
 * `Matplotlib <https://matplotlib.org>`_ library. Used to plot graphs/surfaces.
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces.
+
+
 
 
 ##############################################
@@ -47,21 +49,35 @@ B. Installation and Configuration
 
 
 *****************************************************
-B1. Semi-Automatic
+B1. Semi-Automatic Miniconda setup (easiest)
 *****************************************************
 
-(RECOMMENDED)
+1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_  Install it in a location where your user has access (e.g. your home-directory)
+2. Create new environment: **conda create --name ASH**
+3. Load environment: **conda activate ASH**
+4. Change directory to ASH location 
+5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory)
+6. Run: **julia julia-packages-setup.jl** to install some required Julia packages.
+7. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
+8. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
 
-This uses the install_ash.sh script inside the ASH directory.
+9. Run ASH using **python3_ash** in general (python3 on its own will also work but not when Julia routines are needed)
+
+*****************************************************
+B2. Semi-Automatic non-Conda setup
+*****************************************************
+
+
+This uses the nonconda_install_ash.sh script inside the ASH directory.
 The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.
 
-**Step 1.** Make sure the desired python3 is in your environment ('which python3' in the shell) or set path_to_python3_dir in the ./install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
+**Step 1.** Make sure the desired python3 is in your environment ('which python3' in the shell) or set path_to_python3_dir in the ./nonconda_install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
 Note: You need to be able to install packages to this installation via pip 
 
-**Step 2.** cd to ASH directory, make install_ash executable and run: 
+**Step 2.** cd to ASH directory, make nonconda_install_ash.sh executable and run: 
 
-- chmod +x ./install_ash.sh
-- ./install_ash.sh
+- chmod +x ./nonconda_install_ash.sh
+- ./nonconda_install_ash.sh
 
 **Step 3.** If installation is successful:
 
@@ -73,7 +89,7 @@ Common problems:
 
 
 *****************************************************
-B2. Manual
+B3. Manual
 *****************************************************
 
 (Use only if semi-automatic approach does not work)
@@ -212,6 +228,8 @@ Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/pyt
 #########################################
 C. Install External Programs
 #########################################
+
+See also ASH-packages.sh in ASH source code directory!
 
 **Step 1.** Install desired QM program(s):
 
