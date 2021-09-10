@@ -11,6 +11,7 @@ ORCATheory class:
         brokensym=None, HSmult=None, atomstoflip=None, numcores=1, label=None, moreadfile=None, autostart=True, propertyblock=None):
 
 Options:
+
 - orcadir: string. Path to ORCA
 - fragment: ASH Fragment object.
 - charge: integer. Charge of molecule.

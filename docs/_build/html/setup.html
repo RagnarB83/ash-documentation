@@ -238,6 +238,7 @@ Future versions will make Julia a requirement.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.6</a> installation for fast routines in MolCrys QM/MM</p></li>
 <li><p><a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a> installation (Python package via pip).</p></li>
+<li><p><a class="reference external" href="http://openmm.org">OpenMM</a> version 7.6 or later</p></li>
 </ul>
 <p>Useful:</p>
 <ul class="simple">
@@ -259,21 +260,21 @@ Future versions will make Julia a requirement.</p>
 <li><p>Change directory to ASH location</p></li>
 <li><p>Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory)</p></li>
 <li><p>Run: <strong>julia julia-packages-setup.jl</strong> to install some required Julia packages.</p></li>
-<li><p>Run: <strong>bash setup_ash.sh</strong> # This creates new files: set_environment_ash.sh and python3_ash</p></li>
+<li><p>Run: <strong>bash conda_setup_ash.sh</strong> # This creates new files: set_environment_ash.sh and python3_ash</p></li>
 <li><p>Run: <strong>source set_environment_ash.sh</strong>  (this sets necessary PATHs and should probably be put in each user’s .bash_profile, job-submission script etc.)</p></li>
 <li><p>Run ASH using <strong>python3_ash</strong> in general (python3 on its own will also work but not when Julia routines are needed)</p></li>
 </ol>
 </div>
 <div class="section" id="b2-semi-automatic-non-conda-setup">
 <h3>B2. Semi-Automatic non-Conda setup<a class="headerlink" href="#b2-semi-automatic-non-conda-setup" title="Permalink to this headline">¶</a></h3>
-<p>This uses the install_ash.sh script inside the ASH directory.
+<p>This uses the nonconda_install_ash.sh script inside the ASH directory.
 The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.</p>
-<p><strong>Step 1.</strong> Make sure the desired python3 is in your environment (‘which python3’ in the shell) or set path_to_python3_dir in the ./install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
+<p><strong>Step 1.</strong> Make sure the desired python3 is in your environment (‘which python3’ in the shell) or set path_to_python3_dir in the ./nonconda_install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
 Note: You need to be able to install packages to this installation via pip</p>
-<p><strong>Step 2.</strong> cd to ASH directory, make install_ash executable and run:</p>
+<p><strong>Step 2.</strong> cd to ASH directory, make nonconda_install_ash.sh executable and run:</p>
 <ul class="simple">
-<li><p>chmod +x ./install_ash.sh</p></li>
-<li><p>./install_ash.sh</p></li>
+<li><p>chmod +x ./nonconda_install_ash.sh</p></li>
+<li><p>./nonconda_install_ash.sh</p></li>
 </ul>
 <p><strong>Step 3.</strong> If installation is successful:</p>
 <ul class="simple">

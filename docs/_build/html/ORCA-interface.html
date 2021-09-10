@@ -220,28 +220,30 @@
     <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>Options:
-- orcadir: string. Path to ORCA
-- fragment: ASH Fragment object.
-- charge: integer. Charge of molecule.
-- mult: integer. Spin multiplicity of molecule
-- orcasimpleinput: string. Definition of the ORCA simple-input line
-- orcablocks: string (can be multiline). Used for block-input in the ORCA inputfile.
-- extraline: string. Additional inputfile-option for ORCA.
-- printlevel: integer. how much output by the ORCA module.
-- extrabasisatoms: list. What atomindices should have a different basis set (gets added to coordinate block)
-- extrabasis: string. What the basis set on extrabasisatoms should be
-- TDDFT: Boolean. Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.
-- TDDFTroots: integer. How many TDDFT roots to calculate.
-- FollowRoot: integer. What excited state root to calculate gradient for.
-- brokensym: Boolean. Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.
-- HSmult: integer. What high-spin multiplicity to use in a Flipspin job.
-- atomstoflip: list. What atom indices to spin-flip.
-- moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation
-- autostart: Boolean. Whether to turn Autostart on or off (default: True)
-- numcores: integer. Number of cores to use for ORCA
-- label: string. Label for ORCA object. Useful if working with many.
-- propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p>orcadir: string. Path to ORCA</p></li>
+<li><p>fragment: ASH Fragment object.</p></li>
+<li><p>charge: integer. Charge of molecule.</p></li>
+<li><p>mult: integer. Spin multiplicity of molecule</p></li>
+<li><p>orcasimpleinput: string. Definition of the ORCA simple-input line</p></li>
+<li><p>orcablocks: string (can be multiline). Used for block-input in the ORCA inputfile.</p></li>
+<li><p>extraline: string. Additional inputfile-option for ORCA.</p></li>
+<li><p>printlevel: integer. how much output by the ORCA module.</p></li>
+<li><p>extrabasisatoms: list. What atomindices should have a different basis set (gets added to coordinate block)</p></li>
+<li><p>extrabasis: string. What the basis set on extrabasisatoms should be</p></li>
+<li><p>TDDFT: Boolean. Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.</p></li>
+<li><p>TDDFTroots: integer. How many TDDFT roots to calculate.</p></li>
+<li><p>FollowRoot: integer. What excited state root to calculate gradient for.</p></li>
+<li><p>brokensym: Boolean. Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.</p></li>
+<li><p>HSmult: integer. What high-spin multiplicity to use in a Flipspin job.</p></li>
+<li><p>atomstoflip: list. What atom indices to spin-flip.</p></li>
+<li><p>moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation</p></li>
+<li><p>autostart: Boolean. Whether to turn Autostart on or off (default: True)</p></li>
+<li><p>numcores: integer. Number of cores to use for ORCA</p></li>
+<li><p>label: string. Label for ORCA object. Useful if working with many.</p></li>
+<li><p>propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.</p></li>
+</ul>
 <p>The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
 argument when creating object (alternatively it can be set in the ~/ash_user_settings.ini file). orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by ASH.
 Functionality such as telling ORCA what orbitals to read and parallelization would be handled by ASH as well.</p>
