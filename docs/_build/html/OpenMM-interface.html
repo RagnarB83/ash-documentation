@@ -217,7 +217,8 @@
             
   <div class="section" id="openmm-interface">
 <h1>OpenMM interface<a class="headerlink" href="#openmm-interface" title="Permalink to this headline">¶</a></h1>
-<p>OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU codes.</p>
+<p>OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU codes.
+The GPU code is particulary fast.</p>
 <div class="section" id="the-openmmtheory-theory-level">
 <h2>The OpenMMTheory theory level<a class="headerlink" href="#the-openmmtheory-theory-level" title="Permalink to this headline">¶</a></h2>
 <p>OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: ‘CPU’, ‘OpenCL’ or ‘CUDA’ depending on whether there is a GPU available on the computer. For platform=’CPU’ the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.</p>
@@ -235,8 +236,9 @@
                  <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">ewalderrortolerance</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">PMEparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">delete_QM1_MM1_bonded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">applyconstraints</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">delete_QM1_MM1_bonded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">applyconstraints_in_run</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">restraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or an OpenMM XML forcefieldfile.
@@ -291,11 +293,13 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <li><p>Available Barostat: MonteCarloBarostat</p></li>
 <li><p>Optional additional thermostat: Anderson</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-              <span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">restraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">parmed_state_datareporter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dummy_MM</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_center_force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.004</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinMiddleIntegrator&#39;</span><span class="p">,</span>
+              <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">trajfilename</span><span class="o">=</span><span class="s1">&#39;trajectory&#39;</span><span class="p">,</span>
+              <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">datafilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dummy_MM</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_center_force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">center_force_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centerforce_constant</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -312,14 +316,11 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <li><p>coupling_frequency: frequency (ps^-1) to update thermostat/integrator. Applies to Nose-Hoover/Langevin.</p></li>
 <li><p>anderson_thermostat: Boolean (default: False)</p></li>
 <li><p>trajectory_file_option: ‘PDB’ or ‘DCD’. Creates an ASCII PDB-trajectory or a compressed DCD trajectory.</p></li>
+<li><p>trajfilename : ‘string’. Name of trajectory file (without extension)</p></li>
 <li><p>traj_frequency: integer (default: 1000). How often to write coordinates to trajectory file (every nth step)</p></li>
 <li><p>enforcePeriodicBox: Boolean (default: False). Option to fix PBC-image artifacts in trajectory.</p></li>
-<li><p>frozen_atoms: list (default: None). What atom indices to freeze in simulation (masses = zero). Note: ASH counts from zero.</p></li>
-<li><p>constraints: list of lists (default: None). [[atom_i,atom_j,distance]] Each list defines an atom-pair that is constrained with optionally the bond distance specified.   Example: constraints=[[827,830], [830,833, 1.010]].  Only bond constraints available for now.</p></li>
-<li><p>restraints: list of lists (default: None). [[atom_i,atom_j,distance,force_constant]] Example: restraints=[[830,833, 1.010, 1000.0]]  where 830,833 are atom indices, 1.010 is the distance in Å and 1000.0 is the force-constant in kcal/mol *Å^-2. Only bond restraints available for now.</p></li>
-<li><p>autoconstraints: string (default: None) Options: ‘HBonds’ (X-H bonds constrained), ‘AllBonds’ (all bonds constrained), ‘HAngles’ (all bonds and H-X-H and H-O-X angles constrained) or None (default).  Only affects OpenMM_MD runs.</p></li>
-<li><p>hydrogenmass: integer (default: None) Mass of hydrogens (e.g. set to 2 for deuterium). Only affects OpenMM_MD runs.</p></li>
 </ul>
+<p>Note that constraints, autoconstraints, restraints and frozen_atoms must be defined in the OpenMMTHeory object before.</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -346,8 +347,8 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 </div>
 <p><strong>General constraints or H-mass modification:</strong></p>
 <ul class="simple">
-<li><p>In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory rather than OpenMM_MD). autoconstraints can be set to: ‘HBonds’ (X-H bonds constrained), ‘AllBonds’ (all bonds constrained), ‘HAngles’ (all bonds and H-X-H and H-O-X angles constrained) or None (default)</p></li>
-<li><p>An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=None is default (no changes to hydrogen masses).</p></li>
+<li><p>In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory). autoconstraints can be set to: ‘HBonds’ (X-H bonds constrained), ‘AllBonds’ (all bonds constrained), ‘HAngles’ (all bonds and H-X-H and H-O-X angles constrained) or None (default)</p></li>
+<li><p>An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=1.5 is default (default in OpenMM) .</p></li>
 </ul>
 <p>General X-H constraints and deuterium-mass example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -387,19 +388,20 @@ To obtain a more pleasing visualization of the trajectory you can “reimage” 
 <h2>PBC box relaxation via NPT<a class="headerlink" href="#pbc-box-relaxation-via-npt" title="Permalink to this headline">¶</a></h2>
 <p>This function allows one to run multiple NPT simulations (constant pressure and temperature) in order to relax the periodic box dimensions
 of the system.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_box_relaxation</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="s2">&quot;nptsim.csv&quot;</span><span class="p">,</span> <span class="n">numsteps_per_NPT</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">volume_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">density_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
-                          <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;OpenMM_box_relaxation: NPT simulations until volume and density stops changing</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_box_relaxation</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="s2">&quot;nptsim.csv&quot;</span><span class="p">,</span> <span class="n">numsteps_per_NPT</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                          <span class="n">volume_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">density_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.004</span><span class="p">,</span>
+                          <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">trajfilename</span><span class="o">=</span><span class="s1">&#39;relaxbox_NVT&#39;</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;NPT simulations until volume and density stops changing</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        fragment ([type], optional): [description]. Defaults to None.</span>
 <span class="sd">        theory ([type], optional): [description]. Defaults to None.</span>
 <span class="sd">        datafilename (str, optional): [description]. Defaults to &quot;nptsim.csv&quot;.</span>
-<span class="sd">        numsteps_per_NPT (int, optional): [description]. Defaults to 2000.</span>
+<span class="sd">        numsteps_per_NPT (int, optional): [description]. Defaults to 10000.</span>
 <span class="sd">        volume_threshold (float, optional): [description]. Defaults to 1.0.</span>
 <span class="sd">        density_threshold (float, optional): [description]. Defaults to 0.001.</span>
 <span class="sd">        temperature (int, optional): [description]. Defaults to 300.</span>
-<span class="sd">        timestep (float, optional): [description]. Defaults to 0.001.</span>
+<span class="sd">        timestep (float, optional): [description]. Defaults to 0.004.</span>
 <span class="sd">        traj_frequency (int, optional): [description]. Defaults to 100.</span>
 <span class="sd">        trajectory_file_option (str, optional): [description]. Defaults to &#39;DCD&#39;.</span>
 <span class="sd">        coupling_frequency (int, optional): [description]. Defaults to 1.</span>
@@ -449,15 +451,17 @@ you can do this by freezing all non-H atoms. An ASH fragment can conveniently gi
 
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">)</span>
 
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
 <span class="c1">#List of all non-H atoms</span>
 <span class="n">allnonHatoms</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">get_atomindices_except_element</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
 
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">allnonHatoms</span><span class="p">)</span>
+
+
+
 <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s2">&quot;LangevinIntegrator&quot;</span><span class="p">,</span>
-        <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s2">&quot;PDB&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">allnonHatoms</span><span class="p">,)</span>
+        <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s2">&quot;PDB&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

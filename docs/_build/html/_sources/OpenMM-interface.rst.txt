@@ -3,6 +3,7 @@ OpenMM interface
 ======================================
 
 OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU codes.
+The GPU code is particulary fast.
 
 
 
@@ -29,8 +30,9 @@ The OpenMMTheory class:
                      periodic_nonbonded_cutoff=12, dispersion_correction=True,
                      switching_function_distance=10,
                      ewalderrortolerance=1e-5, PMEparameters=None,
-                     delete_QM1_MM1_bonded=False, applyconstraints=False,
-                     autoconstraints=None, hydrogenmass=None, rigidwater=True):
+                     delete_QM1_MM1_bonded=False, applyconstraints_in_run=False,
+                     constraints=None, restraints=None, frozen_atoms=None, fragment=None,
+                     autoconstraints='HBonds', hydrogenmass=1.5, rigidwater=True):
 
 
 
@@ -99,12 +101,15 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 
 .. code-block:: python
 
-    def OpenMM_MD(fragment=None, theory=None, timestep=0.001, simulation_steps=None, simulation_time=None,
-                  traj_frequency=1000, temperature=300, integrator=None,
-                  barostat=None, pressure=1, trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False,
-                  enforcePeriodicBox=True, frozen_atoms=None, constraints=None, restraints=None,
-                  parmed_state_datareporter=False, datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
+    def OpenMM_MD(fragment=None, theory=None, timestep=0.004, simulation_steps=None, simulation_time=None,
+                  traj_frequency=1000, temperature=300, integrator='LangevinMiddleIntegrator',
+                  barostat=None, pressure=1, trajectory_file_option='PDB', trajfilename='trajectory',
+                  coupling_frequency=1,
+                  anderson_thermostat=False,
+                  enforcePeriodicBox=True, 
+                  datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
                   center_force_atoms=None, centerforce_constant=1.0):
+
 
 Options:
 
@@ -119,13 +124,12 @@ Options:
 - coupling_frequency: frequency (ps^-1) to update thermostat/integrator. Applies to Nose-Hoover/Langevin.
 - anderson_thermostat: Boolean (default: False)
 - trajectory_file_option: 'PDB' or 'DCD'. Creates an ASCII PDB-trajectory or a compressed DCD trajectory.
+- trajfilename : 'string'. Name of trajectory file (without extension)
 - traj_frequency: integer (default: 1000). How often to write coordinates to trajectory file (every nth step)
 - enforcePeriodicBox: Boolean (default: False). Option to fix PBC-image artifacts in trajectory.
-- frozen_atoms: list (default: None). What atom indices to freeze in simulation (masses = zero). Note: ASH counts from zero.
-- constraints: list of lists (default: None). [[atom_i,atom_j,distance]] Each list defines an atom-pair that is constrained with optionally the bond distance specified.   Example: constraints=[[827,830], [830,833, 1.010]].  Only bond constraints available for now.
-- restraints: list of lists (default: None). [[atom_i,atom_j,distance,force_constant]] Example: restraints=[[830,833, 1.010, 1000.0]]  where 830,833 are atom indices, 1.010 is the distance in Å and 1000.0 is the force-constant in kcal/mol \*Å^-2. Only bond restraints available for now.
-- autoconstraints: string (default: None) Options: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default).  Only affects OpenMM_MD runs.
-- hydrogenmass: integer (default: None) Mass of hydrogens (e.g. set to 2 for deuterium). Only affects OpenMM_MD runs.
+
+Note that constraints, autoconstraints, restraints and frozen_atoms must be defined in the OpenMMTHeory object before.
+
 
 
 Example:
@@ -157,8 +161,8 @@ Example:
 
 **General constraints or H-mass modification:**
 
-- In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory rather than OpenMM_MD). autoconstraints can be set to: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default)
-- An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=None is default (no changes to hydrogen masses).
+- In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory). autoconstraints can be set to: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default)
+- An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=1.5 is default (default in OpenMM) .
 
 
 
@@ -213,24 +217,24 @@ of the system.
 
 .. code-block:: python
 
-    def OpenMM_box_relaxation(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=2000, volume_threshold=1.0, density_threshold=0.001, 
-                              temperature=300, timestep=0.001, traj_frequency=100, trajectory_file_option='DCD', coupling_frequency=1):
-        """OpenMM_box_relaxation: NPT simulations until volume and density stops changing
+    def OpenMM_box_relaxation(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=10000,
+                              volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
+                              traj_frequency=100, trajfilename='relaxbox_NVT', trajectory_file_option='DCD', coupling_frequency=1):
+        """NPT simulations until volume and density stops changing
 
         Args:
             fragment ([type], optional): [description]. Defaults to None.
             theory ([type], optional): [description]. Defaults to None.
             datafilename (str, optional): [description]. Defaults to "nptsim.csv".
-            numsteps_per_NPT (int, optional): [description]. Defaults to 2000.
+            numsteps_per_NPT (int, optional): [description]. Defaults to 10000.
             volume_threshold (float, optional): [description]. Defaults to 1.0.
             density_threshold (float, optional): [description]. Defaults to 0.001.
             temperature (int, optional): [description]. Defaults to 300.
-            timestep (float, optional): [description]. Defaults to 0.001.
+            timestep (float, optional): [description]. Defaults to 0.004.
             traj_frequency (int, optional): [description]. Defaults to 100.
             trajectory_file_option (str, optional): [description]. Defaults to 'DCD'.
             coupling_frequency (int, optional): [description]. Defaults to 1.
         """
-
 
 
 ######################################
@@ -284,15 +288,17 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
 
     frag = Fragment(pdbfile=pdbfile)
 
-    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, periodic=True,
-            platform='CPU', autoconstraints=None, rigidwater=False)
-
     #List of all non-H atoms
     allnonHatoms=frag.get_atomindices_except_element('H')
 
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, periodic=True,
+            platform='CPU', autoconstraints=None, rigidwater=False, frozen_atoms=allnonHatoms)
+
+
+
     OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=100,
             traj_frequency=1, temperature=300, integrator="LangevinIntegrator",
-            coupling_frequency=1, trajectory_file_option="PDB", frozen_atoms=allnonHatoms,)
+            coupling_frequency=1, trajectory_file_option="PDB")
 
 
 ######################################
