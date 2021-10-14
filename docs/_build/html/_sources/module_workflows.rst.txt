@@ -1,6 +1,9 @@
 Workflows module
 ======================================
 
+ASH includes a number of convenient built-in functionality to carry out multi-step workflows. See below.
+See also :doc:`workflows-examples` for a tutorial on how you can build your own workflows. 
+
 
 #####################
 Thermochemprotocols
@@ -34,6 +37,119 @@ High-level single-point workflows
 ###################################
 
 See :doc:`module_highlevel_workflows`
+
+#######################################################################
+confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow
+#######################################################################
+
+See :doc:`crest-interface`
+
+###################################
+Counter-poise correction (ORCA)
+###################################
+
+ASH can perform Boys-Bernardi counterpoise corrections (single-point energy level only) together with ORCA in a convenient way.
+All that is required are geometries (previously optimized) for the AB dimer as well as monomers A and B respectively, a theory level definition and lists of atom indices that specify which atoms in the AB dimer belong to monomer A and B, respectively. 
+
+.. code-block:: python
+
+	from ash import *
+
+	#Define ASH fragments for the A-B adduct (dimer) and monomers from XYZ-files
+	#Dimer: H2O...MeOH H-bonded complex
+	dimer=Fragment(xyzfile="h2o_meoh.xyz")
+	#H2O monomer
+	h2o=Fragment(xyzfile="h2o.xyz")
+	#MeOH monomer
+	meoh=Fragment(xyzfile="meoh.xyz")
+	#Combine fragments in a list
+	all_fragments=[dimer, h2o, meoh]
+
+	#Define ORCA theory
+	simple=" ! RI-MP2 def2-SVP def2-SVP/C RIJCOSX def2/J tightscf "
+	blocks="""
+	%scf
+	maxiter 300
+	end
+	"""
+	orcacalc = ORCATheory(charge=0, mult=1, orcasimpleinput=simple, orcablocks=blocks)
+
+
+	#Run counterpoise_calculation giving fragment-list, orcacalculation and atom-indices as input
+	# monomer1_indices and monomer2_indices specify which atoms in the dimer correspond to monomer1 and monomer2
+	counterpoise_calculation_ORCA(fragments=all_fragments, theory=orcacalc, monomer1_indices=[0,1,2], monomer2_indices=[3,4,5,6,7,8])
+
+
+The final output looks like :
+
+.. code-block:: shell
+
+	                #######################################
+	                #                                     #
+	              #     COUNTERPOISE CORRECTION JOB     #
+	                #                                     #
+	                #######################################
+
+
+
+	 Boys-Bernardi counterpoise correction
+
+	monomer1_indices: [0, 1, 2]
+	monomer2_indices: [3, 4, 5, 6, 7, 8]
+
+	Monomer 1:
+	--------------------
+	Defined coordinates (Å):
+	   O  -0.52532979   -0.05097108   -0.31451686
+	   H  -0.94200663    0.74790163    0.01125282
+	   H   0.40369652    0.05978598   -0.07356837
+	Monomer 1 indices in dimer: [0, 1, 2]
+
+	Monomer 2:
+	--------------------
+	Defined coordinates (Å):
+	   O   2.31663329    0.04550085    0.07185839
+	   H   2.68461611   -0.52657655    0.74938672
+	   C   2.78163836   -0.42612907   -1.19030072
+	   H   2.35082127    0.22496462   -1.94341475
+	   H   3.86760205   -0.37533621   -1.26461265
+	   H   2.45329574   -1.44599856   -1.38938136
+	Monomer 2 indices in dimer: [3, 4, 5, 6, 7, 8]
+
+	Dimer:
+	--------------------
+	0   O -0.525329794 -0.050971084 -0.314516861   Monomer1
+	1   H -0.942006633 0.747901631 0.011252816   Monomer1
+	2   H 0.403696525 0.059785981 -0.073568368   Monomer1
+	3   O 2.316633291 0.045500849 0.071858389   Monomer2
+	4   H 2.684616115 -0.526576554 0.749386716   Monomer2
+	5   C 2.781638362 -0.426129067 -1.190300721   Monomer2
+	6   H 2.350821267 0.224964624 -1.943414753   Monomer2
+	7   H 3.867602049 -0.375336206 -1.264612649   Monomer2
+	8   H 2.453295744 -1.445998564 -1.389381355   Monomer2
+
+
+	----LOTS OF CALCULATION OUTPUT---
+
+	COUNTERPOISE CORRECTION RESULTS
+	==================================================
+
+	Monomer 1 energy: -76.162192724532 Eh
+	Monomer 2 energy: -115.290878785879 Eh
+	Sum of monomers energy: -191.453071510411 Eh
+	Dimer energy: -191.465349252819 Eh
+
+	Monomer 1 at dimer geometry: -115.290878793717 Eh
+	Monomer 2 at dimer geometry: -76.162192727048 Eh
+	Sum of monomers at dimer geometry energy: -191.45307152076498 Eh
+
+	Monomer 1 at dimer geometry with dimer basis: -115.29491810198 Eh
+	Monomer 2 at dimer geometry with dimer basis: -76.163483336908 Eh
+	Sum of monomers at dimer geometry with dimer basis: -191.45840143888802 Eh
+	counterpoise_corr: 3.344574118169517 kcal/mol
+
+	Uncorrected interaction energy: -7.704399681128008 kcal/mol
+	Corrected interaction energy: -4.359825562958491 kcal/mol
 
 
 ###################################

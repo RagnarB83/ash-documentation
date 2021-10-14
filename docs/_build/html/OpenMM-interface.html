@@ -131,6 +131,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenMM interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-openmmtheory-theory-level">The OpenMMTheory theory level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics-via-openmm">Molecular Dynamics via OpenMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pbc-box-relaxation-via-npt">PBC box relaxation via NPT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#simple-minimization-via-openmm">Simple minimization via OpenMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#system-setup-via-openmm-modeller">System setup via OpenMM: Modeller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#small-molecule-solvation">Small molecule solvation</a></li>
@@ -222,17 +223,19 @@
 <p>OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: ‘CPU’, ‘OpenCL’ or ‘CUDA’ depending on whether there is a GPU available on the computer. For platform=’CPU’ the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.</p>
 <p>The OpenMMTheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OpenMMTheory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">psffile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charmmprmfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">GROMACSfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gromacstopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grofile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gromacstopdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">Amberfiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">xmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_parmed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">cluster_fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PBCvectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">xmlfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_parmed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">xmlsystemfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">customnonbondedforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">periodic_nonbonded_cutoff</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">dispersion_correction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">switching_function_distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">ewalderrortolerance</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">PMEparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">delete_QM1_MM1_bonded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">applyconstraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">delete_QM1_MM1_bonded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">applyconstraints</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hydrogenmass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -269,6 +272,11 @@ Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly
 <li><p>The periodic nonbonded cutoff can be modified. Default: 12 Å</p></li>
 <li><p>Long-range dispersion correction can be turned on or off.</p></li>
 <li><p>The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.</p></li>
+<li><dl class="simple">
+<dt>The box dimensions can also be modified by PBCvectors= keyword argument:</dt><dd><p>Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]]</p>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 <div class="section" id="molecular-dynamics-via-openmm">
@@ -283,10 +291,12 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <li><p>Available Barostat: MonteCarloBarostat</p></li>
 <li><p>Optional additional thermostat: Anderson</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">barostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;PDB&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anderson_thermostat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">enforcePeriodicBox</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">restraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">parmed_state_datareporter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dummy_MM</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plumed_object</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_center_force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">center_force_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centerforce_constant</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>Options:</p>
@@ -370,6 +380,30 @@ To obtain a more pleasing visualization of the trajectory you can “reimage” 
 
 <span class="c1">#If periodic box info is missing from trajectory file (can happen with CHARMM files):</span>
 <span class="n">MDtraj_imagetraj</span><span class="p">(</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">pdbtopology</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">unitcell_lengths</span><span class="o">=</span><span class="p">[</span><span class="mf">100.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">],</span> <span class="n">unitcell_angles</span><span class="o">=</span><span class="p">[</span><span class="mf">90.0</span><span class="p">,</span><span class="mf">90.0</span><span class="p">,</span><span class="mf">90.0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pbc-box-relaxation-via-npt">
+<h2>PBC box relaxation via NPT<a class="headerlink" href="#pbc-box-relaxation-via-npt" title="Permalink to this headline">¶</a></h2>
+<p>This function allows one to run multiple NPT simulations (constant pressure and temperature) in order to relax the periodic box dimensions
+of the system.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_box_relaxation</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="s2">&quot;nptsim.csv&quot;</span><span class="p">,</span> <span class="n">numsteps_per_NPT</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">volume_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">density_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                          <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;OpenMM_box_relaxation: NPT simulations until volume and density stops changing</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fragment ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        theory ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        datafilename (str, optional): [description]. Defaults to &quot;nptsim.csv&quot;.</span>
+<span class="sd">        numsteps_per_NPT (int, optional): [description]. Defaults to 2000.</span>
+<span class="sd">        volume_threshold (float, optional): [description]. Defaults to 1.0.</span>
+<span class="sd">        density_threshold (float, optional): [description]. Defaults to 0.001.</span>
+<span class="sd">        temperature (int, optional): [description]. Defaults to 300.</span>
+<span class="sd">        timestep (float, optional): [description]. Defaults to 0.001.</span>
+<span class="sd">        traj_frequency (int, optional): [description]. Defaults to 100.</span>
+<span class="sd">        trajectory_file_option (str, optional): [description]. Defaults to &#39;DCD&#39;.</span>
+<span class="sd">        coupling_frequency (int, optional): [description]. Defaults to 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 </div>
 </div>

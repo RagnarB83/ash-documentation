@@ -17,17 +17,19 @@ The OpenMMTheory class:
 .. code-block:: python
 
     class OpenMMTheory:
-        def __init__(self, printlevel=2, platform='CPU', numcores=None, 
+        def __init__(self, printlevel=2, platform='CPU', numcores=None, Modeller=False, forcefield=None, topology=None,
                      CHARMMfiles=False, psffile=None, charmmtopfile=None, charmmprmfile=None,
                      GROMACSfiles=False, gromacstopfile=None, grofile=None, gromacstopdir=None,
                      Amberfiles=False, amberprmtopfile=None,
-                     xmlfile=None, pdbfile=None, use_parmed=False,
+                     cluster_fragment=None, ASH_FF_file=None, PBCvectors=None,
+                     xmlfiles=None, pdbfile=None, use_parmed=False,
+                     xmlsystemfile=None,
                      do_energy_decomposition=False,
                      periodic=False, charmm_periodic_cell_dimensions=None, customnonbondedforce=False,
-                     periodic_nonbonded_cutoff=12, dispersion_correction=True, 
+                     periodic_nonbonded_cutoff=12, dispersion_correction=True,
                      switching_function_distance=10,
                      ewalderrortolerance=1e-5, PMEparameters=None,
-                     delete_QM1_MM1_bonded=False, applyconstraints=True,
+                     delete_QM1_MM1_bonded=False, applyconstraints=False,
                      autoconstraints=None, hydrogenmass=None, rigidwater=True):
 
 
@@ -77,6 +79,8 @@ Periodic boundary conditions:
 - The periodic nonbonded cutoff can be modified. Default: 12 Å
 - Long-range dispersion correction can be turned on or off.
 - The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.
+- The box dimensions can also be modified by PBCvectors= keyword argument:
+    Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]]
 
 ######################################
 Molecular Dynamics via OpenMM
@@ -95,10 +99,12 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 
 .. code-block:: python
 
-    def OpenMM_MD(fragment=None, theory=None, timestep=0.001, simulation_steps=None, 
-    simulation_time=None, traj_frequency=1000, temperature=300, integrator=None, barostat=None, 
-    trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False, 
-    enforcePeriodicBox=False, frozen_atoms=None):
+    def OpenMM_MD(fragment=None, theory=None, timestep=0.001, simulation_steps=None, simulation_time=None,
+                  traj_frequency=1000, temperature=300, integrator=None,
+                  barostat=None, pressure=1, trajectory_file_option='PDB', coupling_frequency=None, anderson_thermostat=False,
+                  enforcePeriodicBox=True, frozen_atoms=None, constraints=None, restraints=None,
+                  parmed_state_datareporter=False, datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
+                  center_force_atoms=None, centerforce_constant=1.0):
 
 Options:
 
@@ -196,6 +202,34 @@ Example:
     #If periodic box info is missing from trajectory file (can happen with CHARMM files):
     MDtraj_imagetraj("out", pdbtopology, format='DCD', unitcell_lengths=[100.0,100.0,100.0], unitcell_angles=[90.0,90.0,90.0])
 
+
+######################################
+PBC box relaxation via NPT 
+######################################
+
+This function allows one to run multiple NPT simulations (constant pressure and temperature) in order to relax the periodic box dimensions
+of the system.
+
+
+.. code-block:: python
+
+    def OpenMM_box_relaxation(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=2000, volume_threshold=1.0, density_threshold=0.001, 
+                              temperature=300, timestep=0.001, traj_frequency=100, trajectory_file_option='DCD', coupling_frequency=1):
+        """OpenMM_box_relaxation: NPT simulations until volume and density stops changing
+
+        Args:
+            fragment ([type], optional): [description]. Defaults to None.
+            theory ([type], optional): [description]. Defaults to None.
+            datafilename (str, optional): [description]. Defaults to "nptsim.csv".
+            numsteps_per_NPT (int, optional): [description]. Defaults to 2000.
+            volume_threshold (float, optional): [description]. Defaults to 1.0.
+            density_threshold (float, optional): [description]. Defaults to 0.001.
+            temperature (int, optional): [description]. Defaults to 300.
+            timestep (float, optional): [description]. Defaults to 0.001.
+            traj_frequency (int, optional): [description]. Defaults to 100.
+            trajectory_file_option (str, optional): [description]. Defaults to 'DCD'.
+            coupling_frequency (int, optional): [description]. Defaults to 1.
+        """
 
 
 

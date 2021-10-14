@@ -112,6 +112,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#thermochemprotocols">Thermochemprotocols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#high-level-single-point-workflows">High-level single-point workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#counter-poise-correction-orca">Counter-poise correction (ORCA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automatic-active-space-selection">Automatic active-space selection</a></li>
 </ul>
 </li>
@@ -214,6 +216,8 @@
             
   <div class="section" id="workflows-module">
 <h1>Workflows module<a class="headerlink" href="#workflows-module" title="Permalink to this headline">¶</a></h1>
+<p>ASH includes a number of convenient built-in functionality to carry out multi-step workflows. See below.
+See also <a class="reference internal" href="workflows-examples.html"><span class="doc">Workflow examples in ASH</span></a> for a tutorial on how you can build your own workflows.</p>
 <div class="section" id="thermochemprotocols">
 <h2>Thermochemprotocols<a class="headerlink" href="#thermochemprotocols" title="Permalink to this headline">¶</a></h2>
 <p>The <strong>thermochemprotocol_reaction</strong> and <strong>thermochemprotocol_single</strong> functions can be used to
@@ -235,6 +239,111 @@ The available high-level single-point calculations are defined later.</p>
 <div class="section" id="high-level-single-point-workflows">
 <h2>High-level single-point workflows<a class="headerlink" href="#high-level-single-point-workflows" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference internal" href="module_highlevel_workflows.html"><span class="doc">Highlevel workflows module</span></a></p>
+</div>
+<div class="section" id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
+<h2>confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow<a class="headerlink" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="crest-interface.html"><span class="doc">CREST interface</span></a></p>
+</div>
+<div class="section" id="counter-poise-correction-orca">
+<h2>Counter-poise correction (ORCA)<a class="headerlink" href="#counter-poise-correction-orca" title="Permalink to this headline">¶</a></h2>
+<p>ASH can perform Boys-Bernardi counterpoise corrections (single-point energy level only) together with ORCA in a convenient way.
+All that is required are geometries (previously optimized) for the AB dimer as well as monomers A and B respectively, a theory level definition and lists of atom indices that specify which atoms in the AB dimer belong to monomer A and B, respectively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Define ASH fragments for the A-B adduct (dimer) and monomers from XYZ-files</span>
+<span class="c1">#Dimer: H2O...MeOH H-bonded complex</span>
+<span class="n">dimer</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_meoh.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#H2O monomer</span>
+<span class="n">h2o</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#MeOH monomer</span>
+<span class="n">meoh</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;meoh.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#Combine fragments in a list</span>
+<span class="n">all_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">dimer</span><span class="p">,</span> <span class="n">h2o</span><span class="p">,</span> <span class="n">meoh</span><span class="p">]</span>
+
+<span class="c1">#Define ORCA theory</span>
+<span class="n">simple</span><span class="o">=</span><span class="s2">&quot; ! RI-MP2 def2-SVP def2-SVP/C RIJCOSX def2/J tightscf &quot;</span>
+<span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">%s</span><span class="s2">cf</span>
+<span class="s2">maxiter 300</span>
+<span class="s2">end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">orcacalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">simple</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+
+
+<span class="c1">#Run counterpoise_calculation giving fragment-list, orcacalculation and atom-indices as input</span>
+<span class="c1"># monomer1_indices and monomer2_indices specify which atoms in the dimer correspond to monomer1 and monomer2</span>
+<span class="n">counterpoise_calculation_ORCA</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="n">all_fragments</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">orcacalc</span><span class="p">,</span> <span class="n">monomer1_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">monomer2_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The final output looks like :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>                <span class="c1">#######################################</span>
+                <span class="c1">#                                     #</span>
+              <span class="c1">#     COUNTERPOISE CORRECTION JOB     #</span>
+                <span class="c1">#                                     #</span>
+                <span class="c1">#######################################</span>
+
+
+
+ Boys-Bernardi counterpoise correction
+
+monomer1_indices: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span><span class="o">]</span>
+monomer2_indices: <span class="o">[</span><span class="m">3</span>, <span class="m">4</span>, <span class="m">5</span>, <span class="m">6</span>, <span class="m">7</span>, <span class="m">8</span><span class="o">]</span>
+
+Monomer <span class="m">1</span>:
+--------------------
+Defined coordinates <span class="o">(</span>Å<span class="o">)</span>:
+   O  -0.52532979   -0.05097108   -0.31451686
+   H  -0.94200663    <span class="m">0</span>.74790163    <span class="m">0</span>.01125282
+   H   <span class="m">0</span>.40369652    <span class="m">0</span>.05978598   -0.07356837
+Monomer <span class="m">1</span> indices <span class="k">in</span> dimer: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span><span class="o">]</span>
+
+Monomer <span class="m">2</span>:
+--------------------
+Defined coordinates <span class="o">(</span>Å<span class="o">)</span>:
+   O   <span class="m">2</span>.31663329    <span class="m">0</span>.04550085    <span class="m">0</span>.07185839
+   H   <span class="m">2</span>.68461611   -0.52657655    <span class="m">0</span>.74938672
+   C   <span class="m">2</span>.78163836   -0.42612907   -1.19030072
+   H   <span class="m">2</span>.35082127    <span class="m">0</span>.22496462   -1.94341475
+   H   <span class="m">3</span>.86760205   -0.37533621   -1.26461265
+   H   <span class="m">2</span>.45329574   -1.44599856   -1.38938136
+Monomer <span class="m">2</span> indices <span class="k">in</span> dimer: <span class="o">[</span><span class="m">3</span>, <span class="m">4</span>, <span class="m">5</span>, <span class="m">6</span>, <span class="m">7</span>, <span class="m">8</span><span class="o">]</span>
+
+Dimer:
+--------------------
+<span class="m">0</span>   O -0.525329794 -0.050971084 -0.314516861   Monomer1
+<span class="m">1</span>   H -0.942006633 <span class="m">0</span>.747901631 <span class="m">0</span>.011252816   Monomer1
+<span class="m">2</span>   H <span class="m">0</span>.403696525 <span class="m">0</span>.059785981 -0.073568368   Monomer1
+<span class="m">3</span>   O <span class="m">2</span>.316633291 <span class="m">0</span>.045500849 <span class="m">0</span>.071858389   Monomer2
+<span class="m">4</span>   H <span class="m">2</span>.684616115 -0.526576554 <span class="m">0</span>.749386716   Monomer2
+<span class="m">5</span>   C <span class="m">2</span>.781638362 -0.426129067 -1.190300721   Monomer2
+<span class="m">6</span>   H <span class="m">2</span>.350821267 <span class="m">0</span>.224964624 -1.943414753   Monomer2
+<span class="m">7</span>   H <span class="m">3</span>.867602049 -0.375336206 -1.264612649   Monomer2
+<span class="m">8</span>   H <span class="m">2</span>.453295744 -1.445998564 -1.389381355   Monomer2
+
+
+----LOTS OF CALCULATION OUTPUT---
+
+COUNTERPOISE CORRECTION <span class="nv">RESULTS</span>
+<span class="o">==================================================</span>
+
+Monomer <span class="m">1</span> energy: -76.162192724532 Eh
+Monomer <span class="m">2</span> energy: -115.290878785879 Eh
+Sum of monomers energy: -191.453071510411 Eh
+Dimer energy: -191.465349252819 Eh
+
+Monomer <span class="m">1</span> at dimer geometry: -115.290878793717 Eh
+Monomer <span class="m">2</span> at dimer geometry: -76.162192727048 Eh
+Sum of monomers at dimer geometry energy: -191.45307152076498 Eh
+
+Monomer <span class="m">1</span> at dimer geometry with dimer basis: -115.29491810198 Eh
+Monomer <span class="m">2</span> at dimer geometry with dimer basis: -76.163483336908 Eh
+Sum of monomers at dimer geometry with dimer basis: -191.45840143888802 Eh
+counterpoise_corr: <span class="m">3</span>.344574118169517 kcal/mol
+
+Uncorrected interaction energy: -7.704399681128008 kcal/mol
+Corrected interaction energy: -4.359825562958491 kcal/mol
+</pre></div>
+</div>
 </div>
 <div class="section" id="automatic-active-space-selection">
 <h2>Automatic active-space selection<a class="headerlink" href="#automatic-active-space-selection" title="Permalink to this headline">¶</a></h2>
