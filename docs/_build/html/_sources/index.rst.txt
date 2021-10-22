@@ -25,6 +25,7 @@ These are the documentation pages of Ash.
    job-types
    QM-interfaces
    MM-interfaces
+   parallelization
 
 .. toctree::
    :maxdepth: 2
