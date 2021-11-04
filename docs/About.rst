@@ -4,8 +4,8 @@ About ASH
 ==================================================
 
 ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
-explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations,
-molecular dynamics (soon), numerical frequencies using a MM, QM or QM/MM Hamiltonian.
+explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations, surface scans,
+molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonian.
 Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 
@@ -13,10 +13,11 @@ Requirements:
 
     - Python3 installation
     - Numpy Python library
-    - Julia installation (for faster Julia versions of MM routines)
-    - Matplotlib (for some plotting options).
     - geomeTRIC (optimizer). Python library, easily installed via pip.
-    - OpenMM (molecular mechanics library). Only needed for QM/MM. Installed via conda.
+    - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
+    - Julia installation (only for faster Julia versions of some MM routines)
+    - Matplotlib (for some plotting options).
+
 
 Optional Python modules for specific functionality (can be installed via pip or conda):
 
@@ -51,11 +52,11 @@ Features
     - CIF file
     - Fractional coordinate XTL file
     - PDB file
-    - Amber file
+    - Amber CRD file
     - Chemshell fragment file
-    - GROMACS gro file
+    - GROMACS .gro file
     - Python lists
-    - ASH file format
+    - ASH (.ygg) fragment file format
 
 
 **Interfaces to various QM codes:**
@@ -115,7 +116,8 @@ Features
     - Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)
 
 **Molecular dynamics**
-    - **To be done**
+    - via OpenMM library: MM-only, QM/MM and QM-only
+    - via ASE library
 
 **Submodules:**
 
