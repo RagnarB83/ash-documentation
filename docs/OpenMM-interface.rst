@@ -360,7 +360,7 @@ then these need to be provided using the extraxmlfile option.
 The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue. 
 Here defining a dummy molybdenum ion:
 
-.. code-block:: 
+.. code-block:: text
 
     <ForceField>
     <AtomTypes>
