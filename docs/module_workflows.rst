@@ -32,6 +32,49 @@ The reaction is defined via a list of defined fragments and stoichiometry, a the
 and then a protocol for the high-level single-point level is chosen (SP_theory).
 The available high-level single-point calculations are defined later.
 
+
+###############################################################
+calc_xyzfiles: Run calculations on a collection of XYZ-files
+###############################################################
+
+If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations) 
+then this can be easily accomplished using the calc_xyzfiles function.
+
+.. code-block:: python
+
+	from ash import *
+
+	numcores=24
+	#Directory of XYZ files. Can be full path or relative path (dir needs to be copied to scratch location in this case).
+	dir = '/home/bjornsson/FeCO4_N2/r2scan-opt/xyzfiles_temp'
+
+	#Defining theory. Charge/mult is skipped here
+	ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", orcablocks="%scf maxiter 500 end", numcores=numcores)
+
+	#Call calc_xyzfiles giving xyzdir and theory. 
+	#Geometry optimizations for each XYZ-file can be requested via Opt=True (default False, i.e. singlepoint) 
+	calc_xyzfiles(xyzdir=dir, theory=ORCAcalc, Opt=True)
+
+
+
+The ASH script then runs through and gives a table at the end with the energies. 
+In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created
+
+.. highlight:: none
+.. code-block::
+
+	XYZ-file             Charge     Mult           Energy(Eh)
+	----------------------------------------------------------------------
+	no.xyz                     0       2      -129.8755914784
+	no_plus.xyz                1       1      -129.5232460574
+	h2.xyz                     0       1        -1.1693816161
+	n2.xyz                     0       1      -109.5070757384
+	hbr.xyz                    0       1     -2574.7361724856
+
+
+	XYZ-files with optimized coordinates can be found in: optimized_xyzfiles
+
+
 ###################################
 High-level single-point workflows
 ###################################
@@ -82,7 +125,8 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 
 The final output looks like :
 
-.. code-block:: shell
+.. highlight:: none
+.. code-block::
 
 	                #######################################
 	                #                                     #
@@ -181,7 +225,8 @@ Example on ozone:
 
 Output:
 
-.. code-block:: shell
+.. highlight:: none
+.. code-block::
 
 	ICE-CI step done
 	Note: New natural orbitals from ICE-CI density matrix formed!

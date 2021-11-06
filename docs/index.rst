@@ -54,7 +54,6 @@ These are the documentation pages of Ash.
    Dalton-interface
    PySCF-interface
    Psi4-interface
-   Dalton-interface
    crest-interface
    geomeTRIC-interface
    knarr-interface

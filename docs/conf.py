@@ -270,8 +270,8 @@ html_theme_options = {
 #    'code_font_family:' : 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace
 
 #RB Added
-#def setup(app):
-#    app.add_css_file('my_theme.css')
+def setup(app):
+    app.add_css_file('my_theme.css')
     #app.add_stylesheet('prism.css')
     #app.add_css_file('default.css')
 
