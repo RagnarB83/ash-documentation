@@ -419,19 +419,19 @@ then these need to be provided using the extraxmlfile option.</p>
 </div>
 <p>The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue.
 Here defining a dummy molybdenum ion:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ForceField</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Type</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MOX&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;Mo&quot;</span> <span class="n">element</span><span class="o">=</span><span class="s2">&quot;Mo&quot;</span> <span class="n">mass</span><span class="o">=</span><span class="s2">&quot;99.0&quot;</span><span class="o">/&gt;</span>
-<span class="o">&lt;/</span><span class="n">AtomTypes</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Residues</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Residue</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FEM&quot;</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Atom</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MOD&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;MOX&quot;</span><span class="o">/&gt;</span>
-<span class="o">&lt;/</span><span class="n">Residue</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">Residues</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">NonbondedForce</span> <span class="n">coulomb14scale</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span> <span class="n">lj14scale</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">Atom</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;MOX&quot;</span> <span class="n">charge</span><span class="o">=</span><span class="s2">&quot;3&quot;</span> <span class="n">sigma</span><span class="o">=</span><span class="s2">&quot;0.375&quot;</span> <span class="n">epsilon</span><span class="o">=</span><span class="s2">&quot;0.439&quot;</span><span class="o">/&gt;</span>
-<span class="o">&lt;/</span><span class="n">NonbondedForce</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">ForceField</span><span class="o">&gt;</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;ForceField&gt;
+&lt;AtomTypes&gt;
+&lt;Type name=&quot;MOX&quot; class=&quot;Mo&quot; element=&quot;Mo&quot; mass=&quot;99.0&quot;/&gt;
+&lt;/AtomTypes&gt;
+&lt;Residues&gt;
+&lt;Residue name=&quot;FEM&quot;&gt;
+&lt;Atom name=&quot;MOD&quot; type=&quot;MOX&quot;/&gt;
+&lt;/Residue&gt;
+&lt;/Residues&gt;
+&lt;NonbondedForce coulomb14scale=&quot;1.0&quot; lj14scale=&quot;1.0&quot;&gt;
+&lt;Atom type=&quot;MOX&quot; charge=&quot;3&quot; sigma=&quot;0.375&quot; epsilon=&quot;0.439&quot;/&gt;
+&lt;/NonbondedForce&gt;
+&lt;/ForceField&gt;
 </pre></div>
 </div>
 <p>See e.g. <a class="reference external" href="https://education.molssi.org/mm-tools/01-introduction/index.html">https://education.molssi.org/mm-tools/01-introduction/index.html</a> for information on the format of the XML file.</p>
