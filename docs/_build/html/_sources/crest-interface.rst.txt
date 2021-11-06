@@ -103,8 +103,7 @@ at various levels of theory.
 
 Final result table of calculated conformers at 3 different theory levels:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     =================
     FINAL RESULTS

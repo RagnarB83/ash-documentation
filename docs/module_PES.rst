@@ -254,8 +254,7 @@ Here we show how results with multiple functionals can be obtained at the same t
 
 A table is printed out:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     -------------------------------------------------------------------------
     FINAL RESULTS

@@ -201,7 +201,7 @@ Make sure to use the iPython that uses the same Python as ASH.</p>
 <h2>ASH settings<a class="headerlink" href="#ash-settings" title="Permalink to this headline"></a></h2>
 <p>Global settings are stored in  <em>/path/to/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Settings]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Settings]
 scale = 1.0
 tol = 0.2
 use_ANSI_color = True
@@ -218,7 +218,7 @@ orcadir = &#39;/path/to/orcadir&#39;
 </div>
 <p>In addition to options above it is also possible to specify the paths to various external codes.
 If these paths are set in the settings file, one can avoid setting them in the inputfiles.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Settings]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Settings]
 orcadir = &#39;/path/to/orcadir&#39;
 daltondir = &#39;/path/to/daltondir&#39;
 xtbdir = &#39;/path/to/xtbdir&#39;
@@ -245,7 +245,7 @@ dealing with local scratch, copy files back when done etc.
 Here is an example SLURM jobscript. Remember to go through all the lines and change the various things like the path to
 local scratch, set the correct PATH variables, load modules etc.</p>
 <p>Use like this:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sbatch -J ashtest.py jobscript.sh
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sbatch -J ashtest.py jobscript.sh
 </pre></div>
 </div>
 <p>where jobscript.sh is:</p>

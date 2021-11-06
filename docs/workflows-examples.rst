@@ -155,8 +155,7 @@ See :doc:`thermochemistry` for more information.
 
 Final output:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
      Reaction_energy(ΔSCF):  -33.980155385058865
      Reaction_energy(ΔCCSD):  -6.937247193220541
@@ -233,8 +232,7 @@ Example 3a : Running multiple single-point energies with different functionals (
 
 Producing a nice table of results:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
      Functional   Energy (Eh)
     ----------------------------
@@ -320,8 +318,7 @@ This can also be accomplished using a pre-coded workflow calc_xyzfiles. See: :do
 
 Output:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
      XYZ-file             Energy (Eh)
     -----------------------------------------------
@@ -600,8 +597,7 @@ The manually defined workflow above can also be more conveniently run like this:
 
 Final result table of calculated conformers at 3 different theory levels:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     =================
     FINAL RESULTS

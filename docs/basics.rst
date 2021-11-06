@@ -108,8 +108,7 @@ ASH settings
 Global settings are stored in  */path/to/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     [Settings]
     scale = 1.0
@@ -128,8 +127,8 @@ Here you can set whether to use ANSI colors in output, whether to print inputfil
 In addition to options above it is also possible to specify the paths to various external codes.
 If these paths are set in the settings file, one can avoid setting them in the inputfiles.
 
-.. highlight:: none
-.. code-block::
+
+.. code-block:: text
 
     [Settings]
     orcadir = '/path/to/orcadir'
@@ -164,8 +163,7 @@ local scratch, set the correct PATH variables, load modules etc.
 
 Use like this:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     sbatch -J ashtest.py jobscript.sh
 

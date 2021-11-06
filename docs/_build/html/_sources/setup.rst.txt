@@ -311,8 +311,7 @@ first-ash-job.py:
 
 If you get an error message when launching python3_ash that looks like the following:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
     File "/home/bjornsson/ash/python3_ash", line 9, in <module>
     sys.exit(main())
