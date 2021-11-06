@@ -60,8 +60,7 @@ then this can be easily accomplished using the calc_xyzfiles function.
 The ASH script then runs through and gives a table at the end with the energies. 
 In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
 	XYZ-file             Charge     Mult           Energy(Eh)
 	----------------------------------------------------------------------
@@ -125,8 +124,8 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 
 The final output looks like :
 
-.. highlight:: none
-.. code-block::
+
+.. code-block:: text
 
 	                #######################################
 	                #                                     #
@@ -225,8 +224,7 @@ Example on ozone:
 
 Output:
 
-.. highlight:: none
-.. code-block::
+.. code-block:: text
 
 	ICE-CI step done
 	Note: New natural orbitals from ICE-CI density matrix formed!
