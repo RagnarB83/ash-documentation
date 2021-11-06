@@ -1,4 +1,4 @@
-Workflows module
+Workflows
 ======================================
 
 ASH includes a number of convenient built-in functionality to carry out multi-step workflows. See below.
@@ -8,6 +8,7 @@ See also :doc:`workflows-examples` for a tutorial on how you can build your own 
 #####################
 Thermochemprotocols
 #####################
+
 
 The **thermochemprotocol_reaction** and **thermochemprotocol_single** functions can be used to
 perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.
@@ -37,8 +38,15 @@ The available high-level single-point calculations are defined later.
 calc_xyzfiles: Run calculations on a collection of XYZ-files
 ###############################################################
 
+.. code-block:: python
+
+	def calc_xyzfiles(xyzdir=None, Opt=False, theory=None, charge=None, mult=None, xtb_preopt=False ):
+
+
 If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations) 
 then this can be easily accomplished using the calc_xyzfiles function.
+
+Example:
 
 .. code-block:: python
 
@@ -55,10 +63,14 @@ then this can be easily accomplished using the calc_xyzfiles function.
 	#Geometry optimizations for each XYZ-file can be requested via Opt=True (default False, i.e. singlepoint) 
 	calc_xyzfiles(xyzdir=dir, theory=ORCAcalc, Opt=True)
 
+	# Same but with an xTB pre-optimization (requires xtb to be installed)
+	#calc_xyzfiles(xyzdir=dir, theory=ORCAcalc, Opt=True, xtb_preopt=True)
+
 
 
 The ASH script then runs through and gives a table at the end with the energies. 
-In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created
+In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created.
+
 
 .. code-block:: text
 
@@ -89,6 +101,10 @@ See :doc:`crest-interface`
 ###################################
 Counter-poise correction (ORCA)
 ###################################
+
+.. code-block:: python
+	
+	def counterpoise_calculation_ORCA(fragments=None, theory=None, monomer1_indices=None, monomer2_indices=None):
 
 ASH can perform Boys-Bernardi counterpoise corrections (single-point energy level only) together with ORCA in a convenient way.
 All that is required are geometries (previously optimized) for the AB dimer as well as monomers A and B respectively, a theory level definition and lists of atom indices that specify which atoms in the AB dimer belong to monomer A and B, respectively. 
@@ -198,6 +214,12 @@ The final output looks like :
 ###################################
 Automatic active-space selection
 ###################################
+
+.. code-block:: python
+
+	def auto_active_space(fragment=None, orcadir=None, basis="def2-SVP", scalar_rel=None, charge=None, mult=None, 
+    initial_orbitals='MP2', functional='TPSS', smeartemp=5000, tgen=1e-1, selection_thresholds=[1.999,0.001],
+    numcores=1):
 
 Workflow to guess a good active space for CASSCF calculation based on a 2-step procedure:
 1. Calculate MP2-natural orbitals (alternative Fractional occupation DFT orbitals)
