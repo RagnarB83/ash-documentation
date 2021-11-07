@@ -44,9 +44,21 @@ calc_xyzfiles: Run calculations on a collection of XYZ-files
 
 
 If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations) 
-then this can be easily accomplished using the calc_xyzfiles function.
+then this can be easily accomplished using the calc_xyzfiles function. 
+Charge and multiplicities for each XYZ-file need to be given in the description-line (2nd line) of each XYZ-file like this:
 
-Example:
+HCl.xyz example:
+
+.. code-block:: text
+
+	2
+	0 1
+	H 0.0 0.0 0.0
+	Cl 0.0 0.0 0.0
+
+Alternatively, if all molecules are e.g. neutral singlets then one can give charge=0, mult=1 keyword arguments to **calc_xyzfiles()**
+
+Example script:
 
 .. code-block:: python
 
@@ -69,7 +81,7 @@ Example:
 
 
 The ASH script then runs through and gives a table at the end with the energies. 
-In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created.
+In the case of Opt=True, a geometry optimization is performed for each molecule and a final directory of XYZ-files with optimized coordinates is created.
 
 
 .. code-block:: text

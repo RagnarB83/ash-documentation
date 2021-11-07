@@ -243,8 +243,17 @@ The available high-level single-point calculations are defined later.</p>
 </pre></div>
 </div>
 <p>If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations)
-then this can be easily accomplished using the calc_xyzfiles function.</p>
-<p>Example:</p>
+then this can be easily accomplished using the calc_xyzfiles function.
+Charge and multiplicities for each XYZ-file need to be given in the description-line (2nd line) of each XYZ-file like this:</p>
+<p>HCl.xyz example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2
+0 1
+H 0.0 0.0 0.0
+Cl 0.0 0.0 0.0
+</pre></div>
+</div>
+<p>Alternatively, if all molecules are e.g. neutral singlets then one can give charge=0, mult=1 keyword arguments to <strong>calc_xyzfiles()</strong></p>
+<p>Example script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">24</span>
@@ -263,7 +272,7 @@ then this can be easily accomplished using the calc_xyzfiles function.</p>
 </pre></div>
 </div>
 <p>The ASH script then runs through and gives a table at the end with the energies.
-In the case of Opt=True, a directory of XYZ-files with optimized coordinates is created.</p>
+In the case of Opt=True, a geometry optimization is performed for each molecule and a final directory of XYZ-files with optimized coordinates is created.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>XYZ-file             Charge     Mult           Energy(Eh)
 ----------------------------------------------------------------------
 no.xyz                     0       2      -129.8755914784
