@@ -6,7 +6,7 @@
 Ash: Documentation
 ======================================
 
-These are the documentation pages of Ash.
+These are the documentation pages of ASH, a multiscale modelling program.
 
 .. raw:: html
 

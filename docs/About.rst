@@ -15,6 +15,7 @@ Strict requirements:
 - Numpy Python library
 
 Strongly recommended:
+
 - geomeTRIC (optimizer). Python library, easily installed via pip.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
 - Julia installation (only required for faster Julia versions of routines in molcrys-QM/MM code)
@@ -49,6 +50,7 @@ Features
 #####################
 
 **Flexible coordinate input:**
+
 - coordinate string
 - XYZ file
 - CIF file
@@ -62,6 +64,7 @@ Features
 
 
 **Interfaces to various QM codes:**
+
 - ORCA (inputfile-based). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding.
 - xTB (both as Python library and inputfile-based). OpenMP parallelization
 - Psi4 (both as Python library and inputfile-based). Threaded parallelization.
@@ -71,42 +74,50 @@ Features
 - Dalton
 
 **Parallelization :**
+
 - Parallelization via Python multiprocessing: multiple jobs and numerical frequencies.
 - QM code parallelization also available.
 - Support for simultaneous single-point jobs.
 - Support for simultaneous Numerical-Hessian displacement calculations.
 
 **Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
+
 - **To do**: PySCF
 
 **Polarizable embedding via Psi4, PySCF and CPPE library**
 
 
 **Nonbonded Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
+
 - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
 - Both energy and gradient available.
 - Slow Python version and fast Julia version available.
 - Limitation: No bonded MM yet.
 
 **Full Molecular Mechanics (MM) via OpenMM interface**
+
 - To be documented.
 
 **Geometry optimization with multiple optimizers**
+
 - Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
 - PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.
 - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
 
 **QM/MM Geometry optimization:**
+
 - Possible with geomeTRIC optimizer currently, only.
 - **Todo**: Knarr-optimizer.
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
+
 - Partial Hessian possible
 - Full parallelization.
 - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
 - Request analytical Hessian from ORCA.
 
 **Hessian analysis**
+
 - Diagonalization of Hessian (from ASH or ORCA). Print frequencies and normal modes.
 - **Todo:** projection of translation/rotational modes
 - Normal mode composition analysis in terms of individual atoms, elements and atom groups.
@@ -118,6 +129,7 @@ Features
 - Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)
 
 **Molecular dynamics**
+
 - via OpenMM library: MM-only, QM/MM and QM-only
 - via ASE library
 
