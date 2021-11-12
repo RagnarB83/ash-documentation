@@ -394,8 +394,14 @@ Once the simulation is found to be converged, last snapshot together with the co
     #Re-image trajectory so that protein is in middle
     MDtraj_imagetraj("NVTtrajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
 
-To test whether the system is stable during the long final NVT simulation we 
-Note that while in principle NPT simulations are more realistic conditions compared to reality, the NVT simulations have the benefit that the
+To test whether the system is stable during the long final NVT simulation we can do some analysis of the trajectory.
+
+TODO: Make plots of :
+- temperature vs. time
+- RMSD vs. time
+- other things vs. time
+  
+Note that while in principle NPT simulations are more realistic conditions than NVT , the NVT simulations have the benefit that the
 periodic box vectors are constant and will not change from snapshot to snapshot, a convenient property when grabbing arbitrary snapshots from the trajectory
 for other calculations.
 
@@ -406,10 +412,16 @@ for other calculations.
 ###########################################################################
 
 Once we have performed an acceptable classical simulation and demonstrated that the system is stable we can move on to QM/MM calculations.
-Typical Q
+Typically most QM/MM calculations involve geometry optimizations of an active region of about 1000 atoms or so (see step 4 below).
+But here, due to the small cofactor involved and the availability of a decent semi-empirical method (GFN-XTB) we can also explore
+GFN-xTB/CHARMM36 QM/MM MD simulations.
 
-
+TODO
 
 ###########################################################################
 **4. Run QM/MM geometry optimizations at the DFT-level in ORCA**
 ###########################################################################
+
+QM/MM geometry optimizations are the most typical way of running QM/MM calculation of a protein active site.
+
+TODO
