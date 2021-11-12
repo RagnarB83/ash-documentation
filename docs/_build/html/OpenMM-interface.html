@@ -92,6 +92,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: XXX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
@@ -300,7 +301,7 @@ To obtain a more pleasing visualization of the trajectory you can “reimage” 
 of the system.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_box_relaxation</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datafilename</span><span class="o">=</span><span class="s2">&quot;nptsim.csv&quot;</span><span class="p">,</span> <span class="n">numsteps_per_NPT</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
                           <span class="n">volume_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">density_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.004</span><span class="p">,</span>
-                          <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">trajfilename</span><span class="o">=</span><span class="s1">&#39;relaxbox_NVT&#39;</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                          <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">trajfilename</span><span class="o">=</span><span class="s1">&#39;relaxbox_NPT&#39;</span><span class="p">,</span> <span class="n">trajectory_file_option</span><span class="o">=</span><span class="s1">&#39;DCD&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;NPT simulations until volume and density stops changing</span>
 
 <span class="sd">    Args:</span>
@@ -380,10 +381,13 @@ you can do this by freezing all non-H atoms. An ASH fragment can conveniently gi
 <p>OpenMM features a convenient PDBfixer program (<a class="reference external" href="https://github.com/openmm/pdbfixer">https://github.com/openmm/pdbfixer</a>) and a Modeller tool (<a class="reference external" href="http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html">http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html</a>)
 that is capable of setting up a new biomolecular system from scratch. See also: <a class="reference external" href="http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing">http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing</a> . ASH features a highly convenient interface to these programs and allows near-automatic system-setup for favorable systems.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">waterxmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
-                <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">solvent_boxdims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s1">&#39;K+&#39;</span><span class="p">):</span>
+                    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">solvent_boxdims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">pos_iontype</span><span class="o">=</span><span class="s1">&#39;Na+&#39;</span><span class="p">,</span> <span class="n">neg_iontype</span><span class="o">=</span><span class="s1">&#39;Cl-&#39;</span><span class="p">):</span>
 </pre></div>
 </div>
+<p>The OpenMM_Modeller function returns an ASH OpenMMTheory object that can be used directly as theory level for future calculations.
+OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.).
+And an XML file associated with the system that can be used to create future OpenMMtheory objects from.</p>
 <p>Lysozyme example (simple, no modifications required):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -393,16 +397,14 @@ that is capable of setting up a new biomolecular system from scratch. See also: 
 
 
 <span class="c1">#Defining residues with special user-wanted protonation states</span>
-<span class="c1">#Example: residue_variants={0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39; }</span>
-<span class="c1">#residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.</span>
+<span class="c1">#Example: residue_variants={0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39;, 20:&#39;HID&#39;, 21:&#39;GLH&#39; }</span>
+<span class="c1">#residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP,</span>
+<span class="c1">#residue 19 epsilon-protonated HIS, residue 20 delta-protonated HIS, 21 protonated GLU.</span>
 <span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
 
 <span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
-<span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
-    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
-
-<span class="c1">#Creating new OpenMM object from forcefield, topology and and fragment</span>
-<span class="n">openmmobject</span> <span class="o">=</span><span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
 
 <span class="c1">#MM minimization for 100 steps</span>
 <span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -414,8 +416,8 @@ that is capable of setting up a new biomolecular system from scratch. See also: 
 </div>
 <p>If the protein contains nonstandard residues (e.g. metallocofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
 then these need to be provided using the extraxmlfile option.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
-    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="s2">&quot;cofactor.xml&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="s2">&quot;cofactor.xml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue.
@@ -445,6 +447,19 @@ Here defining a simple Fe(III) ion:</p>
 
 <span class="c1">#TODO</span>
 </pre></div>
+</div>
+<p>Valid alternative residue names for alternative protonation states of titratable residues:</p>
+<ul class="simple">
+<li><p>LYN instead of LYS: deprotonated lysine residue (NH2 instead of NH3)</p></li>
+<li><p>CYX instead of CYS: deprotonated cysteine residue (S- instead of SH)</p></li>
+<li><p>ASH instead of ASP: protonated aspartate residue (COOH instead of COO-)</p></li>
+<li><p>GLH instead of GLU: protonated glutamate residue (COOH instead of COO-)</p></li>
+<li><p>HID instead of HIS: histidine protonated at delta nitrogen</p></li>
+<li><p>HIE instead of HIS: histidine protonated at epsilon nitrogen</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note: these names should not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.</p>
 </div>
 </section>
 <section id="small-molecule-solvation">

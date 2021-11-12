@@ -69,12 +69,8 @@ Example on lysozyme:
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
-
-    #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True,
-                     autoconstraints='HBonds', rigidwater=True)
+    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
     #MM minimization for 1000 steps
     OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=1000, tolerance=1)

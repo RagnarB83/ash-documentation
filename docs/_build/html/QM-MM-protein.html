@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Workflow examples in ASH" href="workflows-examples.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="Metalloprotein-II.html" /> 
+    <link rel="prev" title="Metalloprotein tutorial II: XXX" href="Metalloprotein-II.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -84,6 +84,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: XXX</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM on a protein</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-a-classical-mm-model-of-the-system"><strong>1. Prepare a classical MM model of the system.</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#a-read-coordinates-and-forcefield-into-ash"><strong>2a. Read coordinates and forcefield into ASH</strong></a></li>
@@ -170,12 +171,8 @@ See <a class="reference internal" href="OpenMM-interface.html"><span class="doc"
 <span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
 
 <span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
-<span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
-    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">iontype</span><span class="o">=</span><span class="s2">&quot;Na+&quot;</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
-
-<span class="c1">#Creating new OpenMM object from forcefield, topology and and fragment</span>
-<span class="n">openmmobject</span> <span class="o">=</span><span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Modeller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">forcefield</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">autoconstraints</span><span class="o">=</span><span class="s1">&#39;HBonds&#39;</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
 
 <span class="c1">#MM minimization for 1000 steps</span>
 <span class="n">OpenMM_Opt</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -638,7 +635,7 @@ The example below (can also be found in examples directory)  shows how this can 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Metalloprotein-II.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Metalloprotein-II.html" class="btn btn-neutral float-left" title="Metalloprotein tutorial II: XXX" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="workflows-examples.html" class="btn btn-neutral float-right" title="Workflow examples in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

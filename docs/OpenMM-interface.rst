@@ -219,7 +219,7 @@ of the system.
 
     def OpenMM_box_relaxation(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=10000,
                               volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
-                              traj_frequency=100, trajfilename='relaxbox_NVT', trajectory_file_option='DCD', coupling_frequency=1):
+                              traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1):
         """NPT simulations until volume and density stops changing
 
         Args:
@@ -310,11 +310,14 @@ that is capable of setting up a new biomolecular system from scratch. See also: 
 
 .. code-block:: python
 
-    def OpenMM_Modeller(pdbfile=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0, 
-                    solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
-                    ionicstrength=0.1, iontype='K+'):
+    def OpenMM_Modeller(pdbfile=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0,
+                        solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
+                        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-'):
 
 
+The OpenMM_Modeller function returns an ASH OpenMMTheory object that can be used directly as theory level for future calculations.
+OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.).
+And an XML file associated with the system that can be used to create future OpenMMtheory objects from.
 
 Lysozyme example (simple, no modifications required):
 
@@ -328,16 +331,14 @@ Lysozyme example (simple, no modifications required):
 
 
     #Defining residues with special user-wanted protonation states
-    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
-    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, residue 19 epsilon-protonated HIS.
+    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' } 
+    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, 
+    #residue 19 epsilon-protonated HIS, residue 20 delta-protonated HIS, 21 protonated GLU.
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
-
-    #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True, autoconstraints='HBonds', rigidwater=True)
+    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1)
@@ -347,14 +348,13 @@ Lysozyme example (simple, no modifications required):
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
-
 If the protein contains nonstandard residues (e.g. metallocofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
 then these need to be provided using the extraxmlfile option.
 
 .. code-block:: python
 
-    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants, extraxmlfile="cofactor.xml")
+    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+        solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants, extraxmlfile="cofactor.xml")
 
 
 The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue. 
@@ -390,6 +390,19 @@ Advanced example (additional forcefield parameters required):
 
 
     #TODO
+
+
+Valid alternative residue names for alternative protonation states of titratable residues:
+
+- LYN instead of LYS: deprotonated lysine residue (NH2 instead of NH3)
+- CYX instead of CYS: deprotonated cysteine residue (S- instead of SH)
+- ASH instead of ASP: protonated aspartate residue (COOH instead of COO-)
+- GLH instead of GLU: protonated glutamate residue (COOH instead of COO-)
+- HID instead of HIS: histidine protonated at delta nitrogen
+- HIE instead of HIS: histidine protonated at epsilon nitrogen
+
+.. note:: Note: these names should not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
+
 
 
 ######################################
