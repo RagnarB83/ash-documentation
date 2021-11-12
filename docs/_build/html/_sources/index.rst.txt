@@ -64,6 +64,8 @@ These are the documentation pages of ASH, a multiscale modelling program.
    :caption: Tutorials
 
    Explicit-solvation
+   Metalloprotein-I
+   Metalloprotein-II
    QM-MM-protein
    workflows-examples
    thermochemistry

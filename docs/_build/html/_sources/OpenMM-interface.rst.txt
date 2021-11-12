@@ -358,22 +358,25 @@ then these need to be provided using the extraxmlfile option.
 
 
 The cofactor.xml file needs to define a forcefield (a nonbonded one at least) for the residue. 
-Here defining a dummy molybdenum ion:
+Here defining a simple Fe(III) ion:
 
 .. code-block:: text
 
     <ForceField>
     <AtomTypes>
-    <Type name="MOX" class="Mo" element="Mo" mass="99.0"/>
+    <Type name="FEX" class="Fe" element="Fe" mass="55.84700"/>
     </AtomTypes>
     <Residues>
-    <Residue name="FEM">
-    <Atom name="MOD" type="MOX"/>
+    <Residue name="FE">
+    <Atom name="FE" type="FEX"/>
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="MOX" charge="3" sigma="0.375" epsilon="0.439"/>
+    <Atom type="FEX" charge="3.0" sigma="1.3" epsilon="0.0"/>
     </NonbondedForce>
+    <LennardJonesForce lj14scale="1.0">
+    <Atom type="FEX" sigma="0.3" epsilon="0.00000"/>
+    </LennardJonesForce>
     </ForceField>
 
 
