@@ -321,14 +321,20 @@ The trajectory can be visualized using VMD:
 
 
 
-.. image:: figures/rubredoxin-boxweird-nodepth-ua.png
-   :align: center
-   :width: 300
+.. raw:: html
+
+    <div align=center>
+    <video width="320" height="240" controls>
+    <source src="../../videos/rubredoxin-weirdbox-720p.mov" type="video/mp4">
+    </video>
+    </div>
+
 
 The trajectory or the PDB-file associated with the last snapshot (final_MDfrag_laststep.pdb) may appear quite odd as seen above with the protein
-being outside the box and centered on one of the box corners. It is important to realize that there is nothing wrong with the simulation,
-it's only a visualization oddity due to the periodic boundary conditions enforced during the simulation. If one inspects neighbouring 
-boxes in VMD (Periodic tab in the Graphical Representations window) one can see that each protein is fully solvated if surrounding boxes are visualized.
+being partially outside the box and centered on one of the box corners (and then jumping between corners). It is important to realize that there is 
+nothing wrong with the simulation, it's only a visualization oddity due to the periodic boundary conditions enforced during the simulation. 
+If one inspects neighbouring boxes in VMD (Periodic tab in the Graphical Representations window) one can see that each protein is fully solvated 
+if surrounding boxes are visualized.
 
 .. image:: figures/rubredoxin-multibox.png
    :align: center
@@ -342,9 +348,13 @@ However, it is also possible to reimage the trajectory so that the protein appea
 
 The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 
-.. image:: figures/rubredoxin-box-imaged-side-t1.png
-   :align: center
-   :width: 300
+.. raw:: html
+
+    <div align=center>
+    <video width="320" height="240" controls>
+    <source src="../../videos/rubredoxin-reimaged-720p.mov" type="video/mp4">
+    </video>
+    </div>
 
 
 
