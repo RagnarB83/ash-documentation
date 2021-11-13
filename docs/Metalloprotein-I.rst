@@ -497,7 +497,7 @@ The QM-theory can then be chosen to be any QM-method within a QM-theory interfac
 (usually the case for most DFT, HF and MP2 methods but rarer for e.g. WFT methods like CCSD(T)).
 
 We will here run QM/MM geometry optimization using the ORCATheory interface and will choose the DFT-composite method r2SCAN-3c as our QM-level.
-We will first choose a small active region that consists only of the QM-region. This means that we don't have to worry too much about what happens at the MM-level since the whole MM-region is frozen and will interact
+We will first choose a small active region that consists only of the QM-region (17 atoms + 4 linkatoms). This means that we don't have to worry too much about what happens at the MM-level since the whole MM-region is frozen and will interact
 with the QM-region via electrostatic embedding (MM pointcharging polarizing the QM electron density), short-range Lennard-Jones interactions (MM atoms interacting with QM atoms via the Lennard-Jones parameters defined) as well 
 as via the bonded terms occurring at the QM and MM boundary. 
 
@@ -540,17 +540,114 @@ These are link atoms that turn each methylene group in the QM-region into a meth
 The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
 
 While our QM/MM geometry optimization with this small active region may be an OK first approximation, a more realistic setting is to allow a larger active region.
-We will here choose a large active region of 1000 atoms, surrounding the metal-site.
-In order to conveniently choose this active region we can 
+We will here choose a large active region of ~ 1000 atoms, surrounding the metal-site.
+In order to conveniently choose this active region we can create a little temporary script that calls the actregiondefine function and defines a list of all
+atom indices of whole residues that are 12 Å away from an origin atom (here the Fe ion).
 
-TODO: .... ACTIVE REGION
+It will create a list of active-atom indices and write to a file: active_atoms
+
+*define_activeregion.py:*
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
+    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    fragment=Fragment(pdbfile=lastpdbfile)
+
+    #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
+                platform='CPU',  autoconstraints=None, rigidwater=False)
+
+
+    #Defining active region as within X Å from originatom 755 (Fe)
+    actregiondefine(mmtheory=omm, fragment=fragment, radius=12, originatom=755)
+
+The script will create the following output:
+
+.. code-block:: text
+
+                      ###########################
+                      #                         #
+                    #     ActregionDefine     #
+                      #                         #
+                      ###########################
+
+
+    Radius: 12
+    Origin atom: 755 (Fe)
+    Will find all atoms within 12 Å from atom: 755 (Fe)
+    Will select all whole residues within region and export list
+    Wrote list to file: active_atoms
+    Active region size: 908
+    Active-region indices written to file: active_atoms
+    The active_atoms list  can be read-into Python script like this:	 actatoms = read_intlist_from_file("active_atoms")
+    Wrote Active region XYZfile: ActiveRegion.xyz  (inspect with visualization program)
+
+
+This active_atoms file just contains a list of atom indices indicating which atoms should be active (all others are frozen).
+The file can be manually modified if required. The ActiveRegion.xyz file can be visualized to make sure that the active-region looks reasonable.
+
+.. image:: figures/activregion.png
+   :align: center
+   :width: 300
+
+
 
 While we do not need to apply constraints to the protein X-H atoms as is typically done in MD simulations we have to make sure that the water molecules remain
-rigid as they typically should be (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
-needs to be provided to the optimizer using the bondconstraints keyword argument.
+rigid as they should be (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
+needs to be provided to the optimizer using the constraints keyword argument.
+We use this simple code below to define a constraints dictionary that can then be passed onto the geomeTRICOptimizer.
+
+.. code-block:: python
+
+    actatoms = read_intlist_from_file("active_atoms")
+    #Defining water constraints for atoms in the active region
+    waterconlist = getwaterconstraintslist(openmmtheoryobject=omm, atomlist=actatoms, watermodel='tip3p')
+    waterconstraints = {'bond': waterconlist}
 
 
-TODO: .... WATER CONSTRAINTS
+Now we are ready to perform our QM/MM geometry optimization using our large active region of 908 atoms:
+While the cost of each optimization cycle should remain  the same (the QM-region and QM theory level is the same as before), because 908 atoms are active instead
+of 17 atoms, the minimization problem is tougher and we should expect more optimization cycles to take place.
+The number of optimization cycles may be especially large since we are minimizing from and MD simulation snapshot rather than a previously optimized structure.
 
+*4-QM_MM_Opt_bigact.py:*
 
-    *4-QM_MM_Opt_bigact.py:*
+.. code-block:: python
+
+    from ash import *
+
+    #Define number of cores variable
+    numcores=4
+
+    #Fe(SCH2)4 indices (inspect system_aftersolvent.pdb file to get indices)
+    qmatoms=[93,94,95,96,133,134,135,136,564,565,566,567,604,605,606,607,755]
+
+    #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
+    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    fragment=Fragment(pdbfile=lastpdbfile)
+
+    #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
+                platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
+
+    #QM theory
+    orca = ORCATheory(charge=-1, mult=6, orcasimpleinput="! r2SCAN-3c tightscf", numcores=1)
+    #QM/MM theory
+    qmmm = QMMMTheory(qm_theory=orca, mm_theory=omm, fragment=fragment,
+            embedding="Elstat", qmatoms=qmatoms, printlevel=1)
+
+    # QM/MM geometry optimization
+
+    #Define active-region by reading from active_atoms file
+    actatoms = read_intlist_from_file("active_atoms")
+
+    #Defining water constraints for atoms in the active region
+    waterconlist = getwaterconstraintslist(openmmtheoryobject=omm, atomlist=actatoms, watermodel='tip3p')
+    waterconstraints = {'bond': waterconlist}
+
+    #Calling geomeTRICOptimizer with defined constraints
+    geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints)
+
