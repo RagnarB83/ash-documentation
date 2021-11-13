@@ -160,7 +160,7 @@ Valid alternative residue names for alternative protonation states of titratable
 .. note:: These names can not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
 
 
-If OpenMM_Modeller runs through the whole protocol succesfully, it will print out the the following output in the end:
+If OpenMM_Modeller runs through the whole protocol successfully, it will print out the the following output in the end:
 
 
 .. code-block:: text
@@ -273,7 +273,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 
     numcores=4
 
-    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note ASH counts from 0.
+    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note that ASH counts from 0.
     cofactor_indices=[96, 136, 567, 607, 755]
     bondconstraints=[[755,96],[755,136],[755,567],[755,607]]
 
@@ -363,8 +363,13 @@ The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 **2b. Run through an advanced NPT equilibration + long NVT simulation**
 ###########################################################################
 
-Step 2a above only ran a very short 5 ps MD simulation. That is too short of a simulation time to properly equilibrate a solvated protein system.
+Step 2a above only ran a very short 5 ps MD simulation and is only to demonstrate the basic principles in a short runtime.
+5 ps is much too short of a simulation time to properly equilibrate a solvated protein system.
 Here we will instead run through a longer multistep simulation protocol that will make sure the system is equilibrated.
+We will use a 4fs timestep which is relatively large (a longer timestep allows longer simulation times but can lead to instabilities). 
+Classical MD simulations in OpenMM with the LangevinMiddleIntegrator and appropriate constraints (autoconstraints='HBonds', rigidwater=True, default hydrogenmass scaling of 1.5)
+can typically use such large timesteps without problems.
+
 We will use the original files from OpenMM_Modeller, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_relaxation function)
 that uses both a barostat that changes the box dimensions (to keep pressure constant) until the volume and density of the system reaches convergence.
 Once the simulation is found to be converged, last snapshot together with the converged box vectors are used to start a long 1 ns NVT simulation.
@@ -378,7 +383,7 @@ Once the simulation is found to be converged, last snapshot together with the co
 
     numcores=4
 
-    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note ASH counts from 0.
+    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note that ASH counts from 0.
     cofactor_indices=[96, 136, 567, 607, 755]
     bondconstraints=[[755,96],[755,136],[755,567],[755,607]]
 
@@ -395,10 +400,10 @@ Once the simulation is found to be converged, last snapshot together with the co
     #NPT simulation until density and volume converges
     OpenMM_box_relaxation(fragment=fragment, theory=omm, datafilename="nptsim.csv", numsteps_per_NPT=10000,
                           volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
-                          traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1):
+                          traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1)
 
-    #NVT MD simulation for 1 ns
-    OpenMM_MD(fragment=fragment, theory=omm, timestep=0.001, simulation_time=1000, traj_frequency=1000, temperature=300,
+    #NVT MD simulation for 1000 ps = 1 ns
+    OpenMM_MD(fragment=fragment, theory=omm, timestep=0.004, simulation_time=1000, traj_frequency=1000, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD')
 
 
@@ -413,7 +418,7 @@ To test whether the system is stable during the long final NVT simulation we can
 - RMSD vs. time
 - other things vs. time
   
-Note that while in principle NPT simulations are more realistic conditions than NVT , the NVT simulations have the benefit that the
+Note that while in principle NPT simulations are more realistic conditions than NVT, the NVT simulations have the benefit that the
 periodic box vectors are constant and will not change from snapshot to snapshot, a convenient property when grabbing arbitrary snapshots from the trajectory
 for other calculations.
 
@@ -423,9 +428,10 @@ for other calculations.
 **3. Run semi-empirical GFN-xTB QM/MM MD simulation**
 ###########################################################################
 
-Once we have performed an acceptable classical simulation and demonstrated that the system is stable we can move on to QM/MM calculations.
+Once we have performed an acceptable classical simulation and demonstrated that the system is stable we can move on to QM/MM calculations that allows a more realistic
+description of the metal site and allows us to remove artificial constraints associated with the Fe-S bonds.
 Typically most QM/MM calculations involve geometry optimizations of an active region of about 1000 atoms or so (see step 4 below).
-But here, due to the small cofactor involved and the availability of a decent semi-empirical method (GFN-XTB) we can also explore
+But here, due to the small cofactor involved and the availability of a decent semi-empirical method (GFN-XTB) that can handle semi-empirical we can also explore
 GFN-xTB/CHARMM36 QM/MM MD simulations.
 
 TODO
