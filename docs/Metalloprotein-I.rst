@@ -304,6 +304,7 @@ This script defines an ASH fragment from the final PDB-file created by OpenMM_Mo
 full system XML file (and PDB topology). In addition to basic automatic X-H bondconstraints and rigid-water constraints we also have to
 add constraints associated with the Fe-S cysteine bonds as our simple forcefield did not define bonded parameters associated with this interaction.
 The bond constraints are easily defined as a list of lists using the atom indices of the Fe (755) and the sulfurs (96,136,567,607). Note that ASH counts from 0.
+Alternatively, we could also have added harmonic bond restraints instead of rigid constraints.
 
 We next provide the ASH fragment and the OpenMMTheory as input to the OpenMM_Opt minimizer and run a minimization of 100 steps.
 For a large MM system it is typically not needed to minimize the whole system until convergence (and can in fact be very hard to accomplish).
@@ -325,7 +326,7 @@ The trajectory can be visualized using VMD:
 
     <div align=center>
     <video width="320" height="240" controls>
-    <source src="../../videos/rubredoxin-weirdbox-720p.mov" type="video/mp4">
+    <source src="_static/rubredoxin-weirdbox-720p.mov" type="video/mp4">
     </video>
     </div>
 
@@ -352,7 +353,7 @@ The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 
     <div align=center>
     <video width="320" height="240" controls>
-    <source src="../../videos/rubredoxin-reimaged-720p.mov" type="video/mp4">
+    <source src="_static/rubredoxin-reimaged-720p.mov" type="video/mp4">
     </video>
     </div>
 
@@ -406,7 +407,8 @@ Once the simulation is found to be converged, last snapshot together with the co
 
 To test whether the system is stable during the long final NVT simulation we can do some analysis of the trajectory.
 
-TODO: Make plots of :
+**TODO: Make plots of :**
+
 - temperature vs. time
 - RMSD vs. time
 - other things vs. time
