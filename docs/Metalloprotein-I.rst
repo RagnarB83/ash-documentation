@@ -476,10 +476,10 @@ of course how well the semi-empirical method handles the system).
 
     #QM/MM MD simulation for 10 ps. More conservative timestep
     OpenMM_MD(fragment=fragment, theory=qmmm, timestep=0.001, simulation_time=10, traj_frequency=50, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1)
 
-    #Re-image trajectory so that protein is in middle
-    MDtraj_imagetraj("trajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+
+TODO: inspect QM/MM trajectory
 
 
 Finally, note that we are of course not limited to semi-empirical methods for QM/MM MD.
@@ -529,12 +529,15 @@ as via the bonded terms occurring at the QM and MM boundary.
             embedding="Elstat", qmatoms=qmatoms, printlevel=1)
 
     # QM/MM geometry optimization
-    #Defining active region as QM-region here
+    #Defining active region as QM-region
     actatoms=qmatoms
     geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200)
 
 
 This optimization should converge in about 13 optimization steps.
+
+TODO: inspect QM/MM trajectory
+
 If you inspect the ORCA inputfile created by ASH you will notice that the QM-coordinates provided by ASH to ORCA contain 4 extra hydrogen atoms on each carbon atom.
 These are link atoms that turn each methylene group in the QM-region into a methyl group in order to maintain a simple closed-shell electronic structure.
 The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
@@ -651,3 +654,5 @@ The number of optimization cycles may be especially large since we are minimizin
     #Calling geomeTRICOptimizer with defined constraints
     geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints)
 
+
+TODO: inspect QM/MM trajectory
