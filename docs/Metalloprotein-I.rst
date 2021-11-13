@@ -261,7 +261,7 @@ the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory
     omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile="finalsystem.pdb", periodic=True, platform='OpenCL', numcores=numcores,
                         autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
-.. warning:: This has the disadvantage that all constraints of the system have been hardcoded into the XML file and can not be changed later.
+.. warning:: The xmlsystemfile="system_full.xml" option has the disadvantage that all constraints of the system have been hardcoded into the XML file and can not be changed later.
     This it not a good option for future QM/MM optimizations since these constraints are not compatible with QM/MM optimization runs (using geomeTRIC).
 
 .. note:: pdbfile=  input in OpenMMTheory is used to define the topology and needs to match the assumed topology in the XML-files. 
@@ -436,14 +436,13 @@ for other calculations.
 ###########################################################################
 
 Once we have performed an acceptable classical simulation (with the Fe-S bonds of the metal site constrained) and demonstrated that the system is stable 
-we can move on to QM/MM calculations that allows a more realistic description of the metal site and allows us to remove artificial constraints associated 
-with the Fe-S bonds.
-Typically most QM/MM calculations involve geometry optimizations of a system-subset (an active region of about 1000 atoms or so) in order
-to explore the local potential energy surface: see step 4 below.
+we can move on to QM/MM calculations that allow a more realistic description of the metal site and allows us to remove artificial constraints associated 
+with the Fe-S bonds (we constrained them because we did not have bonded MM parameters available).
+Typical QM/MM calculations involved geometry optimizations of a system-subset : see step 4 below.
 
 But here, due to the small cofactor involved and the availability of a decent cheap semi-empirical method (GFN-XTB) that can handle transition metals we can perform
-GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds at least and explore the dynamic nature of the metal site properly (this depends of course how well the
-semi-empirical method handles the system).
+GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds and explore the dynamic nature of the metal site properly (the accuracy of such a simulations depends 
+of course how well the semi-empirical method handles the system).
 
 
 .. note:: This feature is in an experimental stage as OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
@@ -535,47 +534,23 @@ as via the bonded terms occurring at the QM and MM boundary.
     geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200)
 
 
-    This optimization converges should converge in about 13 optimization steps.
-    If you inspect the ORCA inputfile created by ASH you will notice that the QM-coordinates provided by ASH to ORCA contain 4 extra hydrogen atoms on each carbon atom.
-    These are link atoms that turn each methylene group in the QM-region into a methyl group in order to maintain a simple closed-shell electronic structure.
-    The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
+This optimization should converge in about 13 optimization steps.
+If you inspect the ORCA inputfile created by ASH you will notice that the QM-coordinates provided by ASH to ORCA contain 4 extra hydrogen atoms on each carbon atom.
+These are link atoms that turn each methylene group in the QM-region into a methyl group in order to maintain a simple closed-shell electronic structure.
+The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
 
-    While our QM/MM geometry optimization with this small active region may be an OK first approximation, a more realistic setting is to allow a larger active region.
-    We will here choose a large active region of 1000 atoms, surrounding the metal-site.
-    In order to conveniently choose this active region
+While our QM/MM geometry optimization with this small active region may be an OK first approximation, a more realistic setting is to allow a larger active region.
+We will here choose a large active region of 1000 atoms, surrounding the metal-site.
+In order to conveniently choose this active region we can 
 
-    While we do not need to apply constraints to the protein X-H atoms as is typically done in MD simulations we have to make sure that the water molecules remain
-    rigid as they typically should be (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
-    needs to be provided to the optimizer using the bondconstraints keyword argument.
+TODO: .... ACTIVE REGION
+
+While we do not need to apply constraints to the protein X-H atoms as is typically done in MD simulations we have to make sure that the water molecules remain
+rigid as they typically should be (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
+needs to be provided to the optimizer using the bondconstraints keyword argument.
+
+
+TODO: .... WATER CONSTRAINTS
 
 
     *4-QM_MM_Opt_bigact.py:*
-
-    .. code-block:: python
-
-        from ash import *
-
-        #Define number of cores variable
-        numcores=4
-
-        #Fe(SCH2)4 indices (inspect system_aftersolvent.pdb file to get indices)
-        qmatoms=[93,94,95,96,133,134,135,136,564,565,566,567,604,605,606,607,755]
-
-        #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
-        lastpdbfile="final_MDfrag_laststep_imaged.pdb"
-        fragment=Fragment(pdbfile=lastpdbfile)
-
-        #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
-        omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
-                    platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
-
-        #QM theory: r2SCAN-3c DFT-composite method using ORCA
-        orca = ORCATheory(charge=-1, mult=6, orcasimpleinput="! r2SCAN-3c tightscf", numcores=numcores)
-        #QM/MM theory
-        qmmm = QMMMTheory(qm_theory=orca, mm_theory=omm, fragment=fragment,
-                embedding="Elstat", qmatoms=qmatoms, printlevel=1)
-
-        # QM/MM geometry optimization
-        #Defining active region as QM-region here
-        actatoms=qmatoms
-        geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200)
