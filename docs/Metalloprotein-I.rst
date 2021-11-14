@@ -448,7 +448,7 @@ of course how well the semi-empirical method handles the system).
 .. note:: This feature is in an experimental stage as OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
     the periodic boundary conditions and will calculate a non-periodic box instead. It's unclear how reliable this approximation is in the long run.
 
-*3-QM_MM_MD.py:*
+*3-QMMM_MD.py:*
 
 .. code-block:: python
 
@@ -498,11 +498,11 @@ The QM-theory can then be chosen to be any QM-method within a QM-theory interfac
 
 We will here run QM/MM geometry optimization using the ORCATheory interface and will choose the DFT-composite method r2SCAN-3c as our QM-level.
 We will first choose a small active region that consists only of the QM-region (17 atoms + 4 linkatoms). This means that we don't have to worry too much about what happens at the MM-level since the whole MM-region is frozen and will interact
-with the QM-region via electrostatic embedding (MM pointcharging polarizing the QM electron density), short-range Lennard-Jones interactions (MM atoms interacting with QM atoms via the Lennard-Jones parameters defined) as well 
+with the QM-region via electrostatic embedding (MM pointcharges polarizing the QM electron density), short-range Lennard-Jones interactions (MM atoms interacting with QM atoms via the Lennard-Jones parameters defined in the forcefield) as well 
 as via the bonded terms occurring at the QM and MM boundary. 
 
 
-*4-QM_MM_Opt_smallact.py:*
+*4-QMMM_Opt_smallact.py:*
 
 .. code-block:: python
 
@@ -535,19 +535,37 @@ as via the bonded terms occurring at the QM and MM boundary.
 
 
 This optimization should converge in about 13 optimization steps.
+geomeTRICOptimizer writes out 2 trajectory files that can be visualized: geometric_OPTtraj.xyz (active-region only) geometric_OPTtraj_Full.xyz (full system) using e.g VMD:
 
-TODO: inspect QM/MM trajectory
+.. code-block:: text
 
-If you inspect the ORCA inputfile created by ASH you will notice that the QM-coordinates provided by ASH to ORCA contain 4 extra hydrogen atoms on each carbon atom.
-These are link atoms that turn each methylene group in the QM-region into a methyl group in order to maintain a simple closed-shell electronic structure.
-The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
+    vmd geometric_OPTtraj.xyz  # visualize trajectory with active region 
+    vmd geometric_OPTtraj_Full.xyz # visualize full trajectory
+    vmd final_MDfrag_laststep_imaged.pdb geometric_OPTtraj_Full.xyz # visualize trajectory with topology information available
 
-While our QM/MM geometry optimization with this small active region may be an OK first approximation, a more realistic setting is to allow a larger active region.
-We will here choose a large active region of ~ 1000 atoms, surrounding the metal-site.
-In order to conveniently choose this active region we can create a little temporary script that calls the actregiondefine function and defines a list of all
-atom indices of whole residues that are 12 Å away from an origin atom (here the Fe ion).
+.. raw:: html
 
-It will create a list of active-atom indices and write to a file: active_atoms
+    <div align=center>
+    <video width="320" height="240" controls>
+    <source src="_static/rubredoxin-opt-traj-smallactonly720p.mov" type="video/mp4">
+    </video>
+    <video width="320" height="240" controls>
+    <source src="_static/rubredoxin-opt-traj-smallact-full720p.mov" type="video/mp4">
+    </video>
+    </div>
+
+
+
+.. note:: Unlike the active-region trajectory above that shows only the QM atoms, if you inspect the ORCA inputfile created by ASH  (orca.inp by default) you will notice that the QM-coordinates provided by ASH to ORCA contain 4 extra hydrogen atoms on each carbon atom.
+    These are link atoms that turn each methylene group in the QM-region into a methyl group in order to maintain a simple closed-shell electronic structure.
+    The forces acting on the linkatoms are projected onto the MM atoms by ASH automatically.
+
+While our QM/MM geometry optimization with this small active region can be an acceptable first approximation, a more realistic calculation that accounts for protein environment flexibility
+is to allow a larger active region. We will here choose a large active region of ~ 1000 atoms, surrounding the metal-site. Note that while an even larger active region is of course possible,
+really large active regions create minimization problems as well MM local minima problems occurring in QM/MM reaction profile studies. In order to conveniently choose the active region we can 
+create a little temporary script (here called define_activeregion.py) that calls the actregiondefine function and defines a list of
+atom indices of whole residues that are 12 Å away from the origin atom (here the Fe ion).
+
 
 *define_activeregion.py:*
 
@@ -596,11 +614,14 @@ The file can be manually modified if required. The ActiveRegion.xyz file can be 
    :align: center
    :width: 300
 
+.. warning:: While it might be tempting to call the actregiondefine function directly within your regular ASH QM/MM optimization script, this is typically 
+    not a good idea as the active region is then redefined for each set of new system coordinates. It's possible that the active region might slightly change in subsequent jobs due to e.g. water molecules being randomly in 
+    or out out of the sphere-radius when the function is run. This will result in an inconsistent energy surface. Instead: run the actregion definition script only once to define the active-atoms 
+    list and use for all subsequent jobs.
 
-
-While we do not need to apply constraints to the protein X-H atoms as is typically done in MD simulations we have to make sure that the water molecules remain
-rigid as they should be (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
-needs to be provided to the optimizer using the constraints keyword argument.
+While we do not need to apply constraints to the X-H bonds of the protein (as is typically done in MD simulations to allow longer timesteps) we do have to make sure that the water molecules remain
+rigid as they should be according to the model definition (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
+needs to be provided using the constraints keyword argument.
 We use this simple code below to define a constraints dictionary that can then be passed onto the geomeTRICOptimizer.
 
 .. code-block:: python
@@ -616,7 +637,7 @@ While the cost of each optimization cycle should remain  the same (the QM-region
 of 17 atoms, the minimization problem is tougher and we should expect more optimization cycles to take place.
 The number of optimization cycles may be especially large since we are minimizing from and MD simulation snapshot rather than a previously optimized structure.
 
-*4-QM_MM_Opt_bigact.py:*
+*4-QMMM_Opt_bigact.py:*
 
 .. code-block:: python
 
