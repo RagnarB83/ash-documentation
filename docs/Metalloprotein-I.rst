@@ -3,11 +3,11 @@ Metalloprotein tutorial I: Rubredoxin
 
 How to set up an MM and QM/MM model from scratch using the ASH-OpenMM interface.
 
-**Test system:** rubredoxin
+**Test system:** rubredoxin using CHARMM36 protein forcefield.
 
 This tutorial shows how to set up a classical model of the rubredoxin metalloprotein in ASH using the CHARMM36 forcefield.
 Rubredoxin is one of the simplest metalloproteins having only a single metal-ion (Fe), bound to the protein via 4 cysteine residues but that makes
-the system a good first test system to demonstrate how to set up a relatively simple metalloprotein using the ASH-OpenMM interface.
+the system a good first test system to demonstrate how to set up a relatively simple metalloprotein using the ASH-OpenMM interface with minimal modifications.
 
 The files for this tutorial can be found in the ASH source code directory under:
 $ASHDIR/examples/OpenMM_Modeller-setups/rubredoxin or https://github.com/RagnarB83/ash/tree/master/examples/OpenMM_Modeller-setups/rubredoxin
@@ -70,7 +70,7 @@ Let's create an OpenMM forcefield XML file that looks like:
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="FEX" charge="0.0" sigma="1.3" epsilon="0.0"/>
+    <Atom type="FEX" charge="3.0" sigma="1.3" epsilon="0.0"/>
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
     <Atom type="FEX" sigma="0.3" epsilon="0.00000"/>
@@ -80,7 +80,8 @@ Let's create an OpenMM forcefield XML file that looks like:
 This OpenMM XML file defines a forcefield associated with the Fe residue. A list of atomtypes needs to be defined (here only a single atomtype, FEX, is needed). 
 Note that an atomtype can be applied to many atoms in a residue or many residues while an atomname is unique within a residue.
 Then the extra residue needs to be defined (named "FE"). Next we define an atom name ("FE") that points to the atom type ("FEX").
-Finally, we need to define nonbonded parameters associated with the residue and the single atom. Note that in this case we need to define both NonbondedForce and LennardJonesForce in order
+Finally, we need to define nonbonded parameters associated with the residue and the single atom (here an Fe3+ ion is defined). We ignore the LJ parameters in this case which is an acceptable approximation for a fully coordinates metal ion.
+Note that we need to define both NonbondedForce and LennardJonesForce in order
 to be consistent with the CHARMM36 forcefield as defined within OpenMM.
 
 
@@ -115,8 +116,8 @@ This is obviously not what we want for our Fe ion that should be coordinated to 
 
 In order to let OpenMM_Modeller know that we do not want those cysteine sidechains protonated we need to define 
 the residue_variants keyword argument.
-The residue_variants value needs to be a dictionary that points to alternative residuenames for residues with 
-other protonation states.
+The residue_variants value needs to be a dictionary of dictionaries that points to alternative residuenames for residues with 
+other protonation states in each chain (identified by chainname)
 Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residues (deprotonated CYS).
 
 
@@ -132,18 +133,40 @@ Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residu
     #XML-file to deal with cofactor
     extraxmlfile="./specialresidue.xml"
 
-    #Setting some manual protonation states. Note: ASH counts from 0
-    #Here defining residues 5,8,38,41 (6,9,39,42 in the PDB-file) to be deprotonated cysteines (CYX).
-    residue_variants={5:'CYX',8:'CYX',38:'CYX',41:'CYX'}
+    #Setting some manual protonation states.
+    #Here defining residues in chain A with resid values: 6,9,39,42 to be deprotonated cysteines (CYX). 
+    #NOTE: Here the actual resid values in the PDB-file are used (ASH's 0-based indexing does not apply)
+    residue_variants={'A':{6:'CYX',9:'CYX',39:'CYX',42:'CYX'}}
 
     # Setting up system via Modeller
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36',
         extraxmlfile=extraxmlfile, residue_variants=residue_variants)
 
+OpenMM_Modeller prints a table that confirms that we have selected the correct residue (though best to visually confirm.):
+
+.. code-block:: text
+
+    User defined residue variants per chain:
+    Chain A : {6: 'CYX', 9: 'CYX', 39: 'CYX', 42: 'CYX'}
+
+    MODELLER TOPOLOGY - RESIDUES TABLE
+
+    ASH-resid   Resname      Chain-index  Chain-name   ResID-in-chain       User-modification
+    ----------------------------------------------------------------------------------------------------
+    0           MET          0            A            1
+    1           ASP          0            A            2
+    2           ILE          0            A            3
+    3           TYR          0            A            4
+    4           VAL          0            A            5
+    5           CYS          0            A            6                   -- This residue will be changed to: CYX --
+    6           THR          0            A            7
+    7           VAL          0            A            8
+    8           CYS          0            A            9                   -- This residue will be changed to: CYX --
+    9           GLY          0            A            10
+    10          TYR          0            A            11
+    11          GLU          0            A            12
 
 
-This is the final version of the setup script that will correctly setup the rubredoxin model, at least with respect to the coordinated Fe ion.
-For this system
 
 Valid alternative residue names for alternative protonation states of titratable residues:
 
@@ -156,8 +179,8 @@ Valid alternative residue names for alternative protonation states of titratable
 
 .. note:: These names can not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
 
-
-If OpenMM_Modeller runs through the whole protocol successfully, it will print out the the following output in the end:
+This is the final version of the setup script that will correctly setup the rubredoxin model, at least with respect to the coordinated Fe ion.
+When OpenMM_Modeller runs through the whole protocol without errors, it will print out the the following output in the end:
 
 
 .. code-block:: text
@@ -196,7 +219,7 @@ PDB-files are created for each step and can be inspected.
 
 Figure above shows a visualization of the PDB after basic fixes (missing heavy atoms added) at the top left, after adding all hydrogen atoms (top right), after adding a solvent box (bottom left) and after adding ions (bottom right).
 
-.. note:: Even though OpenMM_Modeller exits succesfully without errors you should be highly 
+.. note:: Even though OpenMM_Modeller exits successfully without errors you should be highly 
     critical of the final results and visual inspection of the PDB-files will always be required. 
     Pay special attention to the environment around unusual residues and inspect the protonation states of titratable residues, 
     e.g. by analyzing hydrogen bonding networks.
@@ -218,9 +241,10 @@ control protonation state of titratable residues according to pH value, change i
     #XML-file to deal with cofactor
     extraxmlfile="./specialresidue.xml"
 
-    #Setting some manual protonation states. Note: ASH counts from 0
-    #Here defining residues 5,8,38,41 (6,9,39,42 in the PDB-file) to be deprotonated cysteines (CYX).
-    residue_variants={5:'CYX',8:'CYX',38:'CYX',41:'CYX'}
+    #Setting some manual protonation states.
+    #Here defining residues in chain A with resid values: 6,9,39,42 to be deprotonated cysteines (CYX). 
+    #NOTE: Here the actual resid values in the PDB-file are used (ASH's 0-based indexing does not apply)
+    residue_variants={'A':{6:'CYX',9:'CYX',39:'CYX',42:'CYX'}}
 
     # Setting up system via Modeller
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36',
@@ -286,8 +310,8 @@ To show how we can run classical simulations of our rubredoxin setup consider th
     fragment=Fragment(pdbfile="finalsystem.pdb")
 
     #Creating new OpenMM object from OpenMM full system file
-    omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile="finalsystem.pdb", periodic=True, platform='CPU', numcores=numcores,
-                        autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+                numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=fragment, theory=omm, maxiter=100, tolerance=1)
@@ -338,7 +362,7 @@ The trajectory can be visualized using VMD:
 
 The trajectory or the PDB-file associated with the last snapshot (final_MDfrag_laststep.pdb) may appear quite odd as seen above with the protein
 being partially outside the box and centered on one of the box corners (and then jumping between corners). It is important to realize that there is 
-nothing wrong with the simulation, it's only a visualization oddity due to the periodic boundary conditions enforced during the simulation. 
+nothing wrong with the simulation, it's only a visualization oddity due to the periodic boundary conditions enforced during the simulation (and OpenMM's choice of image representation). 
 If one inspects neighbouring boxes in VMD (Periodic tab in the Graphical Representations window) one can see that each protein is fully solvated 
 if surrounding boxes are visualized.
 
@@ -396,8 +420,8 @@ Once the simulation is found to be converged, last snapshot together with the co
     fragment=Fragment(pdbfile="finalsystem.pdb")
 
     #Creating new OpenMM object from OpenMM full system file
-    omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile="finalsystem.pdb", periodic=True, platform='CPU', numcores=numcores,
-                        autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+                numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=fragment, theory=omm, maxiter=100, tolerance=1)
@@ -463,8 +487,8 @@ of course how well the semi-empirical method handles the system).
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM full system file
-    omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile=lastpdbfile, periodic=True, platform='CPU', numcores=numcores,
-                        autoconstraints='HBonds', rigidwater=True)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+                numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #QM theory: GFN1-xTB
     xtb = xTBTheory(charge=-1, mult=6, xtbmethod="GFN1", numcores=numcores)

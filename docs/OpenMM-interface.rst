@@ -330,10 +330,11 @@ Lysozyme example (simple, no modifications required):
     pdbfile="1aki.pdb"
 
 
-    #Defining residues with special user-wanted protonation states
-    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' } 
-    #residue 0 neutral LYS, residue 17, deprotonated CYS, residue 18 protonated ASP, 
-    #residue 19 epsilon-protonated HIS, residue 20 delta-protonated HIS, 21 protonated GLU.
+    #Defining residues with special user-wanted protonation states for residues in each indicated chain
+    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary and the resids being keys for the inner dictionary
+    #Example: residue_variants={'A':{0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' }}
+    #resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP, 
+    #resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
@@ -381,6 +382,29 @@ Here defining a simple Fe(III) ion:
 
 
 See e.g. https://education.molssi.org/mm-tools/01-introduction/index.html for information on the format of the XML file.
+
+Common error messages encountered when reading in user-defined XML-files:
+
+-**ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.**
+
+*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resnames is not the same in the
+PDBfile as in the XML file.*
+
+- **ValueError: Found multiple definitions for atom type: X**  :  
+
+*This means that the atomtypes you defined inside <AtomTypes> </AtomTypes> are not unique. Either you have accidentally two lines with the same name for atomtype or the general forcefield (e.g. CHARMM) already contains an atomtype definition with this name. In that case, choose a unique name.*
+
+- **KeyError: 'SXM'**  :  
+
+*Possibly means that your atomname definition points to an atomtype-name that does not exist*
+
+
+- **ValueError: No template found for residue X (YYY).  The set of atoms matches YYY, but the bonds are different.  Perhaps the chain is missing a terminal group?'**  :  
+
+*This means there is some mismatch between the information present in the PDB-file and the information in the XML-file you provided.
+It's possible that the PDB-file contains connectivity statements at the bottom of the PDB-file (CONE lines) but no bond information is present in the XML file.
+Solution: Either add the missing bond to the residue definition so that it matches the CONE lines or simply delete the CONE information that you don't need.*
+
 
 Advanced example (additional forcefield parameters required):
 

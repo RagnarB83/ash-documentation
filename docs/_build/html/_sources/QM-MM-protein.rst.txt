@@ -62,10 +62,11 @@ Example on lysozyme:
     pdbfile="1aki.pdb"
 
 
-    #Defining residues with special user-wanted protonation states
-    #Example: residue_variants={0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE' } 
-    #residue 0: neutral LYS, residue 17: deprotonated CYS, residue 18: protonated ASP, residue 19: epsilon-protonated HIS.
-    #Other residues are determined based on the rules in the OpenMM modeller program
+    #Defining residues with special user-wanted protonation states for residues in each indicated chain
+    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary and the resids being keys for the inner dictionary
+    #Example: residue_variants={'A':{0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' }}
+    #resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP, 
+    #resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
@@ -73,10 +74,10 @@ Example on lysozyme:
         solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
     #MM minimization for 1000 steps
-    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=1000, tolerance=1)
+    OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=1000, tolerance=1)
 
     #Classical MD simulation for 1000 ps
-    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=1000, traj_frequency=1000, temperature=300,
+    OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=1000, traj_frequency=1000, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
@@ -548,12 +549,9 @@ The example below (can also be found in examples directory)  shows how this can 
     pdbfile="1aki.pdb"
 
 
-    #Defining residues with special user-wanted protonation states
-    residue_variants={}
-
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
     forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1, iontype="Na+", residue_variants=residue_variants)
+        solvent_padding=10.0, ionicstrength=0.1)
 
     #Creating new OpenMM object from forcefield, topology and and fragment
     openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
@@ -561,10 +559,10 @@ The example below (can also be found in examples directory)  shows how this can 
                      autoconstraints='HBonds', rigidwater=True)
 
     #MM minimization for 100 steps
-    OpenMM_Opt(fragment=ashfragment, openmmobject=openmmobject, maxiter=100, tolerance=1)
+    OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1)
 
     #Classical MD simulation for 10 ps
-    OpenMM_MD(fragment=ashfragment, openmmobject=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+    OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
     #Setting up QM/MM model with QM-region: side-chain of ASP66
