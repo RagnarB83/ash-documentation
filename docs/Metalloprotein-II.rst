@@ -29,7 +29,17 @@ we will get this error:
     ValueError: No template found for residue 191 (FES).  This might mean your input topology is missing some atoms or bonds, 
     or possibly that you are using the wrong force field.
 
-This arises simply because the FES residue (the [2Fe-2S] cluster is not present in the CHARMM36 forcefield.)
+This arises simply because the FES residue, i.e. the [2Fe-2S] cluster is not present in the CHARMM36 forcefield.
+In the PDB-file the residue is defined like this:
+
+.. code-block:: text
+
+    HETATM 1457 FE1  FES A 101       5.508  -6.531  22.895  1.00  7.55          FE
+    HETATM 1458 FE2  FES A 101       4.734  -4.618  21.086  1.00  6.50          FE
+    HETATM 1459  S1  FES A 101       5.095  -4.352  23.250  1.00  7.17           S
+    HETATM 1460  S2  FES A 101       4.997  -6.752  20.748  1.00  7.46           S
+
+
 If we tell OpenMM_Modeller about the extra residue: 
 
 .. code-block:: python
