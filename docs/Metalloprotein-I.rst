@@ -103,16 +103,13 @@ Now that we have created an XML-file (*specialresidue.xml*) associated with the 
 While this script runs to completion in just a few seconds, we are not quite ready. The Fe ion is now defined in the combined forcefield, however, OpenMM does not know that the Fe ion is actually chemically bonded to 4 deprotonated cysteine
 residues of the protein. Those 4 cysteine residues are Cys6, Cys9, Cys39 and Cys42.
 
-.. image:: figures/rubredoxin-cysteines-bad.png
+.. image:: figures/rubredoxin-cysteines-combined-72.png
    :align: center
-   :width: 300
+   :width: 700
 
-.. image:: figures/rubredoxin-cysteines-correct.png
-   :align: center
-   :width: 300
 
-Cysteine residues are by default assumed to have a protonated sidechain and we can see on the figure on the top that OpenMM added H-atoms to each thiol group of the cysteine sidechain.
-This is obviously not what we want for our Fe ion that should be coordinated to 4 deprotonated cysteines.
+Cysteine residues are by default assumed to have a protonated sidechain and we can see on the figure on the left that OpenMM added H-atoms to each thiol group of the cysteine sidechain.
+This is obviously not what we want for our Fe ion that should be coordinated to 4 deprotonated cysteines (right figure)
 
 
 
@@ -487,9 +484,9 @@ The xTBTheory we used as QM theory can be replaced by any QM-theory implemented 
 This, however, will mean that each QM energy+gradient step will take longer, meaning only shorter timescales can be reached.
 
 
-###########################################################################
-**4. Run QM/MM geometry optimizations at the DFT-level in ORCA**
-###########################################################################
+####################################################################################
+**4. Run QM/MM geometry optimizations at the DFT-level using ORCA as QM theory**
+####################################################################################
 
 QM/MM geometry optimizations are the most typical way of running QM/MM calculations of a protein active site.
 One defines a QM-region that can be chosen to be as large as one can afford and an active region that can be considerably larger (typically consisting of all QM atoms and many surrounding MM atoms, usually around 1000 atoms).
@@ -658,7 +655,7 @@ The number of optimization cycles may be especially large since we are minimizin
                 platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM theory
-    orca = ORCATheory(charge=-1, mult=6, orcasimpleinput="! r2SCAN-3c tightscf", numcores=1)
+    orca = ORCATheory(charge=-1, mult=6, orcasimpleinput="! r2SCAN-3c tightscf", numcores=numcores)
     #QM/MM theory
     qmmm = QMMMTheory(qm_theory=orca, mm_theory=omm, fragment=fragment,
             embedding="Elstat", qmatoms=qmatoms, printlevel=1)
