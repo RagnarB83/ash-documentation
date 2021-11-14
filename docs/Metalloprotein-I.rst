@@ -80,7 +80,8 @@ Let's create an OpenMM forcefield XML file that looks like:
 This OpenMM XML file defines a forcefield associated with the Fe residue. A list of atomtypes needs to be defined (here only a single atomtype, FEX, is needed). 
 Note that an atomtype can be applied to many atoms in a residue or many residues while an atomname is unique within a residue.
 Then the extra residue needs to be defined (named "FE"). Next we define an atom name ("FE") that points to the atom type ("FEX").
-Finally, we need to define nonbonded parameters associated with the residue and the single atom (here an Fe3+ ion is defined). We ignore the LJ parameters in this case which is an acceptable approximation for a fully coordinates metal ion.
+Finally, we need to define nonbonded parameters associated with the residue and the single atom (here an Fe3+ ion is defined). 
+We ignore the LJ parameters in this case (epsilon=0.0 kJ/mol) which is an acceptable approximation for a fully coordinated metal ion.
 Note that we need to define both NonbondedForce and LennardJonesForce in order
 to be consistent with the CHARMM36 forcefield as defined within OpenMM.
 
@@ -142,7 +143,7 @@ Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residu
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36',
         extraxmlfile=extraxmlfile, residue_variants=residue_variants)
 
-OpenMM_Modeller prints a table that confirms that we have selected the correct residue (though best to visually confirm.):
+OpenMM_Modeller prints a table with to-be-modified residues indicated, that confirms that we have selected the correct residues (though best to visually confirm):
 
 .. code-block:: text
 
@@ -165,7 +166,7 @@ OpenMM_Modeller prints a table that confirms that we have selected the correct r
     9           GLY          0            A            10
     10          TYR          0            A            11
     11          GLU          0            A            12
-
+    ...
 
 
 Valid alternative residue names for alternative protonation states of titratable residues:
@@ -220,7 +221,7 @@ PDB-files are created for each step and can be inspected.
 Figure above shows a visualization of the PDB after basic fixes (missing heavy atoms added) at the top left, after adding all hydrogen atoms (top right), after adding a solvent box (bottom left) and after adding ions (bottom right).
 
 .. note:: Even though OpenMM_Modeller exits successfully without errors you should be highly 
-    critical of the final results and visual inspection of the PDB-files will always be required. 
+    critical of the final results and visual inspection of the final system PDB-file should always be a requirement. 
     Pay special attention to the environment around unusual residues and inspect the protonation states of titratable residues, 
     e.g. by analyzing hydrogen bonding networks.
     Histidine protonation states are especially important (and C/N assignments may even be wrong in the X-ray structure).
@@ -258,11 +259,11 @@ control protonation state of titratable residues according to pH value, change i
 ###############################################################
 
 Once OpenMM_Modeller has finished setting up the system we need to do some basic classical simulations to make sure 
-the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD system. While OpenMM_Modeller returns a valid OpenMMTheory ASH object that could be used as input in the next steps, it is often more
+the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD. While OpenMM_Modeller returns a valid OpenMMTheory ASH object that could be used as input in the next steps, it is often more
 convenient to separate the OpenMM_Modeller setup in one script and simulations in another script. It is also required in this case because we
-need to be able define bond-constraints in OpenMMTheory.
+need to be able define bond-constraints for the metal ion in the OpenMMTheory definition. 
 
-To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup we canread in a list of forcefield XML files that were used in the original setup together with the PDB-file:
+To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup we can read in a list of forcefield XML files that were used in the original setup together with the PDB-file:
 
 .. code-block:: python
 
@@ -272,7 +273,7 @@ To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup 
 
 The charmm36.xml and charmm36/water.xml files should be found automatically in the OpenMM library while the specialresidue.xml file needs to be present in the directory.
 
-Alternatively we can also read in the XML-file that OpenMM_Modeller created for the full system ("system_full.xml") together with 
+Alternatively, we can also read in the XML-file that OpenMM_Modeller created for the full system ("system_full.xml") together with 
 the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory:
 
 
@@ -287,7 +288,7 @@ the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory
     This it not a good option for future QM/MM optimizations since these constraints are not compatible with QM/MM optimization runs (using geomeTRIC).
 
 .. note:: pdbfile=  input in OpenMMTheory is used to define the topology and needs to match the assumed topology in the XML-files. 
-    The PDB-coordinates are not used by OpenMMTheory (except to define user constraints)
+    The PDB-coordinates are generally not used by OpenMMTheory (though they may be used to define user constraints).
 
 
 
@@ -324,7 +325,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
     MDtraj_imagetraj("trajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
 
 
-.. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will update the coordinates of that ASH fragment
+.. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will upon completion, update the coordinates of that ASH fragment
     with the coordinates of the last step.
     In the script above, the MD function will use the last geometry from the OpenMM_Opt function.
 
@@ -337,7 +338,7 @@ Alternatively, we could also have added harmonic bond restraints instead of rigi
 
 We next provide the ASH fragment and the OpenMMTheory as input to the OpenMM_Opt minimizer and run a minimization of 100 steps.
 For a large MM system it is typically not needed to minimize the whole system until convergence (and can in fact be very hard to accomplish).
-Here we simply minimize for 100 steps in order to remove large forces from the system (due to the addition of H-atoms and solvent) before we
+Here we simply minimize for 100 steps in order to remove the larges starting forces from the system (due to the addition of H-atoms, solvent, ions etc.) before we
 go on to perform an MM simulation.
 
 Next we perform an MM MD simulation using OpenMM_MD. Here we do a very short MD simulation for 5 picoseconds using a timestep 
@@ -392,16 +393,16 @@ The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 **2b. Run through an advanced NPT equilibration + long NVT simulation**
 ###########################################################################
 
-Step 2a above only ran a very short 5 ps MD simulation and is only to demonstrate the basic principles in a short runtime.
+Step 2a above only ran a very short 5 ps MD simulation and only served to demonstrate the basic principles in a short runtime.
 5 ps is much too short of a simulation time to properly equilibrate a solvated protein system.
 Here we will instead run through a longer multistep simulation protocol that will make sure the system is equilibrated.
-We will use a 4fs timestep which is relatively large (a longer timestep allows longer simulation times but can lead to instabilities). 
+We will use a 4fs timestep which is relatively large (a longer timestep allows longer simulation times but can lead to instabilities if poorly chosen). 
 Classical MD simulations in OpenMM with the LangevinMiddleIntegrator and appropriate constraints (autoconstraints='HBonds', rigidwater=True, default hydrogenmass scaling of 1.5)
 can typically use such large timesteps without problems.
 
 We will use the original files from OpenMM_Modeller, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_relaxation function)
 that uses both a barostat that changes the box dimensions (to keep pressure constant) until the volume and density of the system reaches convergence.
-Once the simulation is found to be converged, last snapshot together with the converged box vectors are used to start a long 1 ns NVT simulation.
+Once the simulation is found to be converged, the last snapshot together with the converged box vectors are used to start a long 1 ns NVT simulation.
 
 
 *2b-classicalMD.py:*
@@ -464,7 +465,7 @@ Typical QM/MM calculations involved geometry optimizations of a system-subset : 
 
 But here, due to the small cofactor involved and the availability of a decent cheap semi-empirical method (GFN-XTB) that can handle transition metals we can perform
 GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds and explore the dynamic nature of the metal site properly (the accuracy of such a simulations depends 
-of course how well the semi-empirical method handles the system).
+of course on how well the semi-empirical method handles the system).
 
 
 .. note:: This feature is in an experimental stage as OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
@@ -631,6 +632,7 @@ The script will create the following output:
 
 This active_atoms file just contains a list of atom indices indicating which atoms should be active (all others are frozen).
 The file can be manually modified if required. The ActiveRegion.xyz file can be visualized to make sure that the active-region looks reasonable.
+The active region does not have to be completely spherical and the ~1000 atom size is mostly a guideline.
 
 .. image:: figures/activregion.png
    :align: center
@@ -641,7 +643,7 @@ The file can be manually modified if required. The ActiveRegion.xyz file can be 
     or out out of the sphere-radius when the function is run. This will result in an inconsistent energy surface. Instead: run the actregion definition script only once to define the active-atoms 
     list and use for all subsequent jobs.
 
-While we do not need to apply constraints to the X-H bonds of the protein (as is typically done in MD simulations to allow longer timesteps) we do have to make sure that the water molecules remain
+While we do not need to apply constraints to the X-H bonds of the protein in an optimization (as is typically done in MD simulations to allow longer timesteps) we do have to make sure that the water molecules remain
 rigid as they should be according to the model definition (applies to standard water forcefields like TIP3, TIP4P, SPC). Since we use the geomeTRICOptimizer here, this information
 needs to be provided using the constraints keyword argument.
 We use this simple code below to define a constraints dictionary that can then be passed onto the geomeTRICOptimizer.
@@ -656,8 +658,8 @@ We use this simple code below to define a constraints dictionary that can then b
 
 Now we are ready to perform our QM/MM geometry optimization using our large active region of 908 atoms:
 While the cost of each optimization cycle should remain  the same (the QM-region and QM theory level is the same as before), because 908 atoms are active instead
-of 17 atoms, the minimization problem is tougher and we should expect more optimization cycles to take place.
-The number of optimization cycles may be especially large since we are minimizing from and MD simulation snapshot rather than a previously optimized structure.
+of 17 atoms, the minimization problem is tougher and we should expect many more optimization cycles to take place.
+The number of optimization cycles may be especially large since we are minimizing from an MD simulation snapshot rather than a previously optimized structure.
 
 *4-QMMM_Opt_bigact.py:*
 

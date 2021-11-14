@@ -1,4 +1,4 @@
-Metalloprotein tutorial II: ferredoxin
+Metalloprotein tutorial II: Ferredoxin
 ======================================
 
 Here we encounter a slightly more complex metalloprotein example, ferredoxin.
