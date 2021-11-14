@@ -186,7 +186,8 @@ If OpenMM_Modeller runs through the whole protocol successfully, it will print o
     1. Define using separate forcefield XML files:
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True)
 
-OpenMM_Modeller has here executed a multi-step protocol that fixes problems in the PDB-file, corrects for missing atoms, will add H-atoms according to an algorithm and takes pH into account (default pH=7.0) and finally will add a solvent box around the protein as well as ions according to a desired ion strength (here 0.1).
+OpenMM_Modeller has here executed a multi-step protocol that fixes problems in the PDB-file, corrects for missing atoms, intelligently added H-atoms according to topology and takes pH into account for titratable residues (default pH=7.0) 
+and finally added a solvent box around the protein as well as ions according to a desired ion strength (here 0.1).
 PDB-files are created for each step and can be inspected.
 
 
