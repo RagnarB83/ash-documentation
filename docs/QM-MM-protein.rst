@@ -149,8 +149,7 @@ Amber example:
     inpcrdfile="PS2_ALL.inpcrd"
 
     #Read coordinates from Amber INPCRD and PRMTOP FILES
-    elems,coords,boxdims=module_coords.read_ambercoordinates(prmtopfile=prmtopfile, inpcrdfile=inpcrdfile)
-    frag=Fragment(elems=elems,coords=coords, conncalc=False)
+    frag=Fragment(amber_prmtopfile=prmtopfile, amber_inpcrdfile=inpcrdfile)
 
     #Creating OpenMMobject using AMBER forcefield files
     openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, periodic=True)
@@ -188,7 +187,7 @@ The script above (e.g. called MMtest.py) can then be executed like this:
 
     python-jl MMtest.py
 
-It should finish in just a few seconds (or 1-2 minutes at most)þ
+It should finish in just a few seconds (or 1-2 minutes at most).
 
 ############################################################################
 **3. Create the QM/MM model and test it by running an energy calculation**
