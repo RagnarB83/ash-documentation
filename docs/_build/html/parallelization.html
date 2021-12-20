@@ -137,7 +137,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: ferredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: Ferredoxin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
@@ -214,25 +214,29 @@
             
   <div class="section" id="parallelization-in-ash">
 <h1>Parallelization in ASH<a class="headerlink" href="#parallelization-in-ash" title="Permalink to this headline">¶</a></h1>
-<p>ASH can utilize parallelization in a few different ways: either via indepent parallelization of the external QM program or MM program.
-For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode and will run its calculations in parallel using OpenMPI parallelization. This requires, however, OpenMPI to be set up (define PATH and LD_LIBRARY_PATH) correctly in the environment that ASH runs in (typically the jobscript used to submit calculations to the queuing system).
-Other QM programs or OpenMM will utilize simpler threads-based parallelization. ASH can sometimes control the number of threads launched (via. numcores=X option).</p>
+<p>ASH can utilize parallelization in a few different ways: either via independent parallelization of the external QM program or MM program or via Python multiprocessing (running independent jobs in parallel).
+For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created contains parallelization information)
+and will run its calculations in parallel using OpenMPI parallelization.
+This requires, however, OpenMPI to be set up (define PATH and LD_LIBRARY_PATH) correctly in the environment that ASH runs in (typically the jobscript used to submit calculations to the queuing system).
+OpenMM and some QM programs may utilize simpler threads-based parallelization. ASH can sometimes control the number of threads launched (also via. numcores=X option).</p>
 <p>note: for OpenMM the number of threads needs to be set up outside ASH (jobscript)</p>
-<p>Some parts of ASH are parallelized by the Python multiprocessing library. This allows many independent calculations to be run simultaneously via multiprocessing.Pool.</p>
+<p>Some parts of ASH are parallelized by the Python multiprocessing library. This allows many independent calculations to be run simultaneously via the Pool feature of the multiprocessing library.</p>
 <p>ASH modules that use multiprocessing parallelization are currently: NumFreq and Singlepoint_parallel (see below).</p>
 <div class="section" id="singlepoint-parallel">
 <h2>Singlepoint_parallel<a class="headerlink" href="#singlepoint-parallel" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragmentfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mofilesdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>The Singlepoint_parallel function allows one to run many independent single-point energy jobs in complete parallelization via the Python multiprocessing library. Typically the QM program parallelization is turned off in this case as it is more efficient to run as many calculations simultaneously as possible with each calculation utilizing 1 core.
-Example: if you have 120 single-point jobs to do (roughly equivalent cost) and 24 cores available, it scales perfectly to occupy all CPU cores by 24 jobs at once (each utilizing 1 core) and thus run through the list of 120 jobs in 5 batches.
+<p>The Singlepoint_parallel function allows one to run many independent single-point energy jobs in complete parallelization via the Python multiprocessing library.
+Typically the QM program parallelization is turned off in this case as it is more efficient to run as many calculations simultaneously as possible with each calculation utilizing a single core.
+Example: if you have 120 single-point jobs to do (with roughly equivalent cost) and 24 cores available, it scales perfectly to occupy all CPU cores by 24 jobs at once (each utilizing 1 core) and thus run through the list of 120 jobs in 5 batches.
 This would be faster than running each job 1-by-1 utilizing QM-program parallelization (using 24 cores) as the QM-program parallelization will simply not scale as well.</p>
 <p>Singlepoint_parallel allows you to conveniently launch such parallelization jobs. The function distinguishes betwen 2 job-types: multiple fragments vs. multiple theories</p>
 <ul class="simple">
 <li><p><strong>multiple fragments with 1 theory</strong></p></li>
 </ul>
-<p>For the more common case of multiple fragments, you may have a directory of e.g. 120 XYZ-files of different molecules and you want to run a singlepoint-energy job for each one. To do this using Singlepoint_parallel you would just need to create a list of ASH fragments for each XYZ-file and then pass the list and an ASH Theory level object to Singlepoint_parallel.</p>
+<p>For the more common case of multiple fragments, you may have a directory of e.g. 120 XYZ-files of different molecules and you want to run a singlepoint-energy job for each one.
+To do this using Singlepoint_parallel you would just need to create a list of ASH fragments for each XYZ-file and then pass the list and an ASH Theory level object to Singlepoint_parallel.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1">#Directory of XYZ files. Can be full path or relative path.</span>
@@ -278,6 +282,10 @@ This would be faster than running each job 1-by-1 utilizing QM-program paralleli
 <span class="n">results</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="n">list_of_fragments</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="n">list_of_orcaobjects</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p><strong>multiple theories for multiple fragments</strong></p></li>
+</ul>
+<p>TODO: This is currently not available</p>
 </div>
 </div>
 

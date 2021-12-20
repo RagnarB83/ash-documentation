@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Highlevel workflows module" href="module_highlevel_workflows.html" />
+    <link rel="next" title="Highlevel workflows" href="module_highlevel_workflows.html" />
     <link rel="prev" title="Freq module" href="module_freq.html" /> 
 </head>
 
@@ -119,7 +119,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#automatic-active-space-selection">Automatic active-space selection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
@@ -142,7 +142,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: ferredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: Ferredoxin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
@@ -227,17 +227,46 @@ See also <a class="reference internal" href="workflows-examples.html"><span clas
 perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.</p>
 <p>The thermochemprotocol_reaction is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">thermochemprotocol_reaction</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                   <span class="n">workflow_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                   <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>while thermochemprotocol_single is used for a single fragment (thermochemprotocol_reaction calls thermochemprotocol_single).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">thermochemprotocol_single</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                   <span class="n">workflow_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+                   <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>The reaction is defined via a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
-and then a protocol for the high-level single-point level is chosen (SP_theory).
-The available high-level single-point calculations are defined later.</p>
+and then a theory for the high-level single-point level is chosen (SP_theory). Can be any ASH Theory including ORCATheory, CC_CBS_Theory etc.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#</span>
+<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_5.0.2&#39;</span>
+<span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
+
+<span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;n2.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">NH3</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;nh3.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># List of species from reactant to product</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#Use same order as stoichiometry</span>
+<span class="c1">#Equation stoichiometry : negative integer for reactant, positive integer for product</span>
+<span class="c1"># Example: N2 + 3H2 -&gt; 2NH3  reaction should be:  [-1,-3,2]</span>
+<span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1">#Use same order as specieslist</span>
+
+<span class="c1">#ORCA theory for Opt+Freq</span>
+    <span class="n">B3LYP_opt</span><span class="o">=</span><span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP def2/J tightscf&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+    <span class="n">DLPNO_CC_calc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+    <span class="c1">#Example: Thermochemistry protocol on the single N2 species</span>
+<span class="n">thermochemprotocol_single</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span>
+                    <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="n">DLPNO_CC_calc</span><span class="p">)</span>
+
+<span class="c1">#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 =&gt; 2 NH3 reaction</span>
+<span class="n">thermochemprotocol_reaction</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span>
+                    <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="n">B3LYP_opt</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="n">DLPNO_CC_calc</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files">
 <h2>calc_xyzfiles: Run calculations on a collection of XYZ-files<a class="headerlink" href="#calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files" title="Permalink to this headline">¶</a></h2>
@@ -290,7 +319,7 @@ XYZ-files with optimized coordinates can be found in: optimized_xyzfiles
 </div>
 <div class="section" id="high-level-single-point-workflows">
 <h2>High-level single-point workflows<a class="headerlink" href="#high-level-single-point-workflows" title="Permalink to this headline">¶</a></h2>
-<p>See <a class="reference internal" href="module_highlevel_workflows.html"><span class="doc">Highlevel workflows module</span></a></p>
+<p>See <a class="reference internal" href="module_highlevel_workflows.html"><span class="doc">Highlevel workflows</span></a></p>
 </div>
 <div class="section" id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
 <h2>confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow<a class="headerlink" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow" title="Permalink to this headline">¶</a></h2>
@@ -484,7 +513,7 @@ Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="module_highlevel_workflows.html" class="btn btn-neutral float-right" title="Highlevel workflows module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="module_highlevel_workflows.html" class="btn btn-neutral float-right" title="Highlevel workflows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="module_freq.html" class="btn btn-neutral float-left" title="Freq module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

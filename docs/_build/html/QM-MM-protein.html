@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Workflow examples in ASH" href="workflows-examples.html" />
-    <link rel="prev" title="Metalloprotein tutorial II: ferredoxin" href="Metalloprotein-II.html" /> 
+    <link rel="prev" title="Metalloprotein tutorial II: Ferredoxin" href="Metalloprotein-II.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -134,7 +134,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: ferredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: Ferredoxin</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM on a protein</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-a-classical-mm-model-of-the-system"><strong>1. Prepare a classical MM model of the system.</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#a-read-coordinates-and-forcefield-into-ash"><strong>2a. Read coordinates and forcefield into ASH</strong></a></li>
@@ -325,8 +325,7 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 <span class="n">inpcrdfile</span><span class="o">=</span><span class="s2">&quot;PS2_ALL.inpcrd&quot;</span>
 
 <span class="c1">#Read coordinates from Amber INPCRD and PRMTOP FILES</span>
-<span class="n">elems</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">boxdims</span><span class="o">=</span><span class="n">module_coords</span><span class="o">.</span><span class="n">read_ambercoordinates</span><span class="p">(</span><span class="n">prmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">inpcrdfile</span><span class="o">=</span><span class="n">inpcrdfile</span><span class="p">)</span>
-<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">elems</span><span class="o">=</span><span class="n">elems</span><span class="p">,</span><span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">amber_prmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">amber_inpcrdfile</span><span class="o">=</span><span class="n">inpcrdfile</span><span class="p">)</span>
 
 <span class="c1">#Creating OpenMMobject using AMBER forcefield files</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -358,7 +357,7 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python-jl MMtest.py
 </pre></div>
 </div>
-<p>It should finish in just a few seconds (or 1-2 minutes at most)þ</p>
+<p>It should finish in just a few seconds (or 1-2 minutes at most).</p>
 </div>
 <div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
 <h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline">¶</a></h2>
@@ -727,7 +726,7 @@ The example below (can also be found in examples directory)  shows how this can 
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="workflows-examples.html" class="btn btn-neutral float-right" title="Workflow examples in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="Metalloprotein-II.html" class="btn btn-neutral float-left" title="Metalloprotein tutorial II: ferredoxin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Metalloprotein-II.html" class="btn btn-neutral float-left" title="Metalloprotein tutorial II: Ferredoxin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

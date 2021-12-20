@@ -68,12 +68,16 @@ Example creation of an OpenMMtheory object with OpenMM XML file:
 
 .. code-block:: python
 
-    openmmobject = OpenMMTheory(xmlfile="example.xml")
+    openmmobject = OpenMMTheory(xmlfiles=["example.xml"]) #File example.xml should be in dir
+    #or
+    openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"]) 
+    #Here the "charmm36.xml" and "charmm36/water.xml" files are found in the OpenMM library.
+
 
 
 An openmmtheory object can then be used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
 
-Periodic boundary conditions:
+**Periodic boundary conditions:**
 
 - If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions
 - PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
@@ -90,7 +94,7 @@ Molecular Dynamics via OpenMM
 
 It is possible to run MM molecular dynamics of system using the OpenMMTheory object created.
 This is accomplished directly via the MD algorithms present in the OpenMM library.
-The OpenMM_MD function takes as argument an ASH fragment, an OpenMMTheory object and then the user can select an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.
+The OpenMM_MD function takes as argument an ASH fragment, a teory object and then the user can select an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.
 
 Most general options available in OpenMM are available in this interface. 
 See OpenMM documentation page: http://docs.openmm.org/latest/userguide/application.html#integrators  for details about the integrators, thermostats, barostats etc.
@@ -114,7 +118,7 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 Options:
 
 - fragment: ASH Fragment object.
-- theory: must be an ASH OpenMMTheory object or an ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject)
+- theory: should either be an ASH OpenMMTheory object, ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject) or an ASH QMtheory.
 - timestep: float (default: 0.001 ps). Size of timestep in picoseconds.
 - simulation_steps: integer. Number of steps to take. (Use either simulation_steps or simulation_time)
 - simulation_time: integer. Length of simulation time in ps. (Use either simulation_steps or simulation_time)
@@ -387,7 +391,7 @@ Common error messages encountered when reading in user-defined XML-files:
 
 -**ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.**
 
-*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resnames is not the same in the
+*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the
 PDBfile as in the XML file.*
 
 - **ValueError: Found multiple definitions for atom type: X**  :  
@@ -453,6 +457,7 @@ Options:
 - orcatheory (ORCATheory object). Optional ORCAtheory object defining the theory for deriving charges/LJ parameters
 - numcores (integer). Number of cores used in ORCA/xTB calculations
 
+nonbonded_pars options:
 
 - 'CM5_UFF' derives CM5 charges (scaled Hirshfeld charges) from an ORCA calculation of the molecule and uses UFF Lennard-Jones parameters
 - 'DDEC3' and 'DDEC6' derive both charges and LJ parameters from an ORCA calculation. Uses the Chargemol program.

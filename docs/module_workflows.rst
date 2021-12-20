@@ -19,20 +19,49 @@ The thermochemprotocol_reaction is used for chemical reactions by giving a list 
 .. code-block:: python
 
     def thermochemprotocol_reaction(fraglist=None, stoichiometry=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
-                       workflow_args=None, analyticHessian=False)
+                       analyticHessian=False, temp=298.15, pressure=1.0)
 
 while thermochemprotocol_single is used for a single fragment (thermochemprotocol_reaction calls thermochemprotocol_single).
 
 .. code-block:: python
 
     def thermochemprotocol_single(fragment=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
-                       workflow_args=None, analyticHessian=True, temp=298.15, pressure=1.0):
+                       analyticHessian=True, temp=298.15, pressure=1.0):
 
 
 The reaction is defined via a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
-and then a protocol for the high-level single-point level is chosen (SP_theory).
-The available high-level single-point calculations are defined later.
+and then a theory for the high-level single-point level is chosen (SP_theory). Can be any ASH Theory including ORCATheory, CC_CBS_Theory etc.
 
+.. code-block:: python
+
+    from ash import *
+
+    #
+    orcadir='/opt/orca_5.0.2'
+    numcores=4
+
+    N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+
+    # List of species from reactant to product
+    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+    #Equation stoichiometry : negative integer for reactant, positive integer for product
+    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
+    stoichiometry=[-1, -3, 2] #Use same order as specieslist
+
+    #ORCA theory for Opt+Freq
+	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
+	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
+                  pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
+
+	#Example: Thermochemistry protocol on the single N2 species
+    thermochemprotocol_single(fragment=N2, stoichiometry=stoichiometry, orcadir=orcadir,
+                        numcores=numcores, Opt_theory=None, SP_theory=DLPNO_CC_calc)
+
+    #Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
+    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir,
+                        numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
 
 ###############################################################
 calc_xyzfiles: Run calculations on a collection of XYZ-files

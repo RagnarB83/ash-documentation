@@ -142,7 +142,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: ferredoxin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Metalloprotein-II.html">Metalloprotein tutorial II: Ferredoxin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
@@ -264,11 +264,14 @@ Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly
 </pre></div>
 </div>
 <p>Example creation of an OpenMMtheory object with OpenMM XML file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfile</span><span class="o">=</span><span class="s2">&quot;example.xml&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;example.xml&quot;</span><span class="p">])</span> <span class="c1">#File example.xml should be in dir</span>
+<span class="c1">#or</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;specialresidue.xml&quot;</span><span class="p">])</span>
+<span class="c1">#Here the &quot;charmm36.xml&quot; and &quot;charmm36/water.xml&quot; files are found in the OpenMM library.</span>
 </pre></div>
 </div>
 <p>An openmmtheory object can then be used to create a QM/MM theory object. See <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a> page.</p>
-<p>Periodic boundary conditions:</p>
+<p><strong>Periodic boundary conditions:</strong></p>
 <ul class="simple">
 <li><p>If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions</p></li>
 <li><p>PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z]</p></li>
@@ -287,7 +290,7 @@ Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly
 <h2>Molecular Dynamics via OpenMM<a class="headerlink" href="#molecular-dynamics-via-openmm" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to run MM molecular dynamics of system using the OpenMMTheory object created.
 This is accomplished directly via the MD algorithms present in the OpenMM library.
-The OpenMM_MD function takes as argument an ASH fragment, an OpenMMTheory object and then the user can select an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.</p>
+The OpenMM_MD function takes as argument an ASH fragment, a teory object and then the user can select an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.</p>
 <p>Most general options available in OpenMM are available in this interface.
 See OpenMM documentation page: <a class="reference external" href="http://docs.openmm.org/latest/userguide/application.html#integrators">http://docs.openmm.org/latest/userguide/application.html#integrators</a>  for details about the integrators, thermostats, barostats etc.</p>
 <ul class="simple">
@@ -308,7 +311,7 @@ See OpenMM documentation page: <a class="reference external" href="http://docs.o
 <p>Options:</p>
 <ul class="simple">
 <li><p>fragment: ASH Fragment object.</p></li>
-<li><p>theory: must be an ASH OpenMMTheory object or an ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject)</p></li>
+<li><p>theory: should either be an ASH OpenMMTheory object, ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject) or an ASH QMtheory.</p></li>
 <li><p>timestep: float (default: 0.001 ps). Size of timestep in picoseconds.</p></li>
 <li><p>simulation_steps: integer. Number of steps to take. (Use either simulation_steps or simulation_time)</p></li>
 <li><p>simulation_time: integer. Length of simulation time in ps. (Use either simulation_steps or simulation_time)</p></li>
@@ -535,7 +538,7 @@ Here defining a simple Fe(III) ion:</p>
 <p>See e.g. <a class="reference external" href="https://education.molssi.org/mm-tools/01-introduction/index.html">https://education.molssi.org/mm-tools/01-introduction/index.html</a> for information on the format of the XML file.</p>
 <p>Common error messages encountered when reading in user-defined XML-files:</p>
 <p>-<strong>ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.</strong></p>
-<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resnames is not the same in the
+<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the
 PDBfile as in the XML file.</em></p>
 <ul class="simple">
 <li><p><strong>ValueError: Found multiple definitions for atom type: X</strong>  :</p></li>
@@ -588,6 +591,9 @@ Solution: Either add the missing bond to the residue definition so that it match
 <li><p>nonbonded_pars (string). Options: ‘CM5_UFF’, ‘DDEC3’, ‘DDEC6’ or ‘xtb_UFF’</p></li>
 <li><p>orcatheory (ORCATheory object). Optional ORCAtheory object defining the theory for deriving charges/LJ parameters</p></li>
 <li><p>numcores (integer). Number of cores used in ORCA/xTB calculations</p></li>
+</ul>
+<p>nonbonded_pars options:</p>
+<ul class="simple">
 <li><p>‘CM5_UFF’ derives CM5 charges (scaled Hirshfeld charges) from an ORCA calculation of the molecule and uses UFF Lennard-Jones parameters</p></li>
 <li><p>‘DDEC3’ and ‘DDEC6’ derive both charges and LJ parameters from an ORCA calculation. Uses the Chargemol program.</p></li>
 <li><p>‘xtb_UFF’ performs an xTB calculation to derive charges and uses UFF for LJ.</p></li>

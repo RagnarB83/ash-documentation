@@ -41,16 +41,12 @@ The run_benchmark function needs at minimum the set keyword argument and either 
 
 .. code-block:: python
 
-    def run_benchmark(set=None, theory=None, workflow=None, orcadir=None, numcores=None, reuseorbs=False, corrections=None)
+    def run_benchmark(set=None, theory=None, orcadir=None, numcores=None, reuseorbs=False, corrections=None)
 
 - set: Name of benchmark test set.
 - theory: ASH Theory object
-- workflow: name of valid function that can act as theory level
-- orcadir : Only needed for workflow. Path to ORCA (string).
-- numcores: Only needed for workflow. Number of cores to use.
 - reuseorbs: Whether orbitals should be reused for each species in reaction. Only makes sense if geometries are similar (e.g. IE/EA reactions). Boolean True/False.
 - corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats. Can also be defined within testset.
-- workflow_args: Optional workflow arguments if using workflow and the default settings need to be modified.
 
 #########################################
 Running a test set with a chosen QMtheory
@@ -111,20 +107,12 @@ Output:
      MaxError         -0.2093 eV
 
 
-#########################################
-Running a test set with a workflow
-#########################################
+####################################################
+Running a test set with a highlevel theory workflow
+####################################################
 
 The test set can also be run with a high-level workflow (multi-step theory).
-The workflows are available inside the module: module_highlevel_workflows
-
-- W1theory
-- W1F12theory
-- DLPNO_W1F12theory
-- DLPNO_W1theory
-- DLPNO_F12
-- DLPNO_W2theory
-- CC_CBS
+See :doc:`module_highlevel_workflows`
 
 When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
 
@@ -132,24 +120,12 @@ When using an ORCA-based workflow the orcadir keyword argument and numcores argu
 
     from ash import *
 
-    orcadir='/Applications/orca_4.2.1'
+    orcadir='/Applications/orca_5.0.2'
     #Running the benchmark with a workflow
-    run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.DLPNO_W1theory, numcores=4, orcadir=orcadir)
+    DLPNO_CC_calc = CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
+                pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores, orcadir=orcadir)
+    run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc, numcores=4, orcadir=orcadir)
 
-If some of the default settings of each workflow needs to be modified this can be accomplished like this:
-
-.. code-block:: python
-
-    from ash import *
-
-    orcadir='/Applications/orca_4.2.1'
-
-    #Define a dictionary containing the arguments of the workflow to be modified
-    CC_CBS_args = {'cardinals' : '2/3', "basisfamily" : "def2", 'stabilityanalysis' : True, 'DLPNO' : True,
-                        'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 'extrainputkeyword' : 'Slowconv'}
-
-    #Running the benchmark with a workflow
-    benchmarking.run_benchmark(set="IE-benzenes", workflow=module_highlevel_workflows.CC_CBS, workflow_args = DLPNO_CC_CBS_args, orcadir=orcadir, numcores=numcores)
 
 
 ################################
