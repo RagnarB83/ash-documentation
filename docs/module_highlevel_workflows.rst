@@ -5,9 +5,11 @@ These high-level workflows (singlepoint energy protocols) can either be used on 
 All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.
 
 
-**CC_CBS_Theory**
+#########################################
+CC_CBS_Theory
+#########################################
 
-This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy
+This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
 Multiple ORCA calculations for the given geometry are carried out and the SCF and correlation energies extrapolated to the CCSD(T)/CBS limit using either regular CCSD(T) theory or DLPNO-CCSD(T) theory.
 This workflow is flexible and features multiple ways of approaching the CBS limit and the PNO limit.
 Various options affecting the accuracy, efficiency and robustness of the protocol can be chosen.
@@ -68,52 +70,126 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
   - F12 (Boolean): Use CCSD(T)-F12 approach. Default: False (NOT ACTIVE)
 
 
-**Basisfamily options:**
+#########################################
+Basis-family options
+#########################################
 
-Appropriate all-electron or valence+ECP basis sets for each element for basis-families such as : cc, aug-cc, def2, ma-def2. If instead an all-electron relativistic approch is desired for all elements then basisfamily="cc-dk" and relativity='DKH' can be chosen instead.
+Appropriate all-electron or valence+ECP basis sets for each element with basis-families such as : cc, aug-cc, def2, ma-def2. 
+If instead an all-electron relativistic approch is desired for all elements then basisfamily="cc-dk", "def2-zora", "def2-dkh" and relativity='DKH' or 'ZORA' can be chosen instead.
 
 
 .. note:: - "def2" (Ahlrichs all-electron basis sets for H-Kr, valence basis+def2-ECP for K-Rn)
   - "ma-def2" (minimally augmented diffuse Ahlrichs basis sets)
-  - "def2-zora" (ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)
-  - "ma-def2-zora" (minimally augmented ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)
-  - "def2-dkh" (DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)
-  - "ma-def2-dkh" (minimally augmented DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)
   - "cc" (correlation consistent basis sets, cc-pVnZ for light elements and cc-pVnZ-PP (SK-MCDHF ECP) for heavy elements (Sr-Xe, Hf-Rn, Ba, Ru, U)). Note: not available for K.
   - "aug-cc" (augmented correlation consistent basis sets, cc-pVnZ for light elements and aug-cc-pVnZ-PP for heavy elements)
   - "cc-dk" (DKH-recontracted correlation consistent basis sets, cc-pVnZ-DK for light elements and cc-pVnZ-DK for heavy elements)
   - "aug-cc-dk" (DKH-recontracted aug correlation consistent basis sets, aug-cc-pVnZ-DK for light elements and aug-cc-pVnZ-DK for heavy elements)
+  - "def2-zora" (ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)
+  - "ma-def2-zora" (minimally augmented ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)
+  - "def2-dkh" (DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)
+  - "ma-def2-dkh" (minimally augmented DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)
   - "cc-CV" (Core-valence correlation consistent basis sets, cc-pwCVnZ)
   - "aug-cc-CV" (augmented core-valence correlation consistent basis sets, aug-cc-pwCVnZ)
   - "cc-CV-dk" (DKH-recontracted core-valence correlation consistent basis sets, cc-pwCVnZ-DK)
   - "aug-cc-CV-dk" (augmented DKH-recontracted core-valence correlation consistent basis sets, aug-cc-pwCVnZ-DK)
+  - "cc-CV_3dTM-cc_L" (All-electron DKH protocol for 3d TM complexes. cc-pwCVnZ-DK on 3d transition metals, cc-pVNZ-DK on everything else.)
+  - "aug-cc-CV_3dTM-cc_L" (Augmented all-electron DKH protocol for 3d TM complexes. cc-pwCVnZ-DK on 3d transition metals, aug-cc-pVNZ-DK on everything else.)
+
++---------------------+---------------------------------+------------------------------+-------------------+
+| Basis-family        | Basis-sets                      | Cardinals (n)                | ECP or relativity |
++=====================+=================================+==============================+===================+
+| def2                | Ahlrichs def2                   | - 2: def2-SVP                | def2-ECP          |
+|                     | on all atoms                    | - 3: def2-TZVPP              | on Rb-Rn          |
+|                     |                                 | - 4: def2-QZVPP              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| ma-def2             | Minimally augmented             | - 2: ma-def2-SVP             | def2-ECP          |
+|                     | diffuse def2                    | - 3: ma-def2-TZVPP           | on Rb-Rn          |
+|                     | on all atoms                    | - 4: ma-def2-QZVPP           |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| def2-zora           | - H-Kr : ZORA-def2-TZVP         | - 2: (SARC-ZORA/def2)-SVP    | relativity='ZORA' |
+|                     | - Rb-Rn : SARC-ZORA-TZVP        | - 3: (SARC-ZORA/def2)-TZVPP  |                   |
+|                     |                                 | - 4: (SARC-ZORA/def2)-QZVPP  |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| ma-def2-zora        | - H-Kr : ma-ZORA-def2-TZVP      | - 2: (SARC-ZORA/def2)-SVP    | relativity='ZORA' |
+|                     | - Rb-Rn: (SARC-ZORA/def2)-TZVPP | - 3: (SARC-ZORA/def2)-TZVPP  |                   |
+|                     |                                 | - 4: (SARC-ZORA/def2)-QZVPP  |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| def2-dkh            | - H-Kr : DKH-def2-TZVP          | - 2: (SARC-DKH/def2)-SVP     | relativity='DKH'  |
+|                     | - Rb-Rn : SARC-DKH-TZVP         | - 3: (SARC-DKH/def2)-TZVPP   |                   |
+|                     |                                 | - 4: (SARC-DKH/def2)-QZVPP   |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| ma-def2-dkh         | - H-Kr : ma-DKH-def2-TZVP       | - 2: (SARC-DKH/def2)-SVP     | relativity='DKH'  |
+|                     | - Rb-Rn: (SARC-DKH/def2)-TZVPP  | - 3: (SARC-DKH/def2)-TZVPP   |                   |
+|                     |                                 | - 4: (SARC-DKH/def2)-QZVPP   |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| cc                  | - H-Kr: cc-pVnZ                 | - 2: cc-pVDZ(-PP)            | SK-MCDHF-RSC      |
+|                     | - Sr-Xe: cc-pVnZ-PP             | - 3: cc-pVTZ(-PP)            | on Sr-Xe, Hf-Rn,  |
+|                     | - Hf-Rn: cc-pVnZ-PP             | - 4: cc-pVQZ(-PP)            | Ba,Ra,U           |
+|                     | - Ba,Ra,U: cc-pVnZ-PP           | - 5: cc-pV5Z(-PP)            |                   |
+|                     |                                 | - 6: cc-pV6Z (H-Ar only)     |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| aug-cc              | - H-Kr: aug-cc-pVnZ,            | - 2: aug-cc-pVDZ(-PP)        | SK-MCDHF-RSC      |
+|                     | - Sr-Xe: aug-cc-pVnZ-PP,        | - 3: aug-cc-pVTZ(-PP)        | on Sr-Xe, Hf-Rn,  |
+|                     | - Hf-Rn: aug-cc-pVnZ-PP,        | - 4: aug-cc-pVQZ(-PP)        | Ba,Ra,U           |
+|                     | - Ba,Ra,U: aug-cc-pVnZ-PP       | - 5: aug-cc-pV5Z(-PP)        |                   |
+|                     |                                 | - 6: aug-cc-pV6Z (H-Ar Only) |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| cc-dk               | - cc-pVnZ-DK on H-Ar,           | - 2: cc-pVDZ-DK              |                   |
+|                     | - Sc-Kr, Y-Xe, Hf-Rn,           | - 3: cc-pVTZ-DK              | relativity='DKH'  |
+|                     | - 4: cc-pVQZ-DK                 | - 4: cc-pVQZ-DK              |                   |
+|                     | - (missing QZ for Y-Cd)         | - 5: cc-pV5Z-DK              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| aug-cc-dk           | - cc-pVnZ-DK on H-Ar,           | - 2: aug-cc-pVDZ-DK          |                   |
+|                     | - Sc-Kr, Y-Xe, Hf-Rn,           | - 3: aug-cc-pVTZ-DK          | relativity='DKH'  |
+|                     | - 4: aug-cc-pVQZ-DK             | - 4: aug-cc-pVQZ-DK          |                   |
+|                     | - (missing QZ for Y-Cd)         | - 5: aug-cc-pV5Z-DK          |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| cc-CV               | - H-Kr: cc-pwCVnZ               | - 2: cc-pwCVDZ(-PP)          | SK-MCDHF-RSC      |
+|                     | - Sr-Xe: cc-pwCVnZ-PP           | - 3: cc-pwCVTZ(-PP)          | on Sr-Xe, Hf-Rn,  |
+|                     | - Hf-Rn: cc-pwCVnZ-PP           | - 4: cc-pwCVQZ(-PP)          | Ba,Ra,U           |
+|                     | - Ba,Ra,U: cc-pwCVnZ-PP         | - 5: cc-pWCV5Z(-PP)          |                   |
+|                     |                                 |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| aug-cc-CV           | - H-Kr: aug-cc-pwCVnZ           | - 2: aug-cc-pwCVDZ(-PP)      | SK-MCDHF-RSC      |
+|                     | - Sr-Xe: aug-cc-pwCVnZ-PP       | - 3: aug-cc-pwCVTZ(-PP)      | on Sr-Xe, Hf-Rn,  |
+|                     | - Hf-Rn: aug-cc-pwCVnZ-PP       | - 4: aug-cc-pwCVQZ(-PP)      | Ba,Ra,U           |
+|                     | - Ba,Ra,U: aug-cc-pwCVnZ-PP     | - 5: aug-cc-pWCV5Z(-PP)      |                   |
+|                     |                                 |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| cc-CV-dk            | - H-Be,Na-Mg: cc-pwCVnZ-DK      | - 2: cc-(pwC)VDZ-DK          |                   |
+|                     | - B-Ne: cc-pVnZ-DK (!)          | - 3: cc-(pwC)VTZ-DK          | relativity='DKH'  |
+|                     | - Al-Ar: cc-pVnZ-DK (!)         | - 4: cc-(pwC)VQZ-DK          |                   |
+|                     | - Ca-Zn: cc-pVwCnZ-DK           | - 5: cc-(pwC)V5Z-DK          |                   |
+|                     | - missing QZ for Y-Cd           |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| aug-cc-CV-dk        | - H-Be,Na-Mg: aug-cc-pwCVnZ-DK  | - 2: aug-cc-(pwC)VDZ-DK      |                   |
+|                     | - B-Ne: aug-cc-pVnZ-DK (!)      | - 3: aug-cc-(pwC)VTZ-DK      | relativity='DKH'  |
+|                     | - Al-Ar: aug-cc-pVnZ-DK (!)     | - 4: aug-cc-(pwC)VQZ-DK      |                   |
+|                     | - Ca-Zn: aug-cc-pVwCnZ-DK       | - 5: aug-cc-(pwC)V5Z-DK      |                   |
+|                     | - missing QZ for Y-Cd           |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| cc-CV_3dTM-cc_L     | - H-Kr: cc-pVnZ-DK              | - 2: cc-(pwC)VDZ-DK          |                   |
+|                     | - Sc-Zn: cc-pwCVnZ-DK (!)       | - 3: cc-(pwC)VTZ-DK          | relativity='DKH'  |
+|                     | - Ga-Rn: cc-pVnZ-DK             | - 4: cc-(pwC)VQZ-DK          |                   |
+|                     |                                 | - 5: cc-(pwC)V5Z-DK          |                   |
+|                     |                                 |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+| aug-cc-CV_3dTM-cc_L | - H-Kr: aug-cc-pVnZ-DK          | - 2: (aug)-cc-(pwC)VDZ-DK    |                   |
+|                     | - Sc-Zn: cc-pwCVnZ-DK (!)       | - 3: (aug)-cc-(pwC)VTZ-DK    | relativity='DKH'  |
+|                     | - Ga-Rn: aug-cc-pVnZ-DK         | - 4: (aug)-cc-(pwC)VQZ-DK    |                   |
+|                     |                                 | - 5: (aug)-cc-(pwC)V5Z-DK    |                   |
+|                     |                                 |                              |                   |
++---------------------+---------------------------------+------------------------------+-------------------+
+
+* Note: often missing basis sets for K.
+* Sometimes there are missing basis sets for specific elements and specific cardinals
 
 
-+--------------+-----------------------+---------------------+------------------+
-| Basis-family | Basis-sets            | Cardinals (n)       | ECP on elems     |
-+==============+=======================+=====================+==================+
-| def2         | Ahlrichs def2         | - 2: def2-SVP       | def2-ECP         |
-|              | on all atoms          | - 3: def2-TZVPP     | on Rb-Rn         |
-|              |                       | - 4: def2-QZVPP     |                  |
-+--------------+-----------------------+---------------------+------------------+
-| cc           | - H-Kr: cc-pVnZ,      | - 2: cc-pVDZ        | SK-MCDHF-RSC     |
-|              | - Sr-Xe: cc-pVnZ-PP,  | - 3: cc-pVTZ        | on Sr-Xe, Hf-Rn, |
-|              | - Hf-Rn: cc-pVnZ-PP,  | - 4: cc-pVQZ        | Ba,Ra,U          |
-|              | - Ba,Ra,U: cc-pVnZ-PP | - 5: cc-pV5Z        |                  |
-|              |                       | - 6: cc-pV6Z (H-Ar) |                  |
-+--------------+-----------------------+---------------------+------------------+
-| cc           | - H-Kr: cc-pVnZ,      | - 2: cc-pVDZ        | SK-MCDHF-RSC     |
-|              | - Sr-Xe: cc-pVnZ-PP,  | - 3: cc-pVTZ        | on Sr-Xe, Hf-Rn, |
-|              | - Hf-Rn: cc-pVnZ-PP,  | - 4: cc-pVQZ        | Ba,Ra,U          |
-|              | - Ba,Ra,U: cc-pVnZ-PP | - 5: cc-pV5Z        |                  |
-|              |                       | - 6: cc-pV6Z (H-Ar) |                  |
-+--------------+-----------------------+---------------------+------------------+
+#########################################
+CC_CBS_Theory Examples
+#########################################
 
-* Note: missing basis for K.
-* 
-
-
-**Basic example:**
+**Basic example**
 
 .. code-block:: python
 
@@ -127,7 +203,7 @@ Cardinals=[2,3] and basisfamily="cc" means that the cc-pVDZ and cc-pVTZ basis se
 Appropriate extrapolation parameters for 2-point extrapolations with this basis set family are chosen.
 
 
-**Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:**
+**4d Transition Metal Complex Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:**
 
 .. code-block:: python
 
@@ -142,7 +218,7 @@ The DLPNO approximation utilizes thresholds that determine the accuracy of the D
 By setting pnosetting="NormalPNO" we get the default PNO settings that are reasonably accurate. Other options are: 'LoosePNO' (not recommended) and 'TightPNO' (more accurate, more expensive), and 'extrapolation' (see below).
 
 
-**Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with the cc-pVnZ and cc-pVnZ-PP (n=3,4) extrapolation:**
+DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with the cc-pVnZ and cc-pVnZ-PP (n=3,4) extrapolation:
 
 .. code-block:: python
 
@@ -158,7 +234,7 @@ To further reduce the error of the DLPNO approximation we use pnosetting="extrap
 for each basis-set-cardinal calculation with different TCutPNO cutoffs (here TCutPNO=1e-6 and TCutPNO=1e-7). The results are then extrapolated to the PNO limit according to PNO extrapolation by Giovanni Bistoni and coworkers.
 See these excellent papers: https://pubs.acs.org/doi/abs/10.1021/acs.jctc.0c00344 and https://pubs.acs.org/doi/abs/10.1021/acs.jpca.1c09106
 
-**Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with DKH relativistic approximation and cc-pwCVnZ-DK extrapolation:**
+ DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with DKH relativistic approximation and cc-pwCVnZ-DK extrapolation:
 
 .. code-block:: python
 
@@ -168,10 +244,32 @@ See these excellent papers: https://pubs.acs.org/doi/abs/10.1021/acs.jctc.0c0034
                   relativity='DKH', pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
     Singlepoint(theory=cc, fragment=complex)
 
-While the cc-pVDZ-PP approach for ruthenium is affordable and accurate, for even greater accuracy one can opt for an all-electronic relativistic approach instead.
+While the cc-pVDZ-PP approach for ruthenium is affordable and accurate, for even greater accuracy (and much higher cost) one could opt for an all-electronic relativistic approach instead.
+Here the Douglas-Kroll-Hess scalar relativistic Hamiltonian is used and this requires one to choose a basis-set family that has been recontracted for DKH Hamiltonians.
+We use the 'cc-dk' basis family here that features all-electron correlation consistent basis sets that have been contracted for the DKH Hamiltonian.
+
+
+
+
+**3d Transition Metal Complex Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:**
+
+Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 3d-metal complex with DKH relativistic approximation:
+
+For 3d transition metal complexes (with the complicated 3d shell of the metal), effective core potential are typically not very accurate and an all-electron relativistic approach is typically recommended instead.
+
+.. code-block:: python
+
+    complex=Fragment(xyzfile='fe-complex.xyz')
+    #Note: here providing list of elements more conveniently from the defined fragment
+    cc = CC_CBS_Theory(elements=complex.elems, cardinals = [3,4], basisfamily="cc-dk", DLPNO=True, 
+                  relativity='DKH', pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
+    Singlepoint(theory=cc, fragment=complex)
+
+
+
+for ruthenium is affordable and accurate, for even greater accuracy one can opt for an all-electronic relativistic approach instead.
 Here the Douglas-Kroll-Hess scalar relativistic Hamiltonian is used and this requires one to choose a basis-set family that has been recontracted for DKH Hamiltonians.
 We could choose to use the 'cc-dk' but here we utilize the 'cc-CV-dk' family that in addition to being DKH-recontracted, features additional basis-functions typically used to describe core-valence 
 correlation. The frozen-core approximation is still in use here, meaning that the extra basis functions instead serve to improve the valence-electron correlation problem instead.
-
 
 https://pubs.acs.org/doi/abs/10.1021/acs.jctc.9b01109

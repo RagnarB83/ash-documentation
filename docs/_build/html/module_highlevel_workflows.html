@@ -111,7 +111,12 @@
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory">CC_CBS_Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basis-family-options">Basis-family options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory-examples">CC_CBS_Theory Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
@@ -213,8 +218,9 @@
 <h1>Highlevel workflows<a class="headerlink" href="#highlevel-workflows" title="Permalink to this headline">¶</a></h1>
 <p>These high-level workflows (singlepoint energy protocols) can either be used on their own as a theory-level or used as a SP_theory in <strong>thermochemprotocol</strong> (see <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a>) or as a theory in <strong>run_benchmark</strong> (see <a class="reference internal" href="module_benchmarking.html"><span class="doc">Benchmarking in ASH</span></a>) .
 All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.</p>
-<p><strong>CC_CBS_Theory</strong></p>
-<p>This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy
+<div class="section" id="cc-cbs-theory">
+<h2>CC_CBS_Theory<a class="headerlink" href="#cc-cbs-theory" title="Permalink to this headline">¶</a></h2>
+<p>This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
 Multiple ORCA calculations for the given geometry are carried out and the SCF and correlation energies extrapolated to the CCSD(T)/CBS limit using either regular CCSD(T) theory or DLPNO-CCSD(T) theory.
 This workflow is flexible and features multiple ways of approaching the CBS limit and the PNO limit.
 Various options affecting the accuracy, efficiency and robustness of the protocol can be chosen.
@@ -270,39 +276,44 @@ system is an atom. Default: False
 - F12 (Boolean): Use CCSD(T)-F12 approach. Default: False (NOT ACTIVE)
 </pre></div>
 </div>
-<p><strong>Basisfamily options:</strong></p>
-<p>Appropriate all-electron or valence+ECP basis sets for each element for basis-families such as : cc, aug-cc, def2, ma-def2. If instead an all-electron relativistic approch is desired for all elements then basisfamily=”cc-dk” and relativity=’DKH’ can be chosen instead.</p>
+</div>
+<div class="section" id="basis-family-options">
+<h2>Basis-family options<a class="headerlink" href="#basis-family-options" title="Permalink to this headline">¶</a></h2>
+<p>Appropriate all-electron or valence+ECP basis sets for each element with basis-families such as : cc, aug-cc, def2, ma-def2.
+If instead an all-electron relativistic approch is desired for all elements then basisfamily=”cc-dk”, “def2-zora”, “def2-dkh” and relativity=’DKH’ or ‘ZORA’ can be chosen instead.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>“def2” (Ahlrichs all-electron basis sets for H-Kr, valence basis+def2-ECP for K-Rn)</p></li>
 <li><p>“ma-def2” (minimally augmented diffuse Ahlrichs basis sets)</p></li>
-<li><p>“def2-zora” (ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)</p></li>
-<li><p>“ma-def2-zora” (minimally augmented ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)</p></li>
-<li><p>“def2-dkh” (DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)</p></li>
-<li><p>“ma-def2-dkh” (minimally augmented DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)</p></li>
 <li><p>“cc” (correlation consistent basis sets, cc-pVnZ for light elements and cc-pVnZ-PP (SK-MCDHF ECP) for heavy elements (Sr-Xe, Hf-Rn, Ba, Ru, U)). Note: not available for K.</p></li>
 <li><p>“aug-cc” (augmented correlation consistent basis sets, cc-pVnZ for light elements and aug-cc-pVnZ-PP for heavy elements)</p></li>
 <li><p>“cc-dk” (DKH-recontracted correlation consistent basis sets, cc-pVnZ-DK for light elements and cc-pVnZ-DK for heavy elements)</p></li>
 <li><p>“aug-cc-dk” (DKH-recontracted aug correlation consistent basis sets, aug-cc-pVnZ-DK for light elements and aug-cc-pVnZ-DK for heavy elements)</p></li>
+<li><p>“def2-zora” (ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)</p></li>
+<li><p>“ma-def2-zora” (minimally augmented ZORA-recontracted Ahlrichs basis sets or SARC-ZORA basis sets for heavy elements)</p></li>
+<li><p>“def2-dkh” (DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)</p></li>
+<li><p>“ma-def2-dkh” (minimally augmented DKH-recontracted Ahlrichs basis sets or SARC-DKH basis sets for heavy elements)</p></li>
 <li><p>“cc-CV” (Core-valence correlation consistent basis sets, cc-pwCVnZ)</p></li>
 <li><p>“aug-cc-CV” (augmented core-valence correlation consistent basis sets, aug-cc-pwCVnZ)</p></li>
 <li><p>“cc-CV-dk” (DKH-recontracted core-valence correlation consistent basis sets, cc-pwCVnZ-DK)</p></li>
 <li><p>“aug-cc-CV-dk” (augmented DKH-recontracted core-valence correlation consistent basis sets, aug-cc-pwCVnZ-DK)</p></li>
+<li><p>“cc-CV_3dTM-cc_L” (All-electron DKH protocol for 3d TM complexes. cc-pwCVnZ-DK on 3d transition metals, cc-pVNZ-DK on everything else.)</p></li>
+<li><p>“aug-cc-CV_3dTM-cc_L” (Augmented all-electron DKH protocol for 3d TM complexes. cc-pwCVnZ-DK on 3d transition metals, aug-cc-pVNZ-DK on everything else.)</p></li>
 </ul>
 </div>
 <table class="docutils align-default">
 <colgroup>
+<col style="width: 20%" />
+<col style="width: 32%" />
+<col style="width: 29%" />
 <col style="width: 18%" />
-<col style="width: 30%" />
-<col style="width: 28%" />
-<col style="width: 24%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Basis-family</p></th>
 <th class="head"><p>Basis-sets</p></th>
 <th class="head"><p>Cardinals (n)</p></th>
-<th class="head"><p>ECP on elems</p></th>
+<th class="head"><p>ECP or relativity</p></th>
 </tr>
 </thead>
 <tbody>
@@ -318,53 +329,265 @@ on all atoms</p></td>
 <td><p>def2-ECP
 on Rb-Rn</p></td>
 </tr>
-<tr class="row-odd"><td><p>cc</p></td>
+<tr class="row-odd"><td><p>ma-def2</p></td>
+<td><p>Minimally augmented
+diffuse def2
+on all atoms</p></td>
 <td><ul class="simple">
-<li><p>H-Kr: cc-pVnZ,</p></li>
-<li><p>Sr-Xe: cc-pVnZ-PP,</p></li>
-<li><p>Hf-Rn: cc-pVnZ-PP,</p></li>
+<li><p>2: ma-def2-SVP</p></li>
+<li><p>3: ma-def2-TZVPP</p></li>
+<li><p>4: ma-def2-QZVPP</p></li>
+</ul>
+</td>
+<td><p>def2-ECP
+on Rb-Rn</p></td>
+</tr>
+<tr class="row-even"><td><p>def2-zora</p></td>
+<td><ul class="simple">
+<li><p>H-Kr : ZORA-def2-TZVP</p></li>
+<li><p>Rb-Rn : SARC-ZORA-TZVP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: (SARC-ZORA/def2)-SVP</p></li>
+<li><p>3: (SARC-ZORA/def2)-TZVPP</p></li>
+<li><p>4: (SARC-ZORA/def2)-QZVPP</p></li>
+</ul>
+</td>
+<td><p>relativity=’ZORA’</p></td>
+</tr>
+<tr class="row-odd"><td><p>ma-def2-zora</p></td>
+<td><ul class="simple">
+<li><p>H-Kr : ma-ZORA-def2-TZVP</p></li>
+<li><p>Rb-Rn: (SARC-ZORA/def2)-TZVPP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: (SARC-ZORA/def2)-SVP</p></li>
+<li><p>3: (SARC-ZORA/def2)-TZVPP</p></li>
+<li><p>4: (SARC-ZORA/def2)-QZVPP</p></li>
+</ul>
+</td>
+<td><p>relativity=’ZORA’</p></td>
+</tr>
+<tr class="row-even"><td><p>def2-dkh</p></td>
+<td><ul class="simple">
+<li><p>H-Kr : DKH-def2-TZVP</p></li>
+<li><p>Rb-Rn : SARC-DKH-TZVP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: (SARC-DKH/def2)-SVP</p></li>
+<li><p>3: (SARC-DKH/def2)-TZVPP</p></li>
+<li><p>4: (SARC-DKH/def2)-QZVPP</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-odd"><td><p>ma-def2-dkh</p></td>
+<td><ul class="simple">
+<li><p>H-Kr : ma-DKH-def2-TZVP</p></li>
+<li><p>Rb-Rn: (SARC-DKH/def2)-TZVPP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: (SARC-DKH/def2)-SVP</p></li>
+<li><p>3: (SARC-DKH/def2)-TZVPP</p></li>
+<li><p>4: (SARC-DKH/def2)-QZVPP</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-even"><td><p>cc</p></td>
+<td><ul class="simple">
+<li><p>H-Kr: cc-pVnZ</p></li>
+<li><p>Sr-Xe: cc-pVnZ-PP</p></li>
+<li><p>Hf-Rn: cc-pVnZ-PP</p></li>
 <li><p>Ba,Ra,U: cc-pVnZ-PP</p></li>
 </ul>
 </td>
 <td><ul class="simple">
-<li><p>2: cc-pVDZ</p></li>
-<li><p>3: cc-pVTZ</p></li>
-<li><p>4: cc-pVQZ</p></li>
-<li><p>5: cc-pV5Z</p></li>
-<li><p>6: cc-pV6Z (H-Ar)</p></li>
+<li><p>2: cc-pVDZ(-PP)</p></li>
+<li><p>3: cc-pVTZ(-PP)</p></li>
+<li><p>4: cc-pVQZ(-PP)</p></li>
+<li><p>5: cc-pV5Z(-PP)</p></li>
+<li><p>6: cc-pV6Z (H-Ar only)</p></li>
 </ul>
 </td>
 <td><p>SK-MCDHF-RSC
 on Sr-Xe, Hf-Rn,
 Ba,Ra,U</p></td>
 </tr>
-<tr class="row-even"><td><p>cc</p></td>
+<tr class="row-odd"><td><p>aug-cc</p></td>
 <td><ul class="simple">
-<li><p>H-Kr: cc-pVnZ,</p></li>
-<li><p>Sr-Xe: cc-pVnZ-PP,</p></li>
-<li><p>Hf-Rn: cc-pVnZ-PP,</p></li>
-<li><p>Ba,Ra,U: cc-pVnZ-PP</p></li>
+<li><p>H-Kr: aug-cc-pVnZ,</p></li>
+<li><p>Sr-Xe: aug-cc-pVnZ-PP,</p></li>
+<li><p>Hf-Rn: aug-cc-pVnZ-PP,</p></li>
+<li><p>Ba,Ra,U: aug-cc-pVnZ-PP</p></li>
 </ul>
 </td>
 <td><ul class="simple">
-<li><p>2: cc-pVDZ</p></li>
-<li><p>3: cc-pVTZ</p></li>
-<li><p>4: cc-pVQZ</p></li>
-<li><p>5: cc-pV5Z</p></li>
-<li><p>6: cc-pV6Z (H-Ar)</p></li>
+<li><p>2: aug-cc-pVDZ(-PP)</p></li>
+<li><p>3: aug-cc-pVTZ(-PP)</p></li>
+<li><p>4: aug-cc-pVQZ(-PP)</p></li>
+<li><p>5: aug-cc-pV5Z(-PP)</p></li>
+<li><p>6: aug-cc-pV6Z (H-Ar Only)</p></li>
 </ul>
 </td>
 <td><p>SK-MCDHF-RSC
 on Sr-Xe, Hf-Rn,
 Ba,Ra,U</p></td>
+</tr>
+<tr class="row-even"><td><p>cc-dk</p></td>
+<td><ul class="simple">
+<li><p>cc-pVnZ-DK on H-Ar,</p></li>
+<li><p>Sc-Kr, Y-Xe, Hf-Rn,</p></li>
+<li><p>4: cc-pVQZ-DK</p></li>
+<li><p>(missing QZ for Y-Cd)</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: cc-pVDZ-DK</p></li>
+<li><p>3: cc-pVTZ-DK</p></li>
+<li><p>4: cc-pVQZ-DK</p></li>
+<li><p>5: cc-pV5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-odd"><td><p>aug-cc-dk</p></td>
+<td><ul class="simple">
+<li><p>cc-pVnZ-DK on H-Ar,</p></li>
+<li><p>Sc-Kr, Y-Xe, Hf-Rn,</p></li>
+<li><p>4: aug-cc-pVQZ-DK</p></li>
+<li><p>(missing QZ for Y-Cd)</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: aug-cc-pVDZ-DK</p></li>
+<li><p>3: aug-cc-pVTZ-DK</p></li>
+<li><p>4: aug-cc-pVQZ-DK</p></li>
+<li><p>5: aug-cc-pV5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-even"><td><p>cc-CV</p></td>
+<td><ul class="simple">
+<li><p>H-Kr: cc-pwCVnZ</p></li>
+<li><p>Sr-Xe: cc-pwCVnZ-PP</p></li>
+<li><p>Hf-Rn: cc-pwCVnZ-PP</p></li>
+<li><p>Ba,Ra,U: cc-pwCVnZ-PP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: cc-pwCVDZ(-PP)</p></li>
+<li><p>3: cc-pwCVTZ(-PP)</p></li>
+<li><p>4: cc-pwCVQZ(-PP)</p></li>
+<li><p>5: cc-pWCV5Z(-PP)</p></li>
+</ul>
+</td>
+<td><p>SK-MCDHF-RSC
+on Sr-Xe, Hf-Rn,
+Ba,Ra,U</p></td>
+</tr>
+<tr class="row-odd"><td><p>aug-cc-CV</p></td>
+<td><ul class="simple">
+<li><p>H-Kr: aug-cc-pwCVnZ</p></li>
+<li><p>Sr-Xe: aug-cc-pwCVnZ-PP</p></li>
+<li><p>Hf-Rn: aug-cc-pwCVnZ-PP</p></li>
+<li><p>Ba,Ra,U: aug-cc-pwCVnZ-PP</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: aug-cc-pwCVDZ(-PP)</p></li>
+<li><p>3: aug-cc-pwCVTZ(-PP)</p></li>
+<li><p>4: aug-cc-pwCVQZ(-PP)</p></li>
+<li><p>5: aug-cc-pWCV5Z(-PP)</p></li>
+</ul>
+</td>
+<td><p>SK-MCDHF-RSC
+on Sr-Xe, Hf-Rn,
+Ba,Ra,U</p></td>
+</tr>
+<tr class="row-even"><td><p>cc-CV-dk</p></td>
+<td><ul class="simple">
+<li><p>H-Be,Na-Mg: cc-pwCVnZ-DK</p></li>
+<li><p>B-Ne: cc-pVnZ-DK (!)</p></li>
+<li><p>Al-Ar: cc-pVnZ-DK (!)</p></li>
+<li><p>Ca-Zn: cc-pVwCnZ-DK</p></li>
+<li><p>missing QZ for Y-Cd</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: cc-(pwC)VDZ-DK</p></li>
+<li><p>3: cc-(pwC)VTZ-DK</p></li>
+<li><p>4: cc-(pwC)VQZ-DK</p></li>
+<li><p>5: cc-(pwC)V5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-odd"><td><p>aug-cc-CV-dk</p></td>
+<td><ul class="simple">
+<li><p>H-Be,Na-Mg: aug-cc-pwCVnZ-DK</p></li>
+<li><p>B-Ne: aug-cc-pVnZ-DK (!)</p></li>
+<li><p>Al-Ar: aug-cc-pVnZ-DK (!)</p></li>
+<li><p>Ca-Zn: aug-cc-pVwCnZ-DK</p></li>
+<li><p>missing QZ for Y-Cd</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: aug-cc-(pwC)VDZ-DK</p></li>
+<li><p>3: aug-cc-(pwC)VTZ-DK</p></li>
+<li><p>4: aug-cc-(pwC)VQZ-DK</p></li>
+<li><p>5: aug-cc-(pwC)V5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-even"><td><p>cc-CV_3dTM-cc_L</p></td>
+<td><ul class="simple">
+<li><p>H-Kr: cc-pVnZ-DK</p></li>
+<li><p>Sc-Zn: cc-pwCVnZ-DK (!)</p></li>
+<li><p>Ga-Rn: cc-pVnZ-DK</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: cc-(pwC)VDZ-DK</p></li>
+<li><p>3: cc-(pwC)VTZ-DK</p></li>
+<li><p>4: cc-(pwC)VQZ-DK</p></li>
+<li><p>5: cc-(pwC)V5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
+</tr>
+<tr class="row-odd"><td><p>aug-cc-CV_3dTM-cc_L</p></td>
+<td><ul class="simple">
+<li><p>H-Kr: aug-cc-pVnZ-DK</p></li>
+<li><p>Sc-Zn: cc-pwCVnZ-DK (!)</p></li>
+<li><p>Ga-Rn: aug-cc-pVnZ-DK</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>2: (aug)-cc-(pwC)VDZ-DK</p></li>
+<li><p>3: (aug)-cc-(pwC)VTZ-DK</p></li>
+<li><p>4: (aug)-cc-(pwC)VQZ-DK</p></li>
+<li><p>5: (aug)-cc-(pwC)V5Z-DK</p></li>
+</ul>
+</td>
+<td><p>relativity=’DKH’</p></td>
 </tr>
 </tbody>
 </table>
 <ul class="simple">
-<li><p>Note: missing basis for K.</p></li>
-<li></li>
+<li><p>Note: often missing basis sets for K.</p></li>
+<li><p>Sometimes there are missing basis sets for specific elements and specific cardinals</p></li>
 </ul>
-<p><strong>Basic example:</strong></p>
+</div>
+<div class="section" id="cc-cbs-theory-examples">
+<h2>CC_CBS_Theory Examples<a class="headerlink" href="#cc-cbs-theory-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Basic example</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;n2.xyz&#39;</span><span class="p">)</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">)</span>
@@ -373,7 +596,7 @@ Ba,Ra,U</p></td>
 <p>The example above defines an N2 fragment (from n2.xyz) and runs multiple CCSD(T) calculations, utilizing basis-set extrapolation of SCF and correlation energies.
 Cardinals=[2,3] and basisfamily=”cc” means that the cc-pVDZ and cc-pVTZ basis sets will be used and extrapolated to the basis set limit.
 Appropriate extrapolation parameters for 2-point extrapolations with this basis set family are chosen.</p>
-<p><strong>Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:</strong></p>
+<p><strong>4d Transition Metal Complex Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">complex</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ru-phosphine-complex.xyz&#39;</span><span class="p">)</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ru&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span> <span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNO&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -384,7 +607,7 @@ Appropriate extrapolation parameters for 2-point extrapolations with this basis 
 Here we use the def2 basis family and a def2-ECP effective core-potential will be automatically selected for ruthenium. We choose cardinals=[2,3] here and this means that we do the relatively cheap def2-SVP/def2-TZVPP extrapolation.
 The DLPNO approximation utilizes thresholds that determine the accuracy of the DLPNO approximation (compared to unapproximated CCSD(T)).
 By setting pnosetting=”NormalPNO” we get the default PNO settings that are reasonably accurate. Other options are: ‘LoosePNO’ (not recommended) and ‘TightPNO’ (more accurate, more expensive), and ‘extrapolation’ (see below).</p>
-<p><strong>Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with the cc-pVnZ and cc-pVnZ-PP (n=3,4) extrapolation:</strong></p>
+<p>DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with the cc-pVnZ and cc-pVnZ-PP (n=3,4) extrapolation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">complex</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ru-phosphine-complex.xyz&#39;</span><span class="p">)</span>
 <span class="c1">#Note: here providing list of elements more conveniently from the defined fragment</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">complex</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -397,7 +620,9 @@ correlation-consistent basis set family (‘cc’). For ruthenium, ASH tells ORC
 To further reduce the error of the DLPNO approximation we use pnosetting=”extrapolation” and pnoextrapolation=[6,7] which means that 2 DLPNO-CCSD(T) calculations will be performed
 for each basis-set-cardinal calculation with different TCutPNO cutoffs (here TCutPNO=1e-6 and TCutPNO=1e-7). The results are then extrapolated to the PNO limit according to PNO extrapolation by Giovanni Bistoni and coworkers.
 See these excellent papers: <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/acs.jctc.0c00344">https://pubs.acs.org/doi/abs/10.1021/acs.jctc.0c00344</a> and <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.1c09106">https://pubs.acs.org/doi/abs/10.1021/acs.jpca.1c09106</a></p>
-<p><strong>Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with DKH relativistic approximation and cc-pwCVnZ-DK extrapolation:</strong></p>
+<blockquote>
+<div><p>DLPNO-CCSD(T)/CBS with PNO extrapolation on a 4d-metal complex with DKH relativistic approximation and cc-pwCVnZ-DK extrapolation:</p>
+</div></blockquote>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">complex</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ru-phosphine-complex.xyz&#39;</span><span class="p">)</span>
 <span class="c1">#Note: here providing list of elements more conveniently from the defined fragment</span>
 <span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">complex</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-CV-dk&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -405,11 +630,25 @@ See these excellent papers: <a class="reference external" href="https://pubs.acs
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>While the cc-pVDZ-PP approach for ruthenium is affordable and accurate, for even greater accuracy one can opt for an all-electronic relativistic approach instead.
+<p>While the cc-pVDZ-PP approach for ruthenium is affordable and accurate, for even greater accuracy (and much higher cost) one could opt for an all-electronic relativistic approach instead.
+Here the Douglas-Kroll-Hess scalar relativistic Hamiltonian is used and this requires one to choose a basis-set family that has been recontracted for DKH Hamiltonians.
+We use the ‘cc-dk’ basis family here that features all-electron correlation consistent basis sets that have been contracted for the DKH Hamiltonian.</p>
+<p><strong>3d Transition Metal Complex Example: DLPNO-CCSD(T1)/CBS with PNO extrapolation on a 4d-metal complex with the Ahlrichs def2-SVP/def2-TZVPP extrapolation:</strong></p>
+<p>Example: DLPNO-CCSD(T)/CBS with PNO extrapolation on a 3d-metal complex with DKH relativistic approximation:</p>
+<p>For 3d transition metal complexes (with the complicated 3d shell of the metal), effective core potential are typically not very accurate and an all-electron relativistic approach is typically recommended instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">complex</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;fe-complex.xyz&#39;</span><span class="p">)</span>
+<span class="c1">#Note: here providing list of elements more conveniently from the defined fragment</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">complex</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-dk&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">relativity</span><span class="o">=</span><span class="s1">&#39;DKH&#39;</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for ruthenium is affordable and accurate, for even greater accuracy one can opt for an all-electronic relativistic approach instead.
 Here the Douglas-Kroll-Hess scalar relativistic Hamiltonian is used and this requires one to choose a basis-set family that has been recontracted for DKH Hamiltonians.
 We could choose to use the ‘cc-dk’ but here we utilize the ‘cc-CV-dk’ family that in addition to being DKH-recontracted, features additional basis-functions typically used to describe core-valence
 correlation. The frozen-core approximation is still in use here, meaning that the extra basis functions instead serve to improve the valence-electron correlation problem instead.</p>
 <p><a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/acs.jctc.9b01109">https://pubs.acs.org/doi/abs/10.1021/acs.jctc.9b01109</a></p>
+</div>
 </div>
 
 

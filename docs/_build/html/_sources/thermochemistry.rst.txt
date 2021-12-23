@@ -10,7 +10,7 @@ ASH can also conveniently calculate thermodynamic corrections via the RRHO appro
 thermochemistry corrections
 ##############################################################################
 
-Thermochemistry corrections are automatically calculated (return object) when either a Numfreq or Anfreq job is requested.
+Thermochemistry corrections are automatically calculated when either a Numfreq or Anfreq job is requested.
 
 .. code-block:: python
 
@@ -86,28 +86,7 @@ Single fragment example:
     blockinput="""
     %scf maxiter 200 end
     """
-    ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, numcores=numcores)s
-    thermochemprotocol_single(fragment=H2, Opt_theory=ORCAobject, SP_theory=DLPNO_CC_CBS, orcadir=orcadir, numcores=numcores)
-
-
-Example with additional SP_theory workflow arguments:
-
-.. code-block:: python
-
-    H2=Fragment(xyzfile='h2.xyz')
-    #Defining theory for Opt+Freq step in thermochemprotocol
-    orcadir='/Applications/orca_4.2.1'
-    simpleinput="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
-    blockinput="""
-    %scf maxiter 200 end
-    """
     ORCAobject = ORCATheory(orcadir=orcadir, orcasimpleinput=simpleinput, orcablocks=blockinput, numcores=numcores)
-    DLPNO_CC_CBS_SP_args = {'cardinals' : [2,3], "basisfamily" : "def2", 'stabilityanalysis' : True, 
-    'pnosetting' : 'extrapolation', 'pnoextrapolation' : [5,6], 'CVSR' : True,
-                    'memory' : 5112, 'extrablocks' : "%scf\ndirectresetfreq 1\nend\n", 
-                    'extrainputkeyword' : 'Slowconv'}
-    thermochemprotocol_reaction(fraglist=[H2], stoichiometry=[1], Opt_theory=ORCAobject, 
-    SP_theory=DLPNO_CC_CBS, workflow_args=DLPNO_CC_CBS_SP_args, orcadir=orcadir, numcores=numcores)
-
-
+    DLPNO_CC_CBS = CC_CBS_Theory(elements=["H"], cardinals = [2,3], basisfamily="cc", pnosetting='extrapolation', pnoextrapolation=[6,7], DLPNO=True, numcores=numcores)
+    thermochemprotocol_single(fragment=H2, Opt_theory=ORCAobject, SP_theory=DLPNO_CC_CBS, orcadir=orcadir, numcores=numcores)
 

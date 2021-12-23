@@ -114,8 +114,6 @@ Running a test set with a highlevel theory workflow
 The test set can also be run with a high-level workflow (multi-step theory).
 See :doc:`module_highlevel_workflows`
 
-When using an ORCA-based workflow the orcadir keyword argument and numcores argument needs to provided.
-
 .. code-block:: python
 
     from ash import *
@@ -124,7 +122,7 @@ When using an ORCA-based workflow the orcadir keyword argument and numcores argu
     #Running the benchmark with a workflow
     DLPNO_CC_calc = CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
                 pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores, orcadir=orcadir)
-    run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc, numcores=4, orcadir=orcadir)
+    run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc)
 
 
 
