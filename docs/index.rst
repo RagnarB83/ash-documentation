@@ -69,7 +69,7 @@ These are the documentation pages of ASH, a multiscale modelling program.
    QM-MM-protein
    workflows-examples
    thermochemistry
-
+   Highlevel_CC_CBS_workflows
 .. toctree::
    :maxdepth: 2
    :caption: Tools

@@ -106,6 +106,8 @@
 <p class="caption"><span class="caption-text">Internal modules</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QM/MM Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#qmmmtheory-class">QMMMTheory class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#qm-mm-truncated-pc-approximation">QM/MM Truncated PC approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#qm-mm-boundary-treatment">QM/MM boundary treatment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-nonbondedtheory">Example: QM/MM with ORCA and NonbondedTheory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-qm-mm-with-orca-and-openmmtheory">Example: QM/MM with ORCA and OpenMMTheory</a></li>
@@ -116,7 +118,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
@@ -143,6 +145,7 @@
 <li class="toctree-l1"><a class="reference internal" href="QM-MM-protein.html">QM/MM on a protein</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workflows-examples.html">Workflow examples in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Highlevel_CC_CBS_workflows.html">Tutorial: High-level CCSD(T)/CBS workflows</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tools</span></p>
 <ul>
@@ -216,11 +219,85 @@
             
   <div class="section" id="qm-mm-theory">
 <h1>QM/MM Theory<a class="headerlink" href="#qm-mm-theory" title="Permalink to this headline">¶</a></h1>
-<p>QM/MM in ASH is flexible as one can in principle combine various QM-theories with either NonbondedTheory or OpenMMTHeory.</p>
+<p>QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that supports pointcharge embedding) with an MMTheory object of class NonbondedTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>) or OpenMMTheory (see <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>).</p>
 <p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
-and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
+and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
 Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
 the QMMMTheory object can define the division of QM-region and MM-region.</p>
+<div class="section" id="qmmmtheory-class">
+<h2>QMMMTheory class<a class="headerlink" href="#qmmmtheory-class" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QMMMTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozenatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">unusualboundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">openmm_externalforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Options:</p>
+<ul class="simple">
+<li><p>qm_theory (ASH Theory): Any ASH QMTheory object. Default: None</p></li>
+<li><p>mm_theory (ASH Theory): An ASH MMTheory object. Default: None</p></li>
+<li><p>qmatoms (list): List of atom-indices that define the QM-region. Default: None</p></li>
+<li><p>fragment (ASH Fragment): An ASH Default: None</p></li>
+<li><p>charges (list): Optional list of MM charges for whole system. Will override charges from mm_theory. Default: None</p></li>
+<li><p>embedding (string): Embedding keyword, ‘Elstat’ or ‘Mechanical’ Default: ‘Elstat’</p></li>
+<li><p>printlevel (integer): Printlevel setting of QMMMTheory. Default: 2</p></li>
+<li><p>numcores (integer): Optional setting for how many cores to use. Will override qm_theory setting. Default: 1</p></li>
+<li><p>excludeboundaryatomlist (list): List of atoms that are excluded from adding linkatoms to. Default: None</p></li>
+<li><p>unusualboundary (Boolean): Boundary-option; overrides ASH quitting if an unusual QM-MM boundary is defined.  Default: False</p></li>
+<li><p>openmm_externalforce (Boolean): Option for passing QM/MM force as an external force to OpenMMTheory. Default: False</p></li>
+<li><p>TruncatedPC (Boolean): Truncated PC option; True or False . Default: False</p></li>
+<li><p>TruncPCRadius (float): Truncated PC option; Radius (Å) for the truncated PC region. Default: 35</p></li>
+<li><p>TruncatedPC_recalc_iter (integer): Truncated PC option; frequency for recalculating with full PC field. Default: 50</p></li>
+<li><p>actatoms (list): List of active atoms in QM/MM. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)</p></li>
+<li><p>frozenatoms (list): List of frozen atoms in QM/MM, alternative to actatoms. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">)</span>
+
+<span class="c1">#List of qmatom indices defined</span>
+<span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">502</span><span class="p">,</span><span class="mi">503</span><span class="p">]</span>
+
+<span class="c1">#QM theory: xTB</span>
+<span class="n">qm</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="c1">#Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)</span>
+<span class="n">omm</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;./specialresidue.xml&quot;</span><span class="p">],</span> <span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;finalsystem.pdb&quot;</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#QM/MM theory object</span>
+<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="qm-mm-truncated-pc-approximation">
+<h2>QM/MM Truncated PC approximation<a class="headerlink" href="#qm-mm-truncated-pc-approximation" title="Permalink to this headline">¶</a></h2>
+<p>For large systems (e.g. &gt; 50 000 atoms) the evaluation of the QM-pointcharge interaction (calculated by the QM-code) will start to dominate the cost of the calculation in each QM/MM calculation step.
+The QM-pointcharge gradient calculation is the main culprit and it depends on the QM-code how efficiently this step is carried out for a large number of pointcharges.
+ASH features a convenient workaround for this problem in QM/MM geometry optimizations. Instead of reducing the system size, ASH can temporarily reduce the size of the PC field (MM calculation size remains the same) during the geometry optimization which can speed up the calculation a lot.
+The size of the truncated PC field is controlled by the TruncPCRadius variable (radius in Å) which results in a truncated spherical PC field.</p>
+<p>The algorith works like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Opt cycle 1:
+    Use full pointcharge field. Store the full-system pointcharge gradient.
+Opt cycle n:
+    if Opt cycle n is a multiple of TruncatedPC_recalc_iter then:
+        Use full pointcharge field. Store the full system pointcharge gradient.
+    else:
+        Use truncated PC field (defined by TruncPCRadius) in each QM run. Update the available full-system pointcharge gradient (the rest of the full gradient comes from last full-system update).
+Final Opt cycle:
+    Recalculate final geometry using full pointcharge field.
+</pre></div>
+</div>
+<p>In a typical truncated-PC QM/MM optimization, the full pointcharge field (e.g. 1 million PCs) is used in the 1st step (expensive) but in later steps an approximated spherical PC-region (cheap) is used during the QM-steps (e.g. a spherical 35 Å radius region)
+until step 50/100/150 etc. (if TruncatedPC_recalc_iter=50) where the full pointcharge field is recalculated. When the optimization converges, e.g step 80, a final energy evaluation is performed using the full PC field.
+For such an 80-iteration job, the full PC gradient may be calculated only 3 times (instead of 80 times) that can result in considerable time savings.</p>
+<p>Note that QM and QM/MM energies are approximate during the optimization steps where a truncated PC field is used. The final energy is always calculated using the full PC field.
+The error from the approximation depends on the TruncPCRadius parameter (smaller values than 30 not recommended) and TruncatedPC_recalc_iter (how often the full PC field is used). If TruncatedPC_recalc_iter=1 then no truncation is performed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#QM/MM theory object defined with the truncated PC approximation</span>
+<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="qm-mm-boundary-treatment">
 <h2>QM/MM boundary treatment<a class="headerlink" href="#qm-mm-boundary-treatment" title="Permalink to this headline">¶</a></h2>
 <p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
@@ -230,7 +307,8 @@ Additionally to prevent overpolarization, the atom charge of the MMatom is shift
 applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.</p>
 <p>The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
-By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). To override this add “unusualboundary=True” as keyword argument when creating QMMMTheory object.</p>
+By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired).
+To override this behaviour add “unusualboundary=True” as keyword argument when creating QMMMTheory object.</p>
 <p>In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1">#Excluding QM-atom 5785 from linkatom-creation.</span>
 <span class="n">qmmmobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orcaobject</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span>

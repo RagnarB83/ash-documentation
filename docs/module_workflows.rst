@@ -139,6 +139,12 @@ confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow
 
 See :doc:`crest-interface`
 
+#####################
+ReactionEnergy
+#####################
+
+TODO
+
 ###################################
 Counter-poise correction (ORCA)
 ###################################

@@ -2,12 +2,100 @@
 QM/MM Theory
 ==========================
 
-QM/MM in ASH is flexible as one can in principle combine various QM-theories with either NonbondedTheory or OpenMMTHeory.
+QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that supports pointcharge embedding) with an MMTheory object of class NonbondedTheory (see :doc:`MM-interfaces`) or OpenMMTheory (see :doc:`OpenMM-interface`).
 
 To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
-and then specifies which atoms are QM and which are MM and the type of QM-MM coupling.
+and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
 Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
 the QMMMTheory object can define the division of QM-region and MM-region.
+
+
+######################################
+QMMMTheory class
+######################################
+
+.. code-block:: python
+ 
+    class QMMMTheory:
+        def __init__(self, qm_theory=None, mm_theory=None, qmatoms=None, fragment=None, charges=None,
+                    embedding="Elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
+                    unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=35, TruncatedPC_recalc_iter=50):
+
+Options:
+
+- qm_theory (ASH Theory): Any ASH QMTheory object. Default: None
+- mm_theory (ASH Theory): An ASH MMTheory object. Default: None
+- qmatoms (list): List of atom-indices that define the QM-region. Default: None
+- fragment (ASH Fragment): An ASH Default: None
+- charges (list): Optional list of MM charges for whole system. Will override charges from mm_theory. Default: None
+- embedding (string): Embedding keyword, 'Elstat' or 'Mechanical' Default: 'Elstat'
+- printlevel (integer): Printlevel setting of QMMMTheory. Default: 2
+- numcores (integer): Optional setting for how many cores to use. Will override qm_theory setting. Default: 1
+- excludeboundaryatomlist (list): List of atoms that are excluded from adding linkatoms to. Default: None
+- unusualboundary (Boolean): Boundary-option; overrides ASH quitting if an unusual QM-MM boundary is defined.  Default: False
+- openmm_externalforce (Boolean): Option for passing QM/MM force as an external force to OpenMMTheory. Default: False
+- TruncatedPC (Boolean): Truncated PC option; True or False . Default: False
+- TruncPCRadius (float): Truncated PC option; Radius (Å) for the truncated PC region. Default: 35
+- TruncatedPC_recalc_iter (integer): Truncated PC option; frequency for recalculating with full PC field. Default: 50
+- actatoms (list): List of active atoms in QM/MM. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)
+- frozenatoms (list): List of frozen atoms in QM/MM, alternative to actatoms. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)
+
+Example:
+
+.. code-block:: python
+
+    frag=Fragment(xyzfile="system.xyz")
+
+    #List of qmatom indices defined
+    qmatoms=[500,501,502,503]
+
+    #QM theory: xTB
+    qm = xTBTheory(charge=-1, mult=6, xtbmethod='GFN1')
+
+    #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+                platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
+
+    #QM/MM theory object
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2)
+
+
+######################################
+QM/MM Truncated PC approximation
+######################################
+
+For large systems (e.g. > 50 000 atoms) the evaluation of the QM-pointcharge interaction (calculated by the QM-code) will start to dominate the cost of the calculation in each QM/MM calculation step.
+The QM-pointcharge gradient calculation is the main culprit and it depends on the QM-code how efficiently this step is carried out for a large number of pointcharges.
+ASH features a convenient workaround for this problem in QM/MM geometry optimizations. Instead of reducing the system size, ASH can temporarily reduce the size of the PC field (MM calculation size remains the same) during the geometry optimization which can speed up the calculation a lot.
+The size of the truncated PC field is controlled by the TruncPCRadius variable (radius in Å) which results in a truncated spherical PC field.
+
+The algorith works like this:
+
+.. code-block:: text
+
+    Opt cycle 1: 
+        Use full pointcharge field. Store the full-system pointcharge gradient.
+    Opt cycle n: 
+        if Opt cycle n is a multiple of TruncatedPC_recalc_iter then: 
+            Use full pointcharge field. Store the full system pointcharge gradient.
+        else: 
+            Use truncated PC field (defined by TruncPCRadius) in each QM run. Update the available full-system pointcharge gradient (the rest of the full gradient comes from last full-system update).
+    Final Opt cycle: 
+        Recalculate final geometry using full pointcharge field.
+
+In a typical truncated-PC QM/MM optimization, the full pointcharge field (e.g. 1 million PCs) is used in the 1st step (expensive) but in later steps an approximated spherical PC-region (cheap) is used during the QM-steps (e.g. a spherical 35 Å radius region) 
+until step 50/100/150 etc. (if TruncatedPC_recalc_iter=50) where the full pointcharge field is recalculated. When the optimization converges, e.g step 80, a final energy evaluation is performed using the full PC field.
+For such an 80-iteration job, the full PC gradient may be calculated only 3 times (instead of 80 times) that can result in considerable time savings.
+
+Note that QM and QM/MM energies are approximate during the optimization steps where a truncated PC field is used. The final energy is always calculated using the full PC field.
+The error from the approximation depends on the TruncPCRadius parameter (smaller values than 30 not recommended) and TruncatedPC_recalc_iter (how often the full PC field is used). If TruncatedPC_recalc_iter=1 then no truncation is performed.
+
+.. code-block:: python
+
+    #QM/MM theory object defined with the truncated PC approximation
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2,
+        TruncatedPC=True, TruncPCRadius=35, TruncatedPC_recalc_iter=50)
+
 
 ######################################
 QM/MM boundary treatment
@@ -21,7 +109,8 @@ applied by adding additional pointcharges. These pointcharges are only visible t
 
 The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
-By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). To override this add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
+By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). 
+To override this behaviour add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
 
 In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
 
