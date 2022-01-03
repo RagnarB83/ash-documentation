@@ -15,7 +15,6 @@ MMTheory (see :doc:`MM-interfaces`) or even a QM/MMTheory (see :doc:`module_QM-M
 
 .. code-block:: python
 
-    #Single-point energy function
     def Singlepoint(fragment=None, theory=None, Grad=False):
         """Singlepoint function: runs a single-point energy calculation using ASH theory and ASH fragment.
 
@@ -31,7 +30,6 @@ MMTheory (see :doc:`MM-interfaces`) or even a QM/MMTheory (see :doc:`module_QM-M
         """
 
 *Example*
-
 In the example script below an ASH fragment is created from the XYZ-file "hf.xyz" that contains the Cartesian coordinates of hydrogen fluoride.
 Next a theory-level object is defined, here an object is created from the ORCATheory class. 
 
@@ -186,7 +184,7 @@ Singlepoint_parallel function
 
 The **Singlepoint_fragments** and **Singlepoint_theories** functions perform the calculations in a sequential fashion (via a for loop): i.e. one calculation after the other.
 While convenient, the functions do not utilize the fact that each fragment-calculation (**Singlepoint_fragments**) or theory-calculation (**Singlepoint_theories**) is completely 
-independent from each other and could thus run throught the list of calculations (whether fragments or theories)in parallel on a multi-core CPU.
+independent from each other and could thus run through the list of calculations (whether fragments or theories) in parallel on a multi-core CPU.
 The **Singlepoint_parallel** function, however, allows you to do this.
 
 See :doc:`parallelization` for information on using the **Singlepoint_parallel** function.
