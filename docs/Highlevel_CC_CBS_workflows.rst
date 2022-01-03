@@ -153,9 +153,9 @@ Let's look at a slightly larger molecule where regular CCSD(T) calculations are 
 
 
 
-##############################################################################
-Example: DLPNO-CCSD(T)/CBS calculations on a 3d Transition metal complex 
-##############################################################################
+####################################################################################
+Example: DLPNO-CCSD(T)/CBS 3d Transition metal complex: Ionization of Ferrocene 
+####################################################################################
 
 **INCOMPLETE**
 
@@ -184,8 +184,6 @@ https://pubs.acs.org/doi/abs/10.1021/acs.jctc.9b01109
 ##############################################################################
 Example: DLPNO-CCSD(T)/CBS calculations on a 4d Transition metal complex 
 ##############################################################################
-
-
 
 Let's compare the options available for a 4d transition metal complex.
 Here we choose the ruthenium-phosphine complex: XXX.
