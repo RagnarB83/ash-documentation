@@ -261,7 +261,7 @@ To be added: PNO-extrapolation options
 
 .. code-block:: python
 
-    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel',
+    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', energy_unit='kcal/mol',
                                     def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False, extrapolation=True, highest_cardinal=6,
                                     plot=True ):
         """Function to perform high-level CCSD(T) calculations for a reaction with associated plots.
@@ -274,6 +274,7 @@ To be added: PNO-extrapolation options
             numcores (int, optional): [description]. Defaults to 1.
             memory (int, optional): [description]. Defaults to 7000.
             reactionlabel (str, optional): [description]. Defaults to 'Reactionlabel'.
+            energy_unit (str): Energy unit for ReactionEnergy. Options: 'kcal/mol', 'kJ/mol', 'eV', 'cm-1'. Default: 'kcal/mol'
             def2_family (bool, optional): [description]. Defaults to True.
             cc_family (bool, optional): [description]. Defaults to True.
             F12_family (bool, optional): [description]. Defaults to True.
@@ -309,12 +310,11 @@ Additionally energy vs. basis-cardinal plots are created for both the total ener
    :width: 700
 
 
-.. image:: figures/N2_energy.png
+.. image:: figures/N2_Energy.png
    :align: center
    :width: 700
 
-.. image:: figures/N_energy.png
+.. image:: figures/N_Energy.png
    :align: center
    :width: 700
 
-   

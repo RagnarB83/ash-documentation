@@ -309,10 +309,11 @@ Additionally energy vs. basis-cardinal plots are created for both the total ener
    :width: 700
 
 
-.. image:: figures/N2_energy.png
+.. image:: figures/N2_Energy.png
    :align: center
    :width: 700
 
-.. image:: figures/N_energy.png
+.. image:: figures/N_Energy.png
    :align: center
    :width: 700
+

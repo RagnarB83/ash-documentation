@@ -27,7 +27,7 @@ Let's start with the simple case of N2 and the total energy of the system. We wi
 If we plot the total CCSD(T) energy for basis sets: cc-pVDZ, cc-pVTZ, cc-pVQZ, cc-pV5Z, cc-pV6Z as well as def2-SVP, def2-TZVPP, def2-QZVPP
 we obtain the following plot.
 
-.. image:: figures/N2_energy.png
+.. image:: figures/N2_Energy.png
    :align: center
    :width: 700
 
