@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Highlevel workflows" href="module_highlevel_workflows.html" />
-    <link rel="prev" title="Freq module" href="module_freq.html" /> 
+    <link rel="prev" title="Benchmarking in ASH" href="module_benchmarking.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,24 +98,30 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal modules</span></p>
+<p class="caption"><span class="caption-text">Jobtypes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reactionenergy">ReactionEnergy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#thermochemprotocols">Thermochemprotocols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files">calc_xyzfiles: Run calculations on a collection of XYZ-files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#high-level-single-point-workflows">High-level single-point workflows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reactionenergy">ReactionEnergy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#counter-poise-correction-orca">Counter-poise correction (ORCA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automatic-active-space-selection">Automatic active-space selection</a></li>
 </ul>
@@ -223,6 +229,49 @@
 <h1>Workflows<a class="headerlink" href="#workflows" title="Permalink to this headline">¶</a></h1>
 <p>ASH includes a number of convenient built-in functionality to carry out multi-step workflows. See below.
 See also <a class="reference internal" href="workflows-examples.html"><span class="doc">Workflow examples in ASH</span></a> for a tutorial on how you can build your own workflows.</p>
+<div class="section" id="reactionenergy">
+<h2>ReactionEnergy<a class="headerlink" href="#reactionenergy" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ReactionEnergy</span><span class="p">(</span><span class="n">list_of_energies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Options:</p>
+<ul class="simple">
+<li><p>list_of_energies (list of floats). List of total energies in Eh (hartrees).</p></li>
+<li><p>stoichiometry (list of integers). Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.</p></li>
+<li><p>list_of_fragments (list of ASH Fragments). ASH fragments must have a set energy attribute.</p></li>
+<li><p>unit (string). String that indicates the final unit to convert reaction energy to. Options: ‘kcal/mol’, ‘eV’, ‘kJ/mol’, ‘cm-1’. Default: ‘kcal/mol’</p></li>
+<li><p>reference (float). If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference. Default=None</p></li>
+<li><p>silent (Boolean). If True, ReactionEnergy will not print to standard-output, only return the result.</p></li>
+</ul>
+<p>The simple ReactionEnergy function is a convenient way to calculate the reaction energy for a reaction from a list of energies and the stoichiometry associated with the reaction.
+The function prints to standard output the reaction energy (unless silent=True) and returns the relative energy converted into a unit of choice (default: kcal/mol).</p>
+<p>Simple example for Haber-Bosch reaction:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Haber-Bosch reaction: N2 + 3H2 =&gt; 2NH3</span>
+<span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">diatomic</span><span class="o">=</span><span class="s2">&quot;N2&quot;</span><span class="p">,</span> <span class="n">diatomic_bondlength</span><span class="o">=</span><span class="mf">1.0975</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">H2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">diatomic</span><span class="o">=</span><span class="s2">&quot;H2&quot;</span><span class="p">,</span> <span class="n">diatomic_bondlength</span><span class="o">=</span><span class="mf">0.741</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">NH3</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;nh3.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span> <span class="c1">#An ordered list of ASH fragments.</span>
+<span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1">#Using same order as specieslist.</span>
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span> <span class="c1"># GFN1-xTB theory-level</span>
+<span class="n">energies</span> <span class="o">=</span> <span class="n">Singlepoint_fragments</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">)</span> <span class="c1">#Calculating list of energies</span>
+
+<span class="c1">#Calculating reaction-energy using list and stoichiometry</span>
+<span class="n">reaction_energy</span><span class="p">,</span> <span class="n">unused</span> <span class="o">=</span> <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_energies</span><span class="o">=</span><span class="n">energies</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ΔE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Reaction_energy(Δ):  -136.6723479900558 kcal/mol
+</pre></div>
+</div>
+<p>If there is an energy attribute associated with each fragment it is also possible to just provide ReactionEnergy with a list of the fragments involved.
+This will only work if the energy attribute has been added to the fragment. Some ASH functions will do this: <strong>Singlepoint</strong>, <strong>Singlepoint_fragments</strong>, <strong>geomeTRICOptimizer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Calculating reaction-energy using list_of_fragments and stoichiometry</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span>
+<span class="n">reaction_energy</span><span class="p">,</span> <span class="n">unused</span> <span class="o">=</span> <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ΔE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="thermochemprotocols">
 <h2>Thermochemprotocols<a class="headerlink" href="#thermochemprotocols" title="Permalink to this headline">¶</a></h2>
 <p>The <strong>thermochemprotocol_reaction</strong> and <strong>thermochemprotocol_single</strong> functions can be used to
@@ -272,6 +321,7 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 </div>
 <div class="section" id="calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files">
 <h2>calc_xyzfiles: Run calculations on a collection of XYZ-files<a class="headerlink" href="#calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files" title="Permalink to this headline">¶</a></h2>
+<p>calc_xyzfiles is similar to Singlepoint_fragments (<a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a>) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_xyzfiles</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtb_preopt</span><span class="o">=</span><span class="kc">False</span> <span class="p">):</span>
 </pre></div>
 </div>
@@ -326,10 +376,6 @@ XYZ-files with optimized coordinates can be found in: optimized_xyzfiles
 <div class="section" id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
 <h2>confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow<a class="headerlink" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference internal" href="crest-interface.html"><span class="doc">CREST interface</span></a></p>
-</div>
-<div class="section" id="reactionenergy">
-<h2>ReactionEnergy<a class="headerlink" href="#reactionenergy" title="Permalink to this headline">¶</a></h2>
-<p>TODO</p>
 </div>
 <div class="section" id="counter-poise-correction-orca">
 <h2>Counter-poise correction (ORCA)<a class="headerlink" href="#counter-poise-correction-orca" title="Permalink to this headline">¶</a></h2>
@@ -520,7 +566,7 @@ Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="module_highlevel_workflows.html" class="btn btn-neutral float-right" title="Highlevel workflows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="module_freq.html" class="btn btn-neutral float-left" title="Freq module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="module_benchmarking.html" class="btn btn-neutral float-left" title="Benchmarking in ASH" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

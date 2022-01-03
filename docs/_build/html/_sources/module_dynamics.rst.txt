@@ -1,5 +1,5 @@
 =================================================
-Dynamics module
+Molecular dynamics
 =================================================
 
 Molecular dynamics in ASH is currently available via 2 different approaches.

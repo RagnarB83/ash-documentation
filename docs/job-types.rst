@@ -4,8 +4,8 @@ Job Types
 
 The main job-types available in ASH:
 
-- Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.
-- Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.
+- Single-point energy/property jobs in Ash  are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.
+- Geometry optimizations are typically performed using the geomeTRICOptimizer function (an interface function to the geomeTRIC library)
 - Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.
 - Nudged elastic band calculations are available via an interface to the Knarr-NEB code.
 - Molecular dynamics.
@@ -17,71 +17,10 @@ a QM/MM Theory object from :doc:`module_QM-MM`
 ###########################
 Single-point calculation
 ###########################
-A single-point calculation is the most basic job to perform.
-After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from: :doc:`QM-interfaces` an
-MMTheory (see :doc:`MM-interfaces`) or a QM/MMTheory (see :doc:`module_QM-MM`).
-The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
-ORCA contains a large variety of DFT and WFT methods.
-Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
-(location of ORCA dir and specifying how the inputfile should look).
-
-For a single-point calculation only then simply passes the Theory object and the Fragment object to the **Singlepoint**
-function.
-
-.. code-block:: python
-
-    from ash import *
-
-    HF_frag=Fragment(xyzfile="hf.xyz")
-    #ORCA
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
-    orcablocks="%scf maxiter 200 end"
-    ORCAobject = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                        orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=4)
-
-    #Simple Energy SP calc. Energy will be printed to output
-    Singlepoint(theory=ORCAobject, fragment=HF_frag)
 
 
-The **Singlepoint** function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
-The energy will be printed to standard output by default
 
-We can also run the calculation and store the energy as a new variable (to be used for anything):
-
-.. code-block:: python
-
-    #Simple Energy+Gradient SP calc
-    # The function will return the energy that can be stored as a variable
-    Energy = Singlepoint(theory=ORCAobject, fragment=HF_frag)
-    print("Energy is", Energy)
-
-It is also possible to request a gradient calculation :
-
-.. code-block:: python
-
-    #Simple Energy+Gradient SP calc
-    Energy, Gradient = Singlepoint(theory=ORCAobject, fragment=HF_frag, Grad=True)
-    print("Energy is", Energy)
-    print("Gradient is:", Gradient)
-
-
-By default, the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
-temporary files (e.g. so they don't interfere with a future job), one can use the cleanup function:
-
-.. code-block:: python
-
-    #Clean up
-    ORCAobject.cleanup()
-
-
-The energy and gradient from the last Energy/Energy+Gradient run is also stored inside the Theory object and can be accessed:
-
-.. code-block:: python
-
-    print(ORCAobject.energy)
-    print(ORCAobject.grad)
-
+See :doc:`singlepoint`
 
 
 

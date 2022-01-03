@@ -6,6 +6,58 @@ See also :doc:`workflows-examples` for a tutorial on how you can build your own 
 
 
 #####################
+ReactionEnergy
+#####################
+
+.. code-block:: python
+
+	def ReactionEnergy(list_of_energies=None, stoichiometry=None, list_of_fragments=None, unit='kcal/mol', label=None, reference=None, silent=False):
+
+Options:
+
+- list_of_energies (list of floats). List of total energies in Eh (hartrees).
+- stoichiometry (list of integers). Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.
+- list_of_fragments (list of ASH Fragments). ASH fragments must have a set energy attribute.
+- unit (string). String that indicates the final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'. Default: 'kcal/mol'
+- reference (float). If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference. Default=None
+- silent (Boolean). If True, ReactionEnergy will not print to standard-output, only return the result.
+
+The simple ReactionEnergy function is a convenient way to calculate the reaction energy for a reaction from a list of energies and the stoichiometry associated with the reaction.
+The function prints to standard output the reaction energy (unless silent=True) and returns the relative energy converted into a unit of choice (default: kcal/mol).
+
+Simple example for Haber-Bosch reaction:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
+
+.. code-block:: python
+
+	from ash import *
+
+	#Haber-Bosch reaction: N2 + 3H2 => 2NH3
+	N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
+	H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+	NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+	specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
+	stoichiometry=[-1, -3, 2] #Using same order as specieslist.
+	xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
+	energies = Singlepoint_fragments(theory=xtbcalc, fragments=specieslist) #Calculating list of energies
+
+	#Calculating reaction-energy using list and stoichiometry
+	reaction_energy, unused = ReactionEnergy(stoichiometry=stoichiometry, list_of_energies=energies, unit='kcal/mol', label='ΔE')
+
+.. code-block:: text
+
+	Reaction_energy(Δ):  -136.6723479900558 kcal/mol
+
+
+If there is an energy attribute associated with each fragment it is also possible to just provide ReactionEnergy with a list of the fragments involved.
+This will only work if the energy attribute has been added to the fragment. Some ASH functions will do this: **Singlepoint**, **Singlepoint_fragments**, **geomeTRICOptimizer**
+
+.. code-block:: python
+
+	#Calculating reaction-energy using list_of_fragments and stoichiometry
+	specieslist=[N2, H2, NH3]
+	reaction_energy, unused = ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, unit='kcal/mol', label='ΔE')
+
+#####################
 Thermochemprotocols
 #####################
 
@@ -66,6 +118,9 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 ###############################################################
 calc_xyzfiles: Run calculations on a collection of XYZ-files
 ###############################################################
+
+calc_xyzfiles is similar to Singlepoint_fragments (:doc:`singlepoint`) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.
+
 
 .. code-block:: python
 
@@ -139,11 +194,7 @@ confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow
 
 See :doc:`crest-interface`
 
-#####################
-ReactionEnergy
-#####################
 
-TODO
 
 ###################################
 Counter-poise correction (ORCA)

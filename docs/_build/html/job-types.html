@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="QM Interfaces" href="QM-interfaces.html" />
+    <link rel="next" title="Jobtype: Singlepoint" href="singlepoint.html" />
     <link rel="prev" title="Coordinates and fragments" href="coordinate-input.html" /> 
 </head>
 
@@ -109,6 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics">Molecular Dynamics</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Jobtype: Singlepoint</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
@@ -224,8 +225,8 @@
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline">¶</a></h1>
 <p>The main job-types available in ASH:</p>
 <ul class="simple">
-<li><p>Single-point energy/property jobs in Ash (instead of using the QM code directly) are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.</p></li>
-<li><p>Geometry optimizations can be performed using a simple internal Optimizer or via more flexible external optimizers that can be easily installed.</p></li>
+<li><p>Single-point energy/property jobs in Ash  are useful for the purpose of doing electrostatically embedded QM/MM, running multiple energy/property calculations in parallel, creating advanced workflows etc.</p></li>
+<li><p>Geometry optimizations are typically performed using the geomeTRICOptimizer function (an interface function to the geomeTRIC library)</p></li>
 <li><p>Numerical frequencies can be performed for any Hamiltonian (QM, MM or QM/MM). Analytical frequencies available for some theories.</p></li>
 <li><p>Nudged elastic band calculations are available via an interface to the Knarr-NEB code.</p></li>
 <li><p>Molecular dynamics.</p></li>
@@ -234,56 +235,7 @@
 a QM/MM Theory object from <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a></p>
 <div class="section" id="single-point-calculation">
 <h2>Single-point calculation<a class="headerlink" href="#single-point-calculation" title="Permalink to this headline">¶</a></h2>
-<p>A single-point calculation is the most basic job to perform.
-After creating an Ash fragment, you create a Theory object, e.g. a QMTheory from: <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> an
-MMTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>) or a QM/MMTheory (see <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a>).
-The ORCATheory class is recommended as a QM code in general as this interface is more supported than others.
-ORCA contains a large variety of DFT and WFT methods.
-Below, ORCAobject is created from the ORCATheory class, passing various ORCA-specific variables to it
-(location of ORCA dir and specifying how the inputfile should look).</p>
-<p>For a single-point calculation only then simply passes the Theory object and the Fragment object to the <strong>Singlepoint</strong>
-function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">)</span>
-<span class="c1">#ORCA</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
-<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
-<span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
-<span class="n">ORCAobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                    <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-
-<span class="c1">#Simple Energy SP calc. Energy will be printed to output</span>
-<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The <strong>Singlepoint</strong> function will run an ORCA calculation using the ORCAobject and the coordinates from the HF_frag fragment.
-The energy will be printed to standard output by default</p>
-<p>We can also run the calculation and store the energy as a new variable (to be used for anything):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Simple Energy+Gradient SP calc</span>
-<span class="c1"># The function will return the energy that can be stored as a variable</span>
-<span class="n">Energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy is&quot;</span><span class="p">,</span> <span class="n">Energy</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>It is also possible to request a gradient calculation :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Simple Energy+Gradient SP calc</span>
-<span class="n">Energy</span><span class="p">,</span> <span class="n">Gradient</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy is&quot;</span><span class="p">,</span> <span class="n">Energy</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gradient is:&quot;</span><span class="p">,</span> <span class="n">Gradient</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>By default, the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
-temporary files (e.g. so they don’t interfere with a future job), one can use the cleanup function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Clean up</span>
-<span class="n">ORCAobject</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The energy and gradient from the last Energy/Energy+Gradient run is also stored inside the Theory object and can be accessed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ORCAobject</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ORCAobject</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>See <a class="reference internal" href="singlepoint.html"><span class="doc">Jobtype: Singlepoint</span></a></p>
 </div>
 <div class="section" id="geometry-optimization">
 <h2>Geometry optimization<a class="headerlink" href="#geometry-optimization" title="Permalink to this headline">¶</a></h2>
@@ -547,7 +499,7 @@ See <a class="reference internal" href="module_dynamics.html"><span class="doc">
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="QM-interfaces.html" class="btn btn-neutral float-right" title="QM Interfaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="singlepoint.html" class="btn btn-neutral float-right" title="Jobtype: Singlepoint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="coordinate-input.html" class="btn btn-neutral float-left" title="Coordinates and fragments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

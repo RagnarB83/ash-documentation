@@ -232,7 +232,7 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
 .. code-block:: python
 
     ferrocene=Fragment(xyzfile='ferrocene.xyz')
-    cc = CC_CBS_Theory(elements=ferrocene.elems, cardinals = [3,4], basisfamily="cc-dk", relativity='DKH', numcores=1, 
+    cc = CC_CBS_Theory(elements=ferrocene.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", relativity='DKH', numcores=1, 
         DLPNO=True, pnosetting="extrapolation", pnoextrapolation=[6,7] T1=True)
     Singlepoint(theory=cc, fragment=ferrocene)
 
@@ -242,3 +242,77 @@ Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energi
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.
 
 For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  :doc:`Highlevel_CC_CBS_workflows`
+
+
+##############################
+Reaction_Highlevel_Analysis
+##############################
+
+In order to facilitate the basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
+It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
+CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12) 
+and complete basis set extrapolations are performed. This allows a convenient way of determining the convergence of the CCSD(T) reaction energy.
+Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried out for all systems. Set highest_cardinal to a lower number if required.
+
+
+.. warning:: The plots require the Matplotlib library to be installed. 
+
+To be added: PNO-extrapolation options
+
+.. code-block:: python
+
+    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel',
+                                    def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False, extrapolation=True, highest_cardinal=6,
+                                    plot=True ):
+        """Function to perform high-level CCSD(T) calculations for a reaction with associated plots.
+        Performs CCSD(T) with cc and def2 basis sets, CCSD(T)-F12 and CCSD(T)/CBS extrapolations
+
+        Args:
+            fragment ([type], optional): [description]. Defaults to None.
+            fraglist ([type], optional): [description]. Defaults to None.
+            stoichiometry ([type], optional): [description]. Defaults to None.
+            numcores (int, optional): [description]. Defaults to 1.
+            memory (int, optional): [description]. Defaults to 7000.
+            reactionlabel (str, optional): [description]. Defaults to 'Reactionlabel'.
+            def2_family (bool, optional): [description]. Defaults to True.
+            cc_family (bool, optional): [description]. Defaults to True.
+            F12_family (bool, optional): [description]. Defaults to True.
+            highest_cardinal (int, optional): [description]. Defaults to 5.
+            plot (Boolean): whether to plot the results or not (requires Matplotlib). Defaults to True. 
+        """
+
+Example (Bond Dissociation Energy of N2): 
+
+.. code-block:: python
+
+    from ash import *
+
+    #Define molecular fragments from XYZ-files or other
+    N2=Fragment(xyzfile='n2.xyz', charge=0, mult=1, label='N2')
+    N=Fragment(atom='N', charge=0, mult=4, label='N')
+
+    #Create a list of fragments and define the stoichiometry
+    specieslist=[N2, N]
+    stoichiometry=[-1,2]
+    reactionlabel='N2_BDE'
+
+    # Call Reaction_Highlevel_Analysis
+    Reaction_Highlevel_Analysis(fraglist=specieslist, stoichiometry=stoichiometry, numcores=1, memory=7000, reactionlabel=reactionlabel,
+                                    def2_family=True, cc_family=True, F12_family=True, extrapolation=True, highest_cardinal=5 )
+
+The outputfile will contain the CCSD(T) total energies and reaction energies for each species and basis set level.
+Additionally energy vs. basis-cardinal plots are created for both the total energy for each species and the reaction energy.
+
+
+.. image:: figures/N2_BDE.png
+   :align: center
+   :width: 700
+
+
+.. image:: figures/N2_energy.png
+   :align: center
+   :width: 700
+
+.. image:: figures/N_energy.png
+   :align: center
+   :width: 700

@@ -22,26 +22,33 @@ These are the documentation pages of ASH, a multiscale modelling program.
    setup
    basics
    coordinate-input
-   job-types
+   parallelization
+   module_coords
    QM-interfaces
    MM-interfaces
-   parallelization
 
 .. toctree::
    :maxdepth: 2
-   :caption: Internal modules
+   :caption: Jobtypes
+
+   job-types
+   singlepoint
+   module_freq
+   module_dynamics
+   neb
+   surfacescan
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules
 
    module_QM-MM
    module_benchmarking
-   module_coords
-   module_dynamics
-   module_freq
    module_workflows
    module_highlevel_workflows
    module_molcrys
    module_PES
    module_plotting
-
 
 .. toctree::
    :maxdepth: 2

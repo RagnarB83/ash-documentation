@@ -98,23 +98,30 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal modules</span></p>
+<p class="caption"><span class="caption-text">Jobtypes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory">CC_CBS_Theory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basis-family-options">Basis-family options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory-examples">CC_CBS_Theory Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reaction-highlevel-analysis">Reaction_Highlevel_Analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
@@ -645,7 +652,7 @@ We use the ‘def2’ basis family here with cardinals=[2,3] meaning that the de
 The DLPNO approximation error can be controlled via threshold keywords (‘LoosePNO’, ‘NormalPNO’, ‘TightPNO’), here we choose ‘NormalPNO’.
 We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 to False.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ferrocene</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ferrocene.xyz&#39;</span><span class="p">)</span>
-<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">ferrocene</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-dk&quot;</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="s1">&#39;DKH&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">ferrocene</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-CV_3dTM-cc_L&quot;</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="s1">&#39;DKH&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s2">&quot;extrapolation&quot;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span> <span class="n">T1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ferrocene</span><span class="p">)</span>
 </pre></div>
@@ -655,6 +662,62 @@ This calculation will utilize the cc-pVTZ-DK and cc-pVQZ-DK basis sets.
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.</p>
 <p>For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  <a class="reference internal" href="Highlevel_CC_CBS_workflows.html"><span class="doc">Tutorial: High-level CCSD(T)/CBS workflows</span></a></p>
+</div>
+<div class="section" id="reaction-highlevel-analysis">
+<h2>Reaction_Highlevel_Analysis<a class="headerlink" href="#reaction-highlevel-analysis" title="Permalink to this headline">¶</a></h2>
+<p>In order to facilitate the basis-set and/or PNO convergence in CCSD(T) calculations, the <strong>Reaction_Highlevel_Analysis</strong> function can be used.
+It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
+CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12)
+and complete basis set extrapolations are performed. This allows a convenient way of determining the convergence of the CCSD(T) reaction energy.
+Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried out for all systems. Set highest_cardinal to a lower number if required.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The plots require the Matplotlib library to be installed.</p>
+</div>
+<p>To be added: PNO-extrapolation options</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;Reactionlabel&#39;</span><span class="p">,</span>
+                                <span class="n">def2_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cc_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aug_cc_family</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">F12_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">highest_cardinal</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                                <span class="n">plot</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to perform high-level CCSD(T) calculations for a reaction with associated plots.</span>
+<span class="sd">    Performs CCSD(T) with cc and def2 basis sets, CCSD(T)-F12 and CCSD(T)/CBS extrapolations</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fragment ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        fraglist ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        stoichiometry ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        numcores (int, optional): [description]. Defaults to 1.</span>
+<span class="sd">        memory (int, optional): [description]. Defaults to 7000.</span>
+<span class="sd">        reactionlabel (str, optional): [description]. Defaults to &#39;Reactionlabel&#39;.</span>
+<span class="sd">        def2_family (bool, optional): [description]. Defaults to True.</span>
+<span class="sd">        cc_family (bool, optional): [description]. Defaults to True.</span>
+<span class="sd">        F12_family (bool, optional): [description]. Defaults to True.</span>
+<span class="sd">        highest_cardinal (int, optional): [description]. Defaults to 5.</span>
+<span class="sd">        plot (Boolean): whether to plot the results or not (requires Matplotlib). Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Example (Bond Dissociation Energy of N2):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Define molecular fragments from XYZ-files or other</span>
+<span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;n2.xyz&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;N2&#39;</span><span class="p">)</span>
+<span class="n">N</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>
+
+<span class="c1">#Create a list of fragments and define the stoichiometry</span>
+<span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span>
+<span class="n">stoichiometry</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;N2_BDE&#39;</span>
+
+<span class="c1"># Call Reaction_Highlevel_Analysis</span>
+<span class="n">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="n">reactionlabel</span><span class="p">,</span>
+                                <span class="n">def2_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cc_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">F12_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">highest_cardinal</span><span class="o">=</span><span class="mi">5</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>The outputfile will contain the CCSD(T) total energies and reaction energies for each species and basis set level.
+Additionally energy vs. basis-cardinal plots are created for both the total energy for each species and the reaction energy.</p>
+<a class="reference internal image-reference" href="_images/N2_BDE.png"><img alt="_images/N2_BDE.png" class="align-center" src="_images/N2_BDE.png" style="width: 700px;" /></a>
+<a class="reference internal image-reference" href="_images/N2_energy.png"><img alt="_images/N2_energy.png" class="align-center" src="_images/N2_energy.png" style="width: 700px;" /></a>
+<a class="reference internal image-reference" href="_images/N_energy.png"><img alt="_images/N_energy.png" class="align-center" src="_images/N_energy.png" style="width: 700px;" /></a>
 </div>
 </div>
 

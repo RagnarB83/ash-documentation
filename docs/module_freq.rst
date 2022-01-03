@@ -1,4 +1,4 @@
-Freq module
+Numerical Frequencies
 ======================================
 
 TODO
