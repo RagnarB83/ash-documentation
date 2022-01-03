@@ -248,10 +248,12 @@ For additional examples on using CC_CBS_Theory on real-world systems and showing
 Reaction_Highlevel_Analysis
 ##############################
 
-In order to facilitate the basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
+In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
 It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
+This allows one to easily see how well converged the results are.
+
 CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12) 
-and complete basis set extrapolations are performed. This allows a convenient way of determining the convergence of the CCSD(T) reaction energy.
+and complete basis set extrapolations are performed.
 Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried out for all systems. Set highest_cardinal to a lower number if required.
 
 
