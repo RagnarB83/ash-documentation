@@ -98,23 +98,30 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal modules</span></p>
+<p class="caption"><span class="caption-text">Jobtypes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ash-plot-basic-plotting">ASH_plot: Basic plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#plot-spectrum-plotting-broadened-spectrum">plot_Spectrum: Plotting broadened spectrum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#moplot-vertical-plot-vertical-mo-diagram">MOplot_vertical: Plot vertical MO diagram</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reaction-profile">Reaction_profile</a></li>
@@ -219,8 +226,108 @@
   <div class="section" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h1>
 <p>ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.
-These are essentially wrapper-functions around Matplotlib functionality.
-This requires a Matplotlib installation (easily installed via Anaconda) to the Python environment.</p>
+These are essentially wrapper-functions around Matplotlib functionality.</p>
+<p>All the plotting functions documented here require a Matplotlib installation in the Python environment. Should be easily installed via either pip or Anaconda.</p>
+<div class="section" id="ash-plot-basic-plotting">
+<h2>ASH_plot: Basic plotting<a class="headerlink" href="#ash-plot-basic-plotting" title="Permalink to this headline">¶</a></h2>
+<p>ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting as straightforward as possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you need more advanced plotting options than provided here, it is probably best to use Matplotlib directly.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ASH_plot</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figuretitle</span><span class="o">=</span><span class="s1">&#39;Plottyplot&#39;</span><span class="p">,</span> <span class="n">num_subplots</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;X-axis&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy (X)&#39;</span><span class="p">,</span> <span class="n">x_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Plot-title&#39;</span><span class="p">,</span> <span class="n">subplot_titles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">print_line_with_mainheader</span><span class="p">(</span><span class="s2">&quot;ASH_energy_plot&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">addseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subplot</span><span class="p">,</span> <span class="n">surfacedictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                    <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p><strong>ASH_plot</strong> options:</p>
+<ul class="simple">
+<li><p>figuretitle (string): Title of the plot. Default: ‘Plottyplot’</p></li>
+<li><p>num_subplots (integer): Number of subplots. Default=1</p></li>
+<li><p>dpi (integer): Resolution of the final figure (dots per inch). Default: 200</p></li>
+<li><p>imageformat (string). Imageformat. Options: ‘png’, ‘pdf’, ‘jpg’, ‘.tiff, ‘svg’ etc. Default: ‘png’</p></li>
+<li><p>figsize (tuple of integers):</p></li>
+<li><p>x_axislabel/y_axislabel (string): x- and y- axes labels of plot (when num_subplots=1). Default: ‘X-axis’ and ‘Energy (X).</p></li>
+<li><p>x_axislabels/y_axislabels (list of strings). x- and y-axes labels of each subplot (when num_subplots&gt;1).</p></li>
+<li><p>title (string). Title of plot (when num_subplots=1)</p></li>
+<li><p>subplots_title (list of strings). Titles for each subplot.</p></li>
+</ul>
+<p><strong>ASH_plot.add_series</strong> options</p>
+<ul class="simple">
+<li><p>subplot (integer). What subplot to add data-series to. Use 0 for first subplot.</p></li>
+<li><p>x_list (list). List of x-values. Deafult: None</p></li>
+<li><p>y_list (list). List of x-values. Deafult: None</p></li>
+<li><p>surfacedictionary (dict). Alternative to x_list/y_list. (NOT CURRENTLY ACTIVE)</p></li>
+<li><p>label (string). Label of series added. Will show up in legend. Default:’Series’</p></li>
+<li><p>color (string). What color to use. <a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">Matplotlib colors</a> . Default: ‘blue’</p></li>
+<li><p>pointsize (integer). Marker-size in scatterplots. Default: 40</p></li>
+<li><p>scatter (Boolean). Do scatterplot or not. Default: True</p></li>
+<li><p>line (Boolean). Do lineplot or not. Default: True</p></li>
+<li><p>scatter_linewidth (integer). Linewidth of scatter-marker edges. Default:2</p></li>
+<li><p>line_linewidth (integer). Linewidth of line plots. Default:1</p></li>
+<li><p>marker (string). What marker symbol to use in scatterplots. <a class="reference external" href="https://matplotlib.org/stable/api/markers_api.html">Matplotlib markers</a> . Default: ‘o’</p></li>
+</ul>
+<p>To use, you just need to create an ASH_plot object, add one or more dataseries to the object (using the .addseries method) and then save (using the .savefig method).
+Since the data is provided via simply Python lists you could of course run an ASH job that first generates the data from e.g. QM or QM/MM calculations and then plot the data at the end, all in the same script.</p>
+<p><strong>Basic 1-subplot example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Dataseries1. Data are simply Python lists</span>
+<span class="n">xvalues1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues1</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">]</span>
+<span class="c1">#Dataseries2</span>
+<span class="n">xvalues2</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues2</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">23.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">55.0</span><span class="p">]</span>
+
+<span class="c1">#Create ASH_plot object named edplot</span>
+<span class="n">eplot</span> <span class="o">=</span> <span class="n">ASH_plot</span><span class="p">(</span><span class="s2">&quot;Plotname&quot;</span><span class="p">,</span> <span class="n">num_subplots</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_axislabel</span><span class="o">=</span><span class="s2">&quot;x-axis&quot;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;y-axis&#39;</span><span class="p">)</span>
+
+<span class="c1">#Add a dataseries to subplot 0 (the only subplot)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues1</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series1&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues2</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series2&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#Save figure</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;Simpleplot&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/Simple-subplot1.png"><img alt="_images/Simple-subplot1.png" class="align-center" src="_images/Simple-subplot1.png" style="width: 600px;" /></a>
+<p>You can also create a figure with multiple subplots. Currently, num_subplots=1, 2, 3 or 4 works.</p>
+<p><strong>Basic 4-subplot example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Series1</span>
+<span class="n">xvalues1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues1</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">]</span>
+<span class="c1">#Series2</span>
+<span class="n">xvalues2</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues2</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">23.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">55.0</span><span class="p">]</span>
+<span class="c1">#Series3</span>
+<span class="n">xvalues3</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues3</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">43.0</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">,</span> <span class="mf">48.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">]</span>
+<span class="c1">#Series4</span>
+<span class="n">xvalues4</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">yvalues4</span><span class="o">=</span><span class="p">[</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">21.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">]</span>
+
+<span class="c1">#Create ASH_plot object named edplot</span>
+<span class="n">eplot</span> <span class="o">=</span> <span class="n">ASH_plot</span><span class="p">(</span><span class="s2">&quot;Plotname&quot;</span><span class="p">,</span> <span class="n">num_subplots</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">x_axislabels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x-axis1&quot;</span><span class="p">,</span> <span class="s2">&quot;x-axis2&quot;</span><span class="p">,</span><span class="s2">&quot;x-axis3&quot;</span><span class="p">,</span><span class="s2">&quot;x-axis4&quot;</span><span class="p">],</span>
+        <span class="n">y_axislabels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y-axis1&quot;</span><span class="p">,</span> <span class="s2">&quot;y-axis2&quot;</span><span class="p">,</span><span class="s2">&quot;y-axis3&quot;</span><span class="p">,</span><span class="s2">&quot;y-axis4&quot;</span><span class="p">],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+
+<span class="c1">#Add a series to each subplot (0, 1, 2 or 3)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues1</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series1&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues2</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series2&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues3</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series3&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">addseries</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="n">xvalues4</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="n">yvalues4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series4&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Save figure</span>
+<span class="n">eplot</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;Simple-subplot4&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/Simple-subplot4.png"><img alt="_images/Simple-subplot4.png" class="align-center" src="_images/Simple-subplot4.png" style="width: 600px;" /></a>
+</div>
 <div class="section" id="plot-spectrum-plotting-broadened-spectrum">
 <h2>plot_Spectrum: Plotting broadened spectrum<a class="headerlink" href="#plot-spectrum-plotting-broadened-spectrum" title="Permalink to this headline">¶</a></h2>
 <p>The plot_Spectrum function takes a list of x-axis values (xvalues keyword), y-axis values (yvalues keyword) and plots
@@ -255,9 +362,9 @@ the latter requires Matplotlib.</p>
 </div>
 <div class="section" id="moplot-vertical-plot-vertical-mo-diagram">
 <h2>MOplot_vertical: Plot vertical MO diagram<a class="headerlink" href="#moplot-vertical-plot-vertical-mo-diagram" title="Permalink to this headline">¶</a></h2>
-<p>Input: Dictionary containing lists of molecular-orbital energies.
-Created by MolecularOrbitalgrab in ORCA interface
-Example: mos_dict= {“occ_alpha”:[-1.0,-2.0,-3.0], “occ_beta”:[-1.0,-2.0,-3.0], “unocc_alpha”:[1.0,2.0,3.0], “unocc_beta”:[1.0,2.0,3.0], “Openshell”:True}</p>
+<p>Input: Dictionary containing lists of molecular-orbital energies.</p>
+<p>Created by MolecularOrbitalgrab in ORCA interface</p>
+<p>Example: mos_dict= {“occ_alpha”:[-1.0,-2.0,-3.0], “occ_beta”:[-1.0,-2.0,-3.0], “unocc_alpha”:[1.0,2.0,3.0], “unocc_beta”:[1.0,2.0,3.0], “Openshell”:True}</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MOplot_vertical</span><span class="p">(</span><span class="n">mos_dict</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

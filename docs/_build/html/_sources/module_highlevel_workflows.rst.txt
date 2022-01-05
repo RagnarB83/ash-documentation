@@ -248,10 +248,12 @@ For additional examples on using CC_CBS_Theory on real-world systems and showing
 Reaction_Highlevel_Analysis
 ##############################
 
-In order to facilitate the basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
+In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
 It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
+This allows one to easily see how well converged the results are.
+
 CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12) 
-and complete basis set extrapolations are performed. This allows a convenient way of determining the convergence of the CCSD(T) reaction energy.
+and complete basis set extrapolations are performed.
 Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried out for all systems. Set highest_cardinal to a lower number if required.
 
 
@@ -261,7 +263,7 @@ To be added: PNO-extrapolation options
 
 .. code-block:: python
 
-    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel',
+    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', energy_unit='kcal/mol',
                                     def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False, extrapolation=True, highest_cardinal=6,
                                     plot=True ):
         """Function to perform high-level CCSD(T) calculations for a reaction with associated plots.
@@ -274,6 +276,7 @@ To be added: PNO-extrapolation options
             numcores (int, optional): [description]. Defaults to 1.
             memory (int, optional): [description]. Defaults to 7000.
             reactionlabel (str, optional): [description]. Defaults to 'Reactionlabel'.
+            energy_unit (str): Energy unit for ReactionEnergy. Options: 'kcal/mol', 'kJ/mol', 'eV', 'cm-1'. Default: 'kcal/mol'
             def2_family (bool, optional): [description]. Defaults to True.
             cc_family (bool, optional): [description]. Defaults to True.
             F12_family (bool, optional): [description]. Defaults to True.
@@ -316,4 +319,5 @@ Additionally energy vs. basis-cardinal plots are created for both the total ener
 .. image:: figures/N_Energy.png
    :align: center
    :width: 700
+
 

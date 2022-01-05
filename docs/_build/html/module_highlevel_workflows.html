@@ -665,17 +665,18 @@ Finally we set T1 keyword to True which will tell ORCA to do a more accurate ite
 </div>
 <div class="section" id="reaction-highlevel-analysis">
 <h2>Reaction_Highlevel_Analysis<a class="headerlink" href="#reaction-highlevel-analysis" title="Permalink to this headline">¶</a></h2>
-<p>In order to facilitate the basis-set and/or PNO convergence in CCSD(T) calculations, the <strong>Reaction_Highlevel_Analysis</strong> function can be used.
+<p>In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations, the <strong>Reaction_Highlevel_Analysis</strong> function can be used.
 It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
-CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12)
-and complete basis set extrapolations are performed. This allows a convenient way of determining the convergence of the CCSD(T) reaction energy.
+This allows one to easily see how well converged the results are.</p>
+<p>CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12)
+and complete basis set extrapolations are performed.
 Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried out for all systems. Set highest_cardinal to a lower number if required.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The plots require the Matplotlib library to be installed.</p>
 </div>
 <p>To be added: PNO-extrapolation options</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;Reactionlabel&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;Reactionlabel&#39;</span><span class="p">,</span> <span class="n">energy_unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span>
                                 <span class="n">def2_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cc_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aug_cc_family</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">F12_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">highest_cardinal</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
                                 <span class="n">plot</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function to perform high-level CCSD(T) calculations for a reaction with associated plots.</span>
@@ -688,6 +689,7 @@ Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried ou
 <span class="sd">        numcores (int, optional): [description]. Defaults to 1.</span>
 <span class="sd">        memory (int, optional): [description]. Defaults to 7000.</span>
 <span class="sd">        reactionlabel (str, optional): [description]. Defaults to &#39;Reactionlabel&#39;.</span>
+<span class="sd">        energy_unit (str): Energy unit for ReactionEnergy. Options: &#39;kcal/mol&#39;, &#39;kJ/mol&#39;, &#39;eV&#39;, &#39;cm-1&#39;. Default: &#39;kcal/mol&#39;</span>
 <span class="sd">        def2_family (bool, optional): [description]. Defaults to True.</span>
 <span class="sd">        cc_family (bool, optional): [description]. Defaults to True.</span>
 <span class="sd">        F12_family (bool, optional): [description]. Defaults to True.</span>
