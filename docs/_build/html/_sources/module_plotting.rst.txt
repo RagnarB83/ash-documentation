@@ -14,7 +14,8 @@ All the plotting functions documented here require a Matplotlib installation in 
 
 ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting as straightforward as possible.
 
-.. note::  If you need more advanced plotting options than provided here, it is probably best to use Matplotlib directly.
+.. note::  If you need more advanced plotting options than provided here, it is probably best to use Matplotlib directly. 
+    Contact the developer if you have suggestions for simple improvements.
 
 .. code-block:: python
 
@@ -22,8 +23,8 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
         def __init__(self, figuretitle='Plottyplot', num_subplots=1, dpi=200, imageformat='png', figsize=(9,5),
             x_axislabel='X-axis', y_axislabel='Energy (X)', x_axislabels=None, y_axislabels=None, title='Plot-title', subplot_titles=None):
             print_line_with_mainheader("ASH_energy_plot")
-        def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
-                        scatter=True, line=True, scatter_linewidth=2, line_linewidth=1, marker='o'):
+    def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
+                    scatter=True, line=True, scatter_linewidth=2, line_linewidth=1, marker='o', legend=True):
         def savefig(self, filename, imageformat=None, dpi=None):
 
 **ASH_plot** options:
@@ -43,7 +44,7 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
 - subplot (integer). What subplot to add data-series to. Use 0 for first subplot. 
 - x_list (list). List of x-values. Deafult: None
 - y_list (list). List of x-values. Deafult: None
-- surfacedictionary (dict). Alternative to x_list/y_list. (NOT CURRENTLY ACTIVE) 
+- surfacedictionary (dict). Alternative to x_list/y_list. Dictionary should have x-values as keys and y-values as values. Default: None
 - label (string). Label of series added. Will show up in legend. Default:'Series'
 - color (string). What color to use. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ . Default: 'blue'
 - pointsize (integer). Marker-size in scatterplots. Default: 40
@@ -52,7 +53,7 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
 - scatter_linewidth (integer). Linewidth of scatter-marker edges. Default:2
 - line_linewidth (integer). Linewidth of line plots. Default:1
 - marker (string). What marker symbol to use in scatterplots. `Matplotlib markers <https://matplotlib.org/stable/api/markers_api.html>`_ . Default: 'o'
-
+- legend (Boolean). Whether to plot legend or not. Default: True
 
 To use, you just need to create an ASH_plot object, add one or more dataseries to the object (using the .addseries method) and then save (using the .savefig method). 
 Since the data is provided via simply Python lists you could of course run an ASH job that first generates the data from e.g. QM or QM/MM calculations and then plot the data at the end, all in the same script.
