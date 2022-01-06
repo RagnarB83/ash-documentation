@@ -92,11 +92,12 @@ The energy and gradient from the last Energy/Energy+Gradient run is also stored 
 Singlepoint_fragments function
 ##################################
 
-The **Singlepoint** function is designed to be a simple function that does one job, returning 1 energy for the 1 theory level and the 1 fragment that was defined.
-Usually, however, multiple calculations need to be performed. For example running the same single-point theory calculation on multiple fragments.
+The **Singlepoint** function above is designed to be a simple function that does one job, returning 1 energy for the 1 theory level and the 1 fragment that was defined.
+In a typical project, however, multiple calculations need to be performed. For example running the same single-point theory calculation on multiple fragments.
 
-You could of course easily write a for-loop for this purpose, making sure to define first charge and multiplicity for each fragment first.
-Here, defining the charge/mult for each fragment rather than the theory is desirable since the charge/mult is not always the same for all fragments.
+You could of course easily write a for-loop for this purpose in ASH, making sure to define first charge and multiplicity for each fragment first.
+Here it is convenient to define the charge/mult for each fragment rather than the theory since the charge/mult is not always the same for all fragments.
+If ASH finds no charge/mult information in the Theory object it will search for information in the fragment instead.
 
 .. code-block:: python
     
@@ -121,7 +122,14 @@ Here, defining the charge/mult for each fragment rather than the theory is desir
     print("List of energies:", energies)
 
 
-More conveniently, however, you can instead use the Singlepoint_fragments function that does the same thing:
+More conveniently, however, you can instead use the **Singlepoint_fragments** function:
+
+.. code-block:: python
+
+    def Singlepoint_fragments(theory=None, fragments=None, stoichiometry=None):
+
+
+that does the same thing:
 
 .. code-block:: python
 
@@ -141,11 +149,26 @@ In addition to returning a list of energies, a table is also printed in standard
 
 .. code-block:: text
 
+    ============================================================
+    Singlepoint_fragments: Table of energies of each fragment:
+    ============================================================
     Formula    Label       Charge    Mult           Energy(Eh)
-    ----------------------------------------------------------------------
+    ------------------------------------------------------------
     N2         None             0       1        -6.3335016263
     H2         None             0       1        -1.0361629322
     N1H3       nh3              0       1        -4.8298958374
+
+If you provide (optional) a stoichiometry (list order should match fragments list) to **Singlepoint_fragments** you will also get a print-out of the reaction energy.
+
+.. code-block:: python
+
+    energies = Singlepoint_fragments(theory=xtbcalc, fragments=specieslist, stoichiometry=[-1,-3,2])
+
+
+.. code-block:: text
+
+    Stoichiometry provided.
+    Reaction_energy(ΔE):  -136.6723479900558 kcal/mol
 
 ##################################
 Singlepoint_theories function
@@ -171,12 +194,118 @@ In addition to returning a list of energies, a table is also printed in standard
 
 .. code-block:: text
 
-    Theory Label          Charge    Mult           Energy(Eh)
-    ----------------------------------------------------------------------
-    GFN1-xTB                   0       1        -6.3335016263
-    GFN2-xTB                   0       1        -5.7639339581
-    ORCA-r2SCAN-3c             0       1      -109.5070425194
+    ======================================================================
+    Singlepoint_theories: Table of energies of each theory:
+    ======================================================================
 
+    Theory class    Theory Label     Charge    Mult           Energy(Eh)
+    ----------------------------------------------------------------------
+    xTBTheory       GFN1-xTB              0       1        -6.3335016263
+    xTBTheory       GFN2-xTB              0       1        -5.7639339581
+    ORCATheory      ORCA-r2SCAN-3c        0       1      -109.5070425194
+
+
+#############################################
+Singlepoint_fragments_and_theories function
+#############################################
+
+You might even want to perform calculation on multiple fragments with multiple theories. For example calculating a reaction energy with multiple theory levels.
+**Singlepoint_fragments_and_theories** makes this easy.
+
+.. code-block:: python
+
+    def Singlepoint_fragments_and_theories(theories=None, fragments=None, stoichiometry=None):
+
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Haber-Bosch reaction: N2 + 3H2 => 2NH3
+    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+    specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
+    stoichiometry=[-1, -3, 2] #Using same order as specieslist.
+    xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
+
+    #Defining theories
+    gfn1_xtbcalc=xTBTheory(xtbmethod='GFN1', label='GFN1-xTB') # GFN1-xTB theory-level
+    gfn2_xtbcalc=xTBTheory(xtbmethod='GFN2', label='GFN2-xTB') # GFN2-xTB theory-level
+    orca_r2scan=ORCATheory(orcasimpleinput='! r2SCAN-3c tightscf', label='ORCA-r2SCAN-3c') # ORCA r2SCAN-3c theory-level
+
+    #All theories in a list
+    theories=[gfn1_xtbcalc,gfn2_xtbcalc,orca_r2scan]
+
+    # Running multiple fragments and theories
+    results = Singlepoint_fragments_and_theories(theories=theories, fragments=specieslist, stoichiometry=stoichiometry)
+
+This gives the output:
+
+.. code-block:: text
+
+    ============================================================
+    Singlepoint_fragments_and_theories: FINAL RESULTS
+    ============================================================
+
+    Theory: xTBTheory
+    Label: GFN1-xTB
+
+    ============================================================
+    Table of energies of each fragment:
+    ============================================================
+    Formula    Label       Charge    Mult           Energy(Eh)
+    ------------------------------------------------------------
+    N2         None             0       1      -109.5070425194
+    H2         None             0       1        -1.1693814360
+    H3N1       nh3              0       1       -56.5418434618
+
+    Stoichiometry provided: [-1, -3, 2]
+    Reaction_energy(GFN1-xTB):  -136.6723479900558 kcal/mol
+    ____________________________________________________________
+
+    Theory: xTBTheory
+    Label: GFN2-xTB
+
+    ============================================================
+    Table of energies of each fragment:
+    ============================================================
+    Formula    Label       Charge    Mult           Energy(Eh)
+    ------------------------------------------------------------
+    N2         None             0       1      -109.5070425194
+    H2         None             0       1        -1.1693814360
+    H3N1       nh3              0       1       -56.5418434618
+
+    Stoichiometry provided: [-1, -3, 2]
+    Reaction_energy(GFN2-xTB):  -89.09909008527589 kcal/mol
+    ____________________________________________________________
+
+    Theory: ORCATheory
+    Label: ORCA-r2SCAN-3c
+
+    ============================================================
+    Table of energies of each fragment:
+    ============================================================
+    Formula    Label       Charge    Mult           Energy(Eh)
+    ------------------------------------------------------------
+    N2         None             0       1      -109.5070425194
+    H2         None             0       1        -1.1693814360
+    H3N1       nh3              0       1       -56.5418434618
+
+    Stoichiometry provided: [-1, -3, 2]
+    Reaction_energy(ORCA-r2SCAN-3c):  -42.98445901864511 kcal/mol
+    ____________________________________________________________
+
+    Final list of list of total energies: [[-6.333501626274, -1.036162932168, -4.829895837389], 
+        [-5.763933958102, -0.9820230341, -4.4259957498], [-109.507042519379, -1.16938143601, -56.541843461825]]
+    Final reaction energies:
+    Reaction_energy(GFN1-xTB):  -136.6723479900558 kcal/mol
+    Reaction_energy(GFN2-xTB):  -89.09909008527589 kcal/mol
+    Reaction_energy(ORCA-r2SCAN-3c):  -42.98445901864511 kcal/mol
+
+A final list of lists of total energies is returned (each list containing the total energies of the fragment for each theory level )
 
 ##################################
 Singlepoint_parallel function

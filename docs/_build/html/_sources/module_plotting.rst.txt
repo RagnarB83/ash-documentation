@@ -12,10 +12,10 @@ All the plotting functions documented here require a Matplotlib installation in 
  ASH_plot: Basic plotting
 ##############################################################################
 
-ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting as straightforward as possible.
+ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting of data as straightforward as possible.
 
-.. note::  If you need more advanced plotting options than provided here, it is probably best to use Matplotlib directly. 
-    Contact the developer if you have suggestions for simple improvements.
+.. note::  If you need more advanced plotting options than provided here, it may be best to use Matplotlib directly instead of ASH_plot. 
+    Contact the developer if you have suggestions for simple improvements in ASH_plot.
 
 .. code-block:: python
 
