@@ -109,18 +109,24 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal modules</span></p>
+<p class="caption"><span class="caption-text">Jobtypes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
@@ -411,10 +417,11 @@ It can be installed using conda.</p>
 </div>
 <div class="section" id="d-test-ash">
 <h2>D. Test ASH<a class="headerlink" href="#d-test-ash" title="Permalink to this headline">¶</a></h2>
-<p>Test if things work in general:</p>
-<p>python3_ash /path/to/ash/test_ash.py   #This runs a basic test job.</p>
+<p>Test if things work in general:
+python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
+python3_ash /path/to/ash/test_ash.py   #Using the interpreter with Julia support</p>
 <p>Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3_ash first-ash-job.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 first-ash-job.py
 </pre></div>
 </div>
 <p>first-ash-job.py:</p>
@@ -426,17 +433,15 @@ It can be installed using conda.</p>
 <span class="s2">H       -1.377626260      0.759337000     -1.144156718</span>
 <span class="s2">H       -1.377626260     -0.759337000     -1.144156718</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">H2Ofragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
-<span class="c1">#Defining ORCA-related variables</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
-<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
-<span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
+<span class="n">H2O</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
 
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
+<span class="c1">#Defining ORCA-related variables</span>
+<span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J tightscf&quot;</span>
+
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_5.0.2&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">)</span>
 
 <span class="c1">#Geometry optimization</span>
-<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2Ofragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you get an error message when launching python3_ash that looks like the following:</p>

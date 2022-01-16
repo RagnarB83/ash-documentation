@@ -75,26 +75,21 @@ elements and coordinates, not atom-types or residue information.
     pdbfrag = Fragment(pdbfile="mol.pdb")
 
 
-Adding coordinates to empty object
+Adding coordinates to object
 =====================================
-
-An alternative to the direct way is to first create an empty fragment and then add the coordinate and element information later.
-This can sometimes be useful and demonstrates here the built-in fragment object functions available (coords_from_string, add_coords, read_xyzfile)
-First create empty fragment:
-
-.. code-block:: python
-
-    HCl_frag=Fragment()
 
 
 *Add coordinates from string*
 
 
+
 .. code-block:: python
+
+    HCl_cluster = Fragment(xyzfile="hcl.xyz")
 
     fragcoords="""
     H 0.0 0.0 0.0
-    F 0.0 0.0 1.0
+    Cl 0.0 0.0 1.0
     """
     HCl_frag.add_coords_from_string(fragcoords)
 

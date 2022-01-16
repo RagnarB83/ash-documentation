@@ -49,7 +49,7 @@ Simple example for Haber-Bosch reaction:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2N
 
 
 If there is an energy attribute associated with each fragment it is also possible to just provide ReactionEnergy with a list of the fragments involved.
-This will only work if the energy attribute has been added to the fragment. Some ASH functions will do this: **Singlepoint**, **Singlepoint_fragments**, **geomeTRICOptimizer**
+This will only work if the energy attribute of the fragment has been definded. Some ASH functions will do this: **Singlepoint**, **Singlepoint_fragments**, **geomeTRICOptimizer**
 
 .. code-block:: python
 
@@ -124,7 +124,7 @@ calc_xyzfiles is similar to Singlepoint_fragments (:doc:`singlepoint`) but saves
 
 .. code-block:: python
 
-	def calc_xyzfiles(xyzdir=None, Opt=False, theory=None, charge=None, mult=None, xtb_preopt=False ):
+	def calc_xyzfiles(xyzdir=None, theory=None, Opt=False, Freq=False, charge=None, mult=None, xtb_preopt=False):
 
 
 If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations) 

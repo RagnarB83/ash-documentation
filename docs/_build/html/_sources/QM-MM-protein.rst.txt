@@ -185,7 +185,7 @@ The script above (e.g. called MMtest.py) can then be executed like this:
 
 .. code-block:: shell
 
-    python-jl MMtest.py
+    python3 MMtest.py
 
 It should finish in just a few seconds (or 1-2 minutes at most).
 
@@ -266,7 +266,7 @@ The script above (e.g. called QM_MMtest.py) can be run like this:
 
 .. code-block:: shell
 
-    python-jl QM_MMtest.py
+    python3 QM_MMtest.py
 
 It will run both the MM part and the QMpart using the chosen theory. Choose a small QM-region for testing purposes if
 run directly in the shell.

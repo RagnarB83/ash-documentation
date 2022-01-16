@@ -272,8 +272,8 @@ D. Test ASH
 #########################################
 
 Test if things work in general:
-
-python3_ash /path/to/ash/test_ash.py   #This runs a basic test job.
+python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
+python3_ash /path/to/ash/test_ash.py   #Using the interpreter with Julia support
 
 
 
@@ -281,7 +281,7 @@ Example ASH script to try out with an external QM code (geometry optimization of
 
 .. code-block:: shell
 
-    python3_ash first-ash-job.py
+    python3 first-ash-job.py
 
 
 first-ash-job.py:
@@ -296,17 +296,15 @@ first-ash-job.py:
     H       -1.377626260      0.759337000     -1.144156718
     H       -1.377626260     -0.759337000     -1.144156718
     """
-    H2Ofragment=Fragment(coordsstring=coords)
-    #Defining ORCA-related variables
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
-    orcablocks="%scf maxiter 200 end"
+    H2O=Fragment(coordsstring=coords)
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    #Defining ORCA-related variables
+    orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
+
+    ORCAcalc = ORCATheory(orcadir='/opt/orca_5.0.2', charge=0, mult=1, orcasimpleinput=orcasimpleinput)
 
     #Geometry optimization
-    geomeTRICOptimizer(fragment=H2Ofragment, theory=ORCAcalc, coordsystem='tric')
+    geomeTRICOptimizer(fragment=H2O, theory=ORCAcalc, coordsystem='tric')
 
 
 If you get an error message when launching python3_ash that looks like the following:

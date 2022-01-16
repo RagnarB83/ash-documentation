@@ -20,7 +20,24 @@ $ASHDIR/examples/OpenMM_Modeller-setups/rubredoxin or https://github.com/RagnarB
 
 We will set up a model for rubredoxin based on the `2DSX PDB file <https://www.rcsb.org/structure/2DSX>`_, a 0.68 Å X-ray structure.
 First we download the PDB-file and save it as 2dsx.pdb in our working directory.
-Next we create a script (here called *1-modelsetup-bad1.py*) that looks like:
+If we inspect the file in a text editor we see at lot of crystallographic header information band beginning at line 275 we get the list of atom coordinates.
+Note that typically only the lines beginning with ATOM or HETATM are processed by ASH or OpenMM and header information can usually be deleted. 
+The ANISOU line for each atom give anisotropic temperature factors, typically not of relevance either.
+
+.. code-block:: text
+
+    ATOM      1  N   MET A   1      -4.023 -14.590  -3.242  1.00 10.20           N
+    ANISOU    1  N   MET A   1     1504     33   1339   -532    474   -365       N
+    ATOM      2  CA  MET A   1      -2.749 -13.930  -3.045  1.00  8.61           C
+    ANISOU    2  CA  MET A   1     1571    794    905   -365    151   -203       C
+    ATOM      3  C   MET A   1      -2.934 -12.408  -2.948  1.00  9.14           C
+    ANISOU    3  C   MET A   1     1918    845    710   -489    271   -169       C
+    ATOM      4  O   MET A   1      -1.951 -11.665  -3.176  1.00 10.09           O
+    ANISOU    4  O   MET A   1     1878    774   1182   -330    454   -142       O
+    ATOM      5  CB  MET A   1      -1.819 -14.319  -4.216  1.00  9.28           C
+
+As seen, the PDB-file does not contain information about hydrogen atom positions and this needs to be fixed.
+Next we create a simple naive ASH script (here called *1-modelsetup-bad1.py*) that looks like:
 
 *1-modelsetup-bad1.py:*
 
@@ -28,15 +45,66 @@ Next we create a script (here called *1-modelsetup-bad1.py*) that looks like:
 
     from ash import *
 
-    #Define variable pdbfile that poitns to the original raw PDB-file (no hydrogens, nosolvent)
+    #Define pdbfile that points to the original raw PDB-file (typically without hydrogens and solvent)
     pdbfile="2dsx.pdb"
 
     # Setting up system via OpenMM_Modeller and requesting the CHARMM36 forcefield
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36')
 
-The script calls the OpenMM_Modeller function. See :doc:`OpenMM-interface` for details on the OpenMM_Modeller.
+The script calls the OpenMM_Modeller function taking the PDB-file as input. See :doc:`OpenMM-interface` for details on all the options to OpenMM_Modeller.
 OpenMM_Modeller will read the unmodified PDB-file and attempt to set up the system using the CHARMM36 protein forcefield.
-This script will exit with an error (from the OpenMM library), however, as OpenMM does not recognize the Fe ion in the PDB-file.
+The script will exit almost immediately with an error, however:
+
+.. code-block:: text
+
+    Now checking PDB-file for alternate locations, i.e. multiple occupancies:
+    Found residues in PDB-file that have alternate location labels i.e. multiple occupancies:
+
+    Chain A:
+    VAL5
+    GLU12
+    PRO15
+    PRO34
+    LYS51
+    These residues should be manually inspected and fixed in the PDB-file before continuing
+    You should delete either the labelled A or B location of the residue-atom/atoms and then remove the A/B label from column 17 in the file
+    Alternatively, you can choose use_higher_occupancy=True keyword in OpenMM_Modeller and ASH will keep the higher occupied form and go on
+    Make sure that there is always an A or B form present.
+    Exiting.
+    ASH exiting with code: 1
+
+This occurs due to the fact that the PDB-file contains alternate location lines for some atoms due to either low or multiple occupancies.
+See https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dealing-with-coordinates (bottom of page) for more information.
+Inspection of the PDB-file for residue VAL5 as an example reveals:
+
+.. code-block:: text
+
+    ATOM     37  N   VAL A   5      -1.935  -3.345   2.189  1.00  5.74           N
+    ANISOU   37  N   VAL A   5       35    503    642    -87   -132    -30       N
+    ATOM     38  CA  VAL A   5      -0.944  -2.308   2.488  1.00  5.63           C
+    ANISOU   38  CA  VAL A   5      999    549    593   -139    -43     -4       C
+    ATOM     39  C   VAL A   5      -1.364  -1.610   3.790  1.00  4.80           C
+    ANISOU   39  C   VAL A   5      820    435    567    -59    -80     20       C
+    ATOM     40  O   VAL A   5      -2.514  -1.283   4.038  1.00  5.65           O
+    ANISOU   40  O   VAL A   5      844    568    736    -35   -196     28       O
+    ATOM     41  CB  VAL A   5      -0.826  -1.290   1.329  1.00  6.73           C
+    ANISOU   41  CB  VAL A   5     1093    780    686   -161    -56     86       C
+    ATOM     42  CG1AVAL A   5       0.273  -0.264   1.568  0.33  4.13           C
+    ANISOU   42  CG1AVAL A   5      784    467    320   -227    -59    126       C
+    ATOM     43  CG2AVAL A   5      -0.648  -1.978   0.026  0.33 11.27           C
+    ANISOU   43  CG2AVAL A   5     3028    821    433   -825    -62     68       C
+    ATOM     44  CG2BVAL A   5      -2.062  -0.597   0.943  0.33  6.91           C
+    ANISOU   44  CG2BVAL A   5      975    880    772   -269   -320    421       C
+
+Atom 42 has a low occupancy of only 0.33 and the atom has been labelled as CG1AVAL instead of "CG1 VAL".
+Atom 43 and 44 correspond to alternate locations of the other carbon CG2.
+This seems to be due to the isopropyl group of valine existing in multiple conformations in the crystal structure.
+As suggested by the error message the solution is to modify manually the PDB-file here and make a conscious choice about which atoms to keep.
+Visualization of the relevant residue-atoms with a program like VMD is recommended. 
+For a residue like valine where the multiple conformations arise due to the free rotation of the sidechain the choice of which conformation is not critical.
+If you have inspected the residue-atoms carefully and have concluded that the choice of which residue to pick is not critical you can also choose to use the 
+option: use_higher_occupancy=True as a keyword argument to OpenMM_Modeller.
+Then ASH will keep the atom with the highest occupancy available.
 
 .. code-block:: text
 

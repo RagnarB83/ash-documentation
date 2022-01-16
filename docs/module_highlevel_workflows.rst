@@ -236,8 +236,8 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
         DLPNO=True, pnosetting="extrapolation", pnoextrapolation=[6,7] T1=True)
     Singlepoint(theory=cc, fragment=ferrocene)
 
-Finally we crank up the accuracy even further by choosing cardinals=[3,4], switch to the basisfamily="cc-dk" and activate the 'DKH' relativistic approximation.
-This calculation will utilize the cc-pVTZ-DK and cc-pVQZ-DK basis sets.
+Finally we crank up the accuracy even further by choosing cardinals=[3,4], switch to the basisfamily="cc-CV_3dTM-cc_L and activate the 'DKH' relativistic approximation.
+This calculation will utilize a mixed metal-ligands basis set: cc-pwCVTZ-DK/cc-pwCVQZ-DK on Fe and cc-pVDZ-DK/cc-pVTZ-DK on C,H.
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.
 

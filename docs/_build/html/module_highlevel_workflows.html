@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-examples.html">Basic examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
@@ -657,8 +658,8 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ferrocene</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally we crank up the accuracy even further by choosing cardinals=[3,4], switch to the basisfamily=”cc-dk” and activate the ‘DKH’ relativistic approximation.
-This calculation will utilize the cc-pVTZ-DK and cc-pVQZ-DK basis sets.
+<p>Finally we crank up the accuracy even further by choosing cardinals=[3,4], switch to the basisfamily=”cc-CV_3dTM-cc_L and activate the ‘DKH’ relativistic approximation.
+This calculation will utilize a mixed metal-ligands basis set: cc-pwCVTZ-DK/cc-pwCVQZ-DK on Fe and cc-pVDZ-DK/cc-pVTZ-DK on C,H.
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.</p>
 <p>For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  <a class="reference internal" href="Highlevel_CC_CBS_workflows.html"><span class="doc">Tutorial: High-level CCSD(T)/CBS workflows</span></a></p>

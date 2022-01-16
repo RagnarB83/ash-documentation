@@ -21,6 +21,7 @@ These are the documentation pages of ASH, a multiscale modelling program.
    About
    setup
    basics
+   basic-examples
    coordinate-input
    parallelization
    module_coords
