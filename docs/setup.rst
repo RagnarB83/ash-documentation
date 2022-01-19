@@ -54,15 +54,15 @@ B1. Semi-Automatic Miniconda setup (easiest)
 *****************************************************
 
 1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_  Install it in a location where your user has access (e.g. your home-directory)
-2. Create new environment: **conda create --name ASH**
+2. Create new environment (not required but recommended): **conda create --name ASH**
 3. Load environment: **conda activate ASH**
 4. Change directory to ASH location 
 5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory)
-6. Run: **julia julia-packages-setup.jl** to install some required Julia packages.
+6. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM
 7. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
 8. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
 
-9. Run ASH using **python3_ash** in general (python3 on its own will also work but not when Julia routines are needed)
+9. Run ASH using either:  **python3**  or **python3_ash** (required if ASH needs to call Julia routines)
 
 *****************************************************
 B2. Semi-Automatic non-Conda setup
@@ -219,11 +219,11 @@ Then install using pip/pip3:
 
 Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash
 
-* The ASH python3 executable, *python3_ash* should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.
+* The ASH python3 executable, *python3_ash* should generally be used if Julia routines are called by ASH (molecular-crystal QM/MM functionality requires this). It is needed for the PyJulia interface to work properly.
 
 * Make sure the correct Python3 environment is active. Otherwise ASH will not work.
 
-* The regular Python3 executable, *python3*  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.
+* The regular Python3 executable, *python3*  can also be used to run ASH scripts and is recommended if you don't require ASH to launch Julia routines (molcrystal-QM/MM primarily). There may be warnings about the Python-Julia-interface not working. These warnings can be ignored . For large systems or when using QM/MM-Molcrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.
 
 
 #########################################

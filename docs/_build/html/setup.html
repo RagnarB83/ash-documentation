@@ -108,6 +108,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-examples.html">Basic examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
@@ -264,14 +265,14 @@ Future versions will make Julia a requirement.</p>
 <h3>B1. Semi-Automatic Miniconda setup (easiest)<a class="headerlink" href="#b1-semi-automatic-miniconda-setup-easiest" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>  Install it in a location where your user has access (e.g. your home-directory)</p></li>
-<li><p>Create new environment: <strong>conda create –name ASH</strong></p></li>
+<li><p>Create new environment (not required but recommended): <strong>conda create –name ASH</strong></p></li>
 <li><p>Load environment: <strong>conda activate ASH</strong></p></li>
 <li><p>Change directory to ASH location</p></li>
 <li><p>Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory)</p></li>
-<li><p>Run: <strong>julia julia-packages-setup.jl</strong> to install some required Julia packages.</p></li>
+<li><p>Optional: Run: <strong>julia julia-packages-setup.jl</strong> to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM</p></li>
 <li><p>Run: <strong>bash conda_setup_ash.sh</strong> # This creates new files: set_environment_ash.sh and python3_ash</p></li>
 <li><p>Run: <strong>source set_environment_ash.sh</strong>  (this sets necessary PATHs and should probably be put in each user’s .bash_profile, job-submission script etc.)</p></li>
-<li><p>Run ASH using <strong>python3_ash</strong> in general (python3 on its own will also work but not when Julia routines are needed)</p></li>
+<li><p>Run ASH using either:  <strong>python3</strong>  or <strong>python3_ash</strong> (required if ASH needs to call Julia routines)</p></li>
 </ol>
 </div>
 <div class="section" id="b2-semi-automatic-non-conda-setup">
@@ -381,9 +382,9 @@ which pip3
 <p><strong>Step 6.</strong> Activate python3_ash</p>
 <p>Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash</p>
 <ul class="simple">
-<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used. It is required for the PyJulia interface to work properly. The PyJulia interface is needed for treating large systems.</p></li>
+<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used if Julia routines are called by ASH (molecular-crystal QM/MM functionality requires this). It is needed for the PyJulia interface to work properly.</p></li>
 <li><p>Make sure the correct Python3 environment is active. Otherwise ASH will not work.</p></li>
-<li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts. There will, however, be a warning about the Python-Julia-interface not working. This warning can be ignored if fast Julia routines are not needed. For large systems or when using MolCrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
+<li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts and is recommended if you don’t require ASH to launch Julia routines (molcrystal-QM/MM primarily). There may be warnings about the Python-Julia-interface not working. These warnings can be ignored . For large systems or when using QM/MM-Molcrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
 </ul>
 </div>
 </div>
