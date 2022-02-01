@@ -105,7 +105,6 @@ The optional runmode argument is also available: runmode='library' or runmode='i
     #Create fragment object from XYZ-file
     HF_frag=Fragment(xyzfile='hf.xyz', charge=0, mult=1)
     xTBcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
-    #xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN2', runmode='inputfile', xtbdir='/path/to/xtb_6_2_3/bin')
 
     #Run a single-point energy job on the fragment associated with the xtb-object
     Singlepoint(theory=xTBcalc, fragment=HF_frag)
