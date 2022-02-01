@@ -48,6 +48,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#a-download-ash">A. Download ASH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#b-installation-and-configuration">B. Installation and Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete">B0. The lazy/impatient way to set up ASH (easy but incomplete)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#b1-semi-automatic-miniconda-setup-easiest">B1. Semi-Automatic Miniconda setup (easiest)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#b2-semi-automatic-non-conda-setup">B2. Semi-Automatic non-Conda setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#b3-manual">B3. Manual</a></li>
@@ -170,10 +171,22 @@ Future versions will make Julia a requirement.</p>
 </section>
 <section id="b-installation-and-configuration">
 <h2>B. Installation and Configuration<a class="headerlink" href="#b-installation-and-configuration" title="Permalink to this headline"></a></h2>
+<section id="b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete">
+<h3>B0. The lazy/impatient way to set up ASH (easy but incomplete)<a class="headerlink" href="#b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete" title="Permalink to this headline"></a></h3>
+<p>If you are impatient and want to get ASH going immediately without all features enabled.</p>
+<p><strong>Note:</strong> ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, ORCA, xTB)</p>
+<ol class="arabic simple">
+<li><p>Download the ASH repository</p></li>
+<li><p>Make sure there is a python3 interpreter on your system (with numpy)</p></li>
+<li><p>Set: export PYTHONPATH=/path/to/ash   (where /path/to/ash is the directory containing the ASH source code)</p></li>
+<li><p>Try to run an ASH script (the ASH import line will fail if PYTHONPATH is set incorrectly)</p></li>
+</ol>
+</section>
 <section id="b1-semi-automatic-miniconda-setup-easiest">
 <h3>B1. Semi-Automatic Miniconda setup (easiest)<a class="headerlink" href="#b1-semi-automatic-miniconda-setup-easiest" title="Permalink to this headline"></a></h3>
+<p>This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda).</p>
 <ol class="arabic simple">
-<li><p>Install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>  Install it in a location where your user has access (e.g. your home-directory)</p></li>
+<li><p>Install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>.  Install it in a location where your user has access (e.g. your home-directory)</p></li>
 <li><p>Create new environment (not required but recommended): <strong>conda create –name ASH</strong></p></li>
 <li><p>Load environment: <strong>conda activate ASH</strong></p></li>
 <li><p>Change directory to ASH location</p></li>

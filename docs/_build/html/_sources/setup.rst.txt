@@ -48,12 +48,27 @@ Clone or download the archive containing ASH and put the directory (named ash) i
 B. Installation and Configuration
 ##################################################
 
+***************************************************************
+B0. The lazy/impatient way to set up ASH (easy but incomplete)
+***************************************************************
+
+If you are impatient and want to get ASH going immediately without all features enabled.
+
+**Note:** ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, ORCA, xTB)
+
+1. Download the ASH repository
+2. Make sure there is a python3 interpreter on your system (with numpy)
+3. Set: export PYTHONPATH=/path/to/ash   (where /path/to/ash is the directory containing the ASH source code)
+4. Try to run an ASH script (the ASH import line will fail if PYTHONPATH is set incorrectly)
+
 
 *****************************************************
 B1. Semi-Automatic Miniconda setup (easiest)
 *****************************************************
 
-1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_  Install it in a location where your user has access (e.g. your home-directory)
+This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda).
+
+1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_.  Install it in a location where your user has access (e.g. your home-directory)
 2. Create new environment (not required but recommended): **conda create --name ASH**
 3. Load environment: **conda activate ASH**
 4. Change directory to ASH location 

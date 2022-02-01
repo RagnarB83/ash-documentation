@@ -152,7 +152,7 @@ Example script:
 	#Directory of XYZ files. Can be full path or relative path (dir needs to be copied to scratch location in this case).
 	dir = '/home/bjornsson/FeCO4_N2/r2scan-opt/xyzfiles_temp'
 
-	#Defining theory. Charge/mult is skipped here
+	#Defining theory.
 	ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", orcablocks="%scf maxiter 500 end", numcores=numcores)
 
 	#Call calc_xyzfiles giving xyzdir and theory. 

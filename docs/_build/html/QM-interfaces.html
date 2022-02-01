@@ -68,7 +68,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -173,7 +173,7 @@ This is done using the Singlepoint function that requires both theory and fragme
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>When running an ASH script involving multiple fragments (that differ w.r.t. charge/mult), to associate charge/mult attributes to the fragment instead.
+<p>When running an ASH script involving multiple fragments (that differ w.r.t. charge/mult), it is best to associate charge/mult attributes to the fragment.
 The charge/mult information from the fragment will then be provided to the theory object when run via the respective job-function (Singlepoint, geomeTRICOptimizer etc.) instead.</p>
 <section id="attributes-and-methods-available-to-all-qm-interfaces">
 <h2>Attributes and methods available to all QM interfaces<a class="headerlink" href="#attributes-and-methods-available-to-all-qm-interfaces" title="Permalink to this headline"></a></h2>

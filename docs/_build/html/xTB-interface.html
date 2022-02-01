@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -244,7 +244,6 @@ The optional runmode argument is also available: runmode=’library’ or runmod
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">xTBcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">)</span>
-<span class="c1">#xTBcalc = xTBTheory(charge=0, mult=1, xtbmethod=&#39;GFN2&#39;, runmode=&#39;inputfile&#39;, xtbdir=&#39;/path/to/xtb_6_2_3/bin&#39;)</span>
 
 <span class="c1">#Run a single-point energy job on the fragment associated with the xtb-object</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xTBcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>

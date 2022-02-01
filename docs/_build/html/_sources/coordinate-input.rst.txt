@@ -265,9 +265,9 @@ It is typically unnecessary to request a calculation or recalculation.
 Charge and Multiplicity
 =================================
 
-Charge and spin multiplicity can be associated with the fragment (either at creation or afterwards) but does not have to.
-The QM theory level needs the charge and multiplicity information and it usually must be provided when the QMtheory object is created.
-When working with multiple fragment objects, however, it is convenient to associate a total charge and spin multiplicity with each fragment object.
+Charge and spin multiplicity should usually be associated with the fragment.
+One can also specify the charge and mult to the Job-function (e.g. Singlepoint).
+When working with multiple fragment objects, however, it is highly convenient to associate a total charge and spin multiplicity with each fragment object.
 Usually done when fragment is created like this:
 
 .. code-block:: python

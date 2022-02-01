@@ -73,7 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -343,9 +343,9 @@ It is typically unnecessary to request a calculation or recalculation.</p>
 </section>
 <section id="charge-and-multiplicity">
 <h3>Charge and Multiplicity<a class="headerlink" href="#charge-and-multiplicity" title="Permalink to this headline"></a></h3>
-<p>Charge and spin multiplicity can be associated with the fragment (either at creation or afterwards) but does not have to.
-The QM theory level needs the charge and multiplicity information and it usually must be provided when the QMtheory object is created.
-When working with multiple fragment objects, however, it is convenient to associate a total charge and spin multiplicity with each fragment object.
+<p>Charge and spin multiplicity should usually be associated with the fragment.
+One can also specify the charge and mult to the Job-function (e.g. Singlepoint).
+When working with multiple fragment objects, however, it is highly convenient to associate a total charge and spin multiplicity with each fragment object.
 Usually done when fragment is created like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NO_frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;no.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragcoords</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>

@@ -48,7 +48,7 @@ or it can be provided to the jobtype function (here Singlepoint):
 
 
 
-When running an ASH script involving multiple fragments (that differ w.r.t. charge/mult), to associate charge/mult attributes to the fragment instead.
+When running an ASH script involving multiple fragments (that differ w.r.t. charge/mult), it is best to associate charge/mult attributes to the fragment.
 The charge/mult information from the fragment will then be provided to the theory object when run via the respective job-function (Singlepoint, geomeTRICOptimizer etc.) instead.
 
 #############################################################

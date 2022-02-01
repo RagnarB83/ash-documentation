@@ -189,7 +189,7 @@ Example: TDDFT on H\ :sub:`2`\ O
     end
     """
 
-    #Define ORCA theory. Does not need charge/mult keywords.
+    #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=1)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
@@ -234,7 +234,7 @@ Here we show how results with multiple functionals can be obtained at the same t
 
         """
 
-        #Define ORCA theory. Does not need charge/mult keywords.
+        #Define ORCA theory.
         ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
         #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
@@ -348,7 +348,7 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
 
     """
 
-    #Define ORCA theory. No charge/mult keywords
+    #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
@@ -389,7 +389,7 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
     end
     """
 
-    #Define ORCA theory. No charge/mult keywords
+    #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
@@ -427,7 +427,7 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 
     """
 
-    #Define ORCA theory. No charge/mult keywords
+    #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
