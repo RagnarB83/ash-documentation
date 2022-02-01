@@ -27,16 +27,17 @@ Examples
     ################################################
     # Defining reactant and product ASH fragment
     #################################################
-    react=Fragment(xyzfile="react.xyz")
-    prod=Fragment(xyzfile="prod.xyz")
     charge=0
     mult=1
+    react=Fragment(xyzfile="react.xyz", charge=charge, mult=mult)
+    prod=Fragment(xyzfile="prod.xyz", charge=charge, mult=mult)
+
 
     #Theory to use for NEB
-    xtbcalc = xTBTheory(charge=charge, mult=mult, xtbmethod='GFN2', runmode='library')
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10)
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, charge=charge
 
 
 Restarting a calculation with user-defined path-file. 
@@ -53,13 +54,14 @@ The file from a previously unconverged NEB calculation can be used or a converge
     ################################################
     # Defining reactant and product ASH fragment
     #################################################
-    react=Fragment(xyzfile="react.xyz")
-    prod=Fragment(xyzfile="prod.xyz")
     charge=0
     mult=1
+    react=Fragment(xyzfile="react.xyz", charge=charge, mult=mult)
+    prod=Fragment(xyzfile="prod.xyz", charge=charge, mult=mult)
+
 
     #Theory to use for NEB
-    xtbcalc = xTBTheory(charge=charge, mult=mult, xtbmethod='GFN2', runmode='library', restart_file="knarr_MEP.xyz")
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', restart_file="knarr_MEP.xyz")
 
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
     SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10)

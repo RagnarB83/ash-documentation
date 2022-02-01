@@ -104,8 +104,6 @@ The **Singlepoint** function above is designed to be a simple function that does
 In a typical project, however, multiple calculations need to be performed. For example running the same single-point theory calculation on multiple fragments.
 
 You could of course easily write a for-loop for this purpose in ASH, making sure to define first charge and multiplicity for each fragment first.
-Here it is convenient to define the charge/mult for each fragment rather than the theory since the charge/mult is not always the same for all fragments.
-If ASH finds no charge/mult information in the Theory object it will search for information in the fragment instead.
 
 .. code-block:: python
     

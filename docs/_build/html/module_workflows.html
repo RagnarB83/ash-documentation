@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -299,11 +299,11 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 
 <span class="c1">#Define ASH fragments for the A-B adduct (dimer) and monomers from XYZ-files</span>
 <span class="c1">#Dimer: H2O...MeOH H-bonded complex</span>
-<span class="n">dimer</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_meoh.xyz&quot;</span><span class="p">)</span>
+<span class="n">dimer</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_meoh.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#H2O monomer</span>
-<span class="n">h2o</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">)</span>
+<span class="n">h2o</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#MeOH monomer</span>
-<span class="n">meoh</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;meoh.xyz&quot;</span><span class="p">)</span>
+<span class="n">meoh</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;meoh.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#Combine fragments in a list</span>
 <span class="n">all_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">dimer</span><span class="p">,</span> <span class="n">h2o</span><span class="p">,</span> <span class="n">meoh</span><span class="p">]</span>
 
@@ -314,7 +314,7 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 <span class="s2">maxiter 300</span>
 <span class="s2">end</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">orcacalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">simple</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+<span class="n">orcacalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">simple</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
 
 
 <span class="c1">#Run counterpoise_calculation giving fragment-list, orcacalculation and atom-indices as input</span>
@@ -411,7 +411,7 @@ Corrected interaction energy: -4.359825562958491 kcal/mol
 <span class="s2">O       -2.829559171      0.140210894     -1.736132689</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstring</span><span class="p">)</span>
+<span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstrin</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">activespace_dictionary</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">initial_orbitals</span><span class="o">=</span><span class="s1">&#39;MP2&#39;</span><span class="p">,</span> <span class="n">tgen</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>

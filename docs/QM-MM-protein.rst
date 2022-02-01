@@ -238,7 +238,6 @@ CHARMM example:
     qmatomlist = read_intlist_from_file("qmatoms")
 
     #Define QM-theory. Here ORCA
-    orcadir="/opt/orca_500"
     ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
     ORCAblocklines="""
     %maxcore 2000
@@ -252,7 +251,7 @@ CHARMM example:
     mult=4
 
     #Create ORCA QM object
-    orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
+    orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
                             orcablocks=ORCAblocklines, numcores=8)
 
     # Create QM/MM OBJECT
@@ -260,7 +259,7 @@ CHARMM example:
         fragment=frag, embedding="Elstat", qmatoms=qmatomlist, printlevel=2)
 
     # Single-point job to test QM/MM setup
-    Singlepoint(theory=qmmmobject, fragment=frag)
+    Singlepoint(theory=qmmmobject, fragment=frag, charge=charge,mult=mult)
 
 The script above (e.g. called QM_MMtest.py) can be run like this:
 
@@ -364,7 +363,6 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
     actatomslist = read_intlist_from_file("active_atoms")
 
     #Define QM-theory. Here ORCA
-    orcadir="/opt/orca_current"
     ORCAinpline="! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv"
     ORCAblocklines="""
     %maxcore 2000
@@ -378,7 +376,7 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
     mult=4
 
     #Create ORCA QM object
-    orcaobject = ORCATheory(orcadir=orcadir, charge=charge,mult=mult, orcasimpleinput=ORCAinpline,
+    orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
                             orcablocks=ORCAblocklines, numcores=8)
 
     # Create QM/MM OBJECT
@@ -390,7 +388,7 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
     geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
 
     #Write a PDB-file of the final coordinates.
-    write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject)
+    write_pdbfile(frag, outputname="OptimizedFragment.pdb",openmmobject=openmmobject, charge=charge,mult=mult)
 
 
 
@@ -575,7 +573,7 @@ The example below (can also be found in examples directory)  shows how this can 
     MaxIter 500
     end
     """
-    orcaobject = ORCATheory(orcadir="/Applications/orca_500", charge=-1,mult=1, orcasimpleinput=ORCAinpline,
+    orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
                             orcablocks=ORCAblocklines, numcores=1)
 
     # Create QM/MM OBJECT
@@ -583,7 +581,7 @@ The example below (can also be found in examples directory)  shows how this can 
         fragment=ashfragment, embedding="Elstat", qmatoms=qmatomlist, printlevel=2)
 
     # QM/MM geometry optimization
-    geomeTRICOptimizer(theory=qmmmobject, fragment=ashfragment, ActiveRegion=True, actatoms=qmatomlist, maxiter=500)
+    geomeTRICOptimizer(theory=qmmmobject, fragment=ashfragment, ActiveRegion=True, actatoms=qmatomlist, maxiter=500, charge=-1,mult=1)
 
 
 

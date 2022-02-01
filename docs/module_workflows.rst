@@ -89,7 +89,6 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
     from ash import *
 
     #
-    orcadir='/opt/orca_5.0.2'
     numcores=4
 
     N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
@@ -109,11 +108,11 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
                   pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 
 	#Example: Thermochemistry protocol on the single N2 species
-    thermochemprotocol_single(fragment=N2, stoichiometry=stoichiometry, orcadir=orcadir,
+    thermochemprotocol_single(fragment=N2, stoichiometry=stoichiometry,
                         numcores=numcores, Opt_theory=None, SP_theory=DLPNO_CC_calc)
 
     #Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
-    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir,
+    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
                         numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
 
 ###############################################################
@@ -339,7 +338,7 @@ Example on ozone:
 
 	fragment=Fragment(coordsstring=fragstrin, charge=0, mult=1)
 
-	activespace_dictionary = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
+	activespace_dictionary = auto_active_space(fragment=fragment, basis="def2-TZVP", charge=0, mult=1,
 	    initial_orbitals='MP2', tgen=1.0)
 	#Returns dictionary with various active_spaces based on thresholds
 

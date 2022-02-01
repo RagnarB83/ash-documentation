@@ -179,10 +179,9 @@ The variables are then passed as keyword arguments to the  **molcrys** function 
     numcores=12
 
     #Theory level for charge iterations
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
+    orcasimpleinput="! BP86 def2-SVP def2/J  tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Chargemodel. Options: CHELPG, Hirshfeld, CM5, NPA, Mulliken
     chargemodel='CM5'
@@ -320,16 +319,15 @@ In that case, the code below can simply be appended to the previous script.
 
     #Defining, QM, MM and QM/MM theory levels for Optimization
     #If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
+    orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAQMpart = ORCATheory(orcadir=orcadir, charge=charge, mult=mult, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster.atomcharges, atomtypes=Cluster.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart, actatoms=Centralmainfrag,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', numcores=numcores)
 
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=charge, mult=mult )
 
 
 
@@ -443,8 +441,7 @@ Script below shows an example electrostatically embedded NMR calculation using O
     #Defining, QM, MM and QM/MM theory levels for Optimization
     #ORCAlines: If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.
     numcores=12
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! PBE0 def2-SVP def2/J Grid5 Finalgrid6 tightscf NMR"
+    orcasimpleinput="! PBE0 def2-SVP def2/J tightscf NMR"
     orcablocks="
     %scf maxiter 200 end
     %eprnmr
@@ -452,12 +449,12 @@ Script below shows an example electrostatically embedded NMR calculation using O
     Nuclei = all C { shift }
     end
     "
-    ORCAQMpart = ORCATheory(orcadir=orcadir, charge=charge, mult=mult, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster.atomcharges, atomtypes=Cluster.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', numcores=numcores)
 
-    Singlepoint(fragment=Cluster, theory=QMMM_object)
+    Singlepoint(fragment=Cluster, theory=QMMM_object, charge=charge, mult=mult)
 
 
 Alternatively (sometimes easier), the last ORCA inputfile (orca-input.pc) and pointcharge file (orca-input.pc) from either **molcrys**
@@ -525,15 +522,14 @@ Optimization of product geometry:
     Centralmainfrag = read_intlist_from_file("Centralmainfrag")
     print("Centralmainfrag:", Centralmainfrag)
     Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP def2/J Grid5 Finalgrid6 tightscf"
+    orcasimpleinput="! BP86 def2-SVP def2/J  tightscf"
     orcablocks="%scf maxiter 200 end"
-    ORCAQMpart = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = Cluster_product.atomcharges, atomtypes=Cluster_product.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', numcores=numcores)
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1 )
 
 
 **2. Running NEB-CI job.**
@@ -559,14 +555,14 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
     #Theory level defined
     xtbdir='/opt/xtb-6.2.3/xtb_6.2.3/bin'
     xtbmethod='GFN2'
-    xtbcalc = xTBTheory(xtbdir=xtbdir, runmode='inputfile', numcores=numcores, charge=0, mult=1, xtbmethod=xtbmethod)
+    xtbcalc = xTBTheory(xtbdir=xtbdir, runmode='inputfile', numcores=numcores, xtbmethod=xtbmethod)
     MMpart = NonBondedTheory(charges = Reactant.atomcharges, atomtypes=Reactant.atomtypes, forcefield=Cluster_FF, LJcombrule='geometric')
     QMMM_xtb = QMMMTheory(qm_theory=xtbcalc, mm_theory=MMpart, fragment=Reactant, actatoms=Centralmainfrag,
         qmatoms=Centralmainfrag, charges=Reactant.atomcharges, embedding='Elstat', numcores=numcores)
 
     #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
     Saddlepoint = interface_knarr.NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
-        ActiveRegion=True, actatoms=Centralmainfrag)
+        ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1)
 
 We import interface_knarr and then call interface_knarr.NEB function. It requires the keyword arguments reactant, product, theory at minimum.
 Number of images should typically be specified (default is 6) and CI=True (for NEB-CI) or CI=False (for plain NEB).

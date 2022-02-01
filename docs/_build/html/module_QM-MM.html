@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -168,13 +168,13 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 <li><p>frozenatoms (list): List of frozen atoms in QM/MM, alternative to actatoms. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
 <span class="c1">#List of qmatom indices defined</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">502</span><span class="p">,</span><span class="mi">503</span><span class="p">]</span>
 
 <span class="c1">#QM theory: xTB</span>
-<span class="n">qm</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+<span class="n">qm</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
 
 <span class="c1">#Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)</span>
 <span class="n">omm</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;./specialresidue.xml&quot;</span><span class="p">],</span> <span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;finalsystem.pdb&quot;</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -182,6 +182,16 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 
 <span class="c1">#QM/MM theory object</span>
 <span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Defining the charge of the QM-region</strong></p>
+<p>To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose to either provide this information in the fragment definition or alternatively as input to the job-function.
+This information will be passed onto the QM-program when running. Charge/mult definitions in the job-type (e.g. Singlepoint) take precedence.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

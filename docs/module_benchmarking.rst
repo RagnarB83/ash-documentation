@@ -63,13 +63,12 @@ with a valid directory structure (see more info below).
     from ash import *
 
     #Some variables for ORCA
-    orcadir='/Applications/orca_4.2.1'
     numcores=4
     orcasimpleinput="! BP86 def2-SV(P) tightscf"
     orcablocks="%scf maxiter 200 end"
 
     #Define theory level for benchmarks
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Running the benchmark
     run_benchmark(set="IE-benzenes", theory=ORCAcalc)
@@ -118,10 +117,9 @@ See :doc:`module_highlevel_workflows`
 
     from ash import *
 
-    orcadir='/Applications/orca_5.0.2'
     #Running the benchmark with a workflow
     DLPNO_CC_calc = CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
-                pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores, orcadir=orcadir)
+                pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
     run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc)
 
 

@@ -44,13 +44,13 @@ Example:
 
 .. code-block:: python
 
-    frag=Fragment(xyzfile="system.xyz")
+    frag=Fragment(xyzfile="system.xyz", charge=-1, mult=6)
 
     #List of qmatom indices defined
     qmatoms=[500,501,502,503]
 
     #QM theory: xTB
-    qm = xTBTheory(charge=-1, mult=6, xtbmethod='GFN1')
+    qm = xTBTheory(xtbmethod='GFN1')
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
@@ -59,6 +59,21 @@ Example:
     #QM/MM theory object
     qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2)
 
+
+**Defining the charge of the QM-region**
+
+To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose to either provide this information in the fragment definition or alternatively as input to the job-function.
+This information will be passed onto the QM-program when running. Charge/mult definitions in the job-type (e.g. Singlepoint) take precedence.
+
+.. code-block:: python
+
+    frag=Fragment(xyzfile="system.xyz", charge=-1, mult=6)
+
+or 
+
+.. code-block:: python
+
+    Singlepoint(theory=qmmm, fragment=frag, charge=-1, mult=6)
 
 ######################################
 QM/MM Truncated PC approximation
@@ -150,13 +165,13 @@ Here we read in a forcefield-file (see :doc:`MM-interfaces`)
     MM_forcefield=MMforcefield_read('MeOH_H2O.ff')
 
     #QM and MM objects
-    ORCAQMpart = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
+    ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
     MMpart = NonBondedTheory(charges = atomcharges, atomtypes=atomtypes, forcefield=MM_forcefield, LJcombrule='geometric')
     QMMMobject = QMMMTheory(fragment=H2O_MeOH, qm_theory=ORCAQMpart, mm_theory=MMpart, qmatoms=qmatoms,
                             charges=atomcharges, embedding='Elstat')
 
     #Geometry optimzation of QM/MM object
-    geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8])
+    geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8], charge=0, mult=1)
 
 
 ##########################################
@@ -189,13 +204,12 @@ The files for this example (DHFR protein) are available in the examples/QM-MM-CH
 
 
     #Creating ORCATheory object
-    orcadir="/Applications/orca_4_2_1_macosx_openmpi314"
     ORCAinpline="! HF-3c tightscf"
     ORCAblocklines="""
     %maxcore 2000
     """
     #Create ORCA QM object. Attaching numcores so that ORCA runs in parallel
-    orcaobject = ORCATheory(orcadir=orcadir, charge=0,mult=1, orcasimpleinput=ORCAinpline,
+    orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
                             orcablocks=ORCAblocklines, numcores=numcores)
 
     #act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)
@@ -211,7 +225,7 @@ The files for this example (DHFR protein) are available in the examples/QM-MM-CH
 
     #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
     geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
-                        maxiter=500, coordsystem='hdlc')
+                        maxiter=500, coordsystem='hdlc', charge=0,mult=1)
 
 
 

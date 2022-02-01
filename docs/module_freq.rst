@@ -58,7 +58,6 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     #the total number of CPU cores available to Ash (should match the job-script)
     numcores=8
 
-    orcadir='/opt/orca_4.2.1'
     orcasimpleinput="! HF-3c "
     orcablocks="%scf maxiter 200 end"
 
@@ -69,10 +68,10 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
        H  -2.27350346    0.53131334    0.37379014
        F  -4.03235214   -0.44462811    0.05296388
     """
-    Reactant=Fragment(coordsstring=reactstring)
+    Reactant=Fragment(coordsstring=reactstring, charge=0, mult=1)
 
     #Calculator object without frag. numcores=8 is used here for parallelizing ORCA during optimization.
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Geometry optimization of Reactant object and ORCAcalc theory object.
     #Each Energy+Grad step is parallelized by ORCA.

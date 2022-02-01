@@ -214,11 +214,11 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 
 	#Define ASH fragments for the A-B adduct (dimer) and monomers from XYZ-files
 	#Dimer: H2O...MeOH H-bonded complex
-	dimer=Fragment(xyzfile="h2o_meoh.xyz")
+	dimer=Fragment(xyzfile="h2o_meoh.xyz", charge=0, mult=1)
 	#H2O monomer
-	h2o=Fragment(xyzfile="h2o.xyz")
+	h2o=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 	#MeOH monomer
-	meoh=Fragment(xyzfile="meoh.xyz")
+	meoh=Fragment(xyzfile="meoh.xyz", charge=0, mult=1)
 	#Combine fragments in a list
 	all_fragments=[dimer, h2o, meoh]
 
@@ -229,7 +229,7 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 	maxiter 300
 	end
 	"""
-	orcacalc = ORCATheory(charge=0, mult=1, orcasimpleinput=simple, orcablocks=blocks)
+	orcacalc = ORCATheory(orcasimpleinput=simple, orcablocks=blocks)
 
 
 	#Run counterpoise_calculation giving fragment-list, orcacalculation and atom-indices as input
@@ -337,7 +337,7 @@ Example on ozone:
 	O       -2.829559171      0.140210894     -1.736132689
 	"""
 
-	fragment=Fragment(coordsstring=fragstring)
+	fragment=Fragment(coordsstring=fragstrin, charge=0, mult=1)
 
 	activespace_dictionary = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
 	    initial_orbitals='MP2', tgen=1.0)

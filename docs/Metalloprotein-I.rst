@@ -560,14 +560,14 @@ of course on how well the semi-empirical method handles the system).
                 numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #QM theory: GFN1-xTB
-    xtb = xTBTheory(charge=-1, mult=6, xtbmethod="GFN1", numcores=numcores)
+    xtb = xTBTheory(xtbmethod="GFN1", numcores=numcores)
     #QM/MM theory
     qmmm = QMMMTheory(qm_theory=xtb, mm_theory=omm, fragment=fragment,
             embedding="Elstat", qmatoms=qmatoms, printlevel=1)
 
     #QM/MM MD simulation for 10 ps. More conservative timestep
     OpenMM_MD(fragment=fragment, theory=qmmm, timestep=0.001, simulation_time=10, traj_frequency=50, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1)
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, charge=-1, mult=6)
 
 
 TODO: inspect QM/MM trajectory
@@ -750,7 +750,7 @@ The number of optimization cycles may be especially large since we are minimizin
                 platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM theory
-    orca = ORCATheory(charge=-1, mult=6, orcasimpleinput="! r2SCAN-3c tightscf", numcores=numcores)
+    orca = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", numcores=numcores)
     #QM/MM theory
     qmmm = QMMMTheory(qm_theory=orca, mm_theory=omm, fragment=fragment,
             embedding="Elstat", qmatoms=qmatoms, printlevel=1)
@@ -765,7 +765,8 @@ The number of optimization cycles may be especially large since we are minimizin
     waterconstraints = {'bond': waterconlist}
 
     #Calling geomeTRICOptimizer with defined constraints
-    geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints)
+    geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints,
+        charge=-1, mult=6)
 
 
 TODO: inspect QM/MM trajectory
