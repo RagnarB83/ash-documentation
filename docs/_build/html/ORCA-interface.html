@@ -1,78 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>ORCA interface &mdash; Ash 0.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="xTB interface" href="xTB-interface.html" />
     <link rel="prev" title="Plotting" href="module_plotting.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> Ash
-          
-
-          
-            
             <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -80,45 +41,43 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">ASH</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">ASH</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-examples.html">Basic examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash_program_philosophy.html">ASH Program Philosophy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal modules</span></p>
+<p class="caption" role="heading"><span class="caption-text">Jobtypes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Dynamics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Freq module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_molcrys.html">MOLCRYS: Automatic QM/MM for Molecular Crystals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Interfaces</span></p>
+<p class="caption" role="heading"><span class="caption-text">Interfaces</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ORCA interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#finding-the-orca-program">Finding the ORCA program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parallelization">Parallelization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#useful-orca-functions">Useful ORCA functions</a></li>
 </ul>
@@ -131,10 +90,10 @@
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
@@ -144,117 +103,187 @@
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Highlevel_CC_CBS_workflows.html">Tutorial: High-level CCSD(T)/CBS workflows</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tools</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Ash</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>ORCA interface</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/ORCA-interface.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="orca-interface">
-<h1>ORCA interface<a class="headerlink" href="#orca-interface" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="orca-interface">
+<h1>ORCA interface<a class="headerlink" href="#orca-interface" title="Permalink to this headline"></a></h1>
 <p>ORCATheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCATheory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">extrabasisatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrabasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">TDDFT</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TDDFTroots</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">FollowRoot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">extraline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>Options:</p>
+<p><strong>ORCATheory</strong> options:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orcadir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Path to ORCA directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fragment</span></code></p></td>
+<td><p>ASH Fragment</p></td>
+<td><p>None</p></td>
+<td><p>ASH Fragment object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orcasimpleinput</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Definition of the ORCA simple-input line</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orcablocks</span></code></p></td>
+<td><p>string (multiline)</p></td>
+<td><p>‘’</p></td>
+<td><p>Used for block-input in the ORCA inputfile.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">extraline</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Additional inputfile-option for ORCA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>2</p></td>
+<td><p>How much output printed by the ORCA module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">extrabasisatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>What atomindices should have a different basis set (gets added to coordinate block)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">extrabasis</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>What the basis set on extrabasisatoms should be</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TDDFT</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TDDFTroots</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>5</p></td>
+<td><p>How many TDDFT roots to calculate if TDDFT=True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FollowRoot</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>What excited state root to calculate gradient for if TDDFT=True.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brokensym</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HSmult</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>None</p></td>
+<td><p>What high-spin multiplicity to use in a brokensym=True job.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">atomstoflip</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>What atom indices to spin-flip.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moreadfile</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Name of file or path to file of a GBWfile to read in to the ORCA calculation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">autostart</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘Plottyplot’</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Number of cores to use for ORCA</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Label for ORCA object. Useful if working with many ORCATheory objects to distinguish them.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">propertyblock</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>String containing ORCA-block input (e.g. %eprnmr) that must come after the coordinates.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="finding-the-orca-program">
+<h2>Finding the ORCA program<a class="headerlink" href="#finding-the-orca-program" title="Permalink to this headline"></a></h2>
+<p>ASH can find the ORCA program in a few different ways.</p>
 <ul class="simple">
-<li><p>orcadir: string. Path to ORCA</p></li>
-<li><p>fragment: ASH Fragment object.</p></li>
-<li><p>charge: integer. Charge of molecule.</p></li>
-<li><p>mult: integer. Spin multiplicity of molecule</p></li>
-<li><p>orcasimpleinput: string. Definition of the ORCA simple-input line</p></li>
-<li><p>orcablocks: string (can be multiline). Used for block-input in the ORCA inputfile.</p></li>
-<li><p>extraline: string. Additional inputfile-option for ORCA.</p></li>
-<li><p>printlevel: integer. how much output by the ORCA module.</p></li>
-<li><p>extrabasisatoms: list. What atomindices should have a different basis set (gets added to coordinate block)</p></li>
-<li><p>extrabasis: string. What the basis set on extrabasisatoms should be</p></li>
-<li><p>TDDFT: Boolean. Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.</p></li>
-<li><p>TDDFTroots: integer. How many TDDFT roots to calculate.</p></li>
-<li><p>FollowRoot: integer. What excited state root to calculate gradient for.</p></li>
-<li><p>brokensym: Boolean. Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.</p></li>
-<li><p>HSmult: integer. What high-spin multiplicity to use in a Flipspin job.</p></li>
-<li><p>atomstoflip: list. What atom indices to spin-flip.</p></li>
-<li><p>moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation</p></li>
-<li><p>autostart: Boolean. Whether to turn Autostart on or off (default: True)</p></li>
-<li><p>numcores: integer. Number of cores to use for ORCA</p></li>
-<li><p>label: string. Label for ORCA object. Useful if working with many.</p></li>
-<li><p>propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.</p></li>
+<li><p>ASH will first check if the orcadir argument has been set which should be a string that points to the directory where the orca program is located, e.g. “orcadir=/path/to/orca_5_0_2”. This option takes precedence.</p></li>
+<li><p>If the orcadir argument has not been provided ASH will next see if orcadir has been provided in the ASH settings (~/ash_user_settings.ini file): See <a class="reference internal" href="basics.html"><span class="doc">Basic usage</span></a></p></li>
+<li><p>If orcadir has also not been defined at all, ASH will next search the operating systems’s PATH environment variable for an executable “orca” and if found, will set the orcadir accordingly and use that ORCA version.  This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.</p></li>
 </ul>
-<p>The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
-argument when creating object (alternatively it can be set in the ~/ash_user_settings.ini file). orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by ASH.
-Functionality such as telling ORCA what orbitals to read and parallelization would be handled by ASH as well.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The ORCA program binaries are nowadays often provided as a small-size shared version (has dynamically linked binaries). This means that for ORCA to run using the shared-library version, both the PATH and LD_LIBRARY_PATH needs to be set in the shell environment (should point to the ORCA directory).
+ASH can not set the LD_LIBRARY_PATH (must be done in the shell environment beforehand) and thus if LD_LIBRARY_PATH has not been set properly in the shell, ORCA will crash when called by ASH.
+This means that it is usually best to set the PATH and LD_LIBRARY_PATH to ORCA in your jobscript or login shell-file (.bashrc, .bash_profile etc.) and ASH will then be able to find ORCA like that.</p>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>The ORCA interface is quite flexible. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like.
+This means that you can completely control what type of electronic structure method should be used by ORCA including choosing aspects such as basis set, convergence and grid settings etc.
+The geometry block will be added to the inputfile by ASH.
+Note that ASH handles aspects such as telling ORCA what orbitals to read as well as parallelization.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not put parallelization information (! Pal4 or %pal nprocs 4 end)or job-type keywords such as “! Opt” “!Freq” to the orcasimpleinput and orcablocks variables.
+Such functionality is handled by ASH separately.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
-<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">)</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#ORCA</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
-<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
+<span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP tightscf&quot;</span>
 <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="si">%s</span><span class="s2">cf</span>
 <span class="s2">maxiter 200</span>
@@ -264,7 +293,7 @@ Functionality such as telling ORCA what orbitals to read and parallelization wou
 <span class="s2">end</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1">#Run a single-point energy job</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
@@ -272,13 +301,12 @@ Functionality such as telling ORCA what orbitals to read and parallelization wou
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here a fragment (here called HF_frag) is defined (from an XYZ file) and passed to the Singlepoint function along with an
-ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
-are charge and spin multiplicity. By default, the ORCA autostart feature is active, meaning that if an inputfile with name “orca-input.inp” is run, ORCA will
+<p>Here a fragment (here called HF_frag with a defined charge and multiplicity) is defined (from an XYZ file) and passed to the Singlepoint function along with an ORCAtheory object (called ORCAcalc). The input, and blocks string variables are defined and passed onto the ORCA object via keyword arguments.
+By default, the ORCA autostart feature is active, meaning that if an inputfile with name “orca-input.inp” is run, ORCA will
 try to read orbitals from “orca-input.gbw” file if present. This is utilized automatically during geometry optimizations, numerical frequencies as well
 as multiple single-point calculations sequentially. It is possible to turn this off by adding “!Noautostart” in the simple-inputline of the orcasimpleinput variable or by setting autostart=False when defining ORCATheory object.
 It is also possible to have each ORCA-calculation read in orbitals from another source by using the: moreadfile keyword argument option:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
                     <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="s2">&quot;orbitals.gbw&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -290,8 +318,9 @@ a coordinate block etc. (cordinates in Å). ASH will then tell ORCA to run the i
 Once the ORCA calculation is done the outputfile (or other files) is read for information (usually the energy and gradient) by ASH
 and ASH will continue. The ORCA inputfile , “orca-input.inp” may be replaced later (e.g. if an optimization job” and ORCA
 will be run again.</p>
-<div class="section" id="parallelization">
-<h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="parallelization">
+<h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline"></a></h2>
 <p>ORCA parallelization is handled by OpenMPI. By specifying the numcores=X, a <em>%pal numcores X end block</em> will be added to the
 ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
 correct OpenMPI version to be available.
@@ -299,9 +328,9 @@ Make sure the recommended OpenMPI version for the ORCA version you are using is 
 setting (in the shell or jobscript):</p>
 <p>export PATH=/path/to/openmpi/bin:$PATH and export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH</p>
 <p>or alternatively loading the appropriate module. Set these variables in the job-script (see <a class="reference internal" href="basics.html"><span class="doc">Basic usage</span></a>) that you are using.</p>
-</div>
-<div class="section" id="useful-orca-functions">
-<h2>Useful ORCA functions<a class="headerlink" href="#useful-orca-functions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="useful-orca-functions">
+<h2>Useful ORCA functions<a class="headerlink" href="#useful-orca-functions" title="Permalink to this headline"></a></h2>
 <p>In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
 To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
 To be documented:</p>
@@ -328,68 +357,49 @@ To be documented:</p>
 <p>scfenergygrab(file)</p>
 <p>finalenergiesgrab(file)</p>
 <p>checkORCAfinished(file)</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="xTB-interface.html" class="btn btn-neutral float-right" title="xTB interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="module_plotting.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="xTB-interface.html" class="btn btn-neutral float-right" title="xTB interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Ragnar Bjornsson.
-
-    </p>
+    <p>&#169; Copyright 2020, Ragnar Bjornsson.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

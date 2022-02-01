@@ -12,7 +12,7 @@ All the plotting functions documented here require a Matplotlib installation in 
  ASH_plot: Basic plotting
 ##############################################################################
 
-ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting of data as straightforward as possible.
+ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting of data (calculated by ASH) as straightforward as possible.
 
 .. note::  If you need more advanced plotting options than provided here, it may be best to use Matplotlib directly instead of ASH_plot. 
     Contact the developer if you have suggestions for simple improvements in ASH_plot.
@@ -23,37 +23,131 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
         def __init__(self, figuretitle='Plottyplot', num_subplots=1, dpi=200, imageformat='png', figsize=(9,5),
             x_axislabel='X-axis', y_axislabel='Energy (X)', x_axislabels=None, y_axislabels=None, title='Plot-title', subplot_titles=None):
             print_line_with_mainheader("ASH_energy_plot")
-    def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
+        def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
                     scatter=True, line=True, scatter_linewidth=2, line_linewidth=1, marker='o', legend=True):
         def savefig(self, filename, imageformat=None, dpi=None):
 
+..  https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html
+
 **ASH_plot** options:
 
-- figuretitle (string): Title of the plot. Default: 'Plottyplot'
-- num_subplots (integer): Number of subplots. Default=1
-- dpi (integer): Resolution of the final figure (dots per inch). Default: 200
-- imageformat (string). Imageformat. Options: 'png', 'pdf', 'jpg', '.tiff, 'svg' etc. Default: 'png'
-- figsize (tuple of integers): 
-- x_axislabel/y_axislabel (string): x- and y- axes labels of plot (when num_subplots=1). Default: 'X-axis' and 'Energy (X).
-- x_axislabels/y_axislabels (list of strings). x- and y-axes labels of each subplot (when num_subplots>1).
-- title (string). Title of plot (when num_subplots=1)
-- subplots_title (list of strings). Titles for each subplot.
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
 
-**ASH_plot.add_series** options
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``figuretitle``
+     - string
+     - 'Plottyplot'
+     - Title of the figure.
+   * - ``num_subplots``
+     - integer
+     - 1
+     - Number of subplots.
+   * - ``dpi``
+     - integer
+     - 200
+     - Resolution of the final figure (dots per inch).
+   * - ``imageformat``
+     - string
+     - 'png'
+     - Imageformat. Options: 'png', 'pdf', 'jpg', '.tiff, 'svg' etc.
+   * - ``figsize``
+     - tuple of integers
+     - (9,5)
+     - Figure size dimensions.
+   * - ``x_axislabel``
+     - string
+     - 'X-axis'
+     - x-axis label of plot (when num_subplots=1).
+   * - ``y_axislabel``
+     - string
+     - 'Energy(X)'
+     - y- axis label of plot (when num_subplots=1).
+   * - ``x_axislabels``
+     - list of strings
+     - None
+     - x-axes labels of each subplot (when num_subplots>1)
+   * - ``y_axislabels``
+     - list of strings
+     - None
+     - y-axes labels of each subplot (when num_subplots>1)
+   * - ``title``
+     - string
+     - Plot-title
+     - Title of plot (when num_subplots=1)
+   * - ``subplots_title``
+     - list of strings
+     - None
+     - Titles for each subplot.
 
-- subplot (integer). What subplot to add data-series to. Use 0 for first subplot. 
-- x_list (list). List of x-values. Deafult: None
-- y_list (list). List of x-values. Deafult: None
-- surfacedictionary (dict). Alternative to x_list/y_list. Dictionary should have x-values as keys and y-values as values. Default: None
-- label (string). Label of series added. Will show up in legend. Default:'Series'
-- color (string). What color to use. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ . Default: 'blue'
-- pointsize (integer). Marker-size in scatterplots. Default: 40
-- scatter (Boolean). Do scatterplot or not. Default: True
-- line (Boolean). Do lineplot or not. Default: True
-- scatter_linewidth (integer). Linewidth of scatter-marker edges. Default:2
-- line_linewidth (integer). Linewidth of line plots. Default:1
-- marker (string). What marker symbol to use in scatterplots. `Matplotlib markers <https://matplotlib.org/stable/api/markers_api.html>`_ . Default: 'o'
-- legend (Boolean). Whether to plot legend or not. Default: True
+
+**ASH_plot.add_series** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``subplot``
+     - integer
+     - None
+     - What subplot to add data-series to. Use 0 for first subplot. 
+   * - ``x_list``
+     - list
+     - None
+     - List of x-values for series.
+   * - ``y_list``
+     - list
+     - None
+     - List of y-values for series.
+   * - ``surfacedictionary``
+     - dict
+     - None
+     - Alternative to x_list/y_list. Dictionary should have x-values as keys and y-values as values.
+   * - ``label``
+     - string
+     - 'Series'
+     - Label of series added. Will show up in legend.
+   * - ``color``
+     - string
+     - 'blue'
+     - What color to use for series. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ 
+   * - ``pointsize``
+     - integer
+     - 40
+     - Marker-size in scatterplots.
+   * - ``scatter``
+     - Boolean
+     - True
+     - Do scatterplot or not.
+   * - ``line``
+     - Boolean
+     - True
+     - Do lineplot or not.
+   * - ``scatter_linewidth``
+     - integer
+     - 2
+     - Linewidth of scatter-marker edges.
+   * - ``line_linewidth``
+     - integer
+     - 1
+     - Linewidth of line plots.
+   * - ``marker``
+     - string
+     - 'o'
+     - What marker symbol to use in scatterplots. `Matplotlib markers <https://matplotlib.org/stable/api/markers_api.html>`_ 
+   * - ``legend``
+     - Boolean
+     - True
+     - Whether to plot legend or not.
+
 
 To use, you just need to create an ASH_plot object, add one or more dataseries to the object (using the .addseries method) and then save (using the .savefig method). 
 Since the data is provided via simply Python lists you could of course run an ASH job that first generates the data from e.g. QM or QM/MM calculations and then plot the data at the end, all in the same script.

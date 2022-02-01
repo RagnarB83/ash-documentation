@@ -3,23 +3,22 @@
 About ASH
 ==================================================
 
-ASH is a Python-based computational chemistry and QM/MM environment, primarily for molecular calculations in the gas phase,
-explicit solution, crystal or protein environment. Can do single-point calculations, geometry optimizations, surface scans,
-molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonian.
+ASH is a Python-based computational chemistry and QM/MM environment. Can do single-point calculations, geometry optimizations, surface scans,
+molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians.
 Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 
 Strict requirements:
 
-- Python3 installation
+- Python3 installation (version 3.6 or higher)
 - Numpy Python library
 
 Strongly recommended:
 
 - geomeTRIC (optimizer). Python library, easily installed via pip.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
-- Julia installation (only required for faster Julia versions of routines in molcrys-QM/MM code)
-- Matplotlib (for some plotting options).
+- Julia installation. Only required for faster Julia versions of routines in molcrys-QM/MM code.
+- Matplotlib. Only for plotting options.
 
 
 Optional Python modules for specific functionality (can be installed via pip or conda):
@@ -39,12 +38,6 @@ Optional external QM codes (separate installations):
 - MRCC
 - xTB
 
-We recommend Anaconda or miniconda (https://www.anaconda.com/distribution/) for a good scientific Python distribution.
-Contains Python3, Numpy, SciPy, Matplotlib.
-
-
-
-
 #####################
 Features
 #####################
@@ -60,7 +53,7 @@ Features
 - Chemshell fragment file
 - GROMACS .gro file
 - Python lists
-- ASH (.ygg) fragment file format
+- ASH fragment file format (.ygg)
 
 
 **Interfaces to various QM codes:**
@@ -96,25 +89,25 @@ Features
 
 **Full Molecular Mechanics (MM) via OpenMM interface**
 
-- To be documented.
+- See :doc:`OpenMM-interface`
 
-**Geometry optimization with multiple optimizers**
+**Geometry optimization with internal coordinates**
 
+- geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
 - Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
 - PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.
-- geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
+
 
 **QM/MM Geometry optimization:**
 
-- Possible with geomeTRIC optimizer currently, only.
-- **Todo**: Knarr-optimizer.
+- Possible with geomeTRIC optimizer currently, only. Support for HDLC coordinates.
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
 
 - Partial Hessian possible
 - Full parallelization.
 - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
-- Request analytical Hessian from ORCA.
+- Also possible to request analytical Hessian from ORCA.
 
 **Hessian analysis**
 
@@ -148,7 +141,7 @@ Features
 - QM/MM Geometry optimization of central fragment of cluster to capture solid-state geometrical effects.
 - **Todo:** QM/MM Numerical frequencies of central fragment of cluster.
 
-**solvshell: Multi-shell solvation for redox potentials**
+**solvshell: Multi-shell solvation protocol for redox potentials, spectroscopy etc.**
 
 - Reads snapshots from molecular dynamics trajectory and calculates VIE, VEA, redox pot. or other property.
 - Parallelization over snapshots. Averages over snapshots and finds representative snapshots of trajectory.

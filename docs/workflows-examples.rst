@@ -1,53 +1,60 @@
 Workflow examples in ASH
 ======================================
 
-As an ASH-script is pure Python and the user has access to various functions for manipulating coordinates, create fragments,
-call QM-code and calculate energy, etc. this allows one to easily create advanced workflows in a single script.
+As an ASH-script is pure Python and the user has access to various ASH functionality for manipulating coordinates, create fragments,
+call QM and MM codes, calculate energy, minimize geometry, run dynamics etc. this allows one to easily create advanced workflows in a single script.
+ASH already contains a lot of pre-made workflow to automize things but the user can easily write their own ASH-Python scripts to automize
+more complex workflows, not yet available directly in ASH.
 
-
-As a basic example, a geometry optimization of a structure with a QM method can easily be combined with a subsequent frequency job and this
-can be followed by a subsequent higher-level single-point energy job (even with different QM programs).
-
-- See Example 1 for such a workflow.
-
-Another workflow might involve calculating all species of a chemical reaction with the reaction energy being the final result.
-
-- Example 2a shows an example of this using a simple for-loop.
-- Example 2b shows how the reaction energy could be calculated with a high-level thermochemistry protocol (thermochemprotocol function).
-
-It can also be advantageous to run multiple jobs with slightly different parameters (different theory level, different geometry etc.)
-
-- Example 3a shows how multiple single-point energies with different functionals on 1 geometry can be easily run.
-- Example 3b shows how the same can be accomplished in a completely parallel fashion (Singlepoint_parallel)
-- Example 4a shows how multiple single-point energies on multiple XYZ-files can be easily run.
-- Example 4b shows how the same can be accomplished in a completely fashion (Singlepoint_parallel)
-- Example 5 shows how one can calculate localized orbitals and create Cube files for a collection of XYZ-files or a multi-XYZ file.
-
-
-An even more advanced workflow combines metadynamics-based conformational sampling (Crest procedure by Grimme) from a starting structure,
-automatically performs DFT geometry optimizations for each conformer and finally evaluates a high-level single-point energy.
-
-- See Example 6.
+This page goes through several examples of workflows showing both the use of pre-coded workflows and how you can write your own.
 
 
 ##############################################################################
 Example 1 : Optimization + Frequency + HL-singlepoint
 ##############################################################################
 
+Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
+using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
+In ASH you can use the thermochemprotocol_single to automize such a workflow. 
+
+See: :doc:`module_workflows` for details.
+
 .. code-block:: python
 
     from ash import *
 
+    numcores=2
     #Defining molecular fragment
     molstring="""
     N 0 0 0
     N 0 0 0.9
     """
-    molecule=Fragment(coordsstring=molstring)
-    #Defining ORCA object for optimization
+    molecule=Fragment(coordsstring=molstring, charge=0, mult=1)
+    
+    #Defining theories object for optimization+frequency and High-level CCSD(T)/CBS
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", orcablocks="", numcores=numcores)
+    HL = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
+
+
+    energy, components, thermochem = thermochemprotocol_single(fragment=molecule, numcores=numcores, Opt_theory=ORCAcalc, SP_theory=HL)
+    print("Final HL energy:", energy, "Eh")
+    print("ZPVE: ", thermochem['ZPVE'], "Eh")
+
+But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that suits your needs:
+
+.. code-block:: python
+
+    from ash import *
+
     numcores=2
-    orcadir='/opt/orca_4.2.1'
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+    #Defining molecular fragment
+    molstring="""
+    N 0 0 0
+    N 0 0 0.9
+    """
+    molecule=Fragment(coordsstring=molstring, charge=0, mult=1)
+    #Defining ORCA object for optimization
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", orcablocks="", numcores=numcores)
 
     #Geometry optimization of molecule and ORCAcalc theory object.
     geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
@@ -56,82 +63,28 @@ Example 1 : Optimization + Frequency + HL-singlepoint
     thermochem = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job on optimized geometry
-    HLORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C",
-                orcablocks="", numcores=numcores)
-    HLenergy = Singlepoint(theory=HLORCAcalc, fragment=molecule)
+    cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
+    HLenergy = Singlepoint(theory=HL, fragment=molecule)
 
-    print("DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy: ", HLenergy, "Eh")
+    print("Final HL energy: ", HLenergy, "Eh")
     print("ZPVE: ", thermochem['ZPVE'], "Eh")
 
-.. code-block:: shell
-
-    DLPNO-CCSD(T)/CBS//BP86/def2-SVP energy:  -109.421012242536 Eh
 
 #######################################################################################################
 Example 2a : Direct calculation of Reaction Energy:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2NH\ :sub:`3`\
 #######################################################################################################
 
+Typically one is interested in more than a single energy of a single species and thus you might want to run calculations on multiple species
+of a reaction in the same job and calculate the reaction energy directly.
+In ASH you can easily define multiple fragments in a script, group the fragments in a list and then loop over the fragments with a simple Python for-loop
+that calculates the single-point energy for each fragment.
+
 .. code-block:: python
 
     from ash import *
 
-    #Defining all reaction species as ASH objects from XYZ-files
-    N2=Fragment(xyzfile="n2.xyz")
-    H2=Fragment(xyzfile="h2.xyz")
-    NH3=Fragment(xyzfile="nh3.xyz")
-
-    ##Defining reaction##
-    # List of species from reactant to product
-    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
-
-    #Equation stoichiometry : negative integer for reactant, positive integer for product
-    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
-    stoichiometry=[-1, -3, 2] #Use same order as specieslist
-    ##
     numcores=1
-    orcadir='/opt/orca_4.2.1'
-
-    FinalEnergies=[]
-    for molecule in specieslist:
-        #Defining ORCA object.
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
-        energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
-        #Storing energy as list. Energy is also stored as part of fragment.
-        FinalEnergies.append(energy)
-        ORCAcalc.cleanup()
-
-    #Reaction Energy via list of total energies:
-    ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist, list_of_energies=FinalEnergies)
-
-    ##Reaction Energy via internal energies of fragment objects:
-    #ReactionEnergy(stoichiometry=stoichiometry, list_of_fragments=specieslist)
-
-
-.. code-block:: shell
-
-      Reaction_energy: -65.12668956189346 kcalpermol
-
-
-#######################################################################################################
-Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol
-#######################################################################################################
-
-A more advanced feature is to run each fragment with a high-level thermochemistry protocol (using ORCA) and get the final
-reaction energy with chemical accuracy. Here the coupled-cluster based W1 method is used as part of the
-thermochemprotocol function. The protocol will run a DFT opt+Freq job (as defined via the ORCA-inputline string shown)
-and then do the high-level W1 theory protocol on top (multiple CCSD, CCSD(T) jobs with extrapolation, core-valence, scalar relativistic and atomic spin-orbit corrections etc.)
-This feature is in progress and will be made more userfriendly soon. Note that W1 is only doable for really small molecules (1-4 heavy atom systems are doable).
-
-See :doc:`thermochemistry` for more information.
-
-.. code-block:: python
-
-    from ash import *
-
-    #
-    orcadir='/opt/orca_4.2.1'
-    numcores=4
-
+    #Defining all reaction species as ASH objects from XYZ-files
     N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
     H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
@@ -141,16 +94,78 @@ See :doc:`thermochemistry` for more information.
     specieslist=[N2, H2, NH3] #Use same order as stoichiometry
 
     #Equation stoichiometry : negative integer for reactant, positive integer for product
-    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [1,3,-2]
+    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
     stoichiometry=[-1, -3, 2] #Use same order as specieslist
-    ##
 
-    #ORCA theory inputline for Opt+Freq
-    Opt_protocol_inputline="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
+    #Defining ORCA theory object.
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
 
+    FinalEnergies=[] #Defining empty list to collect energies
+    for molecule in specieslist:
+        energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
+        #Storing energy as list. Energy is also stored as part of fragment.
+        FinalEnergies.append(energy)
+        ORCAcalc.cleanup()
+
+    print("Final list of energies:", FinalEnergies)
+
+
+The script above is verbose but the structure gives you a lot of flexibility that you can adapt to your needs.
+Of course, ASH already contains functions to carry out such a job in a simpler way: **Singlepoint_fragments** and **ReactionEnergy**.
+See :doc:`singlepoint` and :doc:`module_workflows` for more information.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
+    #Haber-Bosch reaction: N2 + 3H2 => 2NH3
+    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+    specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
+    stoichiometry=[-1, -3, 2] #Using same order as specieslist.
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+    energies = Singlepoint_fragments(theory=ORCAcalc, fragments=specieslist) #Calculating list of energies
+
+    #Calculating reaction-energy using list and stoichiometry
+    reaction_energy, unused = ReactionEnergy(stoichiometry=stoichiometry, list_of_energies=energies, unit='kcal/mol', label='ΔE')
+
+
+.. code-block:: shell
+
+      Reaction_energy: -65.12668956189346 kcalpermol
+
+#######################################################################################################
+Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol
+#######################################################################################################
+
+You can of course also combine the Opt+Freq+HL protocol from Example 1 with the multiple fragments-at-the-same-time approach from Example 2
+and calculate the reaction energy directly at a high-level of theory together with thermochemical corrections from a frequency job.
+
+
+See :doc:`thermochemistry` for more information.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=4
+
+    N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+
+    ##Defining reaction
+    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+    stoichiometry=[-1, -3, 2] #Use same order as specieslist
+
+    #Define theories
+    OptFreqtheory = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+    HL=CC_CBS_Theory(elements=["N","H"], basisfamily="cc", cardinals=[3,4], numcores=numcores)
     #Thermochemistry protocol
-    thermochemprotocol(SP_theory='W1', fraglist=specieslist, stoichiometry=stoichiometry, orcadir=orcadir,
-                        numcores=numcores, Opt_protocol_inputline=Opt_protocol_inputline)
+    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry, Opt_theory=OptFreqtheory, SP_theory=HL, 
+                numcores=numcores, memory=5000, analyticHessian=True, temp=298.15, pressure=1.0)
 
 
 Final output:
@@ -176,46 +191,38 @@ The agreement with experiment (-18.4 kcal/mol) is excellent.
 Example 3a : Running multiple single-point energies with different functionals (sequential)
 ############################################################################################
 
+You might be interested in running multiple single-point energy calculations on a molecule with different functionals.
+Such a job could be written directly like this:
 
 .. code-block:: python
 
     from ash import *
 
+    numcores=4
     h2string="""
     H 0 0 0
     H 0 0 0.7
     """
 
-    h2=Fragment(coordsstring=h2string)
+    h2=Fragment(coordsstring=h2string, charge=, mult=1)
 
     #List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.
     functionals=['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']
 
     #Dictionary to keep track of energies
     energies_dict={}
-
     for functional in functionals:
         print("FUNCTIONAL: ", functional)
-        orcadir='/opt/orca_4.2.1'
+        #Defining/redefining ORCA theory.
         #Appending functional keyword to the string-variable that contains the ORCA inputline
-        input="! def2-SVP Grid5 Finalgrid6 tightscf slowconv " + functional
-        blocks="""
-        %scf
-        maxiter 200
-        end
-        """
-        #Defining/redefining ORCA theory. Does not need charge/mult keywords.
-        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, orcablocks=blocks, numcores=4, charge=0, mult=1)
-
+        input="! def2-SVP tightscf slowconv " + functional
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, numcores=numcores)
         # Run single-point job
         energy = Singlepoint(theory=ORCAcalc, fragment=h2)
-
         #Keep ORCA outputfile for each functional
         os.rename('orca-input.out', functional+'_orcajob.out')
-
         #Adding energy to dictionary
         energies_dict[functional] = energy
-
         #Cleaning up after each job (not always necessary)
         ORCAcalc.cleanup()
         print("=================================")
@@ -245,37 +252,58 @@ Producing a nice table of results:
     CAM-B3LYP  -1.1625896338
 
 
-############################################################################################
-Example 3b : Running multiple single-point energies with different functionals (in parallel)
-############################################################################################
-The example in 3a ran each job sequentially, one after the other, according to the list of functional strings.
-While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
-This can be accomplished using the Singlepoint_parallel function inside ASH.
-Here Python multiprocessing (pool.map) is utilized.
-In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+But could also be written a bit more succinctly using the **Singlepoint_theories** function, see :doc:`singlepoint` .
 
 .. code-block:: python
 
     from ash import *
+
+    numcores=4
+    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+
+    #List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.
+    functionals=['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']
+    theories=[]
+    #Looping over strings to create a list of theories
+    for functional in functionals:
+        input="! def2-SVP tightscf slowconv " + functional
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, numcores=numcores)
+        theories.append(ORCAcalc)
+    #Use Singlepoint_theories to run a SP calculation on fragment with each theory
+    energies = Singlepoint_theories(theories=theories, fragment=H2)
+    print(" Functional   Energy (Eh)")
+    print("----------------------------")
+    for func, e in zip(functionals,energies):
+        print("{:10} {:13.10f}".format(func,e))
+
+############################################################################################
+Example 3b : Running multiple single-point energies with different functionals (in parallel)
+############################################################################################
+
+The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
+While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
+This can be accomplished using the Singlepoint_parallel function inside ASH.
+Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+See :doc:`parallelization` for more information.
+
+.. code-block:: python
+
+    from ash import *
+    numcores=4
     #Fragment
-    h2string="""
-    H 0 0 0
-    H 0 0 0.7
-    """
-    h2=Fragment(coordsstring=h2string)
+    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
 
     #Single-point job parallelization
     #Case: Multiple theories
-    orcadir='/opt/orca_4.2.1'
     #Creating multiple ORCA objects and storing in list: orcaobjects
     #Important: use a label (here functional-name)for the created ORCA object to distinguish jobs
     orcaobjects=[]
-    for functional in ['B3LYP', 'BP86', 'PBE0']:
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! def2-SVP def2/J "+functional, orcablocks="", label=functional)
+    for functional in ['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']:
+        ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput="! def2-SVP def2/J "+functional, orcablocks="", label=functional)
         orcaobjects.append(ORCAcalc)
 
     #Calling the Singlepoint_parallel function and providing list of fragments and list of theories:
-    results = Singlepoint_parallel(fragments=[h2], theories=orcaobjects, numcores=4)
+    results = Singlepoint_parallel(fragments=[H2], theories=orcaobjects, numcores=numcores)
 
     #results is a dictionary of energies
     print("results :", results)
@@ -284,26 +312,26 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 Example 4a : Running single-point energies on a collection of XYZ files (sequential)
 ###########################################################################################
 
-This can also be accomplished using a pre-coded workflow calc_xyzfiles. See: :doc:`module_workflows`
-
+At other times you are interested in using a single theory to run single-point energies on a collection of molecules.
+This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), and then use glob to find all files with an ".xyz" file suffix.
+Next, loop over those XYZ-files, define a fragment from each XYZ-file and then run a single-point calculation.
 
 .. code-block:: python
 
     from ash import *
     import glob
-    #
-    orcadir='/opt/orca_4.2.1'
+
     numcores=1
     #Directory of XYZ files. Can be full path or relative path.
-    dir = './xyz_files'
+    dir = '/path/to/xyz_files'
     #Changing to dir
     os.chdir(dir)
 
     energies=[]
     for file in glob.glob('*.xyz'):
         print("XYZ-file:", file)
-        mol=Fragment(xyzfile=file)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=1)
+        mol=Fragment(xyzfile=file, charge=0, mult=1) #Note: Here we have to assume that charge=0 and mult=1 for every molecule
+        ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
         energy = Singlepoint(theory=ORCAcalc, fragment=mol)
         print("Energy of file {} : {} Eh".format(file, energy))
         ORCAcalc.cleanup()
@@ -311,7 +339,7 @@ This can also be accomplished using a pre-coded workflow calc_xyzfiles. See: :do
         print("")
     #Pretty print
     print(" XYZ-file             Energy (Eh)")
-    print("-----------------------------------------------")
+    print("-"*50)
     for xyzfile, e in zip(glob.glob('*.xyz'),energies):
         print("{:20} {:>13.10f}".format(xyzfile,e))
 
@@ -321,7 +349,7 @@ Output:
 .. code-block:: text
 
      XYZ-file             Energy (Eh)
-    -----------------------------------------------
+    -------------------------------------------------
     h2.xyz               -1.1715257797
     h2o_MeOH.xyz         -192.0023991603
     O-O-dimer.xyz        -149.8555328055
@@ -331,37 +359,87 @@ Output:
     hi.xyz               -298.3735362292
     h2o_strained.xyz     -76.2253312246
 
+Again, we can simplify the script with the help of built-in ASH functionality: **read_xyzfiles** and **Singlepoint_fragments**
+See: :doc:`coordinate-input` and :doc:`singlepoint` for more information.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
+    #Directory of XYZ files. Can be full path or relative path.
+    xyzdir = '/path/to/xyz_files'
+
+    #This function reads in all XYZ-files from the chosen directory and returns a list of ASH fragments
+    #Note: Each XYZ-file must have charge/mult defined in 2nd line of header for readchargemult=True to work
+    fragments = read_xyzfiles(xyzdir,readchargemult=True, label_from_filename=True)
+    #Define theory
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+
+    #Call Singlepoint_fragments and get list of calculated energies at chosen theory
+    energies = Singlepoint_fragments(theory=ORCAcalc, fragments=fragments)
+
+
+Output:
+
+.. code-block:: text
+
+    ======================================================================
+    Singlepoint_fragments: Table of energies of each fragment:
+    ======================================================================
+    Formula    Label                 Charge    Mult           Energy(Eh)
+    ----------------------------------------------------------------------
+    H1I1       hi.xyz                     0       1      -298.3737182333
+    N1H3       nh3.xyz                    0       1       -56.5093324450
+    H2         h2.xyz                     0       1        -1.1715262206
+    H2O1       h2o_strained.xyz           0       1       -76.2253299452
+    C4H10      butane.xyz                 0       1      -158.3249141864
+    O2         O-O-dimer.xyz              0       1      -149.8555433766
+    N2         n2.xyz                     0       1      -109.4002889693
+    H6O2C1     h2o_MeOH.xyz               0       1      -192.0023967568
+
+This can also be accomplished using the **calc_xyzfiles** function that further allows you to even run a thermochemistry workflow on each XYZ-file. 
+See: :doc:`module_workflows`
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
+    #Directory of XYZ files. Can be full path or relative path.
+    xyzdir = '/path/to/xyz_files'
+
+    #Define theory
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+
+    #Call calc_xyzfiles giving xyzdir and theory.
+    #Geometry optimizations for each XYZ-file can be requested via Opt=True (default False, i.e. singlepoint)
+    calc_xyzfiles(xyzdir=dir, theory=ORCAcalc)
 
 ############################################################################################
 Example 4b : Running single-point energies on a collection of XYZ files (parallel)
 ############################################################################################
-The example in 4a ran each job sequentially, one after the other, according to the list of XYZ-files available.
-While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of XYZ-files.
-This can be accomplished using the Singlepoint_parallel function inside ASH.
-Here Python multiprocessing (pool.map) is utilized.
+The examples in 4a had each job run sequentially, one job after the other, according to the list of XYZ-files available.
+While ORCA parallelization was utilized, it may be more economical to run such embarrassingly parallel jobs simultaneously instead, especially if there are lot of XYZ-files.
+This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.map).
 In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+
+See :doc:`parallelization` for more information.
 
 .. code-block:: python
 
     from ash import *
     import glob
-    #
-    orcadir='/opt/orca_4.2.1'
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=1)
+    
+    numcores=4
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=1)
     #Directory of XYZ files. Can be full path or relative path.
-    dir = './xyz_files'
+    xyzdir = './xyz_files'
 
-    molecules=[]
-    #Creating list of ASH fragments from XYZ files. Using filename as label
-    for file in glob.glob(dir+'/*.xyz'):
-        print("XYZ-file:", file)
-        basename=os.path.basename(file)
-        label=os.path.splitext(basename)[0]
-        molecule=Fragment(xyzfile=file,label=label)
-        molecules.append(molecule)
+    molecules = read_xyzfiles(xyzdir,readchargemult=True, label_from_filename=True)
 
     #Calling the Singlepoint_parallel function and providing list of fragments and list of theories:
-    results = Singlepoint_parallel(fragments=molecules, theories=[ORCAcalc], numcores=4)
+    results = Singlepoint_parallel(fragments=molecules, theories=[ORCAcalc], numcores=numcores)
 
     #results is a dictionary of energies
     print("results :", results)
@@ -376,7 +454,7 @@ Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or
 can be useful to understand the nature of the reaction. The code below shows how this can be accomplished in ASH
 via a workflow involving single-point DFT, orbital localization and Cube-file creation (via orca_plot).
 
-TODO: Add centroid analysis
+See :doc:`ORCA-interface` for information on **run_orca_plot**.
 
 Using a collection of XYZ-files:
 
@@ -385,12 +463,10 @@ Using a collection of XYZ-files:
     from ash import *
     import glob
     #
-    orcadir='/opt/orca_4.2.1'
     numcores=1
     #Directory of XYZ files. Can be full path or relative path.
     dir = '/home/bjornsson/ASH-DEV_GIT/testsuite/localized-orbital-IRC-workflow/calcs/images'
-    #Changing to dir
-    #os.chdir(dir)
+
     #Localization block in ORCA inputfile
     blockinput="""
     %loc
@@ -403,8 +479,8 @@ Using a collection of XYZ-files:
         basefile=os.path.basename(file)
         print("XYZ-file:", basefile)
         mol=Fragment(xyzfile=file)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=1)
-        energy = Singlepoint(theory=ORCAcalc, fragment=mol)
+        ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=numcores)
+        energy = Singlepoint(theory=ORCAcalc, fragment=mol, charge=-1, mult=1)
         print("Energy of file {} : {} Eh".format(basefile, energy))
         locfile=basefile.split('.')[0]+'_calc.loc'
         os.rename('orca-input.loc', locfile)
@@ -421,9 +497,7 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
 .. code-block:: python
 
     from ash import *
-    import glob
     #
-    orcadir='/opt/orca_4.2.1'
     numcores=1
 
     #Name of trajectory file containing multiple geometries (could be optimization traj, MD traj, NEB-path traj, Hessian XYZ animation etc.)
@@ -440,8 +514,8 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
 
     for index,frag in enumerate(fraglist):
         print("Frag :", index)
-        ORCAcalc = ORCATheory(orcadir=orcadir, charge=-1, mult=1, orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=1)
-        energy = Singlepoint(theory=ORCAcalc, fragment=frag)
+        ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=numcores)
+        energy = Singlepoint(theory=ORCAcalc, fragment=frag, charge=-1, mult=1)
         print("Energy of frag {} : {} Eh".format(index, energy))
         locfile='frag{}_calc.loc'.format(index)
         os.rename('orca-input.loc', locfile)
@@ -455,28 +529,27 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
 ###########################################################################################
 Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points
 ###########################################################################################
-This example utilizes the interface to Crest to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory.
-This is then followed by DFT geometry optimizations for each conformer found by the Crest procedure.
+
+This example utilizes the interface to the powerful `crest <https://xtb-docs.readthedocs.io/en/latest/crest.html>`_ program to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory (GFN2-xTB).
+From the conformational sampling we get a collection of low-energy conformers for that molecule (based on the GFN1-xTB or GFN2-xTB semi-empirical tightbinding Hamiltonian)
+The conformational sampling is then followed by a DFT geometry optimization for each conformer.
 Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.
 
+Such an example can be written in ASH like this:
 
 .. code-block:: python
 
     from ash import *
-    from interface_crest import *
 
-    orcadir='/opt/orca_4.2.1/'
-    crestdir='/opt/crest'
-    numcores=24
+    numcores=4
 
     #0. Starting structure and charge and mult
-    molecule = Fragment(xyzfile="ethanol.xyz")
     charge=0
     mult=1
+    molecule = Fragment(xyzfile="ethanol.xyz", charge=charge, mult=mult)
 
     #1. Calling crest
-    #call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, solvent='H2O', energywindow=6 )
-    call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, charge=charge, mult=mult, numcores=numcores)
+    call_crest(fragment=molecule, xtbmethod='GFN2-xTB', numcores=numcores)
 
     #2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.
     list_conformer_frags, xtb_energies = get_crest_conformers()
@@ -490,15 +563,14 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     #ML Theory level. TODO: Run in ASH parallel instead of ORCA parallel?
     MLorcasimpleinput="! BP86 D3 def2-TZVP def2/J Grid5 Finalgrid6 tightscf"
     MLorcablocks="%scf maxiter 200 end"
-    MLORCATheory = ORCATheory(orcadir=orcadir, charge=charge, mult=mult,
-                        orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, numcores=numcores)
+    MLORCATheory = ORCATheory(orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, numcores=numcores)
 
     DFT_energies=[]
     print("")
     for index,conformer in enumerate(list_conformer_frags):
         print("")
         print("Performing DFT Geometry Optimization for Conformer ", index)
-        geomeTRICOptimizer(fragment=conformer, theory=MLORCATheory, coordsystem='tric')
+        geomeTRICOptimizer(fragment=conformer, theory=MLORCATheory, coordsystem='tric', charge=charge, mult=mult)
         DFT_energies.append(conformer.energy)
         #Saving ASH fragment and XYZ file for each DFT-optimized conformer
         os.rename('Fragment-optimized.ygg', 'Conformer{}_DFT.ygg'.format(index))
@@ -509,23 +581,12 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     print("DFT_energies: ", DFT_energies)
 
     #4.Run high-level DLPNO-CCSD(T). Ash should now have optimized conformers
-    HLorcasimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C tightscf TightPNO"
-    HLorcablocks="""
-    %scf
-    maxiter 200
-    end
-    %mdci
-    maxiter 100
-    end
-    """
-
-    HLORCATheory = ORCATheory(orcadir=orcadir, charge=charge, mult=mult,
-                        orcasimpleinput=HLorcasimpleinput, orcablocks=HLorcablocks, numcores=numcores)
+    HL_CC = CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
     HL_energies=[]
     for index,conformer in enumerate(list_conformer_frags):
         print("")
         print("Performing High-level calculation for DFT-optimized Conformer ", index)
-        HLenergy = Singlepoint(theory=HLORCATheory, fragment=conformer)
+        HLenergy = Singlepoint(theory=HL_CC, fragment=conformer, charge=charge, mult=mult)
         HL_energies.append(HLenergy)
 
 
@@ -564,36 +625,29 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
     print("Workflow done!")
 
 
-The manually defined workflow above can also be more conveniently run like this:
+The manually defined workflow above is a bit verbose and can of course also be more conveniently run like below where we use the 
+**confsampler_protocol** function (see :doc:`crest-interface`), that takes as input the ASH fragment and 2 levels of ASH theories to be used for geometry optimizations and high-level singlepoint energies.
 
 .. code-block:: python
 
     from ash import *
 
-    #
-    crestdir='/opt/crest'
-    orcadir='/opt/orca_4.2.1'
     numcores=4
-    #Fragment to define
-    frag=Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
+    #Fragment to define. Here taken from internal database
+    molecule=Fragment(databasefile="ethanol.xyz")
 
     #Defining MLTheory: DFT optimization
-    orcadir='/opt/orca_4.2.1'
-    MLsimpleinput="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
+    MLsimpleinput="! B3LYP D4 def2-TZVP TightSCF"
     MLblockinput="""
     %scf maxiter 200 end
     """
-    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
+    ML_B3LYP = ORCATheory(orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
-    HLsimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF"
-    HLblockinput="""
-    %scf maxiter 200 end
-    """
-    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, numcores=numcores, charge=frag.charge, mult=frag.mult)
-
+    HL_CC = CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
     #Call confsampler_protocol
-    confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
-                             HLtheory=HL_CC, orcadir=orcadir, numcores=numcores, charge=frag.charge, mult=frag.mult)
+    confsampler_protocol(fragment=molecule, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
+                            HLtheory=HL_CC, numcores=numcores)
+
 
 Final result table of calculated conformers at 3 different theory levels:
 

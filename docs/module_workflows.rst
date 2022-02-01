@@ -102,8 +102,9 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
     # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
     stoichiometry=[-1, -3, 2] #Use same order as specieslist
 
-    #ORCA theory for Opt+Freq
+    #Opt+Freq theory
 	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
+	#HL theory
 	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
                   pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 
@@ -213,11 +214,11 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 
 	#Define ASH fragments for the A-B adduct (dimer) and monomers from XYZ-files
 	#Dimer: H2O...MeOH H-bonded complex
-	dimer=Fragment(xyzfile="h2o_meoh.xyz")
+	dimer=Fragment(xyzfile="h2o_meoh.xyz", charge=0, mult=1)
 	#H2O monomer
-	h2o=Fragment(xyzfile="h2o.xyz")
+	h2o=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 	#MeOH monomer
-	meoh=Fragment(xyzfile="meoh.xyz")
+	meoh=Fragment(xyzfile="meoh.xyz", charge=0, mult=1)
 	#Combine fragments in a list
 	all_fragments=[dimer, h2o, meoh]
 
@@ -228,7 +229,7 @@ All that is required are geometries (previously optimized) for the AB dimer as w
 	maxiter 300
 	end
 	"""
-	orcacalc = ORCATheory(charge=0, mult=1, orcasimpleinput=simple, orcablocks=blocks)
+	orcacalc = ORCATheory(orcasimpleinput=simple, orcablocks=blocks)
 
 
 	#Run counterpoise_calculation giving fragment-list, orcacalculation and atom-indices as input
@@ -336,7 +337,7 @@ Example on ozone:
 	O       -2.829559171      0.140210894     -1.736132689
 	"""
 
-	fragment=Fragment(coordsstring=fragstring)
+	fragment=Fragment(coordsstring=fragstrin, charge=0, mult=1)
 
 	activespace_dictionary = auto_active_space(fragment=fragment, orcadir=None, basis="def2-TZVP", charge=0, mult=1,
 	    initial_orbitals='MP2', tgen=1.0)

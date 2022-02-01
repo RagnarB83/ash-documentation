@@ -7,7 +7,7 @@ Basic usage
 Input structure
 #####################
 
-You create a Python3 script (e.g. called ashtest.py) and import the Ash functionality:
+You create a Python3 script (e.g. called ashtest.py) and import the ASH library:
 
 .. code-block:: python
 
@@ -16,7 +16,7 @@ You create a Python3 script (e.g. called ashtest.py) and import the Ash function
     import ash   # If you use this option you will have to add the "ash." prefix in front of ASH functions/classes.
 
 
-Ash functionality can only be imported if the Ash source dir is in the PYTHONPATH.
+ASH functionality can only be imported if the ASH source dir is in the PYTHONPATH.
 Make sure you have already set in the shell (part of Setup):
 
 .. code-block:: shell
@@ -33,7 +33,7 @@ See  :doc:`coordinate-input` for various ways of dealing with coordinates and fr
 Example script
 #####################
 
-Here is a basic Ash Python script, e.g. named: ashtest.py
+Here is a basic ASH Python script, e.g. named: ashtest.py
 
 .. code-block:: python
 
@@ -41,28 +41,26 @@ Here is a basic Ash Python script, e.g. named: ashtest.py
 
     #Defining a numcores variable with the number of available CPU cores. Will be given to ORCA object.
     numcores=4
-    #Create fragment
+    #Create fragment from a multi-line Python string.
     fragstring="""
     H 0.0 0.0 0.0
     F 0.0 0.0 1.0
     """
-    molecule = Fragment(coordsstring=fragstring)
+    molecule = Fragment(coordsstring=fragstring, charge=0, mult=1)
 
     #Defining ORCA-related variables
-    orcadir='/opt/orca_4.2.1'
-    orcasimpleinput="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
+    orcasimpleinput="! BP86 def2-SVP tightscf"
     orcablocks="%scf maxiter 200 end"
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1,
-                                orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Geometry Optimization using geomeTRIC
     geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
 
 
-The script above loads Ash, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
+The script above loads ASH, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces`), and runs a geometry optimization using the SimpleOpt optimizer function  (see :doc:`job-types` for other better options).
+(see :doc:`QM-interfaces` and :doc:`ORCA-interface` ), and runs a geometry optimization using the geomeTRICOptimizer optimizer function  (see :doc:`job-types` and :doc:`geomeTRIC-interface` ).
 
 
 ######################################
@@ -107,6 +105,7 @@ ASH settings
 
 Global settings are stored in  */path/to/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
+ASH will attempt to read this file on startup.
 
 .. code-block:: text
 

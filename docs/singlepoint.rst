@@ -15,13 +15,15 @@ MMTheory (see :doc:`MM-interfaces`) or even a QM/MMTheory (see :doc:`module_QM-M
 
 .. code-block:: python
 
-    def Singlepoint(fragment=None, theory=None, Grad=False):
+    def Singlepoint(fragment=None, theory=None, Grad=False, charge=None, mult=None):
         """Singlepoint function: runs a single-point energy calculation using ASH theory and ASH fragment.
 
         Args:
             fragment (ASH fragment): An ASH fragment. Defaults to None.
             theory (ASH theory): Any valid ASH theory. Defaults to None.
             Grad (Boolean): Do gradient or not. Defaults to False.
+            charge (int, optional): Specify charge of system. Overrides fragment charge information.
+            mult (int, optional): Specify mult of system. Overrides fragment charge information.            
 
         Returns:
             float: Energy
@@ -31,11 +33,8 @@ MMTheory (see :doc:`MM-interfaces`) or even a QM/MMTheory (see :doc:`module_QM-M
 
 *Example*
 In the example script below an ASH fragment is created from the XYZ-file "hf.xyz" that contains the Cartesian coordinates of hydrogen fluoride.
+The charge and multiplicity is also defined as part of the Fragment object.
 Next a theory-level object is defined, here an object is created from the ORCATheory class. 
-
-The charge and multiplicity is defined when creating the Theory object.
-Note that an alternative is to define the charge/mult as attributes of the Fragment instead (see later).
-
 For a single-point calculation one then simply passes the Theory object and the Fragment object to the **Singlepoint** function.
 
 .. code-block:: python
@@ -43,16 +42,25 @@ For a single-point calculation one then simply passes the Theory object and the 
     from ash import *
 
     #Defining fragment
-    HF_frag=Fragment(xyzfile="hf.xyz")
+    HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1)
     #ORCA
     orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
-    ORCAobject = ORCATheory(charge=0, mult=1, orcasimpleinput=orcasimpleinput, numcores=4)
+    ORCAobject = ORCATheory(orcasimpleinput=orcasimpleinput, numcores=4)
 
     #Simple Energy SP calc. Energy will be printed to output and also returned as an energy variable
     Singlepoint(theory=ORCAobject, fragment=HF_frag)
 
-The energy is printed to standard output by default.
 
+Note that an alternative to defining the charge/mult as attributes of the Fragment is to instead pass the charge and multiplicity to the Singlepoint function.
+
+.. code-block:: python
+
+    #Simple Energy SP calc. Energy will be printed to output and also returned as an energy variable
+    Singlepoint(theory=ORCAobject, fragment=HF_frag, charge=0, mult=1)
+
+If this option is used, this will override any charge/mult information present in the fragment.
+
+The energy calculated is printed to standard output by default.
 The **Singlepoint** function returns an energy as a floating point number and usually you want to store the energy as a new variable so that you can do something more with the data.
 
 .. code-block:: python

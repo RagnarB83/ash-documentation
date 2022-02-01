@@ -7,13 +7,15 @@ Things become even more complicated when heavy elements or transition metals are
 
 To then perform coupled cluster calculations on larger molecules requires the use of local-correlation approximations such as the DLPNO approximation in ORCA, requiring further know-how.
 
-The CC_CBS_Theory class in ASH allows one to carry out all these types of calculations in an easy semi-automatic way.
+The CC_CBS_Theory class in ASH allows one to carry out all these types of calculations in an easy semi-automatic way via the interface to ORCA.
+
 See :doc:`module_highlevel_workflows` for all the options available in CBS_CC_Theory.
 
 This tutorial shows some examples on how to effectively use CC_CBS_Theory to carry out these calculations for both organic and inorganic systems.
 
 You can find the inputfiles for all of these examples in ASH_SOURCE_DIR/examples/workflows/highlevel-thermochemistry 
 
+.. note:: CC_CBS_Theory for now only supports CCSD(T)/CBS calculations via the ORCA interface in ASH. Future work will allow use of CFour, Psi4 and/or MRCC for specific functionality (post-CCSD(T) corrections etc).
 
 ##############################################################################
 Example: CCSD(T)/CBS for the N2 total energy and Bond Dissociation Energy
@@ -138,7 +140,7 @@ The highly approximate Goodson FCI correction is 0.47 kcal/mol which is here in 
 
 The final FCI/CBS bond dissociation energy calculated by ASH is 228.50 kcal/mol which is in excellent agreement with experiment: 228.4 kcal/mol (corrected for ZPE).
 
-.. warning:: The Goodson extrapolation formula when using HF, CCSD and CCSD(T) energies has now always found to be a reliable approach.
+.. warning:: The Goodson extrapolation formula when using HF, CCSD and CCSD(T) energies has not always found to be a reliable approach.
     See discussion in: 
 
     - D. Feller and D. A. Dixon, J. Phys. Chem. A 107, 9641 (2003)

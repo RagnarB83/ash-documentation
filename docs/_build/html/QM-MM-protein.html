@@ -1,78 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>QM/MM on a protein &mdash; Ash 0.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my_theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Workflow examples in ASH" href="workflows-examples.html" />
     <link rel="prev" title="Metalloprotein tutorial II: Ferredoxin" href="Metalloprotein-II.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> Ash
-          
-
-          
-            
             <img src="_static/ash-simple-logo-letterbig.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -80,30 +41,20 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">ASH</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">ASH</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="About.html">About ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic-examples.html">Basic examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ash_program_philosophy.html">ASH Program Philosophy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-input.html">Coordinates and fragments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parallelization.html">Parallelization in ASH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_coords.html">Coords module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="QM-interfaces.html">QM Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MM-interfaces.html">MM Interfaces</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Jobtypes</span></p>
+<p class="caption" role="heading"><span class="caption-text">Jobtypes</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
@@ -112,7 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Modules</span></p>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
@@ -122,7 +73,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_PES.html">PES: PhotoElectron/PhotoEmission Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_plotting.html">Plotting</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Interfaces</span></p>
+<p class="caption" role="heading"><span class="caption-text">Interfaces</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ORCA-interface.html">ORCA interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xTB-interface.html">xTB interface</a></li>
@@ -133,10 +84,10 @@
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">knarr interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Explicit-solvation.html">Explicit solvation (small molecule)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Metalloprotein-I.html">Metalloprotein tutorial I: Rubredoxin</a></li>
@@ -156,83 +107,42 @@
 <li class="toctree-l1"><a class="reference internal" href="thermochemistry.html">High-level Thermochemistry in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Highlevel_CC_CBS_workflows.html">Tutorial: High-level CCSD(T)/CBS workflows</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tools</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="coordinate-tools.html">Coordinates and fragment tools</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Ash</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>QM/MM on a protein</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/QM-MM-protein.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="qm-mm-on-a-protein">
-<h1>QM/MM on a protein<a class="headerlink" href="#qm-mm-on-a-protein" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="qm-mm-on-a-protein">
+<h1>QM/MM on a protein<a class="headerlink" href="#qm-mm-on-a-protein" title="Permalink to this headline"></a></h1>
 <p>How to do QM/MM calculations of a protein in ASH
 This tutorial is in progress…</p>
 <a class="reference internal image-reference" href="_images/fefeh2ase-nosolv.png"><img alt="_images/fefeh2ase-nosolv.png" class="align-right" src="_images/fefeh2ase-nosolv.png" style="width: 400px;" /></a>
-<div class="section" id="prepare-a-classical-mm-model-of-the-system">
-<h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline">¶</a></h2>
+<section id="prepare-a-classical-mm-model-of-the-system">
+<h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline"></a></h2>
 <p>This step cam be the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
@@ -293,9 +203,9 @@ to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER for
 Note that ParMed may help here: <a class="reference external" href="https://parmed.github.io/ParmEd/html/index.html">https://parmed.github.io/ParmEd/html/index.html</a></p>
 <p>Another option is to use the PSF-create script:
 <a class="reference external" href="https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh">https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh</a></p>
-</div>
-<div class="section" id="a-read-coordinates-and-forcefield-into-ash">
-<h2><strong>2a. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#a-read-coordinates-and-forcefield-into-ash" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="a-read-coordinates-and-forcefield-into-ash">
+<h2><strong>2a. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#a-read-coordinates-and-forcefield-into-ash" title="Permalink to this headline"></a></h2>
 <p>Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), an XYZ-file (XMol format, file.xyz), from a previous ASH-file on disk (file.ygg), or  a Chemshell fragment file (file.c).
 The forcefield can be read in using CHARMM files,Amber files, GROMACS files or OpenMM XML format.</p>
@@ -365,9 +275,9 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 </pre></div>
 </div>
 <p>It should finish in just a few seconds (or 1-2 minutes at most).</p>
-</div>
-<div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
-<h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
+<h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline"></a></h2>
 <p>Assuming step 2 worked well, the next step is to setup the QM/MM model.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
 run a single-point energy job for testing purposes.
@@ -438,9 +348,9 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 </div>
 <p>It will run both the MM part and the QMpart using the chosen theory. Choose a small QM-region for testing purposes if
 run directly in the shell.</p>
-</div>
-<div class="section" id="run-a-qm-mm-geometry-optimization">
-<h2><strong>4. Run a QM/MM geometry optimization</strong><a class="headerlink" href="#run-a-qm-mm-geometry-optimization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="run-a-qm-mm-geometry-optimization">
+<h2><strong>4. Run a QM/MM geometry optimization</strong><a class="headerlink" href="#run-a-qm-mm-geometry-optimization" title="Permalink to this headline"></a></h2>
 <p>Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
 optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).</p>
 <p>actregiondefine.py:</p>
@@ -549,15 +459,15 @@ geomeTRICOptimizer like below:</p>
 <span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="modifying-the-coordinates-of-the-qm-region">
-<h2><strong>5. Modifying the coordinates of the QM-region</strong><a class="headerlink" href="#modifying-the-coordinates-of-the-qm-region" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="modifying-the-coordinates-of-the-qm-region">
+<h2><strong>5. Modifying the coordinates of the QM-region</strong><a class="headerlink" href="#modifying-the-coordinates-of-the-qm-region" title="Permalink to this headline"></a></h2>
 <p>To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).</p>
 <p>See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> for information on using fragedit.py  and fragupdate.py</p>
-</div>
-<div class="section" id="adding-removing-atoms-of-the-system">
-<h2><strong>6. Adding/removing atoms of the system</strong><a class="headerlink" href="#adding-removing-atoms-of-the-system" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="adding-removing-atoms-of-the-system">
+<h2><strong>6. Adding/removing atoms of the system</strong><a class="headerlink" href="#adding-removing-atoms-of-the-system" title="Permalink to this headline"></a></h2>
 <p>If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices &gt; 4556 change.</p>
 <p>There are two options:</p>
 <ol class="arabic">
@@ -652,9 +562,9 @@ Also created is a PDB-file: new-system.pdb</p>
 </div></blockquote>
 </li>
 </ol>
-</div>
-<div class="section" id="other-qm-mm-jobtypes">
-<h2><strong>7. Other QM/MM jobtypes</strong><a class="headerlink" href="#other-qm-mm-jobtypes" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="other-qm-mm-jobtypes">
+<h2><strong>7. Other QM/MM jobtypes</strong><a class="headerlink" href="#other-qm-mm-jobtypes" title="Permalink to this headline"></a></h2>
 <p>One can also run a numerical frequency job using the same QM/MM ASH object:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Numerical Frequencies. npoint=2 (two-point numerical differentiation). runmode=&#39;serial&#39; means that each</span>
 <span class="c1">#displacement (Energy+Gradient job on each geometry) is run sequentially. runmode=&#39;parallel&#39; currently not possible</span>
@@ -671,9 +581,9 @@ Also created is a PDB-file: new-system.pdb</p>
 <span class="n">Saddlepoint</span><span class="o">.</span><span class="n">print_system</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;saddlepoint.ygg&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="example-protein-setup-opt-md-qm-mm-all-in-one-script">
-<h2><strong>8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script</strong><a class="headerlink" href="#example-protein-setup-opt-md-qm-mm-all-in-one-script" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="example-protein-setup-opt-md-qm-mm-all-in-one-script">
+<h2><strong>8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script</strong><a class="headerlink" href="#example-protein-setup-opt-md-qm-mm-all-in-one-script" title="Permalink to this headline"></a></h2>
 <p>The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
 The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system, there will be problems to deal with.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -723,68 +633,49 @@ The example below (can also be found in examples directory)  shows how this can 
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="workflows-examples.html" class="btn btn-neutral float-right" title="Workflow examples in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Metalloprotein-II.html" class="btn btn-neutral float-left" title="Metalloprotein tutorial II: Ferredoxin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="workflows-examples.html" class="btn btn-neutral float-right" title="Workflow examples in ASH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Ragnar Bjornsson.
-
-    </p>
+    <p>&#169; Copyright 2020, Ragnar Bjornsson.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

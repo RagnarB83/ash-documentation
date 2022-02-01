@@ -3,6 +3,85 @@ Coordinates and fragments
 ==========================
 
 
+
+The Fragment class
+***********************************
+
+.. code-block:: python
+
+    class Fragment:
+        def __init__(self, coordsstring=None, fragfile=None, databasefile=None, xyzfile=None, pdbfile=None, grofile=None,
+                    amber_inpcrdfile=None, amber_prmtopfile=None,
+                    chemshellfile=None, coords=None, elems=None, connectivity=None, atom=None, diatomic=None, diatomic_bondlength=None,
+                    atomcharges=None, atomtypes=None, conncalc=False, scale=None, tol=None, printlevel=2, charge=None,
+                    mult=None, label=None, readchargemult=False, use_atomnames_as_elements=False):
+
+        def update_attributes(self):
+
+        # Add coordinates from geometry string. Will replace.
+        def add_coords_from_string(self, coordsstring, scale=None, tol=None, conncalc=False):
+
+        # Replace coordinates by providing elems and coords lists. Optional: recalculate connectivity
+        def replace_coords(self, elems, coords, conn=False, scale=None, tol=None):
+
+        def delete_coords(self):
+
+        def get_atomindices_except(self, excludelist):
+
+        def get_nonH_atomindices(self):
+
+        def get_atomindices_for_element(self, element):
+
+        def get_atomindices_except_element(self, element):
+
+        def get_XH_indices(self, conncode='julia'):
+
+        def simple_get_water_constraints(self, starting_index=None):
+
+        def delete_atom(self, atomindex):
+
+        def add_coords(self, elems, coords, conn=True, scale=None, tol=None):
+
+        def print_coords(self):
+
+        def read_amberfile(self, inpcrdfile=None, prmtopfile=None, conncalc=False):
+
+        def read_grofile(self, filename, conncalc=False, scale=None, tol=None):
+
+        def read_chemshellfile(self, filename, conncalc=False, scale=None, tol=None):
+
+        def read_pdbfile(self, filename, conncalc=True, scale=None, tol=None, use_atomnames_as_elements=False):
+
+        def read_xyzfile(self, filename, scale=None, tol=None, readchargemult=False, conncalc=True):
+
+        def set_energy(self, energy):
+
+        def get_coordinate_center(self):
+
+        # Get coordinates for specific atoms (from list of atom indices)
+        def get_coords_for_atoms(self, atoms):
+
+        # Calculate connectivity (list of lists) of coords
+        def calc_connectivity(self, conndepth=99, scale=None, tol=None, codeversion=None):
+
+        def update_atomcharges(self, charges):
+
+        def update_atomtypes(self, types):
+
+        # Adding fragment-type info (used by molcrys, identifies whether atom is mainfrag, counterfrag1 etc.)
+        # This one is fast
+        def add_fragment_type_info(self, fragmentobjects):
+
+        def write_xyzfile(self, xyzfilename="Fragment-xyzfile.xyz", writemode='w', write_chargemult=True, write_energy=True):
+
+        def write_XYZ_for_atoms(self,xyzfilename="Fragment-subset.xyz", atoms=None):
+
+        # Print system-fragment information to file. Default name of file: "fragment.ygg
+        def print_system(self, filename='fragment.ygg'):
+
+        # Reading fragment from file. File created from Fragment.print_system
+        def read_fragment_from_file(self, fragfile):
+
 Creating/modifying fragment objects
 ***********************************
 
@@ -211,7 +290,7 @@ Yet another option is to read the charge and multiplicity information from the n
 
 This will only work if the 2nd-line of the XYZ file contains the charge and multiplicity, separated by a space as seen below:
 
-.. code-block:: shell
+.. code-block:: text
 
     2
     0 2

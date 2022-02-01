@@ -296,12 +296,12 @@ first-ash-job.py:
     H       -1.377626260      0.759337000     -1.144156718
     H       -1.377626260     -0.759337000     -1.144156718
     """
-    H2O=Fragment(coordsstring=coords)
+    H2O=Fragment(coordsstring=coords, charge=0, mult=1)
 
     #Defining ORCA-related variables
     orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
 
-    ORCAcalc = ORCATheory(orcadir='/opt/orca_5.0.2', charge=0, mult=1, orcasimpleinput=orcasimpleinput)
+    ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Geometry optimization
     geomeTRICOptimizer(fragment=H2O, theory=ORCAcalc, coordsystem='tric')

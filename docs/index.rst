@@ -22,9 +22,9 @@ These are the documentation pages of ASH, a multiscale modelling program.
    setup
    basics
    basic-examples
+   ash_program_philosophy
    coordinate-input
    parallelization
-   module_coords
    QM-interfaces
    MM-interfaces
 

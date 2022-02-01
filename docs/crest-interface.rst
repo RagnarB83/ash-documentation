@@ -34,7 +34,6 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
 
     from ash import *
 
-    orcadir='/opt/orca_4.2.1/'
     crestdir='/opt/crest'
     numcores=24
 
@@ -65,7 +64,7 @@ at various levels of theory.
 
 1. conformational sampling using crest and GFN-xTB (**low-level** theory).
 2. Geometry optimizations for each low-energy conformer at a **medium-level** of theory (typically DFT using e.g. ORCATheory)
-3. **High-level** single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. ORCATheory)
+3. **High-level** single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. CC_CBS_Theory)
 
 .. code-block:: python
 
@@ -93,12 +92,8 @@ at various levels of theory.
     ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores, 
         charge=frag.charge, mult=frag.mult)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
-    HLsimpleinput="! DLPNO-CCSD(T) Extrapolate(2/3,def2) def2-QZVPP/C TightSCF"
-    HLblockinput="""
-    %scf maxiter 200 end
-    """
-    HL_CC = ORCATheory(orcadir=orcadir, orcasimpleinput=HLsimpleinput, orcablocks=HLblockinput, numcores=numcores, 
-        charge=frag.charge, mult=frag.mult)
+	HL_CC = CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, charge=frag.charge, mult=frag.mult,
+                  pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,

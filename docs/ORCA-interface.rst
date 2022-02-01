@@ -6,46 +6,134 @@ ORCATheory class:
 .. code-block:: python
     
     class ORCATheory:
-        def __init__(self, orcadir=None, fragment=None, charge=None, mult=None, orcasimpleinput='', orcablocks='', 
+        def __init__(self, orcadir=None, fragment=None, orcasimpleinput='', orcablocks='', 
         printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1, extraline='', 
         brokensym=None, HSmult=None, atomstoflip=None, numcores=1, label=None, moreadfile=None, autostart=True, propertyblock=None):
 
-Options:
 
-- orcadir: string. Path to ORCA
-- fragment: ASH Fragment object.
-- charge: integer. Charge of molecule.
-- mult: integer. Spin multiplicity of molecule
-- orcasimpleinput: string. Definition of the ORCA simple-input line
-- orcablocks: string (can be multiline). Used for block-input in the ORCA inputfile.
-- extraline: string. Additional inputfile-option for ORCA.
-- printlevel: integer. how much output by the ORCA module.
-- extrabasisatoms: list. What atomindices should have a different basis set (gets added to coordinate block)
-- extrabasis: string. What the basis set on extrabasisatoms should be
-- TDDFT: Boolean. Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.
-- TDDFTroots: integer. How many TDDFT roots to calculate.
-- FollowRoot: integer. What excited state root to calculate gradient for.
-- brokensym: Boolean. Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.
-- HSmult: integer. What high-spin multiplicity to use in a Flipspin job.
-- atomstoflip: list. What atom indices to spin-flip.
-- moreadfile: string. Name of file or path to file of a GBWfile to read in to the ORCA calculation
-- autostart: Boolean. Whether to turn Autostart on or off (default: True)
-- numcores: integer. Number of cores to use for ORCA
-- label: string. Label for ORCA object. Useful if working with many.
-- propertyblock: string. String containing ORCA-block input (e.g. %eprnmr) that comes after the coordinates.
 
-The ORCA interface is quite flexible. It currently requires the path to the ORCA installation to be passed on as a keyword
-argument when creating object (alternatively it can be set in the ~/ash_user_settings.ini file). orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. The geometry block would be added to the inputfile by ASH.
-Functionality such as telling ORCA what orbitals to read and parallelization would be handled by ASH as well.
+**ORCATheory** options:
 
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``orcadir``
+     - string
+     - None
+     - Path to ORCA directory.
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - ASH Fragment object.
+   * - ``orcasimpleinput``
+     - string
+     - ''
+     - Definition of the ORCA simple-input line
+   * - ``orcablocks``
+     - string (multiline)
+     - ''
+     - Used for block-input in the ORCA inputfile.
+   * - ``extraline``
+     - string
+     - ''
+     - Additional inputfile-option for ORCA.
+   * - ``printlevel``
+     - integer
+     - 2
+     - How much output printed by the ORCA module.
+   * - ``extrabasisatoms``
+     - list
+     - None
+     - What atomindices should have a different basis set (gets added to coordinate block)
+   * - ``extrabasis``
+     - string
+     - None
+     - What the basis set on extrabasisatoms should be
+   * - ``TDDFT``
+     - Boolean
+     - False
+     - Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.
+   * - ``TDDFTroots``
+     - integer
+     - 5
+     - How many TDDFT roots to calculate if TDDFT=True
+   * - ``FollowRoot``
+     - integer
+     - 1
+     - What excited state root to calculate gradient for if TDDFT=True.
+   * - ``brokensym``
+     - Boolean
+     - False
+     - Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.
+   * - ``HSmult``
+     - integer
+     - None
+     - What high-spin multiplicity to use in a brokensym=True job.
+   * - ``atomstoflip``
+     - list
+     - None
+     - What atom indices to spin-flip.
+   * - ``moreadfile``
+     - string
+     - None
+     - Name of file or path to file of a GBWfile to read in to the ORCA calculation
+   * - ``autostart``
+     - string
+     - 'Plottyplot'
+     - X
+   * - ``numcores``
+     - integer
+     - 1
+     - Number of cores to use for ORCA
+   * - ``label``
+     - string
+     - None
+     - Label for ORCA object. Useful if working with many ORCATheory objects to distinguish them.
+   * - ``propertyblock``
+     - string
+     - None
+     - String containing ORCA-block input (e.g. %eprnmr) that must come after the coordinates.
+
+
+################################
+Finding the ORCA program
+################################
+
+ASH can find the ORCA program in a few different ways.
+
+- ASH will first check if the orcadir argument has been set which should be a string that points to the directory where the orca program is located, e.g. "orcadir=/path/to/orca_5_0_2". This option takes precedence.
+- If the orcadir argument has not been provided ASH will next see if orcadir has been provided in the ASH settings (~/ash_user_settings.ini file): See :doc:`basics`
+- If orcadir has also not been defined at all, ASH will next search the operating systems's PATH environment variable for an executable "orca" and if found, will set the orcadir accordingly and use that ORCA version.  This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.
+
+
+.. warning:: The ORCA program binaries are nowadays often provided as a small-size shared version (has dynamically linked binaries). This means that for ORCA to run using the shared-library version, both the PATH and LD_LIBRARY_PATH needs to be set in the shell environment (should point to the ORCA directory).
+  ASH can not set the LD_LIBRARY_PATH (must be done in the shell environment beforehand) and thus if LD_LIBRARY_PATH has not been set properly in the shell, ORCA will crash when called by ASH.
+  This means that it is usually best to set the PATH and LD_LIBRARY_PATH to ORCA in your jobscript or login shell-file (.bashrc, .bash_profile etc.) and ASH will then be able to find ORCA like that.
+
+
+################################################################################
+Examples
+################################################################################
+
+The ORCA interface is quite flexible. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. 
+This means that you can completely control what type of electronic structure method should be used by ORCA including choosing aspects such as basis set, convergence and grid settings etc.
+The geometry block will be added to the inputfile by ASH.
+Note that ASH handles aspects such as telling ORCA what orbitals to read as well as parallelization.
+
+.. warning:: Do not put parallelization information (! Pal4 or %pal nprocs 4 end)or job-type keywords such as "! Opt" "!Freq" to the orcasimpleinput and orcablocks variables. 
+  Such functionality is handled by ASH separately.
 
 .. code-block:: python
 
     #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
+    HF_frag=Fragment(xyzfile='hf.xyz', charge=0, mult=1)
     #ORCA
-    orcadir='/opt/orca_4.2.1'
-    input="! BP86 def2-SVP Grid5 Finalgrid6 tightscf"
+    input="! BP86 def2-SVP tightscf"
     blocks="""
     %scf
     maxiter 200
@@ -55,7 +143,7 @@ Functionality such as telling ORCA what orbitals to read and parallelization wou
     end
     """
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input, orcablocks=blocks, numcores=8)
+    ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=8)
 
     #Run a single-point energy job
     Singlepoint(theory=ORCAcalc, fragment=HF_frag)
@@ -64,16 +152,15 @@ Functionality such as telling ORCA what orbitals to read and parallelization wou
 
 
 
-Here a fragment (here called HF_frag) is defined (from an XYZ file) and passed to the Singlepoint function along with an
-ORCAtheory object (called ORCAcalc). The orcadir, input, and blocks string variables are defined and passed onto the ORCA object via keywords, as
-are charge and spin multiplicity. By default, the ORCA autostart feature is active, meaning that if an inputfile with name "orca-input.inp" is run, ORCA will
+Here a fragment (here called HF_frag with a defined charge and multiplicity) is defined (from an XYZ file) and passed to the Singlepoint function along with an ORCAtheory object (called ORCAcalc). The input, and blocks string variables are defined and passed onto the ORCA object via keyword arguments. 
+By default, the ORCA autostart feature is active, meaning that if an inputfile with name "orca-input.inp" is run, ORCA will
 try to read orbitals from "orca-input.gbw" file if present. This is utilized automatically during geometry optimizations, numerical frequencies as well
 as multiple single-point calculations sequentially. It is possible to turn this off by adding "!Noautostart" in the simple-inputline of the orcasimpleinput variable or by setting autostart=False when defining ORCATheory object.
 It is also possible to have each ORCA-calculation read in orbitals from another source by using the: moreadfile keyword argument option:
 
 .. code-block:: python
 
-    ORCAcalc = ORCATheory(orcadir=orcadir, charge=0, mult=1, orcasimpleinput=input,
+    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input,
                         orcablocks=blocks, numcores=8, moreadfile="orbitals.gbw")
 
 
