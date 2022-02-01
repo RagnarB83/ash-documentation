@@ -12,10 +12,10 @@ The interface will become more flexible in the future.
 .. code-block:: python
 
     #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
+    HF_frag=Fragment(xyzfile='hf.xyz', charge=0, mult=1)
     #PySCF
     PySCFcalc = PySCFTheory(pyscfbasis="def2-SVP", pyscffunctional="B3LYP", numcores=2,
-    charge=0, mult=1, pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
+    pyscfmemory=3000, outputname='pyscf.out', printsetting=False)
 
     #Run a single-point energy job
     Singlepoint(theory=PySCFcalc, fragment=HF_frag)

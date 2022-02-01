@@ -20,7 +20,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
 .. code-block:: python
 
   class CC_CBS_Theory:
-      def __init__(self, elements=None, cardinals = [2,3], basisfamily="def2", relativity=None, charge=None, mult=None, orcadir=None,
+      def __init__(self, elements=None, cardinals = [2,3], basisfamily="def2", relativity=None, orcadir=None,
                 stabilityanalysis=False, numcores=1, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, 
                 DFTreference=None, DFT_RI=False, auxbasis="autoaux-max", memory=5000, scfsetting='TightSCF', DLPNO=False, T1=True, 
                 pnosetting='extrapolation', pnoextrapolation=[6,7], FullLMP2Guess=False, alpha=None, beta=None, 
@@ -38,7 +38,6 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
   for all elements or basis set families).
   - basisfamily (string): Can be set to various options. See table below. 
   - relativity (string): Options: 'DKH', 'ZORA', 'NoRel', None. Default: None
-  - charge/mult (integer): Charge/multiplicity of system. Should be specified unless theory is used as part of run_benchmark or thermochemprotocol.
   - orcadir(string): Path-to-ORCA. Default: None
   - stabilityanalysis (Boolean): Perform SCF stability analysis. Default: families
   - numcores (integer): Number of cores to use in ORCA calculation.

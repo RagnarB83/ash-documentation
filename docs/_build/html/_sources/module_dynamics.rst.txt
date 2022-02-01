@@ -31,10 +31,10 @@ Simple NVE example:
 	
 	numcores=12
 	#Simple n-butane system
-	butane=Fragment(xyzfile="butane.xyz")
+	butane=Fragment(xyzfile="butane.xyz", charge=0, mult=1)
 
 	# Creating xTBTheory object (Note: runmode='library' runs faster) that is parallelized. Using GFN1-xTB.
-	xtbcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN1', runmode='library', numcores=numcores)
+	xtbcalc = xTBTheory(xtbmethod='GFN1', runmode='library', numcores=numcores)
 	
 	#Running NVE dynamics (initial temp=300 K) on butane using xTBTheory.
 	# 0.001 ps timestep, 100000 steps, writing every 10th step to trajectory. A velocity Verlet algorithm is used.
@@ -85,13 +85,13 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 .. code-block:: python
 
 	from ash import *
-	xtbtheory = xTBTheory(charge=charge, mult=mult, runmode='inputfile', xtbmethod='GFN2', numcores=numcores)
+	xtbtheory = xTBTheory(runmode='inputfile', xtbmethod='GFN2', numcores=numcores)
 	openmmobject = OpenMMTheory(cluster_fragment=Cluster, ASH_FF_file="Cluster_forcefield.ff")
 	QMMMTheory = QMMMTheory(fragment=Cluster, qm_theory=xtbtheory, mm_theory=openmmobject,
     qmatoms=qm_region, embedding='Elstat', numcores=numcores)
 
 	OpenMM_MD(fragment=Cluster, theory=QMMMTheory, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
-	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1)
+	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1, charge=0, mult=1)
 
 
 
@@ -117,9 +117,9 @@ Requirements:
 	numcores=12
 
 	#Simple n-butane system
-	frag=Fragment(xyzfile="butane.xyz")
+	frag=Fragment(xyzfile="butane.xyz", charge=0, mult=1)
 	# Creating xTBTheory object (Note: runmode='library' runs faster) that is parallelized 
-	xtbcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN1', runmode='library', numcores=numcores)
+	xtbcalc = xTBTheory(xtbmethod='GFN1', runmode='library', numcores=numcores)
 
 	#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.
 	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 
@@ -144,9 +144,9 @@ Requirements:
 	numcores=12
 
 	#Simple n-butane system
-	frag=Fragment(xyzfile="butane.xyz")
+	frag=Fragment(xyzfile="butane.xyz", charge=0, mult=1)
 	# Creating xTBTheory object (Note: runmode='library' runs faster) that is parallelized 
-	xtbcalc = xTBTheory(charge=0, mult=1, xtbmethod='GFN1', runmode='library', numcores=numcores)
+	xtbcalc = xTBTheory(xtbmethod='GFN1', runmode='library', numcores=numcores)
 
 	#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.
 	plumed_object = plumed_ASH(path_to_plumed_kernel="/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so", 

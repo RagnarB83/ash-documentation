@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -317,7 +317,6 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 <span class="n">qmatomlist</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;qmatoms&quot;</span><span class="p">)</span>
 
 <span class="c1">#Define QM-theory. Here ORCA</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_500&quot;</span>
 <span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
@@ -331,7 +330,7 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 <span class="n">mult</span><span class="o">=</span><span class="mi">4</span>
 
 <span class="c1">#Create ORCA QM object</span>
-<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
+<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
                         <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1"># Create QM/MM OBJECT</span>
@@ -339,7 +338,7 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
     <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Single-point job to test QM/MM setup</span>
-<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+<span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script above (e.g. called QM_MMtest.py) can be run like this:</p>
@@ -430,7 +429,6 @@ geomeTRICOptimizer like below:</p>
 <span class="n">actatomslist</span> <span class="o">=</span> <span class="n">read_intlist_from_file</span><span class="p">(</span><span class="s2">&quot;active_atoms&quot;</span><span class="p">)</span>
 
 <span class="c1">#Define QM-theory. Here ORCA</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/opt/orca_current&quot;</span>
 <span class="n">ORCAinpline</span><span class="o">=</span><span class="s2">&quot;! TPSSh RIJCOSX  D3BJ SARC/J ZORA-def2-SVP ZORA tightscf slowconv&quot;</span>
 <span class="n">ORCAblocklines</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">%maxcore 2000</span>
@@ -444,7 +442,7 @@ geomeTRICOptimizer like below:</p>
 <span class="n">mult</span><span class="o">=</span><span class="mi">4</span>
 
 <span class="c1">#Create ORCA QM object</span>
-<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
+<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
                         <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1"># Create QM/MM OBJECT</span>
@@ -456,7 +454,7 @@ geomeTRICOptimizer like below:</p>
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatomslist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;hdlc&#39;</span><span class="p">)</span>
 
 <span class="c1">#Write a PDB-file of the final coordinates.</span>
-<span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">)</span>
+<span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -622,7 +620,7 @@ The example below (can also be found in examples directory)  shows how this can 
 <span class="s2">MaxIter 500</span>
 <span class="s2">end</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="s2">&quot;/Applications/orca_500&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
+<span class="n">orcaobject</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">ORCAinpline</span><span class="p">,</span>
                         <span class="n">orcablocks</span><span class="o">=</span><span class="n">ORCAblocklines</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Create QM/MM OBJECT</span>
@@ -630,7 +628,7 @@ The example below (can also be found in examples directory)  shows how this can 
     <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># QM/MM geometry optimization</span>
-<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

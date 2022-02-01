@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Nudged Elastic Band Method" href="neb.html" />
-    <link rel="prev" title="Numerical Frequencies" href="module_freq.html" /> 
+    <link rel="prev" title="Frequency calculation" href="module_freq.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,7 +58,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Molecular dynamics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dynamics-via-ase">Dynamics via ASE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dynamics-via-openmm-md">Dynamics via OpenMM_MD</a></li>
@@ -153,10 +153,10 @@
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
 <span class="c1">#Simple n-butane system</span>
-<span class="n">butane</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+<span class="n">butane</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized. Using GFN1-xTB.</span>
-<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Running NVE dynamics (initial temp=300 K) on butane using xTBTheory.</span>
 <span class="c1"># 0.001 ps timestep, 100000 steps, writing every 10th step to trajectory. A velocity Verlet algorithm is used.</span>
@@ -190,13 +190,13 @@
 This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
 <p><strong>QM/MM example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-    <span class="n">xtbtheory</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;inputfile&#39;</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+    <span class="n">xtbtheory</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;inputfile&#39;</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
     <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">)</span>
     <span class="n">QMMMTheory</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">xtbtheory</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="n">qm_region</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
     <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMTheory</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-        <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_region</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_region</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -215,9 +215,9 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
 
 <span class="c1">#Simple n-butane system</span>
-<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized</span>
-<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.</span>
 <span class="n">plumed_object</span> <span class="o">=</span> <span class="n">plumed_ASH</span><span class="p">(</span><span class="n">path_to_plumed_kernel</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so&quot;</span><span class="p">,</span>
@@ -239,9 +239,9 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
 
 <span class="c1">#Simple n-butane system</span>
-<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">)</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized</span>
-<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Create ASH-Plumed object. Points to Plumed kernel and defines collective variables etc.</span>
 <span class="n">plumed_object</span> <span class="o">=</span> <span class="n">plumed_ASH</span><span class="p">(</span><span class="n">path_to_plumed_kernel</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/plumed-install-serial/lib/libplumedKernel.so&quot;</span><span class="p">,</span>
@@ -296,7 +296,7 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="module_freq.html" class="btn btn-neutral float-left" title="Numerical Frequencies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="module_freq.html" class="btn btn-neutral float-left" title="Frequency calculation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="neb.html" class="btn btn-neutral float-right" title="Nudged Elastic Band Method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

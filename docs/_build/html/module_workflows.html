@@ -201,7 +201,6 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1">#</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_5.0.2&#39;</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
 
 <span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;n2.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -221,11 +220,11 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
               <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
     <span class="c1">#Example: Thermochemistry protocol on the single N2 species</span>
-<span class="n">thermochemprotocol_single</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span>
+<span class="n">thermochemprotocol_single</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span>
                     <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="n">DLPNO_CC_calc</span><span class="p">)</span>
 
 <span class="c1">#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 =&gt; 2 NH3 reaction</span>
-<span class="n">thermochemprotocol_reaction</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span>
+<span class="n">thermochemprotocol_reaction</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span>
                     <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="n">B3LYP_opt</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="n">DLPNO_CC_calc</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -413,7 +412,7 @@ Corrected interaction energy: -4.359825562958491 kcal/mol
 
 <span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragstrin</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">activespace_dictionary</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">activespace_dictionary</span> <span class="o">=</span> <span class="n">auto_active_space</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;def2-TZVP&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">initial_orbitals</span><span class="o">=</span><span class="s1">&#39;MP2&#39;</span><span class="p">,</span> <span class="n">tgen</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="c1">#Returns dictionary with various active_spaces based on thresholds</span>
 </pre></div>

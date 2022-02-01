@@ -38,13 +38,11 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
     numcores=24
 
     #0. Starting structure and charge and mult
-    molecule = Fragment(xyzfile="ethanol.xyz")
-    charge=0
-    mult=1
+    molecule = Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
 
     #1. Calling crest
     call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, 
-        charge=charge, mult=mult, numcores=numcores)
+        numcores=numcores)
 
     #2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.
     list_conformer_frags, xtb_energies = get_crest_conformers()
@@ -78,26 +76,23 @@ at various levels of theory.
 
     #
     crestdir='/opt/crest'
-    orcadir='/opt/orca_4.2.1'
     numcores=4
     #Fragment to define
     frag=Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
 
     #Defining MLTheory: DFT optimization
-    orcadir='/opt/orca_4.2.1'
     MLsimpleinput="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
     MLblockinput="""
     %scf maxiter 200 end
     """
-    ML_B3LYP = ORCATheory(orcadir=orcadir, orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores, 
-        charge=frag.charge, mult=frag.mult)
+    ML_B3LYP = ORCATheory(orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
-	HL_CC = CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, charge=frag.charge, mult=frag.mult,
+	HL_CC = CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, 
                   pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
-                             HLtheory=HL_CC, orcadir=orcadir, numcores=numcores, charge=frag.charge, mult=frag.mult)
+                             HLtheory=HL_CC, orcadir=orcadir, numcores=numcores)
 
 Final result table of calculated conformers at 3 different theory levels:
 

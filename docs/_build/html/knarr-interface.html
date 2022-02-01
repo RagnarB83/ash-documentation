@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -149,16 +149,17 @@
 <span class="c1">################################################</span>
 <span class="c1"># Defining reactant and product ASH fragment</span>
 <span class="c1">#################################################</span>
-<span class="n">react</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">)</span>
-<span class="n">prod</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;prod.xyz&quot;</span><span class="p">)</span>
 <span class="n">charge</span><span class="o">=</span><span class="mi">0</span>
 <span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">react</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
+<span class="n">prod</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;prod.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
+
 
 <span class="c1">#Theory to use for NEB</span>
-<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">)</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">)</span>
 
 <span class="c1">#Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment</span>
-<span class="n">SP</span> <span class="o">=</span> <span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">react</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">prod</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">SP</span> <span class="o">=</span> <span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">react</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">prod</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span>
 </pre></div>
 </div>
 <p>Restarting a calculation with user-defined path-file.
@@ -172,13 +173,14 @@ The file from a previously unconverged NEB calculation can be used or a converge
 <span class="c1">################################################</span>
 <span class="c1"># Defining reactant and product ASH fragment</span>
 <span class="c1">#################################################</span>
-<span class="n">react</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">)</span>
-<span class="n">prod</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;prod.xyz&quot;</span><span class="p">)</span>
 <span class="n">charge</span><span class="o">=</span><span class="mi">0</span>
 <span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">react</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;react.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
+<span class="n">prod</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;prod.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
+
 
 <span class="c1">#Theory to use for NEB</span>
-<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">restart_file</span><span class="o">=</span><span class="s2">&quot;knarr_MEP.xyz&quot;</span><span class="p">)</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">restart_file</span><span class="o">=</span><span class="s2">&quot;knarr_MEP.xyz&quot;</span><span class="p">)</span>
 
 <span class="c1">#Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment</span>
 <span class="n">SP</span> <span class="o">=</span> <span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">react</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">prod</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>

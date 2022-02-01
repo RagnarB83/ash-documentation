@@ -19,18 +19,18 @@ Set pe=True and give path to potfile to use.
 .. code-block:: python
 
     #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
+    HF_frag=Fragment(xyzfile='hf.xyz', charge=0, mult=1)
     #Psi4 variables defined as a dictionary:
     psi4settings={'scf_type': 'pk', 'soscf': True, 'basis' : 'def2-SVP' }
     psi4method='b3lyp'
 
     #Psi4: Input-file based interface: using psi4dir to set path
     psi4dir='/path/to/psi4_install/bin/psi4'
-    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings=psi4settings, psi4method=psi4method, runmode='psithon',
+    Psi4calc = Psi4Theory(psi4settings=psi4settings, psi4method=psi4method, runmode='psithon',
                                 psi4dir=psi4dir, pe=False, outputname='psi4output.dat', label='psi4input',
                                  psi4memory=3000, prinsetting=False)
     #Psi4: Library-based interface
-    Psi4calc = Psi4Theory(charge=0, mult=1, psi4settings=psi4settings, psi4method=psi4method, runmode='library',
+    Psi4calc = Psi4Theory(psi4settings=psi4settings, psi4method=psi4method, runmode='library',
                                 pe=False, outputname='psi4output.dat', label='psi4input', psi4memory=3000)
 
     #Run a single-point energy job

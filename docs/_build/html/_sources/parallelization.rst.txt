@@ -74,7 +74,7 @@ For multiple theories you instead have to create a list of multiple Theory objec
 	#Create list of ORCATheory objects
 	list_of_orcaobjects=[]
 	for functional in ['B3LYP', 'BP86', 'PBE0', 'M06', 'M06-2X', 'r2SCAN', 'SCAN', 'TPSS', 'PBE', 'PWLDA']:
-	    ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput="! def2-SVP def2/J "+functional, orcablocks="", label=functional)
+	    ORCAcalc = ORCATheory(orcasimpleinput="! def2-SVP def2/J "+functional, orcablocks="", label=functional)
 	    list_of_orcaobjects.append(ORCAcalc)
 
 	#Calling the Singlepoint_parallel function 

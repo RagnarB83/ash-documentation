@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -279,7 +279,6 @@ Make sure the PES-Results.txt is available in the same directory.</p>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">h2o</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2ostring</span><span class="p">)</span>
 
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! B3LYP def2-SVP Grid5 Finalgrid6 tightscf&quot;</span>
 <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="si">%s</span><span class="s2">cf</span>
@@ -288,7 +287,7 @@ Make sure the PES-Results.txt is available in the same directory.</p>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1">#Define ORCA theory. Does not need charge/mult keywords.</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
 <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">h2o</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -315,7 +314,6 @@ Here we show how results with multiple functionals can be obtained at the same t
 <span class="n">functionals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BP86&#39;</span><span class="p">,</span> <span class="s1">&#39;BLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSS&#39;</span><span class="p">,</span> <span class="s1">&#39;TPSSh&#39;</span><span class="p">,</span> <span class="s1">&#39;B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;PBE0&#39;</span><span class="p">,</span> <span class="s1">&#39;BHLYP&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM-B3LYP&#39;</span><span class="p">,</span> <span class="s1">&#39;wB97M-D3BJ&#39;</span><span class="p">,</span> <span class="s1">&#39;HF&#39;</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">functional</span> <span class="ow">in</span> <span class="n">functionals</span><span class="p">:</span>
     <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-&quot;</span><span class="o">+</span><span class="n">functional</span>
-    <span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
     <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP RIJCOSX def2/J GridX5 Grid5 Finalgrid6 tightscf slowconv &quot;</span> <span class="o">+</span> <span class="n">functional</span>
     <span class="n">blocks</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    </span><span class="si">%s</span><span class="s2">cf</span>
@@ -327,7 +325,7 @@ Here we show how results with multiple functionals can be obtained at the same t
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="c1">#Define ORCA theory. Does not need charge/mult keywords.</span>
-    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
     <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
     <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
@@ -421,7 +419,6 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
 <span class="kn">import</span> <span class="nn">PES</span>
 
 <span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-IPEOMCCSD&quot;</span>
 
 <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
@@ -436,7 +433,7 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1">#Define ORCA theory. No charge/mult keywords</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
 <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
@@ -460,7 +457,6 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">6</span>
 <span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-CASSCF&quot;</span>
 
 <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
@@ -474,7 +470,7 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1">#Define ORCA theory. No charge/mult keywords</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
 <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
@@ -500,7 +496,6 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">6</span>
 <span class="n">molecule</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;FeS2-tpssh-opt.xyz&quot;</span><span class="p">)</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">joblabel</span><span class="o">=</span><span class="s2">&quot;FeS2min-MRCI+Q&quot;</span>
 
 <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;! def2-TZVP tightscf &quot;</span>
@@ -510,7 +505,7 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1">#Define ORCA theory. No charge/mult keywords</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="c1">#Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum</span>
 <span class="n">IPs</span><span class="p">,</span> <span class="n">dysonnorms</span> <span class="o">=</span> <span class="n">PES</span><span class="o">.</span><span class="n">PhotoElectronSpectrum</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">InitialState_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Initialstate_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>

@@ -58,7 +58,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -155,13 +155,11 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 <span class="n">numcores</span><span class="o">=</span><span class="mi">24</span>
 
 <span class="c1">#0. Starting structure and charge and mult</span>
-<span class="n">molecule</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;ethanol.xyz&quot;</span><span class="p">)</span>
-<span class="n">charge</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">molecule</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;ethanol.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#1. Calling crest</span>
 <span class="n">call_crest</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">molecule</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="n">crestdir</span><span class="p">,</span>
-    <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+    <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.</span>
 <span class="n">list_conformer_frags</span><span class="p">,</span> <span class="n">xtb_energies</span> <span class="o">=</span> <span class="n">get_crest_conformers</span><span class="p">()</span>
@@ -190,26 +188,23 @@ at various levels of theory.</p>
 
 <span class="c1">#</span>
 <span class="n">crestdir</span><span class="o">=</span><span class="s1">&#39;/opt/crest&#39;</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
 <span class="c1">#Fragment to define</span>
 <span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;ethanol.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Defining MLTheory: DFT optimization</span>
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">MLsimpleinput</span><span class="o">=</span><span class="s2">&quot;! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6&quot;</span>
 <span class="n">MLblockinput</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="si">%s</span><span class="s2">cf maxiter 200 end</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">ML_B3LYP</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">MLsimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">MLblockinput</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span>
-    <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
+<span class="n">ML_B3LYP</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">MLsimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">MLblockinput</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 <span class="c1">#Defining HLTheory: DLPNO-CCSD(T)/CBS</span>
-    <span class="n">HL_CC</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">,</span>
+    <span class="n">HL_CC</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Call confsampler_protocol</span>
 <span class="n">confsampler_protocol</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">crestdir</span><span class="o">=</span><span class="n">crestdir</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2-xTB&#39;</span><span class="p">,</span> <span class="n">MLtheory</span><span class="o">=</span><span class="n">ML_B3LYP</span><span class="p">,</span>
-                         <span class="n">HLtheory</span><span class="o">=</span><span class="n">HL_CC</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="n">frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
+                         <span class="n">HLtheory</span><span class="o">=</span><span class="n">HL_CC</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Final result table of calculated conformers at 3 different theory levels:</p>

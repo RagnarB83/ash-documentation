@@ -175,7 +175,6 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="c1">#the total number of CPU cores available to Ash (should match the job-script)</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">8</span>
 
-<span class="n">orcadir</span><span class="o">=</span><span class="s1">&#39;/opt/orca_4.2.1&#39;</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! HF-3c &quot;</span>
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
 
@@ -186,10 +185,10 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="s2">   H  -2.27350346    0.53131334    0.37379014</span>
 <span class="s2">   F  -4.03235214   -0.44462811    0.05296388</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">reactstring</span><span class="p">)</span>
+<span class="n">Reactant</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">reactstring</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Calculator object without frag. numcores=8 is used here for parallelizing ORCA during optimization.</span>
-<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcadir</span><span class="o">=</span><span class="n">orcadir</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
 <span class="c1">#Geometry optimization of Reactant object and ORCAcalc theory object.</span>
 <span class="c1">#Each Energy+Grad step is parallelized by ORCA.</span>
