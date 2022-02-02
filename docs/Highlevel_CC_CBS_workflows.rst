@@ -195,7 +195,6 @@ The formation enthalpy can also be directly derived by passing the TAE to the fu
 
     #Grabbing atomization energy at 0K (with ZPVE) or 298 K.
     TAE_0K=thermochemdict['deltaE_0']
-    print("TAE_0K:", TAE_0K)
     TAE_298K=thermochemdict['deltaH']
 
     #Calculate Enthalpy of formation from atomization energy
@@ -210,15 +209,6 @@ The formation enthalpy can also be directly derived by passing the TAE to the fu
     print("-"*50)
     print("Experimental deltaH_form(0K): -15.908 kcal/mol")
     print("Experimental deltaH_form(298K): -17.812 kcal/mol")
-
-    #Methane from AtCT
-    #deltaHf (0K) = -15.907504780114722 kcal/mol
-    #deltaHf(298.15K)= -17.812141491395792 kcal/mol
-
-    #TAE from Karton 2007 paper
-    #TAE_electronic = 420.26 kcal/mol
-    #ZPVE = 27.74 kcal/mol
-    #TAE at 0K (with ZPVE) = 392.52 kcal/mol
 
 The results of the atomization reaction energy are printed when the thermochemprotocol_reaction function is finished, and the different contributions can be analyzed.
 Not surprisingly, the SCF-energy contribution dominates (~331 kcal/mol), followed by the CCSD correlation energy (~85 kcal/mol), followed by the ZPVE contribution of ~28 kcal/mol (4 bonds are broken), next is the triples correlation (~2.9 kcal/mol), the core-valence+scalar-relativistic contribution (~1.05 kcal/mol) and the atomic spin-orbit coupling (0.08 kcal/mol).
