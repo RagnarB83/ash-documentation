@@ -184,11 +184,13 @@ The formation enthalpy can also be directly derived by passing the TAE to the fu
 
     #Define Theories
     DFTopt=ORCATheory(orcasimpleinput="!r2scan-3c", numcores=numcores)
-    HL=CC_CBS_Theory(elements=["C","H"], DLPNO=False, basisfamily="cc", cardinals=[3,4], CVSR=True, numcores=numcores, Openshellreference="QRO", atomicSOcorrection=True)
+    HL=CC_CBS_Theory(elements=["C","H"], DLPNO=False, basisfamily="cc", cardinals=[3,4], CVSR=True, 
+        numcores=numcores, Openshellreference="QRO", atomicSOcorrection=True)
 
     #RUn thermochemistry protocol: Opt+Freq using DFTOpt, final energy using HL theory
-    thermochemdict = thermochemprotocol_reaction(fraglist=fragments, stoichiometry=stoichiometry, Opt_theory=DFTopt, SP_theory=HL, numcores=numcores, memory=5000,
-                    analyticHessian=True, temp=298.15, pressure=1.0)
+    thermochemdict = thermochemprotocol_reaction(fraglist=fragments, stoichiometry=stoichiometry, 
+                        Opt_theory=DFTopt, SP_theory=HL, numcores=numcores, memory=5000,
+                            analyticHessian=True, temp=298.15, pressure=1.0)
     print("thermochemdict:", thermochemdict)
 
     #Grabbing atomization energy at 0K (with ZPVE) or 298 K.
