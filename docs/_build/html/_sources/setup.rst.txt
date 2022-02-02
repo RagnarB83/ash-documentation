@@ -54,7 +54,7 @@ B0. The lazy/impatient way to set up ASH (easy but incomplete)
 
 If you are impatient and want to get ASH going immediately without all features enabled.
 
-**Note:** ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, ORCA, xTB)
+**Note:** ASH will complain when you try to use features that require additional installations (e.g. geometric, julia)
 
 1. Download the ASH repository
 2. Make sure there is a python3 interpreter on your system (with numpy)

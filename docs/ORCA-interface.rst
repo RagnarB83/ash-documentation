@@ -5,10 +5,10 @@ ORCATheory class:
 
 .. code-block:: python
     
-    class ORCATheory:
-        def __init__(self, orcadir=None, fragment=None, orcasimpleinput='', orcablocks='', 
-        printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1, extraline='', 
-        brokensym=None, HSmult=None, atomstoflip=None, numcores=1, label=None, moreadfile=None, autostart=True, propertyblock=None):
+  class ORCATheory:
+      def __init__(self, orcadir=None, fragment=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
+                  orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, moreadfile=None, 
+                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False):
 
 
 
@@ -98,6 +98,14 @@ ORCATheory class:
      - string
      - None
      - String containing ORCA-block input (e.g. %eprnmr) that must come after the coordinates.
+   * - ``keep_each_run_output``
+     - Boolean
+     - False
+     - Whether to keep copy of each ORCA outputfile from each run-call (e.g. each Opt-step).
+   * - ``print_population_analysis``
+     - Boolean
+     - False
+     - Whether to print Mulliken population analysis for each step
 
 
 ################################
