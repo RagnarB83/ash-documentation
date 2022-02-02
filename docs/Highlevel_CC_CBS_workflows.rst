@@ -148,6 +148,128 @@ The final FCI/CBS bond dissociation energy calculated by ASH is 228.50 kcal/mol 
 
 
 ##########################################################################################
+Example: Atomization energy and formation enthalpy of Methane
+##########################################################################################
+
+Enthalpies of formation are a common quantity for describing the stability of molecules, referring to the relative energy of the molecule with respect to its elements in their standard state.
+The most direct way of calculating the enthalpy of formation is usually via the atomization energy where one calculates the energy of the molecule relative to its atomic components and then via the known experimental enthalpies of formation of the atoms
+one can derive the enthalpy of formation. Note th
+The atomization energy, however, tends to be the most difficult quantity to calculate accurately as it requires the calculation to accurately capture all associated electron correlation effects, possible relativistic and vibratational effects.
+
+Atomization energies and formation enthalpies can be straightforwardly calculated in ASH, via the tools of : CC_CBS_Theory, thermochemprotol_reaction function and the FormationEnthalpy function.
+
+Shown below is a script for calculating the atomization energy of methane.
+As before, we must create the necessary fragments: methane, C and H (making sure to specify the correct spin multiplicites).
+We can then organize the fragments in a list and define the stoichiometry of the atomization reaction: CH4 -> C + 4H
+
+Here we use the thermochemprotocol_reaction to carry out all steps of the reaction: including geometry optimization of each species at the DFT-level (only methane in this case), calculate the Hessian (also with DFT) and derive ZPVE and thermal corrections as well as a high-level single-point calculation
+at the CCSD(T)/CBS level of theory that includes corrections for core-valence+ scalar relativistic effects. We even include a correction for atomic spin-orbit correction.
+thermochemprotocol_reaction will return a dictionary of the results from which we can find the total atomization energy at 0 K (TAE_0K) with ZPVE included or at 298.15 K.
+
+The formation enthalpy can also be directly derived by passing the TAE to the function FormationEnthalpy along with the list of fragments, stoichiometry and specifying whether the enthalpy of formation at 0K or 298.15 K is desired.
+
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
+
+    #Define fragments
+    methane=Fragment(xyzfile="methane.xyz", charge=0, mult=1)
+    C=Fragment(atom="C", charge=0, mult=3)
+    H=Fragment(atom="H", charge=0, mult=2)
+    fragments=[methane,C,H] #Combining into a list
+    stoichiometry=[-1,1,4] #Defining stoichiometry of reaction, here atomization reaction
+
+    #Define Theories
+    DFTopt=ORCATheory(orcasimpleinput="!r2scan-3c", numcores=numcores)
+    HL=CC_CBS_Theory(elements=["C","H"], DLPNO=False, basisfamily="cc", cardinals=[3,4], CVSR=True, numcores=numcores, Openshellreference="QRO", atomicSOcorrection=True)
+
+    #RUn thermochemistry protocol: Opt+Freq using DFTOpt, final energy using HL theory
+    thermochemdict = thermochemprotocol_reaction(fraglist=fragments, stoichiometry=stoichiometry, Opt_theory=DFTopt, SP_theory=HL, numcores=numcores, memory=5000,
+                    analyticHessian=True, temp=298.15, pressure=1.0)
+    print("thermochemdict:", thermochemdict)
+
+    #Grabbing atomization energy at 0K (with ZPVE) or 298 K.
+    TAE_0K=thermochemdict['deltaE_0']
+    print("TAE_0K:", TAE_0K)
+    TAE_298K=thermochemdict['deltaH']
+
+    #Calculate Enthalpy of formation from atomization energy
+    deltaH_form_0K = FormationEnthalpy(TAE_0K, fragments, stoichiometry, RT=False)
+    deltaH_form_298K = FormationEnthalpy(TAE_298K, fragments, stoichiometry, RT=True)
+
+
+    print("\n FINAL RESULTS")
+    print("="*50)
+    print("\n\nCalculated deltaH_form_0K:", deltaH_form_0K)
+    print("Calculated deltaH_form_298K:", deltaH_form_298K)
+    print("-"*50)
+    print("Experimental deltaH_form(0K): -15.908 kcal/mol")
+    print("Experimental deltaH_form(298K): -17.812 kcal/mol")
+
+    #Methane from AtCT
+    #deltaHf (0K) = -15.907504780114722 kcal/mol
+    #deltaHf(298.15K)= -17.812141491395792 kcal/mol
+
+    #TAE from Karton 2007 paper
+    #TAE_electronic = 420.26 kcal/mol
+    #ZPVE = 27.74 kcal/mol
+    #TAE at 0K (with ZPVE) = 392.52 kcal/mol
+
+The results of the atomization reaction energy are printed when the thermochemprotocol_reaction function is finished, and the different contributions can be analyzed.
+Not surprisingly, the SCF-energy contribution dominates (~331 kcal/mol), followed by the CCSD correlation energy (~85 kcal/mol), followed by the ZPVE contribution of ~28 kcal/mol (4 bonds are broken), next is the triples correlation (~2.9 kcal/mol), the core-valence+scalar-relativistic contribution (~1.05 kcal/mol) and the atomic spin-orbit coupling (0.08 kcal/mol).
+
+.. code-block:: text
+
+    FINAL REACTION ENERGY:
+    Enthalpy and Gibbs Energies for  T=298.15 and P=1.0
+    --------------------------------------------------------------------------------
+    Reaction_energy(Total ΔE_el):  420.66773231352124 kcalpermol
+    Reaction_energy(Total Δ(E+ZPVE)):  392.7051331837455 kcalpermol
+    Reaction_energy(Total ΔH(T=298.15):  397.6771692269534 kcalpermol
+    Reaction_energy(Total ΔG(T=298.15):  368.7274457120811 kcalpermol
+    --------------------------------------------------------------------------------
+    Individual contributions
+    Reaction_energy(ΔZPVE):  -27.9625991297763 kcalpermol
+    Reaction_energy(ΔHcorr):  -22.99056308656977 kcalpermol
+    Reaction_energy(ΔGcorr):  -51.940286601441855 kcalpermol
+    --------------------------------------------------------------------------------
+    Reaction_energy(ΔSCF):  331.4715014776347 kcalpermol
+    Reaction_energy(ΔCCSD):  85.28909223866452 kcalpermol
+    Reaction_energy(Δ(T)):  2.9421185749646073 kcalpermol
+    Reaction_energy(ΔCCSD+Δ(T) corr):  88.23121081362918 kcalpermol
+    Reaction_energy(ΔSO):  -0.08457346517516597 kcalpermol
+    Reaction_energy(ΔCV+SR):  1.0495934874310884 kcalpermol
+    --------------------------------------------------------------------------------
+
+The total atomization at 0 K (with ZPVE) is 392.7 kcal/mol which is in excellent agreement with the rigourous theoretical 392.5 kcal/mol estimate by Karton et al. https://www.sciencedirect.com/science/article/abs/pii/S0166128007000565
+As discussed in the paper by Karton et al., there are also other contributions that could be accounted for (not included in our calculations) such as the effects of higher-order correlation effects 
+(full triples, quadruple and quintuple excitation effects), diagonal Born-Oppenheimer correction as well as a more accurate harmonic ZPVE (via CCSD(T)) and anharmonic effects.
+Luckily, those other effects tend to be small or they happen to effectively cancel each other out (higher order correlation effects in particular).
+
+Finally we can derive the enthalpy of formation at either 0K or 298.15 K by calling the FormationEnthalpy function and giving the TAE as input as well as the list of fragments and stoichiometry.
+The FormationEnthalpy function includes high-accuracy enthalpies of formation of maingroup atoms from the Active Thermochemical Tables project (https://atct.anl.gov)
+
+.. code-block:: python
+
+    #Calculate Enthalpy of formation from atomization energy
+    deltaH_form_0K = FormationEnthalpy(TAE_0K, fragments, stoichiometry, RT=False)
+    deltaH_form_298K = FormationEnthalpy(TAE_298K, fragments, stoichiometry, RT=True)
+
+The final results are in excellent agreement with experiment with a deviation of 0.1-0.25 kcal/mol.
+
+.. code-block:: text
+
+    Calculated deltaH_form_0K: -16.143469706881206
+    Calculated deltaH_form_298K: -17.926930207374085
+    --------------------------------------------------
+    Experimental deltaH_form(0K): -15.908 kcal/mol
+    Experimental deltaH_form(298K): -17.812 kcal/mol
+
+
+##########################################################################################
 Example: CCSD(T) and DLPNO-CCSD(T)/CBS calculations on threshold energy of chlorobenzene
 ##########################################################################################
 
