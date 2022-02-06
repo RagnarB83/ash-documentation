@@ -71,10 +71,17 @@ For pure classical forcefield-based MD it is recommended to run the dynamics via
 .. code-block:: python
 
 	from ash import *
-	openmmobject = OpenMMTheory(cluster_fragment=Cluster, ASH_FF_file="Cluster_forcefield.ff")
 
-	OpenMM_MD(fragment=Cluster, theory=openmmobject, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
-	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1)
+	#Fragment
+	frag=Fragment(xyzfile="frag.xyz")
+	#Defining frozen region. Taking difference of all-atom region and active region
+	actatoms=[14,15,16]
+	frozen_atoms=listdiff(frag.allatoms,actatoms)
+
+	openmmobject = OpenMMTheory(cluster_fragment=frag, ASH_FF_file="Cluster_forcefield.ff", frozen_atoms=frozen_atoms)
+
+	OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
+	    integrator='LangevinIntegrator', coupling_frequency=1)
 
 
 For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use OpenMM_MD to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce)
@@ -85,13 +92,20 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 .. code-block:: python
 
 	from ash import *
+
+	#Fragment
+	frag=Fragment(xyzfile="frag.xyz")
+	#Defining frozen region. Taking difference of all-atom region and active region
+	actatoms=[14,15,16]
+	frozen_atoms=listdiff(frag.allatoms,actatoms)
+
 	xtbtheory = xTBTheory(runmode='inputfile', xtbmethod='GFN2', numcores=numcores)
-	openmmobject = OpenMMTheory(cluster_fragment=Cluster, ASH_FF_file="Cluster_forcefield.ff")
-	QMMMTheory = QMMMTheory(fragment=Cluster, qm_theory=xtbtheory, mm_theory=openmmobject,
+	openmmobject = OpenMMTheory(cluster_fragment=frag, ASH_FF_file="Cluster_forcefield.ff", frozen_atoms=frozen_atoms)
+	QMMMTheory = QMMMTheory(fragment=frag, qm_theory=xtbtheory, mm_theory=openmmobject,
     qmatoms=qm_region, embedding='Elstat', numcores=numcores)
 
-	OpenMM_MD(fragment=Cluster, theory=QMMMTheory, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
-	    frozen_atoms=frozen_region, integrator='LangevinIntegrator', coupling_frequency=1, charge=0, mult=1)
+	OpenMM_MD(fragment=frag, theory=QMMMTheory, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
+	    integrator='LangevinIntegrator', coupling_frequency=1, charge=0, mult=1)
 
 
 
