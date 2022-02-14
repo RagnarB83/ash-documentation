@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>xTB interface &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -131,7 +130,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="xtb-interface">
+  <div class="section" id="xtb-interface">
 <h1>xTB interface<a class="headerlink" href="#xtb-interface" title="Permalink to this headline"></a></h1>
 <p>xTBTheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">xTBTheory</span><span class="p">:</span>
@@ -227,7 +226,7 @@
 It requires first installation of xtb-python (<a class="reference external" href="https://xtb-python.readthedocs.io/en/latest/installation.html">https://xtb-python.readthedocs.io/en/latest/installation.html</a>), e.g. via conda: conda install -c conda-forge xtb-python</p>
 <p>The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by ASH.
 For regular jobs, e.g. geometry optimizations, the speed-difference between interfaces will probably not matter.</p>
-<section id="finding-the-xtb-program">
+<div class="section" id="finding-the-xtb-program">
 <h2>Finding the xTB program<a class="headerlink" href="#finding-the-xtb-program" title="Permalink to this headline"></a></h2>
 <p>ASH can find the xTB program in a few different ways. For the inputfile-based runmode:</p>
 <ul class="simple">
@@ -236,8 +235,8 @@ For regular jobs, e.g. geometry optimizations, the speed-difference between inte
 <li><p>If xtbdir has also not been defined there, ASH will search the PATH environment variable for an executable “xtb” and if found will set the xtbdir accordingly. This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple version of the program available.</p></li>
 </ul>
 <p>runmode=’library’ on the other hand requires the installation of the xtb-python interface to your Python environment. ASH will check and complain if it does not find the library.</p>
-</section>
-<section id="examples">
+</div>
+<div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
 <p>To use either interface is quite simple, when an xTB object is created, the xtbmethod keyword is used to select xTB method: “GFN2”, “GFN1” for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
 The optional runmode argument is also available: runmode=’library’ or runmode=’inputfile’. Default runmode: “inputfile”</p>
@@ -251,13 +250,13 @@ The optional runmode argument is also available: runmode=’library’ or runmod
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xTBcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span> <span class="n">Grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="parallelization">
+</div>
+<div class="section" id="parallelization">
 <h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline"></a></h2>
 <p>The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the numcores keyword.
 Currently OMP threads are set equal to numcores and MKL threads are set equal to 1.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

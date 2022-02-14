@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MOLCRYS: Automatic QM/MM for Molecular Crystals &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -138,7 +137,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="molcrys-automatic-qm-mm-for-molecular-crystals">
+  <div class="section" id="molcrys-automatic-qm-mm-for-molecular-crystals">
 <h1>MOLCRYS: Automatic QM/MM for Molecular Crystals<a class="headerlink" href="#molcrys-automatic-qm-mm-for-molecular-crystals" title="Permalink to this headline"></a></h1>
 <p>The molecular crystal QM/MM method in <strong>ASH</strong> is based on the work described
 in articles by Bjornsson et al.</p>
@@ -195,7 +194,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 <div class="line">- Polarizable embedding</div>
 <div class="line">- Proper parallelization of Numerical frequencies.</div>
 </div>
-<section id="molcrys-function-creating-a-cluster">
+<div class="section" id="molcrys-function-creating-a-cluster">
 <h2>MOLCRYS function: Creating a cluster<a class="headerlink" href="#molcrys-function-creating-a-cluster" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">molcrys</span><span class="p">(</span><span class="n">cif_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtl_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xyz_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell_angles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">fragmentobjects</span><span class="o">=</span><span class="p">[],</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">clusterradius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -247,8 +246,8 @@ using cell_length and cell_angles keywords.</p>
     <span class="n">cluster_type</span><span class="o">=</span><span class="s1">&#39;supercell&#39;</span><span class="p">,</span> <span class="n">supercell_expansion</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">chargemodel</span><span class="o">=</span><span class="s1">&#39;CM5&#39;</span><span class="p">,</span> <span class="n">shortrangemodel</span><span class="o">=</span><span class="s1">&#39;UFF_all&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">
+</div>
+<div class="section" id="molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file">
 <h2>MOLCRYS Example: Spherical QM/MM Cluster setup from CIF-file<a class="headerlink" href="#molcrys-example-spherical-qm-mm-cluster-setup-from-cif-file" title="Permalink to this headline"></a></h2>
 <p>Here we show how to use the <strong>MOLCRYS</strong> code for an example Na<sup>+</sup> [H<sub>2</sub>PO<sub>4</sub>] <sup>-</sup> crystal. This molecular crystal contains 2 fragment-types:
 Na<sup>+</sup> and H<sub>2</sub>PO<sub>4</sub><sup>-</sup> </p>
@@ -370,8 +369,8 @@ If using the ORCA interface, the last orca-input.inp and orca-input.pc files cre
 can also directly be used to run a single-point electrostatically-embedded property calculation with ORCA
 (note: not a geometry optimization though) as they contain the QM-coordinates of the central fragment (orca-input.inp) and
 the MM coordinates and self-consistent pointcharges (orca-input.pc).</p>
-</section>
-<section id="molcrys-qm-mm-geometry-optimization">
+</div>
+<div class="section" id="molcrys-qm-mm-geometry-optimization">
 <h2>MOLCRYS: QM/MM Geometry optimization<a class="headerlink" href="#molcrys-qm-mm-geometry-optimization" title="Permalink to this headline"></a></h2>
 <p>To run a QM/MM geometry optimization, this can be done separately by preparing a regular <strong>ASH</strong> QM/MM inputfile and read in
 the Cluster fragment file and the forcefield file, Cluster_forcefield.ff.
@@ -437,8 +436,8 @@ First the Cluster fragment would be read in:</p>
 </pre></div>
 </div>
 <p>One would then manually define variables charge, mult (of the main fragment) as <em>fragmentobjects</em> would not be available.</p>
-</section>
-<section id="molcrys-expanded-qm-region-calculation">
+</div>
+<div class="section" id="molcrys-expanded-qm-region-calculation">
 <h2>MOLCRYS: Expanded QM region calculation<a class="headerlink" href="#molcrys-expanded-qm-region-calculation" title="Permalink to this headline"></a></h2>
 <p>For either a QM/MM geometry optimization or a QM/MM single-point property calculation (see below), the QM-region does
 not have to be a single fragment. If the qmatoms list and the actatoms list (for optimizations) is modified, then a larger
@@ -460,8 +459,8 @@ job or a single-point property job.
 The radius variable would have to be tweaked and the result inspected to get appropriately sized and shaped QM-clusters.</p>
 <p><strong>Note:</strong> The charge and multiplicity keywords probably need to be changed for the new QM-cluster calculations.</p>
 <p>TODO: Create standalone QMregionfragexpand script.</p>
-</section>
-<section id="molcrys-property-calculation">
+</div>
+<div class="section" id="molcrys-property-calculation">
 <h2>MOLCRYS: Property calculation<a class="headerlink" href="#molcrys-property-calculation" title="Permalink to this headline"></a></h2>
 <p>A QM/MM molecular/spectroscopic property calculations can be carried either using <strong>ASH</strong> or using the QM program directly.
 If using ORCA, the appropriate property keywords can be added to orcasimpleinput or orcablocks variables in <strong>ASH</strong> that will be passed onto ORCA.</p>
@@ -509,8 +508,8 @@ object to the Singlepoint function. Make sure to specify the desired Cluster obj
 or the optimization can be used to run a single-point property job using ORCA directly. If the inputfile came from the optimization job then it contains
 optimized QM coordinates and the pointcharge-file should contain the self-consistently determined pointcharges for the full cluster.
 Thus a simple modification to the inputfile would only be required to run a property job using all functionality available in ORCA.</p>
-</section>
-<section id="molcrys-reaction-path-and-saddle-point-finding-via-neb-method">
+</div>
+<div class="section" id="molcrys-reaction-path-and-saddle-point-finding-via-neb-method">
 <h2>MOLCRYS: Reaction path and saddle-point finding via NEB method<a class="headerlink" href="#molcrys-reaction-path-and-saddle-point-finding-via-neb-method" title="Permalink to this headline"></a></h2>
 <p>Due to an interface to the Knarr program, NEB calculations (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> for general info) can easily be performed in <strong>ASH</strong>.
 This is even possible for a QM/MM Hamiltonian and for a molecular crystal system like here.
@@ -613,12 +612,12 @@ It is found in both knarr.energy, outputfile, header line of knarr_saddle.xyz, S
 <p>Ash fragment file for saddlepoint (full coordinates):
 Saddlepoint-optimized.ygg</p>
 <p><strong>4. Confirm saddlepoint via numerical frequencies. See below.</strong></p>
-</section>
-<section id="molcrys-numerical-qm-mm-frequencies">
+</div>
+<div class="section" id="molcrys-numerical-qm-mm-frequencies">
 <h2>MOLCRYS: Numerical QM/MM frequencies<a class="headerlink" href="#molcrys-numerical-qm-mm-frequencies" title="Permalink to this headline"></a></h2>
 <p>Available. Needs to be tested…</p>
-</section>
-<section id="molcrys-fragment-identification-connectivity-issues">
+</div>
+<div class="section" id="molcrys-fragment-identification-connectivity-issues">
 <h2>MOLCRYS: Fragment identification/Connectivity issues<a class="headerlink" href="#molcrys-fragment-identification-connectivity-issues" title="Permalink to this headline"></a></h2>
 <p>If there are difficulties in obtaining the correct fragment identification from the CIF file, first check that the CIF file is correct:</p>
 <div class="line-block">
@@ -632,12 +631,12 @@ Start by playing around with the tol parameter, try values between 0 to 0.5
 The scaling parameter can also be used, though often it is less useful.
 Often, modifying the covalent radius of an element (see above example for Na+) works well.</p>
 <p>The auto_connectivity=True feature should usually work.</p>
-</section>
-<section id="molcrys-molecular-dynamics">
+</div>
+<div class="section" id="molcrys-molecular-dynamics">
 <h2>MOLCRYS: Molecular Dynamics<a class="headerlink" href="#molcrys-molecular-dynamics" title="Permalink to this headline"></a></h2>
 <p>Not yet ready</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

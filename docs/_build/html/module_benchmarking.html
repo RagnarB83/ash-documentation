@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Benchmarking in ASH &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -133,7 +132,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="benchmarking-in-ash">
+  <div class="section" id="benchmarking-in-ash">
 <h1>Benchmarking in ASH<a class="headerlink" href="#benchmarking-in-ash" title="Permalink to this headline"></a></h1>
 <p>ASH contains convenient tools to do energy-benchmarking over test sets.
 Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
@@ -155,7 +154,7 @@ Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
 <li><p>IE-Pantazis (from <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b00252">Isegawa et al.</a>, reference-data: experiment)</p></li>
 <li><p>IE-benzenes (reference-data: experiment)</p></li>
 </ul>
-<section id="the-module-benchmarking-module">
+<div class="section" id="the-module-benchmarking-module">
 <h2>The module_benchmarking module<a class="headerlink" href="#the-module-benchmarking-module" title="Permalink to this headline"></a></h2>
 <p>The module_benchmarking module contains :</p>
 <blockquote>
@@ -164,8 +163,8 @@ Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
 <li><p>run_geobenchmark (not ready)</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="the-run-benchmark-function">
+</div>
+<div class="section" id="the-run-benchmark-function">
 <h2>The run_benchmark function<a class="headerlink" href="#the-run-benchmark-function" title="Permalink to this headline"></a></h2>
 <p>The run_benchmark function needs at minimum the set keyword argument and either a theory or workflow argument.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reuseorbs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">corrections</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -177,8 +176,8 @@ Available test sets are in ASH-dir/databases/Benchmarking-sets.</p>
 <li><p>reuseorbs: Whether orbitals should be reused for each species in reaction. Only makes sense if geometries are similar (e.g. IE/EA reactions). Boolean True/False.</p></li>
 <li><p>corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats. Can also be defined within testset.</p></li>
 </ul>
-</section>
-<section id="running-a-test-set-with-a-chosen-qmtheory">
+</div>
+<div class="section" id="running-a-test-set-with-a-chosen-qmtheory">
 <h2>Running a test set with a chosen QMtheory<a class="headerlink" href="#running-a-test-set-with-a-chosen-qmtheory" title="Permalink to this headline"></a></h2>
 <p>Running a test set is easy. First define a theory object (e.g. an ORCATheory object).
 Then call the run_benchmark function choosing a specific testset as set keyword argument and the theory object as theory keyword argument.
@@ -225,8 +224,8 @@ Unit: eV
  MaxError         -0.2093 eV
 </pre></div>
 </div>
-</section>
-<section id="running-a-test-set-with-a-highlevel-theory-workflow">
+</div>
+<div class="section" id="running-a-test-set-with-a-highlevel-theory-workflow">
 <h2>Running a test set with a highlevel theory workflow<a class="headerlink" href="#running-a-test-set-with-a-highlevel-theory-workflow" title="Permalink to this headline"></a></h2>
 <p>The test set can also be run with a high-level workflow (multi-step theory).
 See <a class="reference internal" href="module_highlevel_workflows.html"><span class="doc">Highlevel workflows</span></a></p>
@@ -238,8 +237,8 @@ See <a class="reference internal" href="module_highlevel_workflows.html"><span c
 <span class="n">run_benchmark</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s2">&quot;IE-benzenes&quot;</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">DLPNO_CC_calc</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="creating-or-modifying-a-test-set">
+</div>
+<div class="section" id="creating-or-modifying-a-test-set">
 <h2>Creating or modifying a test set<a class="headerlink" href="#creating-or-modifying-a-test-set" title="Permalink to this headline"></a></h2>
 <p>Each directory inside ASH-dir/databases/Benchmarking-sets is a separate benchmarking database for a group of molecular reactions.
 Each testset-directory, e.g. “IE-benzenes” should contain a README file and a directory called data.
@@ -296,8 +295,8 @@ This correction can e.g. be ZPE, total enthalpy-correction, total free-energy co
 5 0.010
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

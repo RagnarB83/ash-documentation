@@ -37,6 +37,7 @@ The plot shows how the total electronic energy of N2 gets lower with increasing 
 refers the basis-set size: e.g. 2 is a double-zeta basis set (cc-pVDZ or def2-SVP). Note the difference between cc-pVDZ and def2-SVP, in this case the cc-pVDZ is clearly a better basis set (basis set error of ~92 vs. 155 kcal/mol).
 At the triple-zeta and quadruple-zeta level there is little difference between the def2 basis sets and the cc basis sets (for this system) giving estimated basis set errors of ~30 (TZ) and ~11 kcal/mol (QZ).
 However, there is still a considerable basis set error present in all calculations and it is only at the cc-pV6Z level that a hint of convergence is seen. This demonstrates well the problem of converging the total energy, especially the correlation energy part in correlated wavefunction calculations.
+These single-basis CCSD(T) calculations can either be performed using ORCATheory or alternatively via CC_CBS_Theory like this:
 
 .. code-block:: python
     
@@ -44,7 +45,7 @@ However, there is still a considerable basis set error present in all calculatio
     cc = CC_CBS_Theory(elements=["N"], cardinals = [2], basisfamily="cc") # This is a CCSD(T)/cc-pVDZ calculation
     Singlepoint(theory=cc, fragment=N2)
 
-The convergence of the explicitly correlated CCSD(T)-F12 calculations using the cc-pVDZ-F12, cc-pVTZ-F12 and cc-PVQZ-F12 basis sets shows a considerably improvement, seemingly converging much faster to the CBS limit.
+The convergence of the explicitly correlated CCSD(T)-F12 calculations using the cc-pVDZ-F12, cc-pVTZ-F12 and cc-PVQZ-F12 basis sets shows a considerable improvement, seemingly converging much faster to the CBS limit.
 Note, however a caveat: F12 basis sets of the same cardinal number (e.g. cc-pVDZ-F12 vs. cc-pVDZ) are generally larger in size and the F12 correction also comes with considerable overhead. 
 The F12 calculations were performed like this:
 
@@ -67,17 +68,19 @@ The extrapolations were performed like this:
 where basisfamily are either "cc" or "def2" and cardinals were [2,3] (CBS-cc-23, CBS-def2-23), [3,4] (CBS-cc-34, CBS-def2-34), [4,5] (CBS-cc-45) or [5,6] (CBS-cc-56)
 
 The advantage of CBS extrapolations for the total energy of N2 is obvious. All extrapolations lead to considerably lower energies than the individual basis set calculations and appear to converge well around an estimated CBS limit.
-Note that an exact estimate of the basis set limit is not always completely clear. One might assume that it lies somwehere close to the CCSD(T)/cc-pV6Z, CCSD(T)-F12/cc-pVQZ-F12 and CBS-cc-56 values:
-E(cc-pV6Z): -109.4177701
-E(cc-pVQZ-F12): -109.4202075
-E(CBS-cc-56): -109.4225008
+Note that an exact estimate of the basis set limit is not always completely clear. One might assume that it lies somewhere close to the CCSD(T)/cc-pV6Z, CCSD(T)-F12/cc-pVQZ-F12 and CBS-cc-56 values:
+
+- E(cc-pV6Z): -109.4177701
+- E(cc-pVQZ-F12): -109.4202075
+- E(CBS-cc-56): -109.4225008
+
 Most likely there is still a systematic basis-set error present in the cc-pV6Z result (giving a higher energy than the CBS limit), and probably also in the CCSD(T)-F12 calculation (plus some numerical noise of either sign due to the F12 correction).
 The extrapolated numbers should be more accurate the higher the cardinal numbers (i.e. CBS-cc-56 being the best) but there will also be some numerical error due to the nature of the extrapolation (dependence on extrapolation parameters) and that error could be of either sign.
 Most likely, however, the CBS-cc-56 number is closest to the exact CBS limit.
 
 **Converging the reaction energy**
 
-These total energies nonetheless have a spread of ~3 kcal/mol, again highlighting how difficult it is to converge the total electronic energy even when using very large basis sets.
+The best-estimate total energies candidates nonetheless have a spread of ~3 kcal/mol, again highlighting how difficult it is to converge the total electronic energy even when using very large basis sets.
 Luckily for reaction energies, most of the remaining basis set error is highly systematic and cancels out in most applications.
 Let's now do the same comparison for the bond-dissociation energy of N2 (the energy of the reaction: N2 => 2N) instead.
 
@@ -85,14 +88,15 @@ Let's now do the same comparison for the bond-dissociation energy of N2 (the ene
    :align: center
    :width: 700
 
-The BDE calculations were carried out in ASH like this:
+The BDE calculations can be carried out in ASH like this:
 
 .. code-block:: python
     
     N2=Fragment(xyzfile='n2.xyz', charge=0, mult=1)
     N=Fragment(atom=['N'],charge=0, mult=4)
+    specieslist=[N2,N]
     cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc") # This is CBS-cc-23
-    Singlepoint(theory=cc, fragment=N2)
+    energies = Singlepoint_fragments(theory=cc, fragments=specieslist, stoichiometry=[-1,2])
 
 The results for the BDE show overall similar trends but reveal how much easier it is to converge relative reaction energies to the basis set limit than total energies. 
 The CCSD(T)/cc-pVDZ BDE is ~27 kcal/mol away from an estimated CBS BDE (here taken as CBS-cc-56) instead of ~92 kcal/mol for the N2 total energy. 
@@ -114,6 +118,12 @@ The CCSD(T)(FC) value in the table is 227.2+/-0.2 kcal/mol and was obtained by a
 The agreement between our calculation and theirs is excellent. The experimental BDE of N2 (corrected for ZPE) is 228.4 kcal/mol.
 The remaining ~1.2 kcal/mol deviation comes primarily from core-valence correlation (~0.8 kcal/mol), CCSDTQ correlation (~0.4 kcal/mol), 
 additional FCI correlation (~0.05 kcal/mol) and scalar relativistic effects (-0.1 kcal/mol) as shown in the paper.
+
+All the calculations in this section and automatic creation of the plots
+can be automatically performed using scripts available in: ASH_SOURCE_DIR/examples/workflows/highlevel-thermochemistry/N2-BDE
+
+The  *Reaction-general-bigscript.py* script is a verbose manual version while
+the *Reaction-general-function.py* script shows how to utilize the function **Reaction_Highlevel_Analysis** (see :doc:`module_highlevel_workflows`).
 
 **Accounting for higher-order effects**
 
@@ -162,11 +172,11 @@ Shown below is a script for calculating the atomization energy of methane.
 As before, we must create the necessary fragments: methane, C and H (making sure to specify the correct spin multiplicites).
 We can then organize the fragments in a list and define the stoichiometry of the atomization reaction: CH4 -> C + 4H
 
-Here we use the thermochemprotocol_reaction to carry out all steps of the reaction: including geometry optimization of each species at the DFT-level (only methane in this case), calculate the Hessian (also with DFT) and derive ZPVE and thermal corrections as well as a high-level single-point calculation
+Here we use the **thermochemprotocol_reaction** function to carry out all steps of the reaction: including geometry optimization of each species at the DFT-level (only methane in this case), calculate the Hessian (also with DFT) and derive ZPVE and thermal corrections as well as a high-level single-point calculation
 at the CCSD(T)/CBS level of theory that includes corrections for core-valence+ scalar relativistic effects. We even include a correction for atomic spin-orbit correction.
-thermochemprotocol_reaction will return a dictionary of the results from which we can find the total atomization energy at 0 K (TAE_0K) with ZPVE included or at 298.15 K.
+**thermochemprotocol_reaction** will return a dictionary of the results from which we can find the total atomization energy at 0 K (TAE_0K) with ZPVE included or at 298.15 K.
 
-The formation enthalpy can also be directly derived by passing the TAE to the function FormationEnthalpy along with the list of fragments, stoichiometry and specifying whether the enthalpy of formation at 0K or 298.15 K is desired.
+The formation enthalpy can also be directly derived by passing the TAE to the function **FormationEnthalpy** along with the list of fragments, stoichiometry and specifying whether the enthalpy of formation at 0K or 298.15 K is desired.
 
 
 .. code-block:: python
@@ -211,7 +221,7 @@ The formation enthalpy can also be directly derived by passing the TAE to the fu
     print("Experimental deltaH_form(298K): -17.812 kcal/mol")
 
 The results of the atomization reaction energy are printed when the thermochemprotocol_reaction function is finished, and the different contributions can be analyzed.
-Not surprisingly, the SCF-energy contribution dominates (~331 kcal/mol), followed by the CCSD correlation energy (~85 kcal/mol), followed by the ZPVE contribution of ~28 kcal/mol (4 bonds are broken), next is the triples correlation (~2.9 kcal/mol), the core-valence+scalar-relativistic contribution (~1.05 kcal/mol) and the atomic spin-orbit coupling (0.08 kcal/mol).
+Not surprisingly, the SCF-energy contribution dominates (~331 kcal/mol), followed by the CCSD correlation energy (~85 kcal/mol), followed by the ZPVE contribution of ~28 kcal/mol (relatively large since 4 bonds are broken), next is the triples correlation (~2.9 kcal/mol), the core-valence+scalar-relativistic contribution (~1.05 kcal/mol) and the atomic spin-orbit coupling (0.08 kcal/mol).
 
 .. code-block:: text
 
@@ -241,8 +251,8 @@ As discussed in the paper by Karton et al., there are also other contributions t
 (full triples, quadruple and quintuple excitation effects), diagonal Born-Oppenheimer correction as well as a more accurate harmonic ZPVE (via CCSD(T)) and anharmonic effects.
 Luckily, those other effects tend to be small or they happen to effectively cancel each other out (higher order correlation effects in particular).
 
-Finally we can derive the enthalpy of formation at either 0K or 298.15 K by calling the FormationEnthalpy function and giving the TAE as input as well as the list of fragments and stoichiometry.
-The FormationEnthalpy function includes high-accuracy enthalpies of formation of maingroup atoms from the Active Thermochemical Tables project (https://atct.anl.gov)
+Finally we can derive the enthalpy of formation at either 0K or 298.15 K by calling the **FormationEnthalpy** function and giving the TAE as input as well as the list of fragments and stoichiometry.
+The **FormationEnthalpy** function includes high-accuracy enthalpies of formation of maingroup atoms from the Active Thermochemical Tables project (https://atct.anl.gov)
 
 .. code-block:: python
 

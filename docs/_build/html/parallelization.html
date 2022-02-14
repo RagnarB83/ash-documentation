@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parallelization in ASH &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -129,7 +128,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="parallelization-in-ash">
+  <div class="section" id="parallelization-in-ash">
 <h1>Parallelization in ASH<a class="headerlink" href="#parallelization-in-ash" title="Permalink to this headline"></a></h1>
 <p>ASH can utilize parallelization in a few different ways: either via independent parallelization of the external QM program or MM program or via Python multiprocessing (running independent jobs in parallel).
 For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created contains parallelization information)
@@ -139,7 +138,7 @@ OpenMM and some QM programs may utilize simpler threads-based parallelization. T
 <p>note: for OpenMM the number of threads needs to be set up outside ASH (jobscript)</p>
 <p>Some parts of ASH are parallelized by the Python multiprocessing library. This allows many independent calculations to be run simultaneously via the Pool feature of the multiprocessing library.
 ASH modules that use multiprocessing parallelization are currently: NumFreq and Singlepoint_parallel (see below).</p>
-<section id="singlepoint-parallel">
+<div class="section" id="singlepoint-parallel">
 <h2>Singlepoint_parallel<a class="headerlink" href="#singlepoint-parallel" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragmentfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mofilesdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
@@ -196,8 +195,8 @@ To do this using Singlepoint_parallel you would just need to create a list of AS
 <li><p><strong>multiple theories for multiple fragments</strong></p></li>
 </ul>
 <p>TODO: This is currently not available</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

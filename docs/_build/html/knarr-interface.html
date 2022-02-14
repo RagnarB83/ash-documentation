@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KNARR interface &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -129,7 +128,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="knarr-interface">
+  <div class="section" id="knarr-interface">
 <h1>KNARR interface<a class="headerlink" href="#knarr-interface" title="Permalink to this headline"></a></h1>
 <p>State of the art nudged elastic band (NEB) calculations are possible in ASH using any theory level via an interface to the KNARR code.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">CI</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">free_end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">restart_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -139,7 +138,7 @@
 </pre></div>
 </div>
 <p>TODO: Document options</p>
-<section id="examples">
+<div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
 <p>10-image NEB calculation at the XTB level of theory</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -186,8 +185,8 @@ The file from a previously unconverged NEB calculation can be used or a converge
 <span class="n">SP</span> <span class="o">=</span> <span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">react</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">prod</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

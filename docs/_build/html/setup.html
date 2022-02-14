@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Setup &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -138,7 +137,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <style> .red {color:#aa0060; font-weight:bold; font-size:16px} </style><section id="setup">
+  <style> .red {color:#aa0060; font-weight:bold; font-size:16px} </style><div class="section" id="setup">
 <h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"></a></h1>
 <p>Contact Ragnar if you want access to the code.</p>
 <p>ASH is 99% Python with 1 % Julia.
@@ -165,13 +164,13 @@ Future versions will make Julia a requirement.</p>
 <li><p><a class="reference external" href="https://matplotlib.org">Matplotlib</a> library. Used to plot graphs/surfaces.</p></li>
 <li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library. Used for interpolation routines when plotting surfaces.</p></li>
 </ul>
-<section id="a-download-ash">
+<div class="section" id="a-download-ash">
 <h2>A. Download ASH<a class="headerlink" href="#a-download-ash" title="Permalink to this headline"></a></h2>
 <p>Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, e.g. ash.py and several directories.</p>
-</section>
-<section id="b-installation-and-configuration">
+</div>
+<div class="section" id="b-installation-and-configuration">
 <h2>B. Installation and Configuration<a class="headerlink" href="#b-installation-and-configuration" title="Permalink to this headline"></a></h2>
-<section id="b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete">
+<div class="section" id="b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete">
 <h3>B0. The lazy/impatient way to set up ASH (easy but incomplete)<a class="headerlink" href="#b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete" title="Permalink to this headline"></a></h3>
 <p>If you are impatient and want to get ASH going immediately without all features enabled.</p>
 <p><strong>Note:</strong> ASH will complain when you try to use features that require additional installations (e.g. geometric, julia)</p>
@@ -181,8 +180,8 @@ Future versions will make Julia a requirement.</p>
 <li><p>Set: export PYTHONPATH=/path/to/ash   (where /path/to/ash is the directory containing the ASH source code)</p></li>
 <li><p>Try to run an ASH script (the ASH import line will fail if PYTHONPATH is set incorrectly)</p></li>
 </ol>
-</section>
-<section id="b1-semi-automatic-miniconda-setup-easiest">
+</div>
+<div class="section" id="b1-semi-automatic-miniconda-setup-easiest">
 <h3>B1. Semi-Automatic Miniconda setup (easiest)<a class="headerlink" href="#b1-semi-automatic-miniconda-setup-easiest" title="Permalink to this headline"></a></h3>
 <p>This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda).</p>
 <ol class="arabic simple">
@@ -196,8 +195,8 @@ Future versions will make Julia a requirement.</p>
 <li><p>Run: <strong>source set_environment_ash.sh</strong>  (this sets necessary PATHs and should probably be put in each user’s .bash_profile, job-submission script etc.)</p></li>
 <li><p>Run ASH using either:  <strong>python3</strong>  or <strong>python3_ash</strong> (required if ASH needs to call Julia routines)</p></li>
 </ol>
-</section>
-<section id="b2-semi-automatic-non-conda-setup">
+</div>
+<div class="section" id="b2-semi-automatic-non-conda-setup">
 <h3>B2. Semi-Automatic non-Conda setup<a class="headerlink" href="#b2-semi-automatic-non-conda-setup" title="Permalink to this headline"></a></h3>
 <p>This uses the nonconda_install_ash.sh script inside the ASH directory.
 The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.</p>
@@ -213,8 +212,8 @@ Note: You need to be able to install packages to this installation via pip</p>
 <li><p>source ./set_environment_ash.sh    to activate ASH environment.</p></li>
 </ul>
 <p>Common problems:</p>
-</section>
-<section id="b3-manual">
+</div>
+<div class="section" id="b3-manual">
 <h3>B3. Manual<a class="headerlink" href="#b3-manual" title="Permalink to this headline"></a></h3>
 <p>(Use only if semi-automatic approach does not work)</p>
 <p><strong>Step 1.</strong></p>
@@ -308,9 +307,9 @@ which pip3
 <li><p>Make sure the correct Python3 environment is active. Otherwise ASH will not work.</p></li>
 <li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts and is recommended if you don’t require ASH to launch Julia routines (molcrystal-QM/MM primarily). There may be warnings about the Python-Julia-interface not working. These warnings can be ignored . For large systems or when using QM/MM-Molcrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
 </ul>
-</section>
-</section>
-<section id="c-install-external-programs">
+</div>
+</div>
+<div class="section" id="c-install-external-programs">
 <h2>C. Install External Programs<a class="headerlink" href="#c-install-external-programs" title="Permalink to this headline"></a></h2>
 <p>See also ASH-packages.sh in ASH source code directory!</p>
 <p><strong>Step 1.</strong> Install desired QM program(s):</p>
@@ -337,8 +336,8 @@ It can be installed using conda.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge openmm
 </pre></div>
 </div>
-</section>
-<section id="d-test-ash">
+</div>
+<div class="section" id="d-test-ash">
 <h2>D. Test ASH<a class="headerlink" href="#d-test-ash" title="Permalink to this headline"></a></h2>
 <p>Test if things work in general:
 python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
@@ -384,8 +383,8 @@ Check the following:</p>
 <li><p>Make sure you are using the same Python environment you used when you installed things.</p></li>
 <li><p>Set up PyCall for each Julia user environment (this updates ~/.julia dir)</p></li>
 </ol>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

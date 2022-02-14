@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PES: PhotoElectron/PhotoEmission Spectrum &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -132,7 +131,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pes-photoelectron-photoemission-spectrum">
+  <div class="section" id="pes-photoelectron-photoemission-spectrum">
 <h1>PES: PhotoElectron/PhotoEmission Spectrum<a class="headerlink" href="#pes-photoelectron-photoemission-spectrum" title="Permalink to this headline"></a></h1>
 <p>Workflow to calculate photoelectron/photoemission spectra of molecules using either TDDFT, CASSCF, MRCI+Q or EOM-IP-CCSD state energies combined
 with a Dyson-orbital norm approach for intensities.</p>
@@ -150,13 +149,11 @@ with a Dyson-orbital norm approach for intensities.</p>
 </ul>
 <p>Potential issues: Wfoverlap binary requires libblas.so.3 and liblapack.so.3 binaries. Make sure a directory containing these
 libraries is in your LD_LIBRARY_PATH.</p>
-<figure class="align-center" id="id1">
+<div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="_images/pes-mncl2.png"><img alt="alternate text" src="_images/pes-mncl2.png" style="width: 600px;" /></a>
-<figcaption>
-<p><span class="caption-text">Figure 1. PES-spectrum via MRCI+Q using ASH and ORCA</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<section id="photoelectronspectrum-function">
+<p class="caption"><span class="caption-text">Figure 1. PES-spectrum via MRCI+Q using ASH and ORCA</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</div>
+<div class="section" id="photoelectronspectrum-function">
 <h2>PhotoElectronSpectrum function<a class="headerlink" href="#photoelectronspectrum-function" title="Permalink to this headline"></a></h2>
 <p>The PES.PhotoElectronSpectrum function takes the following keyword arguments:</p>
 <p><strong>Necessary:</strong></p>
@@ -240,8 +237,8 @@ For IP-EOM-CCSD, use EOM=True and provide a basis set keyword in the ORCA object
                           <span class="n">Ionizedstate_charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ionizedstate_mult</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">numionstates</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="n">EOM</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="plot-spectrum">
+</div>
+<div class="section" id="plot-spectrum">
 <h2>Plot spectrum<a class="headerlink" href="#plot-spectrum" title="Permalink to this headline"></a></h2>
 <p>To plot the spectrum one can use the plotting.plot_Spectrum function (see <a class="reference internal" href="module_plotting.html"><span class="doc">Plotting</span></a>)</p>
 <p>Just provide as x and y values the list of ionization energies (in eVs) and the list of dysonnorms and the function will create broadened
@@ -266,8 +263,8 @@ Make sure the PES-Results.txt is available in the same directory.</p>
 </pre></div>
 </div>
 <p>Note: The plotting part (requires Matplotlib)  that creates the final image file can be turned off by setting matplotlib=False</p>
-</section>
-<section id="example-tddft-on-h2o">
+</div>
+<div class="section" id="example-tddft-on-h2o">
 <h2>Example: TDDFT on H<sub>2</sub>O<a class="headerlink" href="#example-tddft-on-h2o" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">PES</span>
@@ -299,8 +296,8 @@ Make sure the PES-Results.txt is available in the same directory.</p>
     <span class="n">broadening</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">
+</div>
+<div class="section" id="example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q">
 <h2>Example: FeS<sub>2</sub> <sup>-</sup> : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q<a class="headerlink" href="#example-fes2-tddft-vs-ip-eom-ccsd-vs-casscf-vs-mrci-q" title="Permalink to this headline"></a></h2>
 <p>This example of the FeS<sub>2</sub> <sup>-</sup>- anion accounts for multiple Finalstate spin-multiplicities as we go from:</p>
 <p>Initial state: FeS<sub>2</sub> <sup>-</sup>- S=5/2 to  Final state: FeS<sub>2</sub>S=2 and S=3</p>
@@ -521,8 +518,8 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=================================&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

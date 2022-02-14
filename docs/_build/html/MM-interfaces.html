@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MM Interfaces &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -62,7 +61,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -130,7 +129,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mm-interfaces">
+  <div class="section" id="mm-interfaces">
 <h1>MM Interfaces<a class="headerlink" href="#mm-interfaces" title="Permalink to this headline"></a></h1>
 <p>Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package: <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
 <p>The internal NonBondedTheory can only perform nonbonded interactions: electrostatics and short-range Lennard-Jones interactions.
@@ -138,7 +137,7 @@ The Coulomb+LJ interaction is quite fast as it is written in Julia.
 Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
 It can be used as MM code in QM/MM (<a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects.</p>
 <p>The interface to the external OpenMM code (<a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>) has recently become available. OpenMM is a fast C++ code with a Python API that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems and can read in multiple types of forcefield files.</p>
-<section id="nonbondedtheory">
+<div class="section" id="nonbondedtheory">
 <h2>NonBondedTheory<a class="headerlink" href="#nonbondedtheory" title="Permalink to this headline"></a></h2>
 <p>The NonBondedTheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NonBondedTheory</span><span class="p">:</span>
@@ -181,12 +180,12 @@ associated with the atomtypes.</p>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span><span class="n">theory</span><span class="o">=</span><span class="n">MMobject</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="openmm-interface">
+</div>
+<div class="section" id="openmm-interface">
 <h2>OpenMM interface<a class="headerlink" href="#openmm-interface" title="Permalink to this headline"></a></h2>
 <p>See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

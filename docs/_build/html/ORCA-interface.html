@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ORCA interface &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -132,7 +131,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="orca-interface">
+  <div class="section" id="orca-interface">
 <h1>ORCA interface<a class="headerlink" href="#orca-interface" title="Permalink to this headline"></a></h1>
 <p>ORCATheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCATheory</span><span class="p">:</span>
@@ -264,7 +263,7 @@
 </tr>
 </tbody>
 </table>
-<section id="finding-the-orca-program">
+<div class="section" id="finding-the-orca-program">
 <h2>Finding the ORCA program<a class="headerlink" href="#finding-the-orca-program" title="Permalink to this headline"></a></h2>
 <p>ASH can find the ORCA program in a few different ways.</p>
 <ul class="simple">
@@ -278,8 +277,8 @@
 ASH can not set the LD_LIBRARY_PATH (must be done in the shell environment beforehand) and thus if LD_LIBRARY_PATH has not been set properly in the shell, ORCA will crash when called by ASH.
 This means that it is usually best to set the PATH and LD_LIBRARY_PATH to ORCA in your jobscript or login shell-file (.bashrc, .bash_profile etc.) and ASH will then be able to find ORCA like that.</p>
 </div>
-</section>
-<section id="examples">
+</div>
+<div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
 <p>The ORCA interface is quite flexible. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like.
 This means that you can completely control what type of electronic structure method should be used by ORCA including choosing aspects such as basis set, convergence and grid settings etc.
@@ -328,8 +327,8 @@ a coordinate block etc. (cordinates in Å). ASH will then tell ORCA to run the i
 Once the ORCA calculation is done the outputfile (or other files) is read for information (usually the energy and gradient) by ASH
 and ASH will continue. The ORCA inputfile , “orca-input.inp” may be replaced later (e.g. if an optimization job” and ORCA
 will be run again.</p>
-</section>
-<section id="parallelization">
+</div>
+<div class="section" id="parallelization">
 <h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline"></a></h2>
 <p>ORCA parallelization is handled by OpenMPI. By specifying the numcores=X, a <em>%pal numcores X end block</em> will be added to the
 ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
@@ -338,8 +337,8 @@ Make sure the recommended OpenMPI version for the ORCA version you are using is 
 setting (in the shell or jobscript):</p>
 <p>export PATH=/path/to/openmpi/bin:$PATH and export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH</p>
 <p>or alternatively loading the appropriate module. Set these variables in the job-script (see <a class="reference internal" href="basics.html"><span class="doc">Basic usage</span></a>) that you are using.</p>
-</section>
-<section id="useful-orca-functions">
+</div>
+<div class="section" id="useful-orca-functions">
 <h2>Useful ORCA functions<a class="headerlink" href="#useful-orca-functions" title="Permalink to this headline"></a></h2>
 <p>In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
 To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
@@ -367,8 +366,8 @@ To be documented:</p>
 <p>scfenergygrab(file)</p>
 <p>finalenergiesgrab(file)</p>
 <p>checkORCAfinished(file)</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

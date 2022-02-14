@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Frequency calculation &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -130,12 +129,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="frequency-calculation">
+  <div class="section" id="frequency-calculation">
 <h1>Frequency calculation<a class="headerlink" href="#frequency-calculation" title="Permalink to this headline"></a></h1>
 <p>A frequency calculation can be performed either numerically or analytically. The numerical approach is highly general and can always be applied to any QM, MM or QM/MM theory while the analytical approach
 is only available if the QM program contains the functionality.
 For QM/MM Hamiltonians, the numerical approach is currently the only available option.</p>
-<section id="numerical-frequencies">
+<div class="section" id="numerical-frequencies">
 <h2>Numerical frequencies<a class="headerlink" href="#numerical-frequencies" title="Permalink to this headline"></a></h2>
 <p>Numerical frequencies can be performed with Ash using any QM, MM or QM/MM theory object.
 Any method for which there is an analytical gradient (forces) available can be used (numerical 2nd derivative on top of numerical 1st derivative is not recommended).</p>
@@ -215,8 +214,8 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE : &quot;</span><span class="p">,</span> <span class="n">freqresult</span><span class="p">[</span><span class="s1">&#39;ZPVE])</span>
 </pre></div>
 </div>
-</section>
-<section id="analytical-frequencies">
+</div>
+<div class="section" id="analytical-frequencies">
 <h2>Analytical frequencies<a class="headerlink" href="#analytical-frequencies" title="Permalink to this headline"></a></h2>
 <p>Some QM programs have analytical frequencies implemented and the ASH interface may support requesting the calculation of the analytical Hessian.</p>
 <p>Currently analytical frequencies are supported in: ORCATheory</p>
@@ -237,8 +236,8 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 </div>
 <p>A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
 (frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

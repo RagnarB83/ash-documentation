@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CREST interface &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -130,7 +129,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="crest-interface">
+  <div class="section" id="crest-interface">
 <h1>CREST interface<a class="headerlink" href="#crest-interface" title="Permalink to this headline"></a></h1>
 <p>ASH features a simple interface to the powerful conformational sampling program <a class="reference external" href="https://xtb-docs.readthedocs.io/en/latest/crest.html">crest</a> by the Grimme group.</p>
 <p>By providing an ASH fragment object to interface_crest.call_crest, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
@@ -147,7 +146,7 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 <p><strong>call_crest</strong> requires one to specify: an ASH fragment, xtbmethod (GFN1-xTB or GFN2-xTB ), location of crest directory, charge, multiplicity.</p>
 <p>Optional keywords are: solvent, energywindow (default 6), numcores (default 1), constrained_atoms (list of integers) and the value of the force-consstant.</p>
 <p>If you specify a list of constrained atoms then ASH will create an .xcontrol file that defines the constraints according to <a class="reference external" href="https://xtb-docs.readthedocs.io/en/latest/crestxmpl.html">crest Example Applications</a>.</p>
-<section id="example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments">
+<div class="section" id="example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments">
 <h2>Example workflow 1. Call crest to get low-energy conformers as ASH fragments.<a class="headerlink" href="#example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -170,8 +169,8 @@ This allows one to write a multi-step workflow of which the crest-procedure is o
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xTB energies: &quot;</span><span class="p">,</span> <span class="n">xtb_energies</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
+</div>
+<div class="section" id="confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">
 <h2>confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow<a class="headerlink" href="#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow" title="Permalink to this headline"></a></h2>
 <p>It is also possible to call the <strong>confsampler_protocol</strong> function that carries out an automatic multi-step workflow
 at various levels of theory.</p>
@@ -233,8 +232,8 @@ FINAL RESULTS
          6  5.7778938373 10.2530749008 10.7481984235
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

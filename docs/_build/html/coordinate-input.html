@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coordinates and fragments &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -141,9 +140,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="coordinates-and-fragments">
+  <div class="section" id="coordinates-and-fragments">
 <h1>Coordinates and fragments<a class="headerlink" href="#coordinates-and-fragments" title="Permalink to this headline"></a></h1>
-<section id="the-fragment-class">
+<div class="section" id="the-fragment-class">
 <h2>The Fragment class<a class="headerlink" href="#the-fragment-class" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Fragment</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordsstring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">databasefile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xyzfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grofile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -219,15 +218,15 @@
     <span class="k">def</span> <span class="nf">read_fragment_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragfile</span><span class="p">):</span>
 </pre></div>
 </div>
-</section>
-<section id="creating-modifying-fragment-objects">
+</div>
+<div class="section" id="creating-modifying-fragment-objects">
 <h2>Creating/modifying fragment objects<a class="headerlink" href="#creating-modifying-fragment-objects" title="Permalink to this headline"></a></h2>
 <p>Fragments in Ash are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.</p>
 <p>Fragments are Python objects created from the Ash <em>Fragment</em> object class.
 See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.</p>
-<section id="direct-creation-of-fragment-from-coordinates">
+<div class="section" id="direct-creation-of-fragment-from-coordinates">
 <h3>Direct creation of fragment from coordinates<a class="headerlink" href="#direct-creation-of-fragment-from-coordinates" title="Permalink to this headline"></a></h3>
 <p><em>From string</em></p>
 <p>First define multi-line string (called fragcoords here) with element and coordinates (Å) separated by space:</p>
@@ -266,8 +265,8 @@ elements and coordinates, not atom-types or residue information.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pdbfrag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;mol.pdb&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="adding-coordinates-to-object">
+</div>
+<div class="section" id="adding-coordinates-to-object">
 <h3>Adding coordinates to object<a class="headerlink" href="#adding-coordinates-to-object" title="Permalink to this headline"></a></h3>
 <p><em>Add coordinates from string</em></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HCl_cluster</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hcl.xyz&quot;</span><span class="p">)</span>
@@ -298,8 +297,8 @@ will follow.</p>
 </div>
 <p><strong>Note:</strong> This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates
 will follow.</p>
-</section>
-<section id="replace-coordinates-of-object">
+</div>
+<div class="section" id="replace-coordinates-of-object">
 <h3>Replace coordinates of object<a class="headerlink" href="#replace-coordinates-of-object" title="Permalink to this headline"></a></h3>
 <p>If you want to replace coords and elems of a fragment object with new information this can be done conveniently through lists.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">elems</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;Cl&#39;</span><span class="p">]</span>
@@ -308,15 +307,15 @@ will follow.</p>
 </pre></div>
 </div>
 <p><strong>TODO:</strong> Add option here of replacing coords from XYZ file and string as well.</p>
-</section>
-<section id="delete-coordinates-of-object">
+</div>
+<div class="section" id="delete-coordinates-of-object">
 <h3>Delete coordinates of object<a class="headerlink" href="#delete-coordinates-of-object" title="Permalink to this headline"></a></h3>
 <p>If you want to delete coordinates from object (both coords list and elems lists) then this is easily done.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">.</span><span class="n">delete_coords</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="calculate-connectivity-of-fragment-object">
+</div>
+<div class="section" id="calculate-connectivity-of-fragment-object">
 <h3>Calculate connectivity of fragment object<a class="headerlink" href="#calculate-connectivity-of-fragment-object" title="Permalink to this headline"></a></h3>
 <p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
 Connectivity is calculated based on a distance and covalen radii-based criterion.
@@ -340,8 +339,8 @@ The connectivity table is available as:</p>
 </div>
 <p>The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
 It is typically unnecessary to request a calculation or recalculation.</p>
-</section>
-<section id="charge-and-multiplicity">
+</div>
+<div class="section" id="charge-and-multiplicity">
 <h3>Charge and Multiplicity<a class="headerlink" href="#charge-and-multiplicity" title="Permalink to this headline"></a></h3>
 <p>Charge and spin multiplicity should usually be associated with the fragment.
 One can also specify the charge and mult to the Job-function (e.g. Singlepoint).
@@ -367,8 +366,8 @@ N 0.0 0.0 0.0
 O 0.0 0.0 1.0
 </pre></div>
 </div>
-</section>
-<section id="label">
+</div>
+<div class="section" id="label">
 <h3>Label<a class="headerlink" href="#label" title="Permalink to this headline"></a></h3>
 <p>If working with multiple fragment objects it can be useful to distinguish between them via a label-string.
 The label can be added when fragment is first created:</p>
@@ -380,8 +379,8 @@ The label can be added when fragment is first created:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">benzene_frag</span><span class="o">.</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Benzene&#39;</span>
 </pre></div>
 </div>
-</section>
-<section id="inspect-defined-fragment-objects">
+</div>
+<div class="section" id="inspect-defined-fragment-objects">
 <h3>Inspect defined fragment objects<a class="headerlink" href="#inspect-defined-fragment-objects" title="Permalink to this headline"></a></h3>
 <p>To inspect a defined fragment one can print out a Python dictionary of all defined attributes of the object.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HF_frag dict&quot;</span><span class="p">,</span> <span class="n">HF_frag</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
@@ -432,9 +431,9 @@ The label can be added when fragment is first created:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">HF_frag</span><span class="o">.</span><span class="n">mult</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
            </div>

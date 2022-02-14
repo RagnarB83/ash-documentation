@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Highlevel workflows &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -132,12 +131,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="highlevel-workflows">
+  <div class="section" id="highlevel-workflows">
 <h1>Highlevel workflows<a class="headerlink" href="#highlevel-workflows" title="Permalink to this headline"></a></h1>
 <p>These high-level workflows (singlepoint energy protocols) can either be used on their own as a theory-level in Singlepoint calculations or used as a SP_theory in workflows such as <strong>thermochemprotocol</strong>, <strong>calc_xyzfiles</strong>, <strong>confsampler_protocol</strong> (see <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a>)
 or as a theory in <strong>run_benchmark</strong> (see <a class="reference internal" href="module_benchmarking.html"><span class="doc">Benchmarking in ASH</span></a>) .
 All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.</p>
-<section id="cc-cbs-theory">
+<div class="section" id="cc-cbs-theory">
 <h2>CC_CBS_Theory<a class="headerlink" href="#cc-cbs-theory" title="Permalink to this headline"></a></h2>
 <p>This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
 Multiple ORCA calculations for the given geometry are carried out and the SCF and correlation energies extrapolated to the CCSD(T)/CBS limit using either regular CCSD(T) theory or DLPNO-CCSD(T) theory.
@@ -194,8 +193,8 @@ system is an atom. Default: False
 - CVbasis (string): The core-valence basis set to use. Default: &quot;W1-mtsmall&quot; (NOT ACTIVE)
 </pre></div>
 </div>
-</section>
-<section id="basis-family-options">
+</div>
+<div class="section" id="basis-family-options">
 <h2>Basis-family options<a class="headerlink" href="#basis-family-options" title="Permalink to this headline"></a></h2>
 <p>Appropriate all-electron or valence+ECP basis sets for each element with basis-families such as : cc, aug-cc, def2, ma-def2.
 If instead an all-electron relativistic approch is desired for all elements then basisfamily=”cc-dk”, “def2-zora”, “def2-dkh” and relativity=’DKH’ or ‘ZORA’ can be chosen instead.</p>
@@ -537,8 +536,8 @@ Ba,Ra,U</p></td>
 <p class="admonition-title">Note</p>
 <p>Note: often missing basis sets for K and Ca. Sometimes there are missing basis sets for specific elements and specific cardinals.</p>
 </div>
-</section>
-<section id="cc-cbs-theory-examples">
+</div>
+<div class="section" id="cc-cbs-theory-examples">
 <h2>CC_CBS_Theory Examples<a class="headerlink" href="#cc-cbs-theory-examples" title="Permalink to this headline"></a></h2>
 <p><strong>Basic examples</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;n2.xyz&#39;</span><span class="p">)</span>
@@ -571,8 +570,8 @@ This calculation will utilize a mixed metal-ligands basis set: cc-pwCVTZ-DK/cc-p
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.</p>
 <p>For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  <a class="reference internal" href="Highlevel_CC_CBS_workflows.html"><span class="doc">Tutorial: High-level CCSD(T)/CBS workflows</span></a></p>
-</section>
-<section id="reaction-highlevel-analysis">
+</div>
+<div class="section" id="reaction-highlevel-analysis">
 <h2>Reaction_Highlevel_Analysis<a class="headerlink" href="#reaction-highlevel-analysis" title="Permalink to this headline"></a></h2>
 <p>In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations, the <strong>Reaction_Highlevel_Analysis</strong> function can be used.
 It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
@@ -629,8 +628,8 @@ Additionally energy vs. basis-cardinal plots are created for both the total ener
 <a class="reference internal image-reference" href="_images/N2_BDE.png"><img alt="_images/N2_BDE.png" class="align-center" src="_images/N2_BDE.png" style="width: 700px;" /></a>
 <a class="reference internal image-reference" href="_images/N2_Energy.png"><img alt="_images/N2_Energy.png" class="align-center" src="_images/N2_Energy.png" style="width: 700px;" /></a>
 <a class="reference internal image-reference" href="_images/N_Energy.png"><img alt="_images/N_Energy.png" class="align-center" src="_images/N_Energy.png" style="width: 700px;" /></a>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

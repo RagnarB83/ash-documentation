@@ -129,8 +129,9 @@ CHARMM example:
     #frag = Fragment(chemshellfile="system.c", conncalc=False)
 
     #Creating OpenMMobject using CHARMM forcefield files
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=parfile)
+        charmmprmfile=parfile, autoconstraints=None, rigidwater=False)
 
 
 
@@ -152,7 +153,9 @@ Amber example:
     frag=Fragment(amber_prmtopfile=prmtopfile, amber_inpcrdfile=inpcrdfile)
 
     #Creating OpenMMobject using AMBER forcefield files
-    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, periodic=True)
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
+    openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, printlevel=1, 
+        periodic=True, autoconstraints=None, rigidwater=False)
 
 
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
@@ -172,8 +175,9 @@ If the system has been set up using OpenMM or using ASH OpenMM_Modeller then you
 
     #Creating OpenMMobject using PDB topology and built-in CHARMM36 protein and TIP3P water XMLfiles. 
     #Also providing cofactor.xml file for nonstandard residues.
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
     openmmobject = OpenMMTheory(pdbfile="final_MDfrag_laststep.pdb", xmlfiles=["charmm36.xml","charmm36/water.xml","cofactor.xml"],
-                     periodic=True)
+                     periodic=True, autoconstraints=None, rigidwater=False)
 
 
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
@@ -221,8 +225,9 @@ CHARMM example:
     frag = Fragment(xyzfile="system.xyz", conncalc=False)
 
     #Creating OpenMMobject using CHARMM forcefield files
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=parfile)
+        charmmprmfile=parfile, autoconstraints=None, rigidwater=False)
 
     #Forcefield files
     forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"
@@ -293,8 +298,9 @@ actregiondefine.py:
     frag = Fragment(pdbfile="protein.pdb")
 
     #Creating OpenMMobject
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, 
-        charmmtopfile=topfile, charmmprmfile=parfile)
+        charmmtopfile=topfile, charmmprmfile=parfile, autoconstraints=None, rigidwater=False)
 
 
     #Define active region based on radius (in Å) around origin-atom (atomindex).
@@ -342,8 +348,9 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
     frag = Fragment(xyzfile="system.xyz", conncalc=False)
 
     #Creating OpenMMobject using CHARMM forcefield files
+    #Note: Here we need to turn autoconstraints and rigidwater constraints off.
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=parfile)
+        charmmprmfile=parfile, autoconstraints=None, rigidwater=False)
 
     #Forcefield files
     forcefielddir="/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/"

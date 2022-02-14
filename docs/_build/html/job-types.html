@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Job Types &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -136,7 +135,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="job-types">
+  <div class="section" id="job-types">
 <h1>Job Types<a class="headerlink" href="#job-types" title="Permalink to this headline"></a></h1>
 <p>The primary job-types available in ASH:</p>
 <ul class="simple">
@@ -150,11 +149,11 @@
 <p>Additionally ASH features various workflows that perform some combination of multiple jobtypes.
 The job-types can be used with any theory object available (with some exceptions), e.g. one of the QMTheories in <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> or using
 a QM/MM Theory object from <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a></p>
-<section id="single-point-calculation">
+<div class="section" id="single-point-calculation">
 <h2>Single-point calculation<a class="headerlink" href="#single-point-calculation" title="Permalink to this headline"></a></h2>
 <p>See <a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a></p>
-</section>
-<section id="geometry-optimization">
+</div>
+<div class="section" id="geometry-optimization">
 <h2>Geometry optimization<a class="headerlink" href="#geometry-optimization" title="Permalink to this headline"></a></h2>
 <p>Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>): <a class="reference internal" href="geomeTRIC-interface.html"><span class="doc">geomeTRIC interface</span></a>
 geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
@@ -176,18 +175,18 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 <ul class="simple">
 <li><p>An internal optimizer is available (called “SimpleOpt”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
 </ul>
-</section>
-<section id="analytical-frequencies-hessian">
+</div>
+<div class="section" id="analytical-frequencies-hessian">
 <h2>Analytical frequencies (Hessian)<a class="headerlink" href="#analytical-frequencies-hessian" title="Permalink to this headline"></a></h2>
 <p>Analytical frequencies can be requested in some cases if supported by the theory-level interface as well as the Hamiltonian inside program.
 See <a class="reference internal" href="module_freq.html"><span class="doc">Frequency calculation</span></a></p>
-</section>
-<section id="numerical-frequencies-hessian">
+</div>
+<div class="section" id="numerical-frequencies-hessian">
 <h2>Numerical frequencies (Hessian)<a class="headerlink" href="#numerical-frequencies-hessian" title="Permalink to this headline"></a></h2>
 <p>Numerical frequencies can be performed with Ash using any QM, MM or QM/MM theory object.
 See <a class="reference internal" href="module_freq.html"><span class="doc">Frequency calculation</span></a></p>
-</section>
-<section id="nudged-elastic-band-calculations">
+</div>
+<div class="section" id="nudged-elastic-band-calculations">
 <h2>Nudged Elastic Band Calculations<a class="headerlink" href="#nudged-elastic-band-calculations" title="Permalink to this headline"></a></h2>
 <p>Through an interface to an external code, nudged elastic band (NEB) calculations are possible.
 Both regular NEB and CI-NEB calculations are possible.
@@ -204,18 +203,18 @@ See <a class="reference internal" href="knarr-interface.html"><span class="doc">
 <span class="n">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="n">Reactant</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="n">Product</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">CI</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="surface-scans">
+</div>
+<div class="section" id="surface-scans">
 <h2>Surface scans<a class="headerlink" href="#surface-scans" title="Permalink to this headline"></a></h2>
 <p>Potential Energy Surfaces can be conveniently scanned in ASH using the <strong>calc_surface function</strong> that uses the <strong>geometric</strong> optimization library.
 Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction coordinates.</p>
 <p>See <a class="reference internal" href="surfacescan.html"><span class="doc">Surface Scans</span></a></p>
-</section>
-<section id="saddle-point-optimization">
+</div>
+<div class="section" id="saddle-point-optimization">
 <h2>Saddle-point optimization<a class="headerlink" href="#saddle-point-optimization" title="Permalink to this headline"></a></h2>
 <p>Currently, saddle-points searches can only be performed in ASH using the NEB method.</p>
-</section>
-<section id="molecular-dynamics">
+</div>
+<div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline"></a></h2>
 <p>It is possible to perform molecular dynamics in ASH in 2 ways.</p>
 <p>1. Classical molecular dynamics using a forcefield via the OpenMM.
@@ -224,8 +223,8 @@ This is only available for a system that has been set up using OpenMMTheory and 
 <li><p>General dynamics via an interface to ASE.
 See <a class="reference internal" href="module_dynamics.html"><span class="doc">Molecular dynamics</span></a></p></li>
 </ol>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

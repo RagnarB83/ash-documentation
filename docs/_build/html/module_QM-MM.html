@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QM/MM Theory &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -133,14 +132,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="qm-mm-theory">
+  <div class="section" id="qm-mm-theory">
 <h1>QM/MM Theory<a class="headerlink" href="#qm-mm-theory" title="Permalink to this headline"></a></h1>
 <p>QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that supports pointcharge embedding) with an MMTheory object of class NonbondedTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>) or OpenMMTheory (see <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>).</p>
 <p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
 Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
 the QMMMTheory object can define the division of QM-region and MM-region.</p>
-<section id="qmmmtheory-class">
+<div class="section" id="qmmmtheory-class">
 <h2>QMMMTheory class<a class="headerlink" href="#qmmmtheory-class" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QMMMTheory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -194,8 +193,8 @@ This information will be passed onto the QM-program when running. Charge/mult de
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="qm-mm-truncated-pc-approximation">
+</div>
+<div class="section" id="qm-mm-truncated-pc-approximation">
 <h2>QM/MM Truncated PC approximation<a class="headerlink" href="#qm-mm-truncated-pc-approximation" title="Permalink to this headline"></a></h2>
 <p>For large systems (e.g. &gt; 50 000 atoms) the evaluation of the QM-pointcharge interaction (calculated by the QM-code) will start to dominate the cost of the calculation in each QM/MM calculation step.
 The QM-pointcharge gradient calculation is the main culprit and it depends on the QM-code how efficiently this step is carried out for a large number of pointcharges.
@@ -223,8 +222,8 @@ The error from the approximation depends on the TruncPCRadius parameter (smaller
     <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="qm-mm-boundary-treatment">
+</div>
+<div class="section" id="qm-mm-boundary-treatment">
 <h2>QM/MM boundary treatment<a class="headerlink" href="#qm-mm-boundary-treatment" title="Permalink to this headline"></a></h2>
 <p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
 In ASH this is treated by the popular linkatom method, combined with charge-shifting.
@@ -241,8 +240,8 @@ To override this behaviour add “unusualboundary=True” as keyword argument wh
          <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="p">[</span><span class="mi">5785</span><span class="p">])</span>
 </pre></div>
 </div>
-</section>
-<section id="example-qm-mm-with-orca-and-nonbondedtheory">
+</div>
+<div class="section" id="example-qm-mm-with-orca-and-nonbondedtheory">
 <h2>Example: QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline"></a></h2>
 <p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
 Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
@@ -274,8 +273,8 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMobject</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-qm-mm-with-orca-and-openmmtheory">
+</div>
+<div class="section" id="example-qm-mm-with-orca-and-openmmtheory">
 <h2>Example: QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline"></a></h2>
 <p>See also <a class="reference internal" href="QM-MM-protein.html"><span class="doc">QM/MM on a protein</span></a>.</p>
 <p>The files for this example (DHFR protein) are available in the examples/QM-MM-CHARMM-example directory in the main ASH directory</p>
@@ -322,8 +321,8 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
                     <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;hdlc&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

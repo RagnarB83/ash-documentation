@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QM/MM on a protein &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -136,12 +135,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="qm-mm-on-a-protein">
+  <div class="section" id="qm-mm-on-a-protein">
 <h1>QM/MM on a protein<a class="headerlink" href="#qm-mm-on-a-protein" title="Permalink to this headline"></a></h1>
 <p>How to do QM/MM calculations of a protein in ASH
 This tutorial is in progress…</p>
 <a class="reference internal image-reference" href="_images/fefeh2ase-nosolv.png"><img alt="_images/fefeh2ase-nosolv.png" class="align-right" src="_images/fefeh2ase-nosolv.png" style="width: 400px;" /></a>
-<section id="prepare-a-classical-mm-model-of-the-system">
+<div class="section" id="prepare-a-classical-mm-model-of-the-system">
 <h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline"></a></h2>
 <p>This step cam be the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
@@ -203,8 +202,8 @@ to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER for
 Note that ParMed may help here: <a class="reference external" href="https://parmed.github.io/ParmEd/html/index.html">https://parmed.github.io/ParmEd/html/index.html</a></p>
 <p>Another option is to use the PSF-create script:
 <a class="reference external" href="https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh">https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh</a></p>
-</section>
-<section id="a-read-coordinates-and-forcefield-into-ash">
+</div>
+<div class="section" id="a-read-coordinates-and-forcefield-into-ash">
 <h2><strong>2a. Read coordinates and forcefield into ASH</strong><a class="headerlink" href="#a-read-coordinates-and-forcefield-into-ash" title="Permalink to this headline"></a></h2>
 <p>Here we will read in the coordinates and forcefield files from the classical system preparation.
 The coordinates can be read-in in multiple ways: e.g. a PDB-file (See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> on reading/writing PDB-files), an XYZ-file (XMol format, file.xyz), from a previous ASH-file on disk (file.ygg), or  a Chemshell fragment file (file.c).
@@ -225,8 +224,9 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 <span class="c1">#frag = Fragment(chemshellfile=&quot;system.c&quot;, conncalc=False)</span>
 
 <span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 
@@ -245,7 +245,9 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 <span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">amber_prmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">amber_inpcrdfile</span><span class="o">=</span><span class="n">inpcrdfile</span><span class="p">)</span>
 
 <span class="c1">#Creating OpenMMobject using AMBER forcefield files</span>
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">Amberfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">amberprmtopfile</span><span class="o">=</span><span class="n">prmtopfile</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="c1">#Run a simple energy+gradient job at the MM level to test whether everything is correct.</span>
@@ -262,8 +264,9 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 
 <span class="c1">#Creating OpenMMobject using PDB topology and built-in CHARMM36 protein and TIP3P water XMLfiles.</span>
 <span class="c1">#Also providing cofactor.xml file for nonstandard residues.</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;final_MDfrag_laststep.pdb&quot;</span><span class="p">,</span> <span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span><span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span><span class="s2">&quot;cofactor.xml&quot;</span><span class="p">],</span>
-                 <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                 <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="c1">#Run a simple energy+gradient job at the MM level to test whether everything is correct.</span>
@@ -275,8 +278,8 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 </pre></div>
 </div>
 <p>It should finish in just a few seconds (or 1-2 minutes at most).</p>
-</section>
-<section id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
+</div>
+<div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
 <h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline"></a></h2>
 <p>Assuming step 2 worked well, the next step is to setup the QM/MM model.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
@@ -300,8 +303,9 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Forcefield files</span>
 <span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/&quot;</span>
@@ -347,8 +351,8 @@ The linkatom coordinates are added to the QM-region coordinates when passed to t
 </div>
 <p>It will run both the MM part and the QMpart using the chosen theory. Choose a small QM-region for testing purposes if
 run directly in the shell.</p>
-</section>
-<section id="run-a-qm-mm-geometry-optimization">
+</div>
+<div class="section" id="run-a-qm-mm-geometry-optimization">
 <h2><strong>4. Run a QM/MM geometry optimization</strong><a class="headerlink" href="#run-a-qm-mm-geometry-optimization" title="Permalink to this headline"></a></h2>
 <p>Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
 optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).</p>
@@ -365,8 +369,9 @@ optimization. A geometry optimization is the most common job to run for QM/MM mo
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;protein.pdb&quot;</span><span class="p">)</span>
 
 <span class="c1">#Creating OpenMMobject</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span> <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+    <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span> <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="c1">#Define active region based on radius (in Å) around origin-atom (atomindex).</span>
@@ -408,8 +413,9 @@ geomeTRICOptimizer like below:</p>
 <span class="n">frag</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">conncalc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Creating OpenMMobject using CHARMM forcefield files</span>
+<span class="c1">#Note: Here we need to turn autoconstraints and rigidwater constraints off.</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">parfile</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#Forcefield files</span>
 <span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;/home/bjornsson/ASH-vs-chemshell-protein/QM-MM/FeMoco-test1/forcefielddir/&quot;</span>
@@ -457,14 +463,14 @@ geomeTRICOptimizer like below:</p>
 <span class="n">write_pdbfile</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">outputname</span><span class="o">=</span><span class="s2">&quot;OptimizedFragment.pdb&quot;</span><span class="p">,</span><span class="n">openmmobject</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="modifying-the-coordinates-of-the-qm-region">
+</div>
+<div class="section" id="modifying-the-coordinates-of-the-qm-region">
 <h2><strong>5. Modifying the coordinates of the QM-region</strong><a class="headerlink" href="#modifying-the-coordinates-of-the-qm-region" title="Permalink to this headline"></a></h2>
 <p>To run a QM/MM optimization to find other minima, one would typically change the coordinates of the fragment file or XYZ-file outside
 ASH (e.g. using a visualization program).</p>
 <p>See <a class="reference internal" href="coordinate-tools.html"><span class="doc">Coordinates and fragment tools</span></a> for information on using fragedit.py  and fragupdate.py</p>
-</section>
-<section id="adding-removing-atoms-of-the-system">
+</div>
+<div class="section" id="adding-removing-atoms-of-the-system">
 <h2><strong>6. Adding/removing atoms of the system</strong><a class="headerlink" href="#adding-removing-atoms-of-the-system" title="Permalink to this headline"></a></h2>
 <p>If you need to add or remove atoms to your QM/MM system this is a bit more involved than modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices &gt; 4556 change.</p>
 <p>There are two options:</p>
@@ -560,8 +566,8 @@ Also created is a PDB-file: new-system.pdb</p>
 </div></blockquote>
 </li>
 </ol>
-</section>
-<section id="other-qm-mm-jobtypes">
+</div>
+<div class="section" id="other-qm-mm-jobtypes">
 <h2><strong>7. Other QM/MM jobtypes</strong><a class="headerlink" href="#other-qm-mm-jobtypes" title="Permalink to this headline"></a></h2>
 <p>One can also run a numerical frequency job using the same QM/MM ASH object:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Numerical Frequencies. npoint=2 (two-point numerical differentiation). runmode=&#39;serial&#39; means that each</span>
@@ -579,8 +585,8 @@ Also created is a PDB-file: new-system.pdb</p>
 <span class="n">Saddlepoint</span><span class="o">.</span><span class="n">print_system</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;saddlepoint.ygg&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-protein-setup-opt-md-qm-mm-all-in-one-script">
+</div>
+<div class="section" id="example-protein-setup-opt-md-qm-mm-all-in-one-script">
 <h2><strong>8. EXAMPLE: Protein-setup, Opt, MD, QM/MM all in one script</strong><a class="headerlink" href="#example-protein-setup-opt-md-qm-mm-all-in-one-script" title="Permalink to this headline"></a></h2>
 <p>The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
 The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system, there will be problems to deal with.</p>
@@ -631,8 +637,8 @@ The example below (can also be found in examples directory)  shows how this can 
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmmobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ashfragment</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatomlist</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

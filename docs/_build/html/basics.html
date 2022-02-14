@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Basic usage &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -135,9 +134,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="basic-usage">
+  <div class="section" id="basic-usage">
 <h1>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline"></a></h1>
-<section id="input-structure">
+<div class="section" id="input-structure">
 <h2>Input structure<a class="headerlink" href="#input-structure" title="Permalink to this headline"></a></h2>
 <p>You create a Python3 script (e.g. called ashtest.py) and import the ASH library:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>   <span class="c1"># This will import the most important ASH functionality into your namespace</span>
@@ -154,8 +153,8 @@ Make sure you have already set in the shell (part of Setup):</p>
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
 See  <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for various ways of dealing with coordinates and fragments.</p>
-</section>
-<section id="example-script">
+</div>
+<div class="section" id="example-script">
 <h2>Example script<a class="headerlink" href="#example-script" title="Permalink to this headline"></a></h2>
 <p>Here is a basic ASH Python script, e.g. named: ashtest.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -182,8 +181,8 @@ See  <a class="reference internal" href="coordinate-input.html"><span class="doc
 <p>The script above loads ASH, creates a new fragment from a string (see <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
 (see <a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a> and <a class="reference internal" href="ORCA-interface.html"><span class="doc">ORCA interface</span></a> ), and runs a geometry optimization using the geomeTRICOptimizer optimizer function  (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a> and <a class="reference internal" href="geomeTRIC-interface.html"><span class="doc">geomeTRIC interface</span></a> ).</p>
-</section>
-<section id="running-script-directly-in-the-shell">
+</div>
+<div class="section" id="running-script-directly-in-the-shell">
 <h2>Running script directly in the shell<a class="headerlink" href="#running-script-directly-in-the-shell" title="Permalink to this headline"></a></h2>
 <p>For a simple job we can just run the script directly</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
@@ -195,8 +194,8 @@ python3_ash ashtest.py
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py &gt;<span class="p">&amp;</span> ashtest.out
 </pre></div>
 </div>
-</section>
-<section id="interactive-ash-in-a-repl-or-ipython-environment">
+</div>
+<div class="section" id="interactive-ash-in-a-repl-or-ipython-environment">
 <h2>Interactive ASH in a REPL or iPython environment<a class="headerlink" href="#interactive-ash-in-a-repl-or-ipython-environment" title="Permalink to this headline"></a></h2>
 <p>It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
 This allows for interactive use of ASH. See video below for an example.</p>
@@ -204,8 +203,8 @@ This allows for interactive use of ASH. See video below for an example.</p>
 Make sure to use the iPython that uses the same Python as ASH.</p>
  <div align=center>
 <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
- </div></section>
-<section id="ash-settings">
+ </div></div>
+<div class="section" id="ash-settings">
 <h2>ASH settings<a class="headerlink" href="#ash-settings" title="Permalink to this headline"></a></h2>
 <p>Global settings are stored in  <em>/path/to/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
@@ -236,8 +235,8 @@ cfourdir = &#39;/path/to/cfourdir&#39;
 crestdir = &#39;/path/to/crestdir&#39;
 </pre></div>
 </div>
-</section>
-<section id="use-of-colors-in-ash-output">
+</div>
+<div class="section" id="use-of-colors-in-ash-output">
 <h2>Use of colors in ASH output<a class="headerlink" href="#use-of-colors-in-ash-output" title="Permalink to this headline"></a></h2>
 <p>ASH can display ANSI colors in output if  use_ANSI_color = True   is used in the settings file (see above).
 This makes the output more readable.</p>
@@ -246,8 +245,8 @@ This makes the output more readable.</p>
 <div class="line">- less may require the -R flag: less -R outputfile. Or setting: export LESS=-R</div>
 <div class="line">- vim and emacs require plugins</div>
 </div>
-</section>
-<section id="submitting-job">
+</div>
+<div class="section" id="submitting-job">
 <h2>Submitting job<a class="headerlink" href="#submitting-job" title="Permalink to this headline"></a></h2>
 <p>For a more complicated job we would probably want to create a job-script that would handle various environmental variables,
 dealing with local scratch, copy files back when done etc.
@@ -421,8 +420,8 @@ sbatch -J <span class="nv">$file</span> job-ash.sh
 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">cyan</span><span class="si">}</span><span class="s2">ASH job submitted using </span><span class="nv">$NPROC</span><span class="s2"> cores using file </span><span class="nv">$file</span><span class="s2">.</span><span class="nv">$mult</span><span class="s2"> </span><span class="si">${</span><span class="nv">normal</span><span class="si">}</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

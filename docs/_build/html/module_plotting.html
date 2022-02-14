@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plotting &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -58,7 +57,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -133,12 +132,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="plotting">
+  <div class="section" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline"></a></h1>
 <p>ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.
 These are essentially wrapper-functions around Matplotlib functionality.</p>
 <p>All the plotting functions documented here require a Matplotlib installation in the Python environment. Should be easily installed via either pip or Anaconda.</p>
-<section id="ash-plot-basic-plotting">
+<div class="section" id="ash-plot-basic-plotting">
 <h2>ASH_plot: Basic plotting<a class="headerlink" href="#ash-plot-basic-plotting" title="Permalink to this headline"></a></h2>
 <p>ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting of data (calculated by ASH) as straightforward as possible.</p>
 <div class="admonition note">
@@ -367,8 +366,8 @@ Since the data is provided via simply Python lists you could of course run an AS
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/Simple-subplot4.png"><img alt="_images/Simple-subplot4.png" class="align-center" src="_images/Simple-subplot4.png" style="width: 600px;" /></a>
-</section>
-<section id="plot-spectrum-plotting-broadened-spectrum">
+</div>
+<div class="section" id="plot-spectrum-plotting-broadened-spectrum">
 <h2>plot_Spectrum: Plotting broadened spectrum<a class="headerlink" href="#plot-spectrum-plotting-broadened-spectrum" title="Permalink to this headline"></a></h2>
 <p>The plot_Spectrum function takes a list of x-axis values (xvalues keyword), y-axis values (yvalues keyword) and plots
 a broadened spectrum and a stick spectrum. The xvalues list is traditionally a Python list of energies (e.g. transition energies, Ionization-energies) and yvalues
@@ -399,8 +398,8 @@ the latter requires Matplotlib.</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PES_spectrum_TPSSh.png"><img alt="_images/PES_spectrum_TPSSh.png" class="align-center" src="_images/PES_spectrum_TPSSh.png" style="width: 600px;" /></a>
-</section>
-<section id="moplot-vertical-plot-vertical-mo-diagram">
+</div>
+<div class="section" id="moplot-vertical-plot-vertical-mo-diagram">
 <h2>MOplot_vertical: Plot vertical MO diagram<a class="headerlink" href="#moplot-vertical-plot-vertical-mo-diagram" title="Permalink to this headline"></a></h2>
 <p>Input: Dictionary containing lists of molecular-orbital energies.</p>
 <p>Created by MolecularOrbitalgrab in ORCA interface</p>
@@ -408,8 +407,8 @@ the latter requires Matplotlib.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MOplot_vertical</span><span class="p">(</span><span class="n">mos_dict</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Label&quot;</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="reaction-profile">
+</div>
+<div class="section" id="reaction-profile">
 <h2>Reaction_profile<a class="headerlink" href="#reaction-profile" title="Permalink to this headline"></a></h2>
 <p>For a 1D scan (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a>), the result dictionary can be given to the <strong>module_plotting.reactionprofile_plot</strong> function which will visualize the
 relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
@@ -433,8 +432,8 @@ The output is an imagefile (PNG by default).</p>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/PlotTPSS.png"><img alt="_images/PlotTPSS.png" class="align-center" src="_images/PlotTPSS.png" style="width: 600px;" /></a>
-</section>
-<section id="contour-plot">
+</div>
+<div class="section" id="contour-plot">
 <h2>Contour_plot<a class="headerlink" href="#contour-plot" title="Permalink to this headline"></a></h2>
 <p>For a 2D scan (see <a class="reference internal" href="job-types.html"><span class="doc">Job Types</span></a>), the dictionary can be given to the <strong>module_plotting.contourplot</strong> function which will visualize the energy surface as a contourplot.
 The output is an imagefile (PNG by default).</p>
@@ -458,8 +457,8 @@ The output is an imagefile (PNG by default).</p>
 </div>
 <a class="reference internal image-reference" href="_images/SurfaceTPSSh.png"><img alt="_images/SurfaceTPSSh.png" class="align-center" src="_images/SurfaceTPSSh.png" style="width: 600px;" /></a>
 <p>Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

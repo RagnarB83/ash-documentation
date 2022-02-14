@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workflow examples in ASH &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -58,7 +57,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -137,14 +136,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="workflow-examples-in-ash">
+  <div class="section" id="workflow-examples-in-ash">
 <h1>Workflow examples in ASH<a class="headerlink" href="#workflow-examples-in-ash" title="Permalink to this headline"></a></h1>
 <p>As an ASH-script is pure Python and the user has access to various ASH functionality for manipulating coordinates, create fragments,
 call QM and MM codes, calculate energy, minimize geometry, run dynamics etc. this allows one to easily create advanced workflows in a single script.
 ASH already contains a lot of pre-made workflow to automize things but the user can easily write their own ASH-Python scripts to automize
 more complex workflows, not yet available directly in ASH.</p>
 <p>This page goes through several examples of workflows showing both the use of pre-coded workflows and how you can write your own.</p>
-<section id="example-1-optimization-frequency-hl-singlepoint">
+<div class="section" id="example-1-optimization-frequency-hl-singlepoint">
 <h2>Example 1 : Optimization + Frequency + HL-singlepoint<a class="headerlink" href="#example-1-optimization-frequency-hl-singlepoint" title="Permalink to this headline"></a></h2>
 <p>Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
 using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
@@ -197,8 +196,8 @@ In ASH you can use the thermochemprotocol_single to automize such a workflow.</p
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE: &quot;</span><span class="p">,</span> <span class="n">thermochem</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">],</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
+</div>
+<div class="section" id="example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3">
 <h2>Example 2a : Direct calculation of Reaction Energy:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub><a class="headerlink" href="#example-2a-direct-calculation-of-reaction-energy-n2-3h2-2nh3" title="Permalink to this headline"></a></h2>
 <p>Typically one is interested in more than a single energy of a single species and thus you might want to run calculations on multiple species
 of a reaction in the same job and calculate the reaction energy directly.
@@ -255,8 +254,8 @@ See <a class="reference internal" href="singlepoint.html"><span class="doc">Sing
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Reaction_energy: -65.12668956189346 kcalpermol
 </pre></div>
 </div>
-</section>
-<section id="example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">
+</div>
+<div class="section" id="example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol">
 <h2>Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol<a class="headerlink" href="#example-2b-direct-calculation-of-reaction-energy-with-an-automatic-thermochemistry-protocol" title="Permalink to this headline"></a></h2>
 <p>You can of course also combine the Opt+Freq+HL protocol from Example 1 with the multiple fragments-at-the-same-time approach from Example 2
 and calculate the reaction energy directly at a high-level of theory together with thermochemical corrections from a frequency job.</p>
@@ -296,8 +295,8 @@ and calculate the reaction energy directly at a high-level of theory together wi
 perturbative triples (Δ(T)), core-valence + scalar-relativistics (CV+SR), atomic spin-orbit coupling (ΔSO, here none), and zero-point
 vibrational energy (ΔZPVE).
 The agreement with experiment (-18.4 kcal/mol) is excellent.</p>
-</section>
-<section id="example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">
+</div>
+<div class="section" id="example-3a-running-multiple-single-point-energies-with-different-functionals-sequential">
 <h2>Example 3a : Running multiple single-point energies with different functionals (sequential)<a class="headerlink" href="#example-3a-running-multiple-single-point-energies-with-different-functionals-sequential" title="Permalink to this headline"></a></h2>
 <p>You might be interested in running multiple single-point energy calculations on a molecule with different functionals.
 Such a job could be written directly like this:</p>
@@ -376,8 +375,8 @@ CAM-B3LYP  -1.1625896338
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{:13.10f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">e</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-<section id="example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">
+</div>
+<div class="section" id="example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel">
 <h2>Example 3b : Running multiple single-point energies with different functionals (in parallel)<a class="headerlink" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel" title="Permalink to this headline"></a></h2>
 <p>The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
@@ -405,8 +404,8 @@ See <a class="reference internal" href="parallelization.html"><span class="doc">
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">
+</div>
+<div class="section" id="example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">
 <h2>Example 4a : Running single-point energies on a collection of XYZ files (sequential)<a class="headerlink" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential" title="Permalink to this headline"></a></h2>
 <p>At other times you are interested in using a single theory to run single-point energies on a collection of molecules.
 This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), and then use glob to find all files with an “.xyz” file suffix.
@@ -500,8 +499,8 @@ See: <a class="reference internal" href="module_workflows.html"><span class="doc
 <span class="n">calc_xyzfiles</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="nb">dir</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">
+</div>
+<div class="section" id="example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel">
 <h2>Example 4b : Running single-point energies on a collection of XYZ files (parallel)<a class="headerlink" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel" title="Permalink to this headline"></a></h2>
 <p>The examples in 4a had each job run sequentially, one job after the other, according to the list of XYZ-files available.
 While ORCA parallelization was utilized, it may be more economical to run such embarrassingly parallel jobs simultaneously instead, especially if there are lot of XYZ-files.
@@ -525,8 +524,8 @@ In this case ORCA parallelization must be turned off as the parallelization stra
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results :&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">
+</div>
+<div class="section" id="example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory">
 <h2>Example 5 : Calculate localized orbitals and create Cube files for multiple XYZ files or an XYZ-trajectory<a class="headerlink" href="#example-5-calculate-localized-orbitals-and-create-cube-files-for-multiple-xyz-files-or-an-xyz-trajectory" title="Permalink to this headline"></a></h2>
 <p>Analyzing electronic structure along a reaction path (e.g. a NEB or IRC path) or a trajectory (optimization or MD)
 can be useful to understand the nature of the reaction. The code below shows how this can be accomplished in ASH
@@ -596,8 +595,8 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
     <span class="n">ORCAcalc</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">
+</div>
+<div class="section" id="example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points">
 <h2>Example 6 : Running conformer-sampling, geometry optimizations and High-level single-points<a class="headerlink" href="#example-6-running-conformer-sampling-geometry-optimizations-and-high-level-single-points" title="Permalink to this headline"></a></h2>
 <p>This example utilizes the interface to the powerful <a class="reference external" href="https://xtb-docs.readthedocs.io/en/latest/crest.html">crest</a> program to perform metadynamics-based conformational sampling from a starting geometry at a semi-empirical level of theory (GFN2-xTB).
 From the conformational sampling we get a collection of low-energy conformers for that molecule (based on the GFN1-xTB or GFN2-xTB semi-empirical tightbinding Hamiltonian)
@@ -737,8 +736,8 @@ FINAL RESULTS
          6  5.7778938373 10.2530749008 10.7481984235
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

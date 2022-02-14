@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Molecular dynamics &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -132,14 +131,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="molecular-dynamics">
+  <div class="section" id="molecular-dynamics">
 <h1>Molecular dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline"></a></h1>
 <p>Molecular dynamics in ASH is currently available via 2 different approaches.</p>
 <ul class="simple">
 <li><p>The more general approach make use of an interface to the dynamics routines of the ASE library. This allows molecular dynamics to be performed via any theory level in ASH: QM, MM or QM/MM theory. This requires the <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a>  library to be installed (simple Python pip installation). In the future, ASH will feature it’s own native dynamics.</p></li>
 <li><p>The more specialized approach uses an interface to the MM dynamics routines of OpenMM library. This is only available for theory levels: OpenMMTheory (i.e. pure classical simulations) and QMMMTheory (with mm_theory=OpenMMTheoryobject). This approach makes the most sense when a considerable amount of time is spent on calculating the MM energy+gradient via OpenMM (faster than the Dynamics_ASE approach)</p></li>
 </ul>
-<section id="dynamics-via-ase">
+<div class="section" id="dynamics-via-ase">
 <h2>Dynamics via ASE<a class="headerlink" href="#dynamics-via-ase" title="Permalink to this headline"></a></h2>
 <p>The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH using any available QM, MM or QM/MM theory.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Dynamics_ASE</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thermostat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -174,33 +173,47 @@
 <p>coupling_freq determines friction-coefficient in Langevin, collions probability in Andersen.</p>
 <p>It is possible to freeze atoms using frozen_atoms= option. Provide list of atom indices.</p>
 <p>Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.</p>
-</section>
-<section id="dynamics-via-openmm-md">
+</div>
+<div class="section" id="dynamics-via-openmm-md">
 <h2>Dynamics via OpenMM_MD<a class="headerlink" href="#dynamics-via-openmm-md" title="Permalink to this headline"></a></h2>
 <p>For pure classical forcefield-based MD it is recommended to run the dynamics via the OpenMM library instead via the ASH <strong>OpenMM_MD</strong> function. The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE. Dynamics via OpenMM_MD requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
 <p><strong>Pure MM example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">)</span>
 
-<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-    <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_region</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#Fragment</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
+<span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
+
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
+
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use OpenMM_MD to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce)
 This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
 <p><strong>QM/MM example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+    <span class="c1">#Fragment</span>
+    <span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
+    <span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
+    <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
+    <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
+
     <span class="n">xtbtheory</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;inputfile&#39;</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
-    <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">)</span>
-    <span class="n">QMMMTheory</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">xtbtheory</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
+    <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
+    <span class="n">QMMMTheory</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">xtbtheory</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="n">qm_region</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
-    <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMTheory</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-        <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_region</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMTheory</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="metadynamics-via-ase-and-plumed">
+</div>
+<div class="section" id="metadynamics-via-ase-and-plumed">
 <h2>Metadynamics via ASE and Plumed<a class="headerlink" href="#metadynamics-via-ase-and-plumed" title="Permalink to this headline"></a></h2>
 <p>Via an interface to the <a class="reference external" href="https://www.plumed.org">Plumed</a> library it is possible to perform metadynamics in ASH. Any theory level in ASH is supported (including QM/MM theories).</p>
 <p>Requirements:</p>
@@ -285,12 +298,12 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 <p class="admonition-title">Note</p>
 <p>Not yet available: multiple-walker metadynamics</p>
 </div>
-</section>
-<section id="metadynamics-via-openmm-md-and-plumed">
+</div>
+<div class="section" id="metadynamics-via-openmm-md-and-plumed">
 <h2>Metadynamics via OpenMM_MD and Plumed<a class="headerlink" href="#metadynamics-via-openmm-md-and-plumed" title="Permalink to this headline"></a></h2>
 <p>to be documented</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

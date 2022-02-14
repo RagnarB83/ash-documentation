@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coordinates and fragment tools &mdash; Ash 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -57,7 +56,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Numerical Frequencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
@@ -130,9 +129,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="coordinates-and-fragment-tools">
+  <div class="section" id="coordinates-and-fragment-tools">
 <h1>Coordinates and fragment tools<a class="headerlink" href="#coordinates-and-fragment-tools" title="Permalink to this headline"></a></h1>
-<section id="modifying-coordinates-in-ash-calculations">
+<div class="section" id="modifying-coordinates-in-ash-calculations">
 <h2>Modifying coordinates in ASH calculations<a class="headerlink" href="#modifying-coordinates-in-ash-calculations" title="Permalink to this headline"></a></h2>
 <p>One often needs to manually modify coordinates in QM or QM/MM calculations. While this is straightforward when working
 with small molecules and for example XYZ-files (open the coordinates in a simple molecular builder and modify) it is more
@@ -166,8 +165,8 @@ unit (Å). The fragfile (containing coordinates of the full system) can then be 
 </pre></div>
 </div>
 <p>This should update the coordinates of fragfile.ygg.</p>
-</section>
-<section id="adding-removing-atoms-of-an-mm-system">
+</div>
+<div class="section" id="adding-removing-atoms-of-an-mm-system">
 <h2><strong>Adding/removing atoms of an MM system</strong><a class="headerlink" href="#adding-removing-atoms-of-an-mm-system" title="Permalink to this headline"></a></h2>
 <p>If you need to add or remove atoms to your MM or QM/MM system this is a bit more involved than just modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices &gt; 4556 change.
 This requires updating of forcefield files, coordinate files as well as atom lists (qmatoms and active atoms) that reference atom indices of the system.</p>
@@ -261,8 +260,8 @@ Also created is a PDB-file: new-system.pdb</p>
 <p class="admonition-title">Note</p>
 <p>If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to add_atoms_to_system_CHARMM  that will preserve the 1-based indexing.</p>
 </div>
-</section>
-<section id="working-with-pdb-files">
+</div>
+<div class="section" id="working-with-pdb-files">
 <h2>Working with PDB files<a class="headerlink" href="#working-with-pdb-files" title="Permalink to this headline"></a></h2>
 <p>WARNING: PDB files are convenient for visualization purposes and for initial reading in of coordinates but are
 generally not a file format to be used (one problem is the limited number of significant digits used
@@ -312,8 +311,8 @@ Could also be done completely manually if desired.</p>
 <p>Here an ASH openMMtheory object is provided to the function (defined like before) and the function will grab the information from it. It should then print a correct PDB-file with the residue, atom and segment information from the ASH OpenMM object. Note: all of this information is currently provided from the CHARMM PSF-file that is read into the ASH openMMtheory object
 Note: the atomnames column differs from conventional CHARMM usage. Instead OpenMM atomnames are used. Should not matter too much.</p>
 <p>Note: Only use PDB-files for basic visualization, when you want to be able to visualize the system and use the reside information etc in VMD to be able to select residues. PDB-file is not a good format for other things. We for example do not want to use it as a file format in general because the format only supports a limited number of decimal points for coordinates.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
