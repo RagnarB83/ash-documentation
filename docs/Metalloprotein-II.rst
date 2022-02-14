@@ -9,7 +9,7 @@ Additionally, the X-ray structure contains additional molecules: SCN\ :sup:`-` \
 
 
 ######################################################
-**1. OpenMM_Modeller parsing errors**
+1. OpenMM_Modeller parsing errors
 ######################################################
 
 If we download the 6lk1.pdb file and read into OpenMM_Modeller:
@@ -107,7 +107,7 @@ in the form of CONE lines (each line indicates which atom indices should be cons
 
 
 While we could add bonding information to specialresidue.xml and try to match the connectivity in the PDB-file an easier solution is to remove the connectivity information by creating a modified version
-of the PDB-file. This should probably always be an acceptable solution since we will constraint our metal-cluster residue anyway, as we don't have forcefield parameters available.
+of the PDB-file. This should probably always be an acceptable solution since we will constrain our metal-cluster residue anyway, as we don't have forcefield parameters available.
 Thus we make a modified version, called 6lk1-mod.pdb, that does not contain the CONE lines and we also remove most header lines of the PDB-file (all lines before ATOM/HETATM section begins).
 
 Next we run our script again (now using 6lk1-mod.pdb as input PDB file):
@@ -145,7 +145,7 @@ and again we make the choice to remove these crystallized contaminants from 6lk1
 Once we have done this, OpenMM_Modeller proceeds without problems but this does not mean of course that the system is correctly set up.
 
 ######################################################
-**2. OpenMM residue variants: protonation states**
+2. OpenMM residue variants: protonation states
 ######################################################
 
 As previously occurred for rubredoxin, OpenMM Modeller protonates the cysteine residues that are coordinated to the Fe ions.
@@ -194,16 +194,26 @@ The printed table shows what Cys residues we selected to deprotonate:
     12          TYR          0            A            13
     ...
 
-######################################################
-**3. Clashing residues**
-######################################################
 
-Arg39 residue clashes with [2Fe-2S] unit due to the fact that there are 2 thermal residues in PDB-file.
-Does PDB-fixer just remove them and add in a new one?
-If so then we need to print out a warning for that. Fix is to remove one of them at least, possibly need to rename ??
 
-TODO: 
+###########################################################
+3. A more realistic nonbonded model for the [2Fe-2S] 
+###########################################################
 
-######################################################
-**4. Charge and Lennard-Jones model**
-######################################################
+While a pragmatic solution to dealing with simple inorganic residues like the [2Fe-2S] cluster is to simply create 
+dummy forcefield parameters as in the specialresidue.xml file above, this will not always work.
+If the charges of the Fe and S atoms in [2Fe-2S] are zero, then this means no electrostatic interaction is present between
+these atoms and the rest of the protein+solvent. Furthermore, with epsilon and/or sigma parameters being 0.0 no repulsion (or attractive dispersion)
+forces are present between [2Fe-2S] and other atoms, meaning that other atoms could occupy the same space as the [2Fe-2S] cluster.
+
+.. note:: In electrostatically embedded QM/MM the metal cluster will most often be in the QM-region and any atom charges defined for the cluster will not be used.
+    Note, however, that the LJ interactions between QM and MM atoms are calculated and the LJ parameters may be important.
+
+
+Thus a more realistic scenario is to come up with a proper nonbonded model for the [2Fe-2S] cluster: i.e. charges and Lennard-Jones parameters.
+There are two main choices here:
+1. Search the literature for a study using nonbonded MM parameters for the same/similar residue. Ideally with the same protein forcefield.
+2. Derive the parameters using similar residues in the forcefield.
+3. Derive the parameters from a DFT calculation and a population analysis.
+
+----THIS IS NOT YET FINISHED----
