@@ -129,3 +129,36 @@ Example:
 
 A dictionary containing various properties is returned (dictionary keys) from an AnFreq job:
 (frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
+
+##############################################################################
+thermochemistry corrections
+##############################################################################
+
+Thermochemistry corrections are automatically calculated when either a Numfreq or Anfreq job is requested.
+
+.. code-block:: python
+
+    thermochem_an = AnFreq(theory=ORCAcalc, fragment=HF_frag)
+    thermochem_num = NumFreq(theory=ORCAcalc, fragment=HF_frag)
+
+    print("Thermochem property dict:", thermochem_an)
+    print("ZPVE (Eh) : ", thermochem_an['ZPVE'])
+
+A dictionary containing various properties is returned (dictionary keys):
+(frequencies, ZPVE, E_trans, E_rot, E_vib, E_tot, TS_trans, TS_rot, TS_vib, TS_el, vibenergycorr, Hcorr, Gcorr, TS_tot)
+
+Alternatively, the thermochemcalc function can be called directly.
+
+.. code-block:: python
+
+    def thermochemcalc(vfreq,atoms,fragment, multiplicity, temp=298.18,pressure=1.0):
+
+This function calculates the thermodynamic corrections from a list of available frequencies, number of atoms, ASH fragment object and spin multiplicity.
+The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be specified.
+
+.. code-block:: python
+
+    h2o_frag = Fragment(xyzfile="h2o.xyz")
+    #Manually defined frequencies for system
+    frequencies=[1600.1, 2300.2, 2400.3]
+    thermochemcalc(frequencies,3,h2o_frag, 1, temp=298.18, pressure=1.0)
