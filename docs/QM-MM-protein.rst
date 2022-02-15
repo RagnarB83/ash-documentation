@@ -1,8 +1,8 @@
 QM/MM on a protein
 ======================================
 
-How to do QM/MM calculations of a protein in ASH
-This tutorial is in progress...
+How to do QM/MM calculations of a protein in ASH in general.
+See also  :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for tutorials on the rubredoxin and ferredoxin metalloproteins.
 
 .. image:: figures/fefeh2ase-nosolv.png
    :align: right
@@ -12,21 +12,18 @@ This tutorial is in progress...
 **1. Prepare a classical MM model of the system.**
 ######################################################
 
-This step cam be the most time-consuming part of setting up a new QM/MM model of a protein.
+This step can be the most time-consuming part of setting up a new QM/MM model of a protein.
 It involves finding a good starting structure (e.g. an X-ray structure), preparing the PDB-file, choose a forcefield,
 adding missing hydrogens, removing disorder-coordinates, removing unnecessary residues, adding missing residues,
 choosing protonation state of titratable residues, solvate the protein, add counterions, fix unphysical orientations in the structure, solvating the protein,
 minimizing the structure and finally running at the very least a simple MD simulation to check for correctness.
 This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step are not easily corrected later on.
+The importance of taking this step seriously before starting any QM/MM can not be overstated!
 
 Some useful reading:
 https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
 
-
-
 There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
-
-
 
 ASH is currently capable of reading in (via OpenMM library):
 
@@ -41,15 +38,11 @@ ASH is currently capable of reading in (via OpenMM library):
 
 
 
-
-
-
 *Option a. OpenMM using the CHARMM forcefield*
 
 
 The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
 This has the convenience of using the same MM program that ASH uses for QM/MM.
-See :doc:`OpenMM-interface` for details.
 
 Example on lysozyme:
 
@@ -80,7 +73,7 @@ Example on lysozyme:
     OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=1000, traj_frequency=1000, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
-
+See :doc:`OpenMM-interface` for details and the :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.
 
 *Option b. GROMACS using the CHARMM forcefield*
 
@@ -203,7 +196,7 @@ run a single-point energy job for testing purposes.
 The division of the system into a QM-region and an MM-region is handled by defining a list of atom-indices that are
 QM-atoms (create a list called qmatoms) and pass that list to the qmatoms keyword argument of the QMMMTheory class.
 
-If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen)is
+If the QM-MM boundary crosses a covalent bond (usually the case for proteins) then a linkatom (hydrogen) is
 automatically created.
 The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.
 
@@ -540,7 +533,8 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
 ####################################################################
 
 The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
-The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system, there will be problems to deal with.
+The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system there will be problems
+to deal with and it will simply make more sense to split up the system-setup, classical MM MD and QM/MM optimizations into different scripts.
 
 .. code-block:: python
 
