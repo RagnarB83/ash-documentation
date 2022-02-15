@@ -138,10 +138,10 @@ Let's create an OpenMM forcefield XML file that looks like:
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="FEX" charge="3.0" sigma="1.3" epsilon="0.0"/>
+    <Atom type="FEX" charge="3.0" sigma="0.194215920554594" epsilon="1.046"/>
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
-    <Atom type="FEX" sigma="0.3" epsilon="0.00000"/>
+    <Atom type="FEX" sigma="0.194215920554594" epsilon="1.046"/>
     </LennardJonesForce>
     </ForceField>
 
@@ -149,9 +149,12 @@ This OpenMM XML file defines a forcefield associated with the Fe residue. A list
 Note that an atomtype can be applied to many atoms in a residue or many residues while an atomname is unique within a residue.
 Then the extra residue needs to be defined (named "FE"). Next we define an atom name ("FE") that points to the atom type ("FEX").
 Finally, we need to define nonbonded parameters associated with the residue and the single atom (here an Fe3+ ion is defined). 
-We ignore the LJ parameters in this case (epsilon=0.0 kJ/mol) which is an acceptable approximation for a fully coordinated metal ion.
-Note that we need to define both NonbondedForce and LennardJonesForce in order
-to be consistent with the CHARMM36 forcefield as defined within OpenMM.
+While we could ignore the LJ parameters for Fe, since this Fe is a fully coordinated metal ion (other residue-atoms unlikely to come close), 
+in practice it is usually better to put some simple Lennard-Jones parameters on the ion to prevent artifical behaviour such as a water molecule attempting to bind to the +3 pointcharge. 
+Here we use available parameters for the Zn(II) ion from the CHARMM forcefield which should be a fine approximation.
+
+Note that in this case we need to define both NonbondedForce and LennardJonesForce in order to be consistent with the CHARMM36 forcefield as defined within OpenMM.
+The form of the XML file will be different if using another forcefield than CHARMM.
 
 
 Now that we have created an XML-file (*specialresidue.xml*) associated with the Fe ion residue that OpenMM complained about, we can try to call OpenMM_Modeller again, this time telling OpenMM_Modeller about the extra forcefield file.
@@ -335,7 +338,7 @@ To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup 
 
 .. code-block:: python
 
-    #Creating new OpenMM object from OpenMM full system file
+    #Creating new OpenMM object by specifying the general CHARMM36 XML files and the special residue file
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
                 platform='OpenCL', numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
@@ -371,8 +374,8 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 
     numcores=4
 
-    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note that ASH counts from 0.
-    cofactor_indices=[96, 136, 567, 607, 755]
+    #Defining list of lists of bond-constraints.  
+    #WARNING: ASH counts atom indices from 0.
     bondconstraints=[[755,96],[755,136],[755,567],[755,607]]
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment or PDB-file)
@@ -481,8 +484,8 @@ Once the simulation is found to be converged, the last snapshot together with th
 
     numcores=4
 
-    #FeS4 indices (inspect finalsystem.pdb file to get atom indices). Note that ASH counts from 0.
-    cofactor_indices=[96, 136, 567, 607, 755]
+    #Defining list of lists of bond-constraints.  
+    #WARNING: ASH counts atom indices from 0.
     bondconstraints=[[755,96],[755,136],[755,567],[755,607]]
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment or PDB-file)
