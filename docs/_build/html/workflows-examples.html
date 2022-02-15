@@ -238,7 +238,7 @@ more complex workflows, not yet available directly in ASH.</p>
 <h2>Example 1 : Optimization + Frequency + HL-singlepoint<a class="headerlink" href="#example-1-optimization-frequency-hl-singlepoint" title="Permalink to this headline">¶</a></h2>
 <p>Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
 using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
-In ASH you can use the thermochemprotocol_single to automize such a workflow.</p>
+In ASH you can use the <strong>thermochemprotocol_single</strong> to automize such a workflow.</p>
 <p>See: <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a> for details.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -260,7 +260,7 @@ In ASH you can use the thermochemprotocol_single to automize such a workflow.</p
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZPVE: &quot;</span><span class="p">,</span> <span class="n">thermochem</span><span class="p">[</span><span class="s1">&#39;ZPVE&#39;</span><span class="p">],</span> <span class="s2">&quot;Eh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that suits your needs:</p>
+<p>But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that better suits your needs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">2</span>
@@ -470,7 +470,7 @@ CAM-B3LYP  -1.1625896338
 <h2>Example 3b : Running multiple single-point energies with different functionals (in parallel)<a class="headerlink" href="#example-3b-running-multiple-single-point-energies-with-different-functionals-in-parallel" title="Permalink to this headline">¶</a></h2>
 <p>The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
-This can be accomplished using the Singlepoint_parallel function inside ASH.
+This can be accomplished using the <strong>Singlepoint_parallel</strong> function inside ASH.
 Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
 See <a class="reference internal" href="parallelization.html"><span class="doc">Parallelization in ASH</span></a> for more information.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>

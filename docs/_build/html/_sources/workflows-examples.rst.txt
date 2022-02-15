@@ -15,7 +15,7 @@ Example 1 : Optimization + Frequency + HL-singlepoint
 
 Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
 using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
-In ASH you can use the thermochemprotocol_single to automize such a workflow. 
+In ASH you can use the **thermochemprotocol_single** to automize such a workflow. 
 
 See: :doc:`module_workflows` for details.
 
@@ -40,7 +40,7 @@ See: :doc:`module_workflows` for details.
     print("Final HL energy:", energy, "Eh")
     print("ZPVE: ", thermochem['ZPVE'], "Eh")
 
-But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that suits your needs:
+But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that better suits your needs:
 
 .. code-block:: python
 
@@ -280,7 +280,7 @@ Example 3b : Running multiple single-point energies with different functionals (
 
 The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
-This can be accomplished using the Singlepoint_parallel function inside ASH.
+This can be accomplished using the **Singlepoint_parallel** function inside ASH.
 Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
 See :doc:`parallelization` for more information.
 
