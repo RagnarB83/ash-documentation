@@ -309,6 +309,206 @@ The final output looks like :
 	Corrected interaction energy: -4.359825562958491 kcal/mol
 
 
+
+###################################
+Automatic non-Aufbau calculator
+###################################
+
+Excited SCF configurations can be tricky to converge to without falling back to the ground-state. 
+While various different algorithms have recently been suggested in the literature to help locating such excited SCF configurations, often the methods are  only available in specific QM codes.
+The `STEP <https://doi.org/10.1021/acs.jctc.0c00502>`_ algorithm by Carter-Fenk and Herbert is a much simpler algorithm and can be used with any QM program with level-shifting implemented (a common SCF convergence aid).
+The idea is simply to choose to change the MO occupation as desired (e.g. swap the HOMO and LUMO orbitals) and then choose a specific levelshift and hopefully converge to the desired SCF configuration.
+The levelshift is chosen based on the occupied-virtual orbital-energy gap together with an extra parameter, epsilon (0.1 by default).
+
+ASH allows one to utilize the STEP algorithm in a convenient way together with ORCA (only QM-program supported so far) using the **AutoNonAufbau** function.
+
+.. code-block:: python
+
+	def AutoNonAufbau(fragment=None, theory=None, num_occ_orbs=1, num_virt_orbs=3, spinset=[0], stability_analysis_GS=False, 
+					TDDFT=False, epsilon=0.1, maxiter=500, manual_levelshift=None):
+
+
+**AutoNonAufbau** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - ASH Fragment object.
+   * - ``theory``
+     - ASH Theory
+     - None
+     - An ASH theory level. Currently only ORCATheory is supported.
+   * - ``num_occ_orbs``
+     - integer
+     - 1
+     - Number of occupied orbitals to include the in orbital rotation procedure. A value of 3 would include the HOMO, HOMO-1 and HOMO-2
+   * - ``num_virt_orbs``
+     - integer
+     - 3
+     - Number of virtual orbitals to include the in orbital rotation procedure. A value of 3 would include the LUMO, LUMO+1 and LUMO+2
+   * - ``spinset``
+     - list
+     - [0]
+     - What spin manifold to use. Alpha: [0] or  Beta: [1] or Both: [0,1]
+   * - ``TDDFT``
+     - Boolean
+     - False
+     - Whether to do TDDFT on the ground-state in order to select orbitals to rotate. Experimental feature
+   * - ``epsilon``
+     - float
+     - 0.1
+     - The value of the epsilon parameter in the STEP algorithm. 
+   * - ``maxiter``
+     - integer
+     - 500
+     - Maximum number of ORCA SCF iterations.
+   * - ``manual_levelshift``
+     - float
+     - None
+     - Manual levelshift instead of the automatic levelshift (based on the gap and epsilon parameter)
+
+
+**How to use:**
+
+One reads in an ASH fragment, an ORCATheory object and optionally specifies how many occupied and virtual orbitals, what spin manifold to use etc.
+ASH will then tell ORCA to calculate the ground-state SCF in a first step.
+ASH will then go through all possible SCF configurations that involve the highest-energy occupied MOs and the lowest-energy virtual MOs based on the user selection,
+rotate the respective occupied and virtual orbital pair (e.g. the HOMO and LUMO+1), apply a levelshift based on the orbital-energy gap and the epsilon parameter (0.1 Eh by default)
+and then attempt to converge the SCF for each possible guess configuration.
+
+
+Example: Finding excited SCF states of the water molecule.
+
+.. code-block:: python
+
+	from ash import *
+	#
+	frag=Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+
+	orcacalc=ORCATheory(orcasimpleinput="! UHF def2-QZVPPD usesym")
+
+	AutoNonAufbau(theory=orcacalc, fragment=frag, num_occ_orbs=2, num_virt_orbs=16, spinset=[0])
+
+**Output:**
+
+.. code-block:: text
+
+						#########################
+						#                       #
+						#     AutoNonAufbau     #
+						#                       #
+						#########################
+
+
+	Spin orbital sets to choose: [0]
+	Number of occupied orbitals allowed in MO swap: 2
+	Number of virtual orbitals allowed in MO swap: 16
+	Total number of states: 32
+	TDDFT: False
+	stability_analysis_GS: False
+	Epsilon: 0.1
+	manual_levelshift: None
+	Cleaning up old ORCA files
+	Now doing initial state SCF calculation
+	...
+	Energy:  -76.06701160263
+	...
+	==========================================================================================
+	Now running excited state SCF no. 0 with multiplicity: 1 and spinset 0
+	==========================================================================================
+	Simple MO selection scheme
+	homo_lumo_gap: -0.5747076804099635
+	Will rotate orbital 4 (HOMO) and orbital 5
+	lshift: 0.6747076804099634
+	Now doing SCF calculation with rotated MOs and levelshift
+	...
+	Energy:  -75.835914096332
+	GS/ES state energy gap: 6.29 eV
+	Found something different than ground state
+	Converged SCF energy higher than ground-state SCF. Found new excited state SCF solution !
+
+	==========================================================================================
+	Now running excited state SCF no. 1 with multiplicity: 1 and spinset 0
+	==========================================================================================
+	Simple MO selection scheme
+	homo_lumo_gap: -0.58996231689521
+	Will rotate orbital 4 (HOMO) and orbital 6
+	lshift: 0.6899623168952099
+	Now doing SCF calculation with rotated MOs and levelshift
+	...
+	Energy:  -75.771691604422
+	GS/ES state energy gap: 8.04 eV
+	Found something different than ground state
+	Converged SCF energy higher than ground-state SCF. Found new excited state SCF solution !
+	==========================================================================================
+	Now running excited state SCF no. 2 with multiplicity: 1 and spinset 0
+	==========================================================================================
+	Simple MO selection scheme
+	homo_lumo_gap: -0.6157346044574922
+	Will rotate orbital 4 (HOMO) and orbital 7
+	lshift: 0.7157346044574922
+	Now doing SCF calculation with rotated MOs and levelshift
+	...
+	Energy:  -76.067008807825
+	GS/ES state energy gap: 0.00 eV
+	GS/ES state energy gap smaller than 0.04 eV. Presumably found the original SCF again.
+
+
+The final output will print a list of all the states found.
+
+.. code-block:: text
+
+	Ground-state SCF energy: -76.06701160263 Eh
+	-----
+	Excited state index: 0
+	Spin multiplicity: 1
+	Excited-state SCF energy 0: -75.835914096332 Eh
+	Excited-state SCF transition energy: 6.29 eV
+	Excited-state SCF orbital rotation: Occ:[4] Virt:[5]
+	Rotation in spin manifold:  [0]
+	Excited-state SCF HOMO-LUMO gap: -0.5747076804099635 Eh (-15.638599999999999) eV:
+	Excited-state SCF Levelshift chosen: 0.6747076804099634
+	-----
+	Excited state index: 1
+	Spin multiplicity: 1
+	Excited-state SCF energy 1: -75.771691604422 Eh
+	Excited-state SCF transition energy: 8.04 eV
+	Excited-state SCF orbital rotation: Occ:[4] Virt:[6]
+	Rotation in spin manifold:  [0]
+	Excited-state SCF HOMO-LUMO gap: -0.58996231689521 Eh (-16.0537) eV:
+	Excited-state SCF Levelshift chosen: 0.6899623168952099
+	-----
+	Excited state index: 2
+	Spin multiplicity: 1
+	Excited-state SCF energy 2: -76.067008807825 Eh
+	Excited-state SCF transition energy: 0.00 eV
+	Excited-state SCF orbital rotation: Occ:[4] Virt:[7]
+	Rotation in spin manifold:  [0]
+	Excited-state SCF HOMO-LUMO gap: -0.6157346044574922 Eh (-16.755) eV:
+	Excited-state SCF Levelshift chosen: 0.7157346044574922
+
+ORCA outputfiles and GBW files for each state is kept and can be inspected or used for future calculations.
+
+- orca_GS.out
+- orca_GS.gbw
+- orcaES_SCF0_mult1_spinset0.out
+- orcaES_SCF0_mult1_spinset0.gbw
+- orcaES_SCF1_mult1_spinset0.out
+- orcaES_SCF1_mult1_spinset0.gbw
+- orcaES_SCF2_mult1_spinset0.out
+- orcaES_SCF2_mult1_spinset0.gbw
+
+
+
+
 ###################################
 Automatic active-space selection
 ###################################

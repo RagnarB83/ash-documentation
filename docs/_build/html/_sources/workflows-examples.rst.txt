@@ -144,8 +144,6 @@ You can of course also combine the Opt+Freq+HL protocol from Example 1 with the 
 and calculate the reaction energy directly at a high-level of theory together with thermochemical corrections from a frequency job.
 
 
-See :doc:`thermochemistry` for more information.
-
 .. code-block:: python
 
     from ash import *

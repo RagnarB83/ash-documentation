@@ -39,7 +39,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
   - basisfamily (string): Can be set to various options. See table below. 
   - relativity (string): Options: 'DKH', 'ZORA', 'NoRel', None. Default: None
   - orcadir(string): Path-to-ORCA. Default: None
-  - stabilityanalysis (Boolean): Perform SCF stability analysis. Default: families
+  - stabilityanalysis (Boolean): Perform SCF stability analysis. Default: False
   - numcores (integer): Number of cores to use in ORCA calculation.
   - Openshellreference (string): Use alternative reference WF in open-shell calculation. Options: 'UHF', 'QRO' Default: None
   - DFTreference (string): Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid DFT keyword). Default: None
