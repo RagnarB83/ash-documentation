@@ -236,15 +236,54 @@ See also <a class="reference internal" href="workflows-examples.html"><span clas
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ReactionEnergy</span><span class="p">(</span><span class="n">list_of_energies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>Options:</p>
-<ul class="simple">
-<li><p>list_of_energies (list of floats). List of total energies in Eh (hartrees).</p></li>
-<li><p>stoichiometry (list of integers). Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.</p></li>
-<li><p>list_of_fragments (list of ASH Fragments). ASH fragments must have a set energy attribute.</p></li>
-<li><p>unit (string). String that indicates the final unit to convert reaction energy to. Options: ‘kcal/mol’, ‘eV’, ‘kJ/mol’, ‘cm-1’. Default: ‘kcal/mol’</p></li>
-<li><p>reference (float). If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference. Default=None</p></li>
-<li><p>silent (Boolean). If True, ReactionEnergy will not print to standard-output, only return the result.</p></li>
-</ul>
+<p><strong>ReactionEnergy</strong> options:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_of_energies</span></code></p></td>
+<td><p>List of floats</p></td>
+<td><p>None</p></td>
+<td><p>List of energies as floats for reaction. Order must match stoichiometry list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stoichiometry</span></code></p></td>
+<td><p>ASH Theory</p></td>
+<td><p>list of integers</p></td>
+<td><p>Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_of_fragments</span></code></p></td>
+<td><p>list of ASH Fragments</p></td>
+<td><p>None</p></td>
+<td><p>List of ASH fragments that must have a set energy attribute. Alternative to list_of_energies.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">unit</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘kcal/mol’</p></td>
+<td><p>String that indicates the final unit to convert reaction energy to. Options: ‘kcal/mol’, ‘eV’, ‘kJ/mol’, ‘cm-1’.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+<td><p>float</p></td>
+<td><p>None</p></td>
+<td><p>If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">silent</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether function prints to stdout (True) or not (False)</p></td>
+</tr>
+</tbody>
+</table>
 <p>The simple ReactionEnergy function is a convenient way to calculate the reaction energy for a reaction from a list of energies and the stoichiometry associated with the reaction.
 The function prints to standard output the reaction energy (unless silent=True) and returns the relative energy converted into a unit of choice (default: kcal/mol).</p>
 <p>Simple example for Haber-Bosch reaction:  N<sub>2</sub>  + 3H<sub>2</sub> → 2NH<sub>3</sub></p>
@@ -267,7 +306,7 @@ The function prints to standard output the reaction energy (unless silent=True) 
 </pre></div>
 </div>
 <p>If there is an energy attribute associated with each fragment it is also possible to just provide ReactionEnergy with a list of the fragments involved.
-This will only work if the energy attribute of the fragment has been definded. Some ASH functions will do this: <strong>Singlepoint</strong>, <strong>Singlepoint_fragments</strong>, <strong>geomeTRICOptimizer</strong></p>
+This will only work if the energy attribute of the fragment has been defined. Some ASH functions will do this: <strong>Singlepoint</strong>, <strong>Singlepoint_fragments</strong>, <strong>geomeTRICOptimizer</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Calculating reaction-energy using list_of_fragments and stoichiometry</span>
 <span class="n">specieslist</span><span class="o">=</span><span class="p">[</span><span class="n">N2</span><span class="p">,</span> <span class="n">H2</span><span class="p">,</span> <span class="n">NH3</span><span class="p">]</span>
 <span class="n">reaction_energy</span><span class="p">,</span> <span class="n">unused</span> <span class="o">=</span> <span class="n">ReactionEnergy</span><span class="p">(</span><span class="n">stoichiometry</span><span class="o">=</span><span class="n">stoichiometry</span><span class="p">,</span> <span class="n">list_of_fragments</span><span class="o">=</span><span class="n">specieslist</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ΔE&#39;</span><span class="p">)</span>
@@ -278,12 +317,12 @@ This will only work if the energy attribute of the fragment has been definded. S
 <h2>Thermochemprotocols<a class="headerlink" href="#thermochemprotocols" title="Permalink to this headline">¶</a></h2>
 <p>The <strong>thermochemprotocol_reaction</strong> and <strong>thermochemprotocol_single</strong> functions can be used to
 perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.</p>
-<p>The thermochemprotocol_reaction is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.</p>
+<p>The <strong>thermochemprotocol_reaction</strong> is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">thermochemprotocol_reaction</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
                    <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>while thermochemprotocol_single is used for a single fragment (thermochemprotocol_reaction calls thermochemprotocol_single).</p>
+<p>while <strong>thermochemprotocol_single</strong> is used for a single fragment (<strong>thermochemprotocol_reaction</strong> calls <strong>thermochemprotocol_single</strong>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">thermochemprotocol_single</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SP_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
                    <span class="n">analyticHessian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 </pre></div>

@@ -101,6 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#example-script">Example script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-script-directly-in-the-shell">Running script directly in the shell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#interactive-ash-in-a-repl-or-ipython-environment">Interactive ASH in a REPL or iPython environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ash-with-julia-support">ASH with Julia support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ash-settings">ASH settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#use-of-colors-in-ash-output">Use of colors in ASH output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#submitting-job">Submitting job</a></li>
@@ -277,8 +278,6 @@ defines variables related to the ORCA-interface , creates an ORCA-theory object
 <h2>Running script directly in the shell<a class="headerlink" href="#running-script-directly-in-the-shell" title="Permalink to this headline">¶</a></h2>
 <p>For a simple job we can just run the script directly</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
-<span class="c1">#or (for full Python-Julia support)</span>
-python3_ash ashtest.py
 </pre></div>
 </div>
 <p>The output will be written to standard output (i.e. your shell). You can redirect the output to a file.</p>
@@ -295,6 +294,12 @@ Make sure to use the iPython that uses the same Python as ASH.</p>
  <div align=center>
 <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
  </div></div>
+<div class="section" id="ash-with-julia-support">
+<h2>ASH with Julia support<a class="headerlink" href="#ash-with-julia-support" title="Permalink to this headline">¶</a></h2>
+<p>Some ASH functionality (primarily the molecular crystal QM/MM code) requires a working Python-Julia interface as some of the Python routines are too slow.
+ASH can use both <a class="reference external" href="https://cjdoris.github.io/PythonCall.jl/stable/pycall/">PythonCall</a> and <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a>
+The PythonCall/juliacall library is recommended.</p>
+</div>
 <div class="section" id="ash-settings">
 <h2>ASH settings<a class="headerlink" href="#ash-settings" title="Permalink to this headline">¶</a></h2>
 <p>Global settings are stored in  <em>/path/to/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
@@ -445,7 +450,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 
 <span class="c1">#Start Ash job from scratch dir.  Output file is written directly to submit directory</span>
 <span class="nb">export</span> <span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
-python3_ash <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+python3 <span class="nv">$job</span>.py &gt;&gt; <span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="nv">$outputname</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 
 <span class="c1"># Ash has finished. Now copy important stuff back.</span>
 <span class="nv">outputdir</span><span class="o">=</span><span class="nv">$SLURM_SUBMIT_DIR</span>/<span class="si">${</span><span class="nv">job</span><span class="si">}</span>_<span class="si">${</span><span class="nv">SLURM_JOB_ID</span><span class="si">}</span>

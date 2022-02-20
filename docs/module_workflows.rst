@@ -13,14 +13,42 @@ ReactionEnergy
 
 	def ReactionEnergy(list_of_energies=None, stoichiometry=None, list_of_fragments=None, unit='kcal/mol', label=None, reference=None, silent=False):
 
-Options:
 
-- list_of_energies (list of floats). List of total energies in Eh (hartrees).
-- stoichiometry (list of integers). Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.
-- list_of_fragments (list of ASH Fragments). ASH fragments must have a set energy attribute.
-- unit (string). String that indicates the final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'. Default: 'kcal/mol'
-- reference (float). If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference. Default=None
-- silent (Boolean). If True, ReactionEnergy will not print to standard-output, only return the result.
+**ReactionEnergy** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``list_of_energies``
+     - List of floats
+     - None
+     - List of energies as floats for reaction. Order must match stoichiometry list.
+   * - ``stoichiometry``
+     - ASH Theory
+     - list of integers
+     - Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.
+   * - ``list_of_fragments``
+     - list of ASH Fragments
+     - None
+     - List of ASH fragments that must have a set energy attribute. Alternative to list_of_energies.
+   * - ``unit``
+     - string
+     - 'kcal/mol'
+     - String that indicates the final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'.
+   * - ``reference``
+     - float
+     - None
+     - If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference.
+   * - ``silent``
+     - Boolean
+     - False
+     - Whether function prints to stdout (True) or not (False)
+
 
 The simple ReactionEnergy function is a convenient way to calculate the reaction energy for a reaction from a list of energies and the stoichiometry associated with the reaction.
 The function prints to standard output the reaction energy (unless silent=True) and returns the relative energy converted into a unit of choice (default: kcal/mol).
@@ -49,7 +77,7 @@ Simple example for Haber-Bosch reaction:  N\ :sub:`2` \  + 3H\ :sub:`2`\  → 2N
 
 
 If there is an energy attribute associated with each fragment it is also possible to just provide ReactionEnergy with a list of the fragments involved.
-This will only work if the energy attribute of the fragment has been definded. Some ASH functions will do this: **Singlepoint**, **Singlepoint_fragments**, **geomeTRICOptimizer**
+This will only work if the energy attribute of the fragment has been defined. Some ASH functions will do this: **Singlepoint**, **Singlepoint_fragments**, **geomeTRICOptimizer**
 
 .. code-block:: python
 
@@ -66,14 +94,14 @@ The **thermochemprotocol_reaction** and **thermochemprotocol_single** functions 
 perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.
 
 
-The thermochemprotocol_reaction is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.
+The **thermochemprotocol_reaction** is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.
 
 .. code-block:: python
 
     def thermochemprotocol_reaction(fraglist=None, stoichiometry=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
                        analyticHessian=False, temp=298.15, pressure=1.0)
 
-while thermochemprotocol_single is used for a single fragment (thermochemprotocol_reaction calls thermochemprotocol_single).
+while **thermochemprotocol_single** is used for a single fragment (**thermochemprotocol_reaction** calls **thermochemprotocol_single**).
 
 .. code-block:: python
 
