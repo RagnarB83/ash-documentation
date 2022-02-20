@@ -72,8 +72,6 @@ For a simple job we can just run the script directly
 .. code-block:: shell
 
     python3 ashtest.py
-    #or (for full Python-Julia support)
-    python3_ash ashtest.py
 
 The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
 
@@ -97,7 +95,13 @@ Make sure to use the iPython that uses the same Python as ASH.
     </div>
 
 
+############################
+ASH with Julia support
+############################
 
+Some ASH functionality (primarily the molecular crystal QM/MM code) requires a working Python-Julia interface as some of the Python routines are too slow.
+ASH can use both `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ and `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
+The PythonCall/juliacall library is recommended.
 
 #####################
 ASH settings
@@ -116,12 +120,15 @@ ASH will attempt to read this file on startup.
     print_input = True
     print_logo = True
     load_julia = True
+    julia_library = pythoncall #pyjulia is another option
     debugflag = False
     print_exit_footer = True
     print_full_timings = True
     nonbondedMM_code = "julia"
     connectivity_code = "julia"
     orcadir = '/path/to/orcadir'
+    print_exit_footer = True
+    print_full_timings = True
 
 In addition to options above it is also possible to specify the paths to various external codes.
 If these paths are set in the settings file, one can avoid setting them in the inputfiles.
@@ -265,7 +272,7 @@ where jobscript.sh is:
 
     #Start Ash job from scratch dir.  Output file is written directly to submit directory
     export PYTHONUNBUFFERED=1
-    python3_ash $job.py >> $SLURM_SUBMIT_DIR/$outputname 2>&1
+    python3 $job.py >> $SLURM_SUBMIT_DIR/$outputname 2>&1
 
     # Ash has finished. Now copy important stuff back.
     outputdir=$SLURM_SUBMIT_DIR/${job}_${SLURM_JOB_ID}

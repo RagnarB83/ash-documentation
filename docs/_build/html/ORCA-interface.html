@@ -432,8 +432,12 @@ setting (in the shell or jobscript):</p>
 <div class="section" id="useful-orca-functions">
 <h2>Useful ORCA functions<a class="headerlink" href="#useful-orca-functions" title="Permalink to this headline">¶</a></h2>
 <p>In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
-To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
-To be documented:</p>
+To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py</p>
+<p><strong>run__orca_plot</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_orca_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">densityfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_operator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>To be documented:</p>
 <p>grab_EFG_from_ORCA_output(filename)</p>
 <p>ICE_WF_size(filename)</p>
 <p>QRO_occ_energies_grab(filename)</p>
@@ -442,7 +446,6 @@ To be documented:</p>
 <p>MP2_natocc_grab(filename)</p>
 <p>check_stability_in_output(file)</p>
 <p>grabEOMIPs(file)</p>
-<p>run_orca_plot(orcadir, filename, option, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None)</p>
 <p>grabatomcharges_ORCA(chargemodel,outputfile)</p>
 <p>chargemodel_select(chargemodel)</p>
 <p>read_ORCA_Hessian(hessfile)</p>

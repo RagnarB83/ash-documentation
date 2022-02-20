@@ -126,6 +126,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#counter-poise-correction-orca">Counter-poise correction (ORCA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automatic-non-aufbau-calculator">Automatic non-Aufbau calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automatic-active-space-selection">Automatic active-space selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#redox-difference-density">Redox difference density</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
@@ -322,18 +323,18 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 </div>
 <div class="section" id="calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files">
 <h2>calc_xyzfiles: Run calculations on a collection of XYZ-files<a class="headerlink" href="#calc-xyzfiles-run-calculations-on-a-collection-of-xyz-files" title="Permalink to this headline">¶</a></h2>
-<p>calc_xyzfiles is similar to Singlepoint_fragments (<a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a>) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.</p>
+<p><strong>calc_xyzfiles</strong> is similar to <strong>Singlepoint_fragments</strong> (<a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a>) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_xyzfiles</span><span class="p">(</span><span class="n">xyzdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Opt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Freq</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xtb_preopt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations)
-then this can be easily accomplished using the calc_xyzfiles function.
+then this can be easily accomplished using the <strong>calc_xyzfiles</strong> function.
 Charge and multiplicities for each XYZ-file need to be given in the description-line (2nd line) of each XYZ-file like this:</p>
 <p>HCl.xyz example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2
 0 1
 H 0.0 0.0 0.0
-Cl 0.0 0.0 0.0
+Cl 0.0 0.0 1.3
 </pre></div>
 </div>
 <p>Alternatively, if all molecules are e.g. neutral singlets then one can give charge=0, mult=1 keyword arguments to <strong>calc_xyzfiles()</strong></p>
@@ -356,7 +357,8 @@ Cl 0.0 0.0 0.0
 </pre></div>
 </div>
 <p>The ASH script then runs through and gives a table at the end with the energies.
-In the case of Opt=True, a geometry optimization is performed for each molecule and a final directory of XYZ-files with optimized coordinates is created.</p>
+In the case of Opt=True, a geometry optimization is performed for each molecule at the chosen theory-level instead of a singlepoint calculations
+and a final directory of XYZ-files with optimized coordinates is created.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>XYZ-file             Charge     Mult           Energy(Eh)
 ----------------------------------------------------------------------
 no.xyz                     0       2      -129.8755914784
@@ -753,6 +755,71 @@ Orbital file to use for future calculations: orca.gbw
 Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
 </pre></div>
 </div>
+</div>
+<div class="section" id="redox-difference-density">
+<h2>Redox difference density<a class="headerlink" href="#redox-difference-density" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/cocene-redox-diffdens-300.png"><img alt="_images/cocene-redox-diffdens-300.png" class="align-center" src="_images/cocene-redox-diffdens-300.png" style="width: 700px;" /></a>
+<p>To understand the nature of a redox process it can be useful to calculate and visualize the density difference between the two redox species.
+This can only cleanly be done for a vertical redox process.
+First one requires Cube files of the electron density for both species that should have the same geometry and same number of grid points (and ideally quite fine).
+Then one can call the built-in ASH function: <strong>read_cube</strong> and <strong>write_cube_diff</strong>  to output the density difference as a Cube file.
+The calculations, Cube-file creation and the density-difference can be done in a single script as shown below if using ORCA (orca_plot used to generate the Cubefiles.)</p>
+<p><strong>Example: Vertical ionization of Cobaltocene</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="n">string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Co       6.344947000     -1.560817000      5.954256000</span>
+<span class="s2">C        6.026452000     -0.546182000      7.802276000</span>
+<span class="s2">C        5.793563000     -1.965872000      7.908267000</span>
+<span class="s2">C        7.027412000     -2.657637000      7.660083000</span>
+<span class="s2">C        7.976024000     -1.681400000      7.254253000</span>
+<span class="s2">C        7.360141000     -0.371346000      7.359546000</span>
+<span class="s2">H        5.287260000      0.234934000      7.955977000</span>
+<span class="s2">H        4.853677000     -2.430623000      8.196105000</span>
+<span class="s2">H        7.174908000     -3.733662000      7.680248000</span>
+<span class="s2">H        7.845323000      0.573837000      7.130600000</span>
+<span class="s2">C        7.003675000     -1.909758000      4.002507000</span>
+<span class="s2">C        6.025582000     -2.892708000      4.310293000</span>
+<span class="s2">C        4.831240000     -2.191536000      4.690416000</span>
+<span class="s2">C        5.029751000     -0.780020000      4.468693000</span>
+<span class="s2">C        6.380790000     -0.601338000      4.083942000</span>
+<span class="s2">H        8.038293000     -2.097559000      3.727053000</span>
+<span class="s2">H        6.179063000     -3.967316000      4.350882000</span>
+<span class="s2">H        3.905308000     -2.652860000      5.025216000</span>
+<span class="s2">H        6.875603000      0.346060000      3.887076000</span>
+<span class="s2">H        4.297348000      0.002948000      4.644348000</span>
+<span class="s2">H        8.999375000     -1.871686000      6.940915000</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">#Defining fragment for redox reaction</span>
+<span class="n">Co_neut</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">string</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">Co_ox</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">string</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cocene_&quot;</span><span class="o">+</span><span class="s1">&#39;_&#39;</span>
+<span class="c1">#Defining QM theory as ORCA here</span>
+<span class="n">qm</span><span class="o">=</span><span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP tightscf notrah&quot;</span><span class="p">)</span>
+
+<span class="c1">#Run neutral species with ORCA</span>
+<span class="n">e_neut</span><span class="o">=</span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">Co_neut</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">qm</span><span class="o">.</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.gbw&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">+</span><span class="s2">&quot;neut.gbw&quot;</span><span class="p">)</span> <span class="c1"># Copy GBW file</span>
+<span class="c1">#Run orca_plot to request electron density creation from ORCA gbw file</span>
+<span class="n">run_orca_plot</span><span class="p">(</span><span class="n">label</span><span class="o">+</span><span class="s2">&quot;neut.gbw&quot;</span><span class="p">,</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+<span class="c1">#Run oxidized species with ORCA</span>
+<span class="n">e_ox</span><span class="o">=</span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">Co_ox</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">qm</span><span class="o">.</span><span class="n">filename</span><span class="o">+</span><span class="s1">&#39;.gbw&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">+</span><span class="s2">&quot;ox.gbw&quot;</span><span class="p">)</span>  <span class="c1"># Copy GBW file</span>
+<span class="c1">#Run orca_plot to request electron density creation from ORCA gbw file</span>
+<span class="n">run_orca_plot</span><span class="p">(</span><span class="n">label</span><span class="o">+</span><span class="s2">&quot;ox.gbw&quot;</span><span class="p">,</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">gridvalue</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+<span class="c1">#Read Cubefiles from disk.</span>
+<span class="n">neut_cube_data</span> <span class="o">=</span> <span class="n">functions</span><span class="o">.</span><span class="n">functions_elstructure</span><span class="o">.</span><span class="n">read_cube</span><span class="p">(</span><span class="n">label</span><span class="o">+</span><span class="s2">&quot;neut.eldens.cube&quot;</span><span class="p">)</span>
+<span class="n">ox_cube_data</span> <span class="o">=</span> <span class="n">functions</span><span class="o">.</span><span class="n">functions_elstructure</span><span class="o">.</span><span class="n">read_cube</span><span class="p">(</span><span class="n">label</span><span class="o">+</span><span class="s2">&quot;ox.eldens.cube&quot;</span><span class="p">)</span>
+<span class="c1">#Write out difference density as a Cubefile</span>
+<span class="n">functions</span><span class="o">.</span><span class="n">functions_elstructure</span><span class="o">.</span><span class="n">write_cube_diff</span><span class="p">(</span><span class="n">neut_cube_data</span><span class="p">,</span> <span class="n">ox_cube_data</span><span class="p">,</span> <span class="n">label</span><span class="o">+</span><span class="s2">&quot;diffence_density.cube&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The script will output the files Cocene_neut.eldens.cube and Cocene_ox.eldens.cube that are here generated by orca_plot.
+The file Cocene_diffence_density.cube is generated by <strong>write_cube_diff</strong>.</p>
 </div>
 </div>
 

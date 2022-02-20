@@ -206,6 +206,17 @@ Useful ORCA functions
 
 In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
 To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
+
+**run__orca_plot**
+
+.. code-block:: python
+
+  def run_orca_plot(filename, option, orcadir=None, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None):
+
+
+
+
+
 To be documented:
 
 grab_EFG_from_ORCA_output(filename)
@@ -224,7 +235,7 @@ check_stability_in_output(file)
 
 grabEOMIPs(file)
 
-run_orca_plot(orcadir, filename, option, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None)
+
 
 grabatomcharges_ORCA(chargemodel,outputfile)
 

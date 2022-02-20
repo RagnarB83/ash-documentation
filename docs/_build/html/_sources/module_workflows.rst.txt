@@ -119,7 +119,7 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 calc_xyzfiles: Run calculations on a collection of XYZ-files
 ###############################################################
 
-calc_xyzfiles is similar to Singlepoint_fragments (:doc:`singlepoint`) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.
+**calc_xyzfiles** is similar to **Singlepoint_fragments** (:doc:`singlepoint`) but saves you the step of defining fragments manually if you already have XYZ-files collected in a directory.
 
 
 .. code-block:: python
@@ -128,7 +128,7 @@ calc_xyzfiles is similar to Singlepoint_fragments (:doc:`singlepoint`) but saves
 
 
 If you have a collection of XYZ-files that you wish to run calculations on (either single-point energy evalutation or geometry optimizations) 
-then this can be easily accomplished using the calc_xyzfiles function. 
+then this can be easily accomplished using the **calc_xyzfiles** function. 
 Charge and multiplicities for each XYZ-file need to be given in the description-line (2nd line) of each XYZ-file like this:
 
 HCl.xyz example:
@@ -138,7 +138,7 @@ HCl.xyz example:
 	2
 	0 1
 	H 0.0 0.0 0.0
-	Cl 0.0 0.0 0.0
+	Cl 0.0 0.0 1.3
 
 Alternatively, if all molecules are e.g. neutral singlets then one can give charge=0, mult=1 keyword arguments to **calc_xyzfiles()**
 
@@ -165,7 +165,8 @@ Example script:
 
 
 The ASH script then runs through and gives a table at the end with the energies. 
-In the case of Opt=True, a geometry optimization is performed for each molecule and a final directory of XYZ-files with optimized coordinates is created.
+In the case of Opt=True, a geometry optimization is performed for each molecule at the chosen theory-level instead of a singlepoint calculations 
+and a final directory of XYZ-files with optimized coordinates is created.
 
 
 .. code-block:: text
@@ -594,5 +595,75 @@ Output:
 	Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
 
 
+###################################
+Redox difference density
+###################################
 
+.. image:: figures/cocene-redox-diffdens-300.png
+   :align: center
+   :width: 700
 
+To understand the nature of a redox process it can be useful to calculate and visualize the density difference between the two redox species.
+This can only cleanly be done for a vertical redox process.
+First one requires Cube files of the electron density for both species that should have the same geometry and same number of grid points (and ideally quite fine).
+Then one can call the built-in ASH function: **read_cube** and **write_cube_diff**  to output the density difference as a Cube file.
+The calculations, Cube-file creation and the density-difference can be done in a single script as shown below if using ORCA (orca_plot used to generate the Cubefiles.)
+
+**Example: Vertical ionization of Cobaltocene**
+
+.. code-block:: python
+
+	from ash import *
+	import shutil
+
+	string="""
+	Co       6.344947000     -1.560817000      5.954256000
+	C        6.026452000     -0.546182000      7.802276000
+	C        5.793563000     -1.965872000      7.908267000
+	C        7.027412000     -2.657637000      7.660083000
+	C        7.976024000     -1.681400000      7.254253000
+	C        7.360141000     -0.371346000      7.359546000
+	H        5.287260000      0.234934000      7.955977000
+	H        4.853677000     -2.430623000      8.196105000
+	H        7.174908000     -3.733662000      7.680248000
+	H        7.845323000      0.573837000      7.130600000
+	C        7.003675000     -1.909758000      4.002507000
+	C        6.025582000     -2.892708000      4.310293000
+	C        4.831240000     -2.191536000      4.690416000
+	C        5.029751000     -0.780020000      4.468693000
+	C        6.380790000     -0.601338000      4.083942000
+	H        8.038293000     -2.097559000      3.727053000
+	H        6.179063000     -3.967316000      4.350882000
+	H        3.905308000     -2.652860000      5.025216000
+	H        6.875603000      0.346060000      3.887076000
+	H        4.297348000      0.002948000      4.644348000
+	H        8.999375000     -1.871686000      6.940915000
+	"""
+
+	#Defining fragment for redox reaction
+	Co_neut=Fragment(coordsstring=string, charge=0, mult=2)
+	Co_ox=Fragment(coordsstring=string, charge=1, mult=1)
+	label="Cocene_"+'_'
+	#Defining QM theory as ORCA here
+	qm=ORCATheory(orcasimpleinput="! BP86 def2-SVP tightscf notrah")
+
+	#Run neutral species with ORCA
+	e_neut=Singlepoint(theory=qm, fragment=Co_neut)
+	shutil.copyfile(qm.filename+'.gbw', label+"neut.gbw") # Copy GBW file
+	#Run orca_plot to request electron density creation from ORCA gbw file
+	run_orca_plot(label+"neut.gbw", "density", gridvalue=80)
+	
+	#Run oxidized species with ORCA
+	e_ox=Singlepoint(theory=qm, fragment=Co_ox)
+	shutil.copyfile(qm.filename+'.gbw', label+"ox.gbw")  # Copy GBW file
+	#Run orca_plot to request electron density creation from ORCA gbw file
+	run_orca_plot(label+"ox.gbw", "density", gridvalue=80)
+
+	#Read Cubefiles from disk. 
+	neut_cube_data = functions.functions_elstructure.read_cube(label+"neut.eldens.cube")
+	ox_cube_data = functions.functions_elstructure.read_cube(label+"ox.eldens.cube")
+	#Write out difference density as a Cubefile
+	functions.functions_elstructure.write_cube_diff(neut_cube_data, ox_cube_data, label+"diffence_density.cube")
+
+The script will output the files Cocene_neut.eldens.cube and Cocene_ox.eldens.cube that are here generated by orca_plot. 
+The file Cocene_diffence_density.cube is generated by **write_cube_diff**.

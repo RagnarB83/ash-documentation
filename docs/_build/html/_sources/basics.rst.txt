@@ -116,12 +116,15 @@ ASH will attempt to read this file on startup.
     print_input = True
     print_logo = True
     load_julia = True
+    julia_library = pythoncall #pyjulia is another option
     debugflag = False
     print_exit_footer = True
     print_full_timings = True
     nonbondedMM_code = "julia"
     connectivity_code = "julia"
     orcadir = '/path/to/orcadir'
+    print_exit_footer = True
+    print_full_timings = True
 
 In addition to options above it is also possible to specify the paths to various external codes.
 If these paths are set in the settings file, one can avoid setting them in the inputfiles.

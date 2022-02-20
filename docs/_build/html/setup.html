@@ -232,12 +232,11 @@
 <h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
 <p>Contact Ragnar if you want access to the code.</p>
 <p>ASH is 99% Python with 1 % Julia.
-A Python3 distribution (version &gt;3.6 or higher) is required and as packages will have to be installed you need to be able to
-install Python packages via pip.</p>
+A Python3 distribution (version &gt;3.6 or higher) is required and you need to be able to install Python packages via conda or pip.</p>
 <p>Scientific Python distributions like Anacond/miniconda can be convenient: <a class="reference external" href="https://www.anaconda.com/distribution/">https://www.anaconda.com/distribution/</a>
 Anaconda comes with Numpy, SciPy, Matplotlib.</p>
-<p>Treatment of large systems via QM/MM require a Julia installation (as the Python routines will be too slow).
-Future versions will make Julia a requirement.</p>
+<p>Some functionality (primarily the molecular crystal QM/MM part) require a Julia installation (as the Python routines will be too slow).
+Future versions may make the Julia interface a requirement.</p>
 <p>Strict dependencies:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.python.org">Python version 3.6</a> &gt;=</p></li>
@@ -246,14 +245,21 @@ Future versions will make Julia a requirement.</p>
 </ul>
 <p>Strongly recommended (necessary for some parts):</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.6</a> installation for fast routines in MolCrys QM/MM</p></li>
-<li><p><a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a> installation (Python package via pip).</p></li>
-<li><p><a class="reference external" href="http://openmm.org">OpenMM</a> version 7.6 or later</p></li>
+<li><p><a class="reference external" href="https://julialang.org/downloads">Julia 1.7</a> installation for fast routines in MolCrys QM/MM</p></li>
+<li><p>Python-Julia library: <a class="reference external" href="https://cjdoris.github.io/PythonCall.jl/stable/pycall/">PythonCall</a> or <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a></p></li>
+<li><p><a class="reference external" href="http://openmm.org">OpenMM</a> version 7.6 or later. For MM and MD functionality of ASH.</p></li>
 </ul>
 <p>Useful:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://matplotlib.org">Matplotlib</a> library. Used to plot graphs/surfaces.</p></li>
-<li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library. Used for interpolation routines when plotting surfaces.</p></li>
+<li><p><a class="reference external" href="https://www.scipy.org">Scipy</a> library. Used for interpolation routines when plotting surfaces and in molecular crystal QM/MM.</p></li>
+<li><p><a class="reference external" href="https://xtb-docs.readthedocs.io/en/latest/">xTB</a> The semi-empirical tightbinding DFT code by Grimme and coworkers.</p></li>
+<li><p><a class="reference external" href="https://www.plumed.org">Plumed</a> Plumed library</p></li>
+<li><p><a class="reference external" href="https://parmed.github.io/ParmEd/html/index.html">Parmed</a> May be used by OpenMM interface.</p></li>
+<li><p><a class="reference external" href="https://www.plumed.org">Plumed</a> MDanalysis</p></li>
+<li><p><a class="reference external" href="https://www.mdanalysis.org">MDAnalysis</a> MD trajectory analysis</p></li>
+<li><p><a class="reference external" href="https://www.mdtraj.org">MDtraj</a> MD trajectory analysis</p></li>
+<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a> Atomic Simulation Environment</p></li>
 </ul>
 <div class="section" id="a-download-ash">
 <h2>A. Download ASH<a class="headerlink" href="#a-download-ash" title="Permalink to this headline">¶</a></h2>
@@ -264,7 +270,7 @@ Future versions will make Julia a requirement.</p>
 <div class="section" id="b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete">
 <h3>B0. The lazy/impatient way to set up ASH (easy but incomplete)<a class="headerlink" href="#b0-the-lazy-impatient-way-to-set-up-ash-easy-but-incomplete" title="Permalink to this headline">¶</a></h3>
 <p>If you are impatient and want to get ASH going immediately without all features enabled.</p>
-<p><strong>Note:</strong> ASH will complain when you try to use features that require additional installations (e.g. geometric, julia)</p>
+<p><strong>Note:</strong> ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc)</p>
 <ol class="arabic simple">
 <li><p>Download the ASH repository</p></li>
 <li><p>Make sure there is a python3 interpreter on your system (with numpy)</p></li>
@@ -280,15 +286,22 @@ Future versions will make Julia a requirement.</p>
 <li><p>Create new environment (not required but recommended): <strong>conda create –name ASH</strong></p></li>
 <li><p>Load environment: <strong>conda activate ASH</strong></p></li>
 <li><p>Change directory to ASH location</p></li>
-<li><p>Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory)</p></li>
+<li><p>Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).</p></li>
+<li><p>Make sure the chosen Python-Julia interface works. PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.</p></li>
 <li><p>Optional: Run: <strong>julia julia-packages-setup.jl</strong> to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM</p></li>
 <li><p>Run: <strong>bash conda_setup_ash.sh</strong> # This creates new files: set_environment_ash.sh and python3_ash</p></li>
 <li><p>Run: <strong>source set_environment_ash.sh</strong>  (this sets necessary PATHs and should probably be put in each user’s .bash_profile, job-submission script etc.)</p></li>
-<li><p>Run ASH using either:  <strong>python3</strong>  or <strong>python3_ash</strong> (required if ASH needs to call Julia routines)</p></li>
+<li><p>Test ASH by launching: <strong>python3</strong>  and then do: from ash import *</p></li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if PyJulia interface was specifically installed (not recommended) you must use <strong>python-jl</strong> for ASH to correctly call Julia routines.</p>
+</div>
 </div>
 <div class="section" id="b2-semi-automatic-non-conda-setup">
 <h3>B2. Semi-Automatic non-Conda setup<a class="headerlink" href="#b2-semi-automatic-non-conda-setup" title="Permalink to this headline">¶</a></h3>
+<p>This option is not recommended if you intend to use ASH and OpenMM for MM, MD and QM/MM functionality.
+This is because OpenMM is only easily installable via conda. See section B1 above.</p>
 <p>This uses the nonconda_install_ash.sh script inside the ASH directory.
 The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.</p>
 <p><strong>Step 1.</strong> Make sure the desired python3 is in your environment (‘which python3’ in the shell) or set path_to_python3_dir in the ./nonconda_install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
@@ -302,11 +315,10 @@ Note: You need to be able to install packages to this installation via pip</p>
 <ul class="simple">
 <li><p>source ./set_environment_ash.sh    to activate ASH environment.</p></li>
 </ul>
-<p>Common problems:</p>
 </div>
 <div class="section" id="b3-manual">
 <h3>B3. Manual<a class="headerlink" href="#b3-manual" title="Permalink to this headline">¶</a></h3>
-<p>(Use only if semi-automatic approach does not work)</p>
+<p>(Use only if semi-automatic approach B1 or B2 does not work)</p>
 <p><strong>Step 1.</strong></p>
 <p>Make sure ASH has been downloaded and moved to some location where it will stay.
 The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual loction on your machine).</p>
@@ -363,11 +375,11 @@ This step will be necessary for each user on the cluster.</p>
 <p>This requires you to be able ot install packages to your Python installation. It may also be possible to install Python packages
 locally to your user’s home directory by the “–user” option:  pip3 install geometric –user</p>
 <p><strong>Step 5a.</strong> Install Julia from the <a class="reference external" href="https://julialang.org/downloads">Julia official site</a>.</p>
-<p>Julia is necessary for some fast QM/MM functionality inside ASH (e.g. MolCrys). Step can be skipped if you won’t be using QM/MM.</p>
+<p>Julia is necessary for some fast QM/MM functionality inside ASH (e.g. Molcrys). This step can be skipped if you won’t be using the molecular crystal QM/MM feature.</p>
 <blockquote>
 <div><ol class="lowerroman simple">
-<li><p>Download appropriate binaries from the official Julia website. Version 1.6 or higher. Extract archive.</p></li>
-<li><p>Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.6.1/bin:$PATH . Put this PATH definition in your shell startup file.</p></li>
+<li><p>Download appropriate binaries from the official Julia website. Version 1.7 or higher. Extract archive.</p></li>
+<li><p>Add Julia binaries to path: e.g. export PATH=/path/to/julia-1.7.1/bin:$PATH . Put this PATH definition in your shell startup file.</p></li>
 <li><p>Run Julia using the ASH sourcefile julia-packages-setup.jl (inside ASH source directory) as input to download and install the  required Julia packages. Currently: PyCall, Hungarian, Distances</p></li>
 </ol>
 </div></blockquote>
@@ -381,20 +393,42 @@ locally to your user’s home directory by the “–user” option:  pip3 insta
 </div>
 <p>If there is an error like this: ERROR: SystemError: opening file “/path/to/.julia/registries/General/Registry.toml”: No such file or directory
 Then execute in shell: rm -rf ~/.julia/registries/General</p>
-<p><strong>Step 5b.</strong> Install <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a></p>
+<p><strong>Step 5b.</strong> Install Julia-Python interface</p>
+<p>ASH requires a Python-Julia library in order to enable communication between Python and Julia.
+The options are: <a class="reference external" href="https://cjdoris.github.io/PythonCall.jl/stable/pycall/">PythonCall</a> and <a class="reference external" href="https://pyjulia.readthedocs.io/en/latest/">PyJulia</a>
+ASH currently supports both but the newer PythonCall is currently recommended due to PyJulia requiring calling ASH with a modified interpreter (python-jl) due to static libpython issues.</p>
 <p><span class="red">Important:</span> Make sure the correct Python environment is active before proceeding. Check that the pip or pip3 executable is available and corresponds to the Python you want:</p>
+<p><span class="red">Important:</span> Make sure the Julia executable is in your PATH already.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>which pip
 which pip3
 </pre></div>
 </div>
 <p>Then install using pip/pip3:</p>
+<p><strong>PythonCall/JuliaCall option:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install juliacall
+</pre></div>
+</div>
+<p>Once juliacall is installed, check that it is working correctly by:</p>
+<ol class="arabic simple">
+<li><p>Launch python3 interactive session :</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 <span class="c1"># in shell</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Run in python3 session:</p></li>
+</ol>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">juliacall</span>   <span class="c1">#This will try to import the PythonCall/Juliacall interface, will check for Julia availability etc.</span>
+<span class="n">juliacall</span><span class="o">.</span><span class="n">Main</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">34.5</span><span class="p">)</span> <span class="c1">#This will call the Julia sin function.</span>
+</pre></div>
+</div>
+<p>If no errors then things should be good to go for ASH.</p>
+<p><strong>PyJulia option:</strong></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip3 install julia
 </pre></div>
 </div>
-<p><strong>Step 6.</strong> Activate python3_ash</p>
-<p>Make the python3_ash executable (inside /path/to/ash): chmod +x /path/to/ash/python3_ash</p>
 <ul class="simple">
-<li><p>The ASH python3 executable, <em>python3_ash</em> should generally be used if Julia routines are called by ASH (molecular-crystal QM/MM functionality requires this). It is needed for the PyJulia interface to work properly.</p></li>
+<li><p>The Pyjulia executable, <em>python-jl</em> (available after pip3 install julia) must generally be used if Julia routines are called by ASH. It is needed for the PyJulia interface to work properly.</p></li>
 <li><p>Make sure the correct Python3 environment is active. Otherwise ASH will not work.</p></li>
 <li><p>The regular Python3 executable, <em>python3</em>  can also be used to run ASH scripts and is recommended if you don’t require ASH to launch Julia routines (molcrystal-QM/MM primarily). There may be warnings about the Python-Julia-interface not working. These warnings can be ignored . For large systems or when using QM/MM-Molcrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.</p></li>
 </ul>
@@ -421,8 +455,8 @@ pip3 install pyframe     <span class="c1">#polarizable embedding helper tool</sp
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install psi4 psi4-rt -c psi4
 </pre></div>
 </div>
-<p><strong>Step 2.</strong> Optional: Install OpenMM (if needed)</p>
-<p>For protein and explict solvation QM/MM in ASH, then the <a class="reference external" href="http://openmm.org">OpenMM program</a> is used as MM code.
+<p><strong>Step 2.</strong> Optional: Install OpenMM</p>
+<p>For general MM, QM/MM and MD functionality in ASH,  the <a class="reference external" href="http://openmm.org">OpenMM program</a> must be available.
 It can be installed using conda.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge openmm
 </pre></div>
@@ -432,7 +466,7 @@ It can be installed using conda.</p>
 <h2>D. Test ASH<a class="headerlink" href="#d-test-ash" title="Permalink to this headline">¶</a></h2>
 <p>Test if things work in general:
 python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
-python3_ash /path/to/ash/test_ash.py   #Using the interpreter with Julia support</p>
+python-jl /path/to/ash/test_ash.py   #Required when PyJulia is used</p>
 <p>Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 first-ash-job.py
 </pre></div>
@@ -457,7 +491,7 @@ python3_ash /path/to/ash/test_ash.py   #Using the interpreter with Julia support
 <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">ORCAcalc</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you get an error message when launching python3_ash that looks like the following:</p>
+<p>If you get an error message when launching python-jl that looks like the following:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>File &quot;/home/bjornsson/ash/python3_ash&quot;, line 9, in &lt;module&gt;
 sys.exit(main())
 File &quot;/home/bjornsson/.local/lib/python3.8/site-packages/julia/python_jl.py&quot;, line 114, in main
