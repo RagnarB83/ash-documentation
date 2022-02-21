@@ -2,7 +2,7 @@
 ASH Program Philosophy
 ==========================
 
-ASH is a program in its infancy and is constantly under revisement as the programming skills and ideas and of the main developer evolve.
+ASH is a program in its infancy and is constantly under revisement as the programming skills and ideas of the main developer evolve.
 It is inspired by multiple software projects. It is written in Python but is not necessarily very Pythonic.
 
 While object-oriented (OO) programming is a highly useful programming paradigm and is used partially in ASH, the OO-use is actually fairly limited.
@@ -33,14 +33,19 @@ the user should then primarily use ASH via running simple Python functions that 
   energy = Singlepoint(fragment=H2O, theory=orcacalc)
  
 Methods inside classes should typically **never** be called by the user and instead there should be a function available for carrying out such functionality. 
-This creates a simpler scripting environment for users who are not used to OO-programming. If a class is needed for improved flexibility for a new type of job, a wrapper function should be provided for the user.
-
-- *ASH should be easy to install*
-
-Currently the Julia dependency is causing complications due to PyJulia problems. Will be revisited.
+This creates a simpler scripting environment for users who are not used to object orientation. If a class is needed for improved flexibility for a new type of job, a wrapper function should be provided for the user.
 
 - *The list of dependencies should be kept to a minimum.*
 
-ASH works via interfaces to various high-quality QM, MM programs, optimizer program etc. whose functionality  can not be easily replicated. 
+ASH works via interfaces to various high-quality QM, MM programs, optimizer program etc. that have functionaly that can not be easily replicated. 
 However, otherwise the philosophy is to keep dependencies to a minimum to avoid future problems and make the ASH installation process as simple as possible.
 Unnecessary Python libraries outside the standard library are not used unless unavoidable. 
+
+- *ASH should be easy to install*
+
+This is work in progress. Currently the conda-forge route (for almost everything) seems to be the easiest for maintaining the Python, OpenMM and Julia dependencies.
+
+- *Ideally nothing should require compilation*
+
+By using Julia we can do just-in-time-compilation for routines that need to be written in a compiled language.
+We should avoid Fortran/C code that requires compilation.

@@ -318,7 +318,7 @@ In that case, the code below can simply be appended to the previous script.
     Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
 
     #Defining, QM, MM and QM/MM theory levels for Optimization
-    #If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.
+    #If same theory as used in molcrys, then orcasimpleinput and orcablocks can be commented out/deleted.
     orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
     orcablocks="%scf maxiter 200 end"
     ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
@@ -439,7 +439,7 @@ Script below shows an example electrostatically embedded NMR calculation using O
     Cluster_FF=MMforcefield_read('Cluster_forcefield.ff')
 
     #Defining, QM, MM and QM/MM theory levels for Optimization
-    #ORCAlines: If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.
+    #ORCAlines: If same theory as used in molcrys, then orcasimpleinput and orcablocks can be commented out/deleted.
     numcores=12
     orcasimpleinput="! PBE0 def2-SVP def2/J tightscf NMR"
     orcablocks="

@@ -487,7 +487,7 @@ In that case, the code below can simply be appended to the previous script.</p>
 <span class="n">Cluster_FF</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;Cluster_forcefield.ff&#39;</span><span class="p">)</span>
 
 <span class="c1">#Defining, QM, MM and QM/MM theory levels for Optimization</span>
-<span class="c1">#If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.</span>
+<span class="c1">#If same theory as used in molcrys, then orcasimpleinput and orcablocks can be commented out/deleted.</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J tightscf&quot;</span>
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">cf maxiter 200 end&quot;</span>
 <span class="n">ORCAQMpart</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
@@ -577,7 +577,7 @@ object to the Singlepoint function. Make sure to specify the desired Cluster obj
 <span class="n">Cluster_FF</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;Cluster_forcefield.ff&#39;</span><span class="p">)</span>
 
 <span class="c1">#Defining, QM, MM and QM/MM theory levels for Optimization</span>
-<span class="c1">#ORCAlines: If same theory as used in molcrys, then orcadir, orcasimpleinput and orcablocks can be commented out/deleted.</span>
+<span class="c1">#ORCAlines: If same theory as used in molcrys, then orcasimpleinput and orcablocks can be commented out/deleted.</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
 <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! PBE0 def2-SVP def2/J tightscf NMR&quot;</span>
 <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;</span>

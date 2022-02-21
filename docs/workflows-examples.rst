@@ -202,7 +202,7 @@ Such a job could be written directly like this:
     H 0 0 0.7
     """
 
-    h2=Fragment(coordsstring=h2string, charge=, mult=1)
+    h2=Fragment(coordsstring=h2string, charge=0, mult=1)
 
     #List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.
     functionals=['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']
