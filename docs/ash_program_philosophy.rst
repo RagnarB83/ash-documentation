@@ -5,17 +5,17 @@ ASH Program Philosophy
 ASH is a program in its infancy and is constantly under revisement as the programming skills and ideas of the main developer evolve.
 It is inspired by multiple software projects. It is written in Python but is not necessarily very Pythonic.
 
-While object-oriented (OO) programming is a highly useful programming paradigm and is used partially in ASH, the OO-use is actually fairly limited.
-OO is used within the program to define simple classes such as : Fragment, Theory classes etc.
-that define the molecular-system or theory level) and to organize the code in a useful way.
+While object-oriented (OO) programming is a highly useful programming paradigm and is used partially in ASH, the OO-use is actually fairly limited and is deliberately mostly hidden when using the program.
+Object orientation is used within the program to define simple classes such as : Fragment, Theory classes etc.
+that define the molecular-system or theory level) and for code organization.
 Meanwhile regular Python functions serve the purpose of jobs: i.e. we run jobs via ASH functions that take ASHTheory objects and ASH Fragment objects as input and return.
 
 We believe that the minimal exposure of object orientation to the user, makes ASH a simpler and easier-to-use program, especially to those not used to much programming or even Python.
 
 
-###########################
-Some basic principles
-###########################
+########################################
+Some basic principles we try to follow
+########################################
 
 - *Object-orientation should be mostly hidden from how a regular user interacts with ASH.* 
   
@@ -37,7 +37,7 @@ This creates a simpler scripting environment for users who are not used to objec
 
 - *The list of dependencies should be kept to a minimum.*
 
-ASH works via interfaces to various high-quality QM, MM programs, optimizer program etc. that have functionaly that can not be easily replicated. 
+ASH works via interfaces to various high-quality QM, MM programs, optimizer programs etc. that have functionality that can not be easily replicated. 
 However, otherwise the philosophy is to keep dependencies to a minimum to avoid future problems and make the ASH installation process as simple as possible.
 Unnecessary Python libraries outside the standard library are not used unless unavoidable. 
 
@@ -45,7 +45,7 @@ Unnecessary Python libraries outside the standard library are not used unless un
 
 This is work in progress. Currently the conda-forge route (for almost everything) seems to be the easiest for maintaining the Python, OpenMM and Julia dependencies.
 
-- *Ideally nothing should require compilation*
+- *Ideally static compilation is avoided*
 
 By using Julia we can do just-in-time-compilation for routines that need to be written in a compiled language.
-We should avoid Fortran/C code that requires compilation.
+We should avoid Fortran/C code that requires compilation thus complicating the installation process.

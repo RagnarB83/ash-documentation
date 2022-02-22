@@ -223,11 +223,15 @@
   <div class="section" id="mm-interfaces">
 <h1>MM Interfaces<a class="headerlink" href="#mm-interfaces" title="Permalink to this headline">¶</a></h1>
 <p>Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package: <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a></p>
-<p>The internal NonBondedTheory can only perform nonbonded interactions: electrostatics and short-range Lennard-Jones interactions.
-The Coulomb+LJ interaction is quite fast as it is written in Julia.
+<p>The internal NonBondedTheory is only capable of calculating nonbonded interactions: Coulomb electrostatics and short-range Lennard-Jones interactions.
+It will use routines written in Julia and thus require activating the Python-Julia interface.
 Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
 It can be used as MM code in QM/MM (<a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects.</p>
-<p>The interface to the external OpenMM code (<a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>) has recently become available. OpenMM is a fast C++ code with a Python API that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems and can read in multiple types of forcefield files.</p>
+<p>The interface to the external OpenMM code (<a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>) allows for full-fledged molecular mechanics.
+OpenMM is a fast C++ code with a Python API that ASH is interfaced to.
+OpenMM is capable of bonded and nonbonded interactions, can treat periodic and nonperiodic systems and can read in multiple types of forcefield files.
+It can also run both on the CPU and the GPU.
+It can be used as MM code in QM/MM (<a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a>) theory objects.</p>
 <div class="section" id="nonbondedtheory">
 <h2>NonBondedTheory<a class="headerlink" href="#nonbondedtheory" title="Permalink to this headline">¶</a></h2>
 <p>The NonBondedTheory class:</p>
@@ -271,6 +275,27 @@ associated with the atomtypes.</p>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">,</span><span class="n">theory</span><span class="o">=</span><span class="n">MMobject</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>where forcefield.ff contains e.g.:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>LennardJones_i_sigma FX 3.150574227 -0.1521
+LennardJones_i_sigma HT 3.550053212    -0.07
+charge FX -0.9
+charge HT 0.9
+</pre></div>
+</div>
+<p>The forcefield file will read and parse lines like:</p>
+<ul class="simple">
+<li><p>LennardJones_i_sigma &lt;atomtype&gt; &lt;sigma&gt; &lt;epsilon&gt; # Specify atomtype and sigma-value (Å) and epsilon value (kcal/mol)</p></li>
+<li><p>LennardJones_i_R0 &lt;atomtype&gt; &lt;R0&gt; &lt;epsilon&gt;  # Specify atomtype and R0-value (Å) and epsilon value (kcal/mol)</p></li>
+<li><p>LennardJones_ij &lt;atomtype1&gt; &lt;atomtype2&gt;  &lt;R0_ij&gt; &lt;epsilon pair parameter&gt; #Specify pair-potential. Currently inactive option</p></li>
+<li><p>charge &lt;atomtype&gt; &lt;chargevalue&gt; # Specify atomtype and charge-value</p></li>
+</ul>
+<p>or other options:</p>
+<ul class="simple">
+<li><p>combination_rule &lt;combrule option&gt;  #For LJ potential. Can be geometric, arithmetic, mixed_geoepsilon, mixed_geosigma</p></li>
+<li><p>XX_atomtypes &lt;list of atomtypes&gt; #Atomtypes for residue XX. List is space-separated.</p></li>
+<li><p>XX_charges &lt;list of charges&gt; #Charges for residue XX. List is space-separated.</p></li>
+<li><p>XX_elements &lt;list of elements&gt; #Elements for residue XX. List is space-separated.</p></li>
+</ul>
 </div>
 <div class="section" id="openmm-interface">
 <h2>OpenMM interface<a class="headerlink" href="#openmm-interface" title="Permalink to this headline">¶</a></h2>

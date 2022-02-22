@@ -2,23 +2,25 @@
 OpenMM interface
 ======================================
 
-OpenMM is an open-source molecular mechanics library written in C++. It comes with a handy Python interface that was easily adapted for use with ASH. It has been designed for both CPU and GPU codes.
-The GPU code is particulary fast.
+`OpenMM <https://openmm.org>`_ is an open-source molecular mechanics library written in C++. ASH features a flexible interface to the Python API of the OpenMM library. 
+OpenMM has been designed to run on both CPU and GPU codes with the GPU code being particulary fast.
 
 
 
 ######################################
-The OpenMMTheory theory level
+The OpenMMTheory class 
 ######################################
 
-OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: 'CPU', 'OpenCL' or 'CUDA' depending on whether there is a GPU available on the computer. For platform='CPU' the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.
+OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: 'CPU', 'OpenCL' or 'CUDA' depending on whether there is a GPU available on the computer. 
+For platform='CPU' the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set 
+to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.
 
 The OpenMMTheory class:
 
 .. code-block:: python
 
     class OpenMMTheory:
-        def __init__(self, printlevel=2, platform='CPU', numcores=None, Modeller=False, forcefield=None, topology=None,
+        def __init__(self, printlevel=2, platform='CPU', numcores=None, topoforce=False, forcefield=None, topology=None,
                      CHARMMfiles=False, psffile=None, charmmtopfile=None, charmmprmfile=None,
                      GROMACSfiles=False, gromacstopfile=None, grofile=None, gromacstopdir=None,
                      Amberfiles=False, amberprmtopfile=None,
@@ -29,10 +31,193 @@ The OpenMMTheory class:
                      periodic=False, charmm_periodic_cell_dimensions=None, customnonbondedforce=False,
                      periodic_nonbonded_cutoff=12, dispersion_correction=True,
                      switching_function_distance=10,
-                     ewalderrortolerance=1e-5, PMEparameters=None,
+                     ewalderrortolerance=5e-4, PMEparameters=None,
                      delete_QM1_MM1_bonded=False, applyconstraints_in_run=False,
-                     constraints=None, restraints=None, frozen_atoms=None, fragment=None,
+                     constraints=None, restraints=None, frozen_atoms=None, dummy_system=False, fragment=None, 
                      autoconstraints='HBonds', hydrogenmass=1.5, rigidwater=True):
+
+
+**OpenMMTheory** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``printlevel``
+     - integer
+     - 2
+     - The printlevel.
+   * - ``platform``
+     - string
+     - 'CPU'
+     - Run on CPU or GPU. Options: 'CPU', 'OpenCL', 'CUDA'
+   * - ``numcores``
+     - integer
+     - None
+     - The number of CPU cores to use for 'CPU' platform.
+   * - ``topoforce``
+     - Boolean
+     - False
+     - Whether to read in topology and forcefield objects created by OpenMM manually. Requires setting topology and forcefield also.
+   * - ``forcefield``
+     - OpenMM forcefield object
+     - None
+     - Read in OpenMM forcefield object defined manually by OpenMM.
+   * - ``topology``
+     - OpenMM forcefield object
+     - None
+     - Read in OpenMM topology object defined by manually by OpenMM.
+   * - ``CHARMMfiles``
+     - Boolean
+     - False
+     - Read in CHARMM forcefiles or not.
+   * - ``psffile``
+     - string
+     - None
+     - Name of CHARMM protein structure file.
+   * - ``charmmtopfile``
+     - string
+     - None
+     - YYYYYYYYYYYY
+   * - ``charmmprmfile``
+     - string
+     - None
+     - Name of CHARMM parameter file.
+   * - ``GROMACSfiles``
+     - Boolean
+     - False
+     - Read in GROMACS forcefiles or not.
+   * - ``gromacstopfile``
+     - string
+     - None
+     - Name of the GROMACS topology file.
+   * - ``grofile``
+     - string
+     - None
+     - Name of Gromacs coordinate file (.gro extension)
+   * - ``gromacstopdir``
+     - string
+     - None
+     - Path to the GROMACS topology directory.
+   * - ``Amberfiles``
+     - Boolean
+     - False
+     - Read in Amber forcefiles or not.
+   * - ``amberprmtopfile``
+     - string
+     - None
+     - Name of the Amber PRMTOP file.
+   * - ``cluster_fragment``
+     - Fragment
+     - None
+     - ASH Fragment objected created by Molcrys.
+   * - ``ASH_FF_file``
+     - string
+     - None
+     - Name of ASH forcefield file.
+   * - ``PBCvectors``
+     - list
+     - None
+     - List of lists of floats (nm) or list of OpenMM Vec3 objects. Units are nm.
+   * - ``xmlfiles``
+     - list
+     - None
+     - List of XML-files to read forcefield from.
+   * - ``pdbfile``
+     - string
+     - None
+     - Name of PDB-file. Used for reading topology for xmlfiles, xmlsystemfile and ASH_FF_file options.
+   * - ``use_parmed``
+     - Boolean
+     - False
+     - Whether to use the Parmed library to help read in CHARMM/Amber/GROMACS files. Requires install of Parmed Python library.
+   * - ``xmlsystemfile``
+     - string
+     - None
+     - Name of XML system file to read in.
+   * - ``do_energy_decomposition``
+     - Boolean
+     - False
+     - Do energy decomposition of each energy evaluation (when called by Singlepoint or optimizer).
+   * - ``periodic``
+     - Boolean
+     - False
+     - Periodic boundary conditions or not.
+   * - ``charmm_periodic_cell_dimensions``
+     - None
+     - None
+     - Periodic cell dimension for CHARMM-setup of system. Example: charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]
+   * - ``customnonbondedforce``
+     - Boolean
+     - False
+     - Expert option: whether CustomNonbondedForce is used instead of NonbondedForce.
+   * - ``periodic_nonbonded_cutoff``
+     - float
+     - 12.0
+     - Cutoff for the periodic nonbonding interaction.
+   * - ``dispersion_correction``
+     - Boolean
+     - True
+     - Dispersion correction in periodic nonbonding evaluation.
+   * - ``switching_function_distance``
+     - float
+     - 10.0
+     - Switching function distance in Å units.
+   * - ``ewalderrortolerance``
+     - float
+     - 5e-4
+     - Error tolerance for the periodic electrostatics Ewald algorithm.
+   * - ``PMEparameters``
+     - list
+     - None
+     - Optional manual parameters for the Particle Mess Ewald algorithm. Alternative to ewalderrortolerance keyword.
+   * - ``delete_QM1_MM1_bonded``
+     - Boolean
+     - False
+     - For QM/MM job, whether QM1-MM1 are deleted or not.
+   * - ``applyconstraints_in_run``
+     - Boolean
+     - False
+     - Exper option: Whether constraints are applied in run method. Should be False.
+   * - ``constraints``
+     - list of lists
+     - None
+     - List of lists of constraint definitions based on atom indices. Either [[atom_i,atom_j]] or [[atom_i,atom_j, d]], e.g. [[700,701],[703,704]] or [[700,701, 1.05],[702,703, 1.14]], where d: distance (Å))
+   * - ``restraints``
+     - list of lists
+     - None
+     - List of lists of restraint definitions ([[atom_i,atom_j, d, k ]], e.g. [[700,701, 1.05, 5.0 ]], d: distance (Å) k: force constant (kcal/mol*Å^-2))
+   * - ``frozen_atoms``
+     - list
+     - None
+     - List of atom indices to keep frozen during MD (particle mass set to 0).
+   * - ``dummy_system``
+     - Boolean
+     - False
+     - If True, OpenMM will set up a dummy MM system based on provided fragment (see below). Used for QM dynamics option in OpenMM_MD.
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - ASH fragment to provide when dummy_system is True.
+   * - ``autoconstraints``
+     - string
+     - 'HBonds'
+     - Type of automatic constraints to apply to system. Options: 'HBonds' (constrain all X-H bonds), 'AllBonds' (constrain all bonds), 'HAngles' (constrain all bonds and  H-X-H and H-O-X angles).
+   * - ``hydrogenmass``
+     - float
+     - 1.5
+     - Hydrogen mass repartioning value. 1.5 is OpenMM and ASH default. Improves numerical stability.
+   * - ``rigidwater``
+     - Boolean
+     - True
+     - Whether to automatically apply rigid water constraints for recognized water models (e.g. TIP3P) found in system. Note: needs to be turned off for Singlepoint/Optimizations.
+
+
+
 
 
 
@@ -40,7 +225,7 @@ The OpenMMTheory class:
 It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or an OpenMM XML forcefieldfile.
 Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed (pip install parmed).
 
-Example creation of an OpenMMtheory object with CHARMM-files:
+*Example creation of an OpenMMtheory object with CHARMM-files:*
 
 .. code-block:: python
 
@@ -51,20 +236,20 @@ Example creation of an OpenMMtheory object with CHARMM-files:
     openmmobject = OpenMMTheory(CHARMMfiles=True, psffile=psffile, charmmtopfile=topfile,
                                charmmprmfile=parfile)
 
-Example creation of an OpenMMtheory object with GROMACS-files:
+*Example creation of an OpenMMtheory object with GROMACS-files:*
 
 .. code-block:: python
 
     openmmobject = OpenMMTheory(GROMACSfiles=True, gromacstopdir="/path/to/gromacstopdir",
                     gromacstopfile="gromacstopfile.top", grofile="grofile.gro")
 
-Example creation of an OpenMMtheory object with AMBER files:
+*Example creation of an OpenMMtheory object with AMBER files:*
 
 .. code-block:: python
 
     openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile="/path/to/amberprmtopfile")
 
-Example creation of an OpenMMtheory object with OpenMM XML file:
+*Example creation of an OpenMMtheory object with OpenMM XML file:*
 
 .. code-block:: python
 
@@ -75,29 +260,29 @@ Example creation of an OpenMMtheory object with OpenMM XML file:
 
 
 
-An openmmtheory object can then be used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
+Any Openmmtheory object can used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
 
 **Periodic boundary conditions:**
 
 - If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions
+- The Ewald error tolerance (ewalderrortolerance) can be modified (default: 5e-4)
 - PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
-- The ewalderrortolerance can be modified (default: 1e-5)
 - The periodic nonbonded cutoff can be modified. Default: 12 Å
-- Long-range dispersion correction can be turned on or off.
+- Long-range dispersion correction can be turned on or off. Default: True
 - The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.
 - The box dimensions can also be modified by PBCvectors= keyword argument:
-    Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]]
+    Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]] with values in Å.
 
 ######################################
 Molecular Dynamics via OpenMM
 ######################################
 
-It is possible to run MM molecular dynamics of system using the OpenMMTheory object created.
-This is accomplished directly via the MD algorithms present in the OpenMM library.
-The OpenMM_MD function takes as argument an ASH fragment, a teory object and then the user can select an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.
+It is possible to run molecular dynamics of an ASH system using the MD algorithms present in the OpenMM library.
+The OpenMM_MD function takes as argument an ASH fragment, a theory object and the user then selects an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.
+The theory level can be OpenMMTheory, QMMMTheory or even a simple QMTheory.
+Some options are only available for OpenMMTheory.
 
-Most general options available in OpenMM are available in this interface. 
-See OpenMM documentation page: http://docs.openmm.org/latest/userguide/application.html#integrators  for details about the integrators, thermostats, barostats etc.
+See `OpenMM documentation page <http://docs.openmm.org/latest/userguide/application.html#integrators>`_  for details about the integrators, thermostats, barostats etc.
 
 - Available Integrators: Langevin, LangevinMiddleIntegrator, NoseHooverIntegrator, VerletIntegrator, VariableLangevinIntegrator, VariableVerletIntegrator
 - Available Barostat: MonteCarloBarostat
@@ -106,31 +291,123 @@ See OpenMM documentation page: http://docs.openmm.org/latest/userguide/applicati
 .. code-block:: python
 
     def OpenMM_MD(fragment=None, theory=None, timestep=0.004, simulation_steps=None, simulation_time=None,
-                  traj_frequency=1000, temperature=300, integrator='LangevinMiddleIntegrator',
-                  barostat=None, pressure=1, trajectory_file_option='PDB', trajfilename='trajectory',
-                  coupling_frequency=1,
-                  anderson_thermostat=False,
-                  enforcePeriodicBox=True, 
-                  datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
-                  center_force_atoms=None, centerforce_constant=1.0):
+                traj_frequency=1000, temperature=300, integrator='LangevinMiddleIntegrator',
+                barostat=None, pressure=1, trajectory_file_option='DCD', trajfilename='trajectory',
+                coupling_frequency=1, charge=None, mult=None,
+                anderson_thermostat=False,
+                enforcePeriodicBox=True, dummyatomrestraint=False, center_on_atoms=None, solute_indices=None,
+                datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
+                center_force_atoms=None, centerforce_constant=1.0, barostat_frequency=25, specialbox=False):
 
 
-Options:
+**OpenMM_MD** options:
 
-- fragment: ASH Fragment object.
-- theory: should either be an ASH OpenMMTheory object, ASH QMMMTheory object (with mm_theory=OpenMMTheoryobject) or an ASH QMtheory.
-- timestep: float (default: 0.001 ps). Size of timestep in picoseconds.
-- simulation_steps: integer. Number of steps to take. (Use either simulation_steps or simulation_time)
-- simulation_time: integer. Length of simulation time in ps. (Use either simulation_steps or simulation_time)
-- temperature: integer (default:300). Temperature in Kelvin
-- integrator: string (regular integrator or integrator+thermostat, e.g. 'LangevinMiddleIntegrator')
-- barostat: string (e.g. 'MonteCarloBarostat'). Whether to add barostat to simulation for NPT simulations.
-- coupling_frequency: frequency (ps^-1) to update thermostat/integrator. Applies to Nose-Hoover/Langevin.
-- anderson_thermostat: Boolean (default: False)
-- trajectory_file_option: 'PDB' or 'DCD'. Creates an ASCII PDB-trajectory or a compressed DCD trajectory.
-- trajfilename : 'string'. Name of trajectory file (without extension)
-- traj_frequency: integer (default: 1000). How often to write coordinates to trajectory file (every nth step)
-- enforcePeriodicBox: Boolean (default: False). Option to fix PBC-image artifacts in trajectory.
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - The ASH fragment.
+   * - ``theory``
+     - ASH Theory
+     - None
+     - The ASH Theory object.
+   * - ``timestep``
+     - float
+     - 0.004
+     - The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator dynamics with frozen X-H bonds)
+   * - ``simulation_steps``
+     - integer
+     - None
+     - Number of simulation steps to take. Alternative to simulation_time below
+   * - ``simulation_time``
+     - float
+     - None
+     - Length of simulation in picoseconds. Alternative to simulation_time above.
+   * - ``temperature``
+     - integer
+     - 300
+     - The temperature in Kelvin.
+   * - ``integrator``
+     - string
+     - LangevinMiddleIntegrator
+     - The integrator to use. Options: 'Langevin', 'LangevinMiddleIntegrator', 'NoseHooverIntegrator', 'VerletIntegrator', 'VariableLangevinIntegrator', 'VariableVerletIntegrator'
+   * - ``coupling_frequency``
+     - integer
+     - 1
+     - The coupling frequency of thermostat (in ps^-1 for Nosé-Hoover and Langevin-type)
+   * - ``barostat``
+     - string
+     - None
+     - Barostat to use for NPT simulations. Options: 'MonteCarloBarostat'
+   * - ``barostat_frequency``
+     - int
+     - 25
+     - Frequency of barostat update.
+   * - ``pressure``
+     - int
+     - 1
+     - Pressure to enforce by barostat
+   * - ``anderson_thermostat``
+     - Boolean
+     - False
+     - Whether to use Andersen Thermostat
+   * - ``trajectory_file_option``
+     - string
+     - 'DCD'
+     - Type of trajectory file. Options: 'DCD' (compressed), 'PDB', 'NetCDFReporter' (compressed), 'HDF5Reporter' (compressed). Applies only to pure MM simulations.
+   * - ``traj_frequency``
+     - integer
+     - 1000
+     - Frequency of writing trajectory (every Xth timestep).
+   * - ``trajfilename``
+     - string
+     - None
+     - Name of trajectory file (without suffix).
+   * - ``enforcePeriodicBox``
+     - Boolean
+     - True
+     - Enforce PBC image during simulation. Fixes PBC-image artifacts in trajectory.
+   * - ``center_on_atoms``
+     - list
+     - None
+     - Expert options: Center system on these atoms.
+   * - ``dummyatomrestraint``
+     - Boolean
+     - False
+     - Expert options: Dummy atom restraints.
+   * - ``solute_indices``
+     - list
+     - None
+     - Expert options: solute_indices
+   * - ``add_center_force``
+     - Boolean
+     - False
+     - Whether to add a spherical force that pushes atoms to the center.
+   * - ``center_force_atoms``
+     - list
+     - None
+     - List of atom indices that the center force acts on.
+   * - ``centerforce_constant``
+     - float
+     - None
+     - Value of the spherical center force in kcal/mol/Ang^2.
+   * - ``specialbox``
+     - Boolean
+     - False
+     - Expert option: Special box for QM/MM.
+   * - ``plumed_object``
+     - ASH-Plumed object
+     - None
+     - Expert option: Plumed object for biased dynamics.
+
+
 
 Note that constraints, autoconstraints, restraints and frozen_atoms must be defined in the OpenMMTHeory object before.
 
@@ -196,7 +473,7 @@ General X-H constraints and deuterium-mass example:
 
 
 
-Dealing with PBC image problems in trajectory. See https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work
+Dealing with PBC image problems in trajectory. See `OpenMM FAQ <https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work>`_
 To obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory afterwards using the program mdtraj (requires installation of mdtraj: pip install mdtraj)
 
 Example:
@@ -215,7 +492,7 @@ Example:
 PBC box relaxation via NPT 
 ######################################
 
-This function allows one to run multiple NPT simulations (constant pressure and temperature) in order to relax the periodic box dimensions
+This function allows one to conveniently run multiple NPT simulations (constant pressure and temperature) in order to converge the periodic box dimensions
 of the system.
 
 
@@ -245,6 +522,9 @@ of the system.
 Simple minimization via OpenMM
 ######################################
 
+A classical system setup typically requires a minimization to get rid of large initial forces related to non-ideal atom positions.
+The simple minimizer in the OpenMM library works well for this purpose although achieving convergence can be difficult.
+Typically a few 100-1000 steps of minimization is sufficient to get rid of the major forces.
 
 Example:
 
@@ -285,7 +565,6 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
 
     from ash import *
 
-    numcores = 4
 
     pdbfile = "ash_inp.pdb"
     prmtopfile = "prmtop"
@@ -298,19 +577,17 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
     openmmobject = OpenMMTheory(Amberfiles=True, amberprmtopfile=prmtopfile, periodic=True,
             platform='CPU', autoconstraints=None, rigidwater=False, frozen_atoms=allnonHatoms)
 
+    OpenMM_Opt(fragment=frag, theory=openmmobject, maxiter=1000, tolerance=1)
 
-
-    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=100,
-            traj_frequency=1, temperature=300, integrator="LangevinIntegrator",
-            coupling_frequency=1, trajectory_file_option="PDB")
 
 
 ######################################
 System setup via OpenMM: Modeller
 ######################################
 
-OpenMM features a convenient PDBfixer program (https://github.com/openmm/pdbfixer) and a Modeller tool (http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html)
-that is capable of setting up a new biomolecular system from scratch. See also: http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing . ASH features a highly convenient interface to these programs and allows near-automatic system-setup for favorable systems.
+OpenMM features a convenient a `PDBfixer program <https://github.com/openmm/pdbfixer>`_ and  `Modeller tool <http://docs.openmm.org/latest/api-python/generated/simtk.openmm.app.modeller.Modeller.html>`_
+that together are capable of setting up a new biomolecular system from scratch. See also `OpenMM-Model-building and editing <http://docs.openmm.org/7.2.0/userguide/application.html#model-building-and-editing>`_
+As ASH features a highly convenient interface to these programs and OpenMM itself this allows near-automatic system-setup for biomolecular systems.
 
 .. code-block:: python
 
@@ -320,8 +597,8 @@ that is capable of setting up a new biomolecular system from scratch. See also: 
 
 
 The OpenMM_Modeller function returns an ASH OpenMMTheory object that can be used directly as theory level for future calculations.
-OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.).
-And an XML file associated with the system that can be used to create future OpenMMtheory objects from.
+OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.) that can be visualized for correctness.
+An XML file associated with the system is created that can be used to create future OpenMMtheory objects from.
 
 Lysozyme example (simple, no modifications required):
 
@@ -385,7 +662,9 @@ Here defining a simple Fe(III) ion:
     </ForceField>
 
 
-See e.g. https://education.molssi.org/mm-tools/01-introduction/index.html for information on the format of the XML file.
+See e.g. `Molecular Mechanics Tools <https://education.molssi.org/mm-tools/01-introduction/index.html>`_ for information on the format of the XML file.
+
+See :doc:`OpenMM-interface` for details and the :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.
 
 Common error messages encountered when reading in user-defined XML-files:
 
@@ -410,15 +689,6 @@ It's possible that the PDB-file contains connectivity statements at the bottom o
 Solution: Either add the missing bond to the residue definition so that it matches the CONE lines or simply delete the CONE information that you don't need.*
 
 
-Advanced example (additional forcefield parameters required):
-
-.. code-block:: python
-
-    from ash import *
-
-
-    #TODO
-
 
 Valid alternative residue names for alternative protonation states of titratable residues:
 
@@ -437,7 +707,11 @@ Valid alternative residue names for alternative protonation states of titratable
 Small molecule solvation
 ######################################
 
-ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is intended to be used for molecules for where forcefield parameters are typically not available: e.g. metal complexes. Instead of regular forcefield parameters, nonbonded parameters (charges and Lennard-Jones parameters) are defined for the solute (used for classical and QM/MM simulations) which can be used to perfrom classical MM dynamics or QM/MM dynamics.
+**WORK IN PROGRESS**
+
+ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is intended to be used for molecules 
+for where forcefield parameters are typically not available: e.g. metal complexes. Instead of regular forcefield parameters, nonbonded parameters (charges and Lennard-Jones parameters) 
+are defined for the solute (used for classical and QM/MM simulations) which can be used to perfrom classical MM dynamics or QM/MM dynamics.
 
 See also :doc:`Explicit-solvation` workflow page.
 
@@ -447,7 +721,8 @@ See also :doc:`Explicit-solvation` workflow page.
     def solvate_small_molecule(fragment=None, charge=None, mult=None, watermodel=None, solvent_boxdims=[70.0,70.0,70.0], 
                                nonbonded_pars="CM5_UFF", orcatheory=None, numcores=1):
 
-The solvate_small_molecule function reads in an ASH fragment, as well as charge and multiplicity, name of watermodel (e.g. "TIP3P"), size of solvent box, option for how the nonbonded parameters should be prepared, an optional ORCATheory object and optional numcores.
+The solvate_small_molecule function reads in an ASH fragment, as well as charge and multiplicity, name of watermodel (e.g. "TIP3P"), size of solvent box, option for 
+how the nonbonded parameters should be prepared, an optional ORCATheory object and optional numcores.
 
 Options:
 

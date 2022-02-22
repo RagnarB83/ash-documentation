@@ -20,8 +20,9 @@ minimizing the structure and finally running at the very least a simple MD simul
 This must all be done before starting the QM/MM calculations and this step should be done carefully as mistakes in this step are not easily corrected later on.
 The importance of taking this step seriously before starting any QM/MM can not be overstated!
 
-Some useful reading:
-https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf
+
+`Some useful reading <https://www.mdy.univie.ac.at/people/boresch/sommerschule2019.pdf>`_
+
 
 There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
 

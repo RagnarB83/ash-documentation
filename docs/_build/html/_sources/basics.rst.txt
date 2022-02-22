@@ -27,7 +27,7 @@ Make sure you have already set in the shell (part of Setup):
 You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
-See  :doc:`coordinate-input` for various ways of dealing with coordinates and fragments.
+See  :doc:`basic-examples` for examples.
 
 #####################
 Example script
@@ -67,17 +67,20 @@ defines variables related to the ORCA-interface , creates an ORCA-theory object
 Running script directly in the shell
 ######################################
 
-For a simple job we can just run the script directly
+For a very simple short job we can just run the script directly
 
 .. code-block:: shell
 
     python3 ashtest.py
 
-The output will be written to standard output (i.e. your shell). You can redirect the output to a file.
+The output will be written to standard output (i.e. your shell). 
+To save the output it is better to redirect the output to a file.
 
 .. code-block:: shell
 
     python3 ashtest.py >& ashtest.out
+
+For a really long job you would typically submit a jobscript to a queuing system instead.
 
 #####################################################
 Interactive ASH in a REPL or iPython environment
@@ -124,25 +127,28 @@ ASH will attempt to read this file on startup.
     debugflag = False
     print_exit_footer = True
     print_full_timings = True
-    nonbondedMM_code = "julia"
-    connectivity_code = "julia"
-    orcadir = '/path/to/orcadir'
+    nonbondedMM_code = julia
+    connectivity_code = julia
     print_exit_footer = True
     print_full_timings = True
 
+.. warning:: The file ~/ash_user_settings.ini should not contain ' or "" symbols when defining strings.
+
 In addition to options above it is also possible to specify the paths to various external codes.
-If these paths are set in the settings file, one can avoid setting them in the inputfiles.
+If these paths are set in the settings file, one can avoid defining them in the inputfiles.
 
 
 .. code-block:: text
 
     [Settings]
-    orcadir = '/path/to/orcadir'
-    daltondir = '/path/to/daltondir'
-    xtbdir = '/path/to/xtbdir'
-    psi4dir = '/path/to/psi4dir'
-    cfourdir = '/path/to/cfourdir'
-    crestdir = '/path/to/crestdir'
+    orcadir = /path/to/orcadir
+    daltondir = /path/to/daltondir
+    xtbdir = /path/to/xtbdir
+    psi4dir = /path/to/psi4dir
+    cfourdir = /path/to/cfourdir
+    crestdir = /path/to/crestdir
+
+
 
 
 ###############################

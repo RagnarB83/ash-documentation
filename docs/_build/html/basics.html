@@ -244,7 +244,7 @@ Make sure you have already set in the shell (part of Setup):</p>
 <p>You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
 object and then call a specific job-module (singlepoint, an optimizer, numerical-frequencies etc.).
-See  <a class="reference internal" href="coordinate-input.html"><span class="doc">Coordinates and fragments</span></a> for various ways of dealing with coordinates and fragments.</p>
+See  <a class="reference internal" href="basic-examples.html"><span class="doc">Basic examples</span></a> for examples.</p>
 </div>
 <div class="section" id="example-script">
 <h2>Example script<a class="headerlink" href="#example-script" title="Permalink to this headline">¶</a></h2>
@@ -276,14 +276,16 @@ defines variables related to the ORCA-interface , creates an ORCA-theory object
 </div>
 <div class="section" id="running-script-directly-in-the-shell">
 <h2>Running script directly in the shell<a class="headerlink" href="#running-script-directly-in-the-shell" title="Permalink to this headline">¶</a></h2>
-<p>For a simple job we can just run the script directly</p>
+<p>For a very simple short job we can just run the script directly</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py
 </pre></div>
 </div>
-<p>The output will be written to standard output (i.e. your shell). You can redirect the output to a file.</p>
+<p>The output will be written to standard output (i.e. your shell).
+To save the output it is better to redirect the output to a file.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 ashtest.py &gt;<span class="p">&amp;</span> ashtest.out
 </pre></div>
 </div>
+<p>For a really long job you would typically submit a jobscript to a queuing system instead.</p>
 </div>
 <div class="section" id="interactive-ash-in-a-repl-or-ipython-environment">
 <h2>Interactive ASH in a REPL or iPython environment<a class="headerlink" href="#interactive-ash-in-a-repl-or-ipython-environment" title="Permalink to this headline">¶</a></h2>
@@ -316,22 +318,25 @@ julia_library = pythoncall #pyjulia is another option
 debugflag = False
 print_exit_footer = True
 print_full_timings = True
-nonbondedMM_code = &quot;julia&quot;
-connectivity_code = &quot;julia&quot;
-orcadir = &#39;/path/to/orcadir&#39;
+nonbondedMM_code = julia
+connectivity_code = julia
 print_exit_footer = True
 print_full_timings = True
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The file ~/ash_user_settings.ini should not contain ‘ or “” symbols when defining strings.</p>
+</div>
 <p>In addition to options above it is also possible to specify the paths to various external codes.
-If these paths are set in the settings file, one can avoid setting them in the inputfiles.</p>
+If these paths are set in the settings file, one can avoid defining them in the inputfiles.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Settings]
-orcadir = &#39;/path/to/orcadir&#39;
-daltondir = &#39;/path/to/daltondir&#39;
-xtbdir = &#39;/path/to/xtbdir&#39;
-psi4dir = &#39;/path/to/psi4dir&#39;
-cfourdir = &#39;/path/to/cfourdir&#39;
-crestdir = &#39;/path/to/crestdir&#39;
+orcadir = /path/to/orcadir
+daltondir = /path/to/daltondir
+xtbdir = /path/to/xtbdir
+psi4dir = /path/to/psi4dir
+cfourdir = /path/to/cfourdir
+crestdir = /path/to/crestdir
 </pre></div>
 </div>
 </div>

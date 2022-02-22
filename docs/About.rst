@@ -3,8 +3,8 @@
 About ASH
 ==================================================
 
-ASH is a Python-based computational chemistry and QM/MM environment. Can do single-point calculations, geometry optimizations, surface scans,
-molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians.
+ASH is a Python-based computational chemistry and multiscale modelling program. Can do single-point calculations, geometry optimizations, surface scans,
+molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians as well as many complex workflows.
 Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 

@@ -4,13 +4,16 @@ MM Interfaces
 
 Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package: :doc:`OpenMM-interface`
 
-The internal NonBondedTheory can only perform nonbonded interactions: electrostatics and short-range Lennard-Jones interactions.
-The Coulomb+LJ interaction is quite fast as it is written in Julia.
+The internal NonBondedTheory is only capable of calculating nonbonded interactions: Coulomb electrostatics and short-range Lennard-Jones interactions.
+It will use routines written in Julia and thus require activating the Python-Julia interface.
 Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
 It can be used as MM code in QM/MM (:doc:`module_QM-MM`) theory objects.
 
-The interface to the external OpenMM code (:doc:`OpenMM-interface`) has recently become available. OpenMM is a fast C++ code with a Python API that ASH is interfaced to. OpenMM can calculate both bonded and nonbonded interactions, both periodic and nonperiodic systems and can read in multiple types of forcefield files.
-
+The interface to the external OpenMM code (:doc:`OpenMM-interface`) allows for full-fledged molecular mechanics.
+OpenMM is a fast C++ code with a Python API that ASH is interfaced to. 
+OpenMM is capable of bonded and nonbonded interactions, can treat periodic and nonperiodic systems and can read in multiple types of forcefield files.
+It can also run both on the CPU and the GPU.
+It can be used as MM code in QM/MM (:doc:`module_QM-MM`) theory objects.
 
 ###########################
 NonBondedTheory
@@ -66,6 +69,29 @@ Alternative is to define the forcefield in a forcefieldfile that is read-in.
     MMobject = NonBondedTheory(forcefield=MM_forcefield, atomtypes=atomtypes, LJcombrule='geometric')
 
     Singlepoint(fragment=HF_frag,theory=MMobject)
+
+where forcefield.ff contains e.g.:
+
+.. code-block:: text
+
+    LennardJones_i_sigma FX 3.150574227 -0.1521
+    LennardJones_i_sigma HT 3.550053212    -0.07
+    charge FX -0.9
+    charge HT 0.9
+
+The forcefield file will read and parse lines like:
+
+- LennardJones_i_sigma <atomtype> <sigma> <epsilon> # Specify atomtype and sigma-value (Å) and epsilon value (kcal/mol)
+- LennardJones_i_R0 <atomtype> <R0> <epsilon>  # Specify atomtype and R0-value (Å) and epsilon value (kcal/mol)
+- LennardJones_ij <atomtype1> <atomtype2>  <R0_ij> <epsilon pair parameter> #Specify pair-potential. Currently inactive option
+- charge <atomtype> <chargevalue> # Specify atomtype and charge-value
+
+or other options:
+
+- combination_rule <combrule option>  #For LJ potential. Can be geometric, arithmetic, mixed_geoepsilon, mixed_geosigma
+- XX_atomtypes <list of atomtypes> #Atomtypes for residue XX. List is space-separated.
+- XX_charges <list of charges> #Charges for residue XX. List is space-separated.
+- XX_elements <list of elements> #Elements for residue XX. List is space-separated.
 
 ###########################
 OpenMM interface
