@@ -85,11 +85,11 @@ The Fragment class
 Creating/modifying fragment objects
 ***********************************
 
-Fragments in Ash are Python objects containing basic information about a molecule. You can create as many fragment objects
+Fragments in ASH are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.
 
-Fragments are Python objects created from the Ash *Fragment* object class.
+Fragments are Python objects created from the ASH *Fragment* object class.
 See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.
 
 Direct creation of fragment from coordinates
@@ -107,7 +107,7 @@ First define multi-line string (called fragcoords here) with element and coordin
     """
 
 Then define object (here called **HF_frag**) of class *Fragment* by passing the coordinates to *coordsstring*, using coordinates from the string "fragcoords".
-The *Fragment* class is an Ash class.
+The *Fragment* class is an ASH class.
 
 .. code-block:: python
 
@@ -217,20 +217,13 @@ If you want to replace coords and elems of a fragment object with new informatio
 **TODO:** Add option here of replacing coords from XYZ file and string as well.
 
 
-Delete coordinates of object
-==============================
-If you want to delete coordinates from object (both coords list and elems lists) then this is easily done.
-
-.. code-block:: python
-
-    HF_frag.delete_coords()
-
 
 Calculate connectivity of fragment object
 ===========================================
 
-Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
-Connectivity is calculated based on a distance and covalen radii-based criterion.
+Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. 
+Correct connectivity is crucial for some ASH functionality (the Molcrys functionality in particular).
+Connectivity is calculated based on a distance and covalent radii-based criterion.
 Atoms A and B will be defined to be connected according to:
 
 .. math::
@@ -258,8 +251,8 @@ The connectivity table is available as:
     mol_frag.connectivity
 
 
-The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
-It is typically unnecessary to request a calculation or recalculation.
+The connectivity table is calculated or recalculated automatically needed. For large systems it can be expensive to calculate and thus not calculated by default.
+For large systems, ASH will call a Julia routine for the calculation.
 
 
 Charge and Multiplicity
@@ -370,7 +363,7 @@ Print various molecule attributes:
     print("Elemental formula of fragment", frag.formula)
     print("Pretty elemental formula of fragment", frag.prettyformula)
 
-The Ash fragment file can be printed conveniently to disk:
+The ASH fragment file can be printed conveniently to disk:
 
 .. code-block:: python
 
