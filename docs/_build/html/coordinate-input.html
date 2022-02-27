@@ -106,7 +106,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#direct-creation-of-fragment-from-coordinates">Direct creation of fragment from coordinates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-coordinates-to-object">Adding coordinates to object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#replace-coordinates-of-object">Replace coordinates of object</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#delete-coordinates-of-object">Delete coordinates of object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-connectivity-of-fragment-object">Calculate connectivity of fragment object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#charge-and-multiplicity">Charge and Multiplicity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#label">Label</a></li>
@@ -312,10 +311,10 @@
 </div>
 <div class="section" id="creating-modifying-fragment-objects">
 <h2>Creating/modifying fragment objects<a class="headerlink" href="#creating-modifying-fragment-objects" title="Permalink to this headline">¶</a></h2>
-<p>Fragments in Ash are Python objects containing basic information about a molecule. You can create as many fragment objects
+<p>Fragments in ASH are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.</p>
-<p>Fragments are Python objects created from the Ash <em>Fragment</em> object class.
+<p>Fragments are Python objects created from the ASH <em>Fragment</em> object class.
 See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.</p>
 <div class="section" id="direct-creation-of-fragment-from-coordinates">
 <h3>Direct creation of fragment from coordinates<a class="headerlink" href="#direct-creation-of-fragment-from-coordinates" title="Permalink to this headline">¶</a></h3>
@@ -328,7 +327,7 @@ See XXFragment-class-page-linkXX for an overview of all Fragment class attribute
 </pre></div>
 </div>
 <p>Then define object (here called <strong>HF_frag</strong>) of class <em>Fragment</em> by passing the coordinates to <em>coordsstring</em>, using coordinates from the string “fragcoords”.
-The <em>Fragment</em> class is an Ash class.</p>
+The <em>Fragment</em> class is an ASH class.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">fragcoords</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -399,17 +398,11 @@ will follow.</p>
 </div>
 <p><strong>TODO:</strong> Add option here of replacing coords from XYZ file and string as well.</p>
 </div>
-<div class="section" id="delete-coordinates-of-object">
-<h3>Delete coordinates of object<a class="headerlink" href="#delete-coordinates-of-object" title="Permalink to this headline">¶</a></h3>
-<p>If you want to delete coordinates from object (both coords list and elems lists) then this is easily done.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">.</span><span class="n">delete_coords</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="calculate-connectivity-of-fragment-object">
 <h3>Calculate connectivity of fragment object<a class="headerlink" href="#calculate-connectivity-of-fragment-object" title="Permalink to this headline">¶</a></h3>
-<p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. Correct connectivity is crucial for some Ash functionality.
-Connectivity is calculated based on a distance and covalen radii-based criterion.
+<p>Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded.
+Correct connectivity is crucial for some ASH functionality (the Molcrys functionality in particular).
+Connectivity is calculated based on a distance and covalent radii-based criterion.
 Atoms A and B will be defined to be connected according to:</p>
 <div class="math notranslate nohighlight">
 \[r(AtomA,AtomB) &lt; scale*( covrad(AtomA) + covrad(AtomB) ) + tol\]</div>
@@ -428,8 +421,8 @@ The connectivity table is available as:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mol_frag</span><span class="o">.</span><span class="n">connectivity</span>
 </pre></div>
 </div>
-<p>The connectivity table is calculated or recalculated automatically when coordinates are added or when modified to the fragment.
-It is typically unnecessary to request a calculation or recalculation.</p>
+<p>The connectivity table is calculated or recalculated automatically needed. For large systems it can be expensive to calculate and thus not calculated by default.
+For large systems, ASH will call a Julia routine for the calculation.</p>
 </div>
 <div class="section" id="charge-and-multiplicity">
 <h3>Charge and Multiplicity<a class="headerlink" href="#charge-and-multiplicity" title="Permalink to this headline">¶</a></h3>
@@ -509,7 +502,7 @@ The label can be added when fragment is first created:</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pretty elemental formula of fragment&quot;</span><span class="p">,</span> <span class="n">frag</span><span class="o">.</span><span class="n">prettyformula</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The Ash fragment file can be printed conveniently to disk:</p>
+<p>The ASH fragment file can be printed conveniently to disk:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">HF_frag</span><span class="o">.</span><span class="n">print_system</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;fragment.ygg&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

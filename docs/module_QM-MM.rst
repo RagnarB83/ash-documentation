@@ -17,34 +17,104 @@ QMMMTheory class
 .. code-block:: python
  
     class QMMMTheory:
-        def __init__(self, qm_theory=None, mm_theory=None, qmatoms=None, fragment=None, charges=None,
+        def __init__(self, qm_theory=None, qmatoms=None, fragment=None, mm_theory=None, charges=None,
                     embedding="Elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
-                    unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=35, TruncatedPC_recalc_iter=50):
+                    unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50, TruncPCcorrection_option="addition",
+                    qm_charge=None, qm_mult=None):
 
-Options:
+**QMMMTheory** options:
 
-- qm_theory (ASH Theory): Any ASH QMTheory object. Default: None
-- mm_theory (ASH Theory): An ASH MMTheory object. Default: None
-- qmatoms (list): List of atom-indices that define the QM-region. Default: None
-- fragment (ASH Fragment): An ASH Default: None
-- charges (list): Optional list of MM charges for whole system. Will override charges from mm_theory. Default: None
-- embedding (string): Embedding keyword, 'Elstat' or 'Mechanical' Default: 'Elstat'
-- printlevel (integer): Printlevel setting of QMMMTheory. Default: 2
-- numcores (integer): Optional setting for how many cores to use. Will override qm_theory setting. Default: 1
-- excludeboundaryatomlist (list): List of atoms that are excluded from adding linkatoms to. Default: None
-- unusualboundary (Boolean): Boundary-option; overrides ASH quitting if an unusual QM-MM boundary is defined.  Default: False
-- openmm_externalforce (Boolean): Option for passing QM/MM force as an external force to OpenMMTheory. Default: False
-- TruncatedPC (Boolean): Truncated PC option; True or False . Default: False
-- TruncPCRadius (float): Truncated PC option; Radius (Å) for the truncated PC region. Default: 35
-- TruncatedPC_recalc_iter (integer): Truncated PC option; frequency for recalculating with full PC field. Default: 50
-- actatoms (list): List of active atoms in QM/MM. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)
-- frozenatoms (list): List of frozen atoms in QM/MM, alternative to actatoms. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``qm_theory``
+     - ASHTheory
+     - None
+     - Required: The theory level for the QM-region. Must be a valid ASH Theory that supports electrostatic embedding.
+   * - ``qmatoms``
+     - list
+     - None
+     - Required: List of QM-atom indices that defined the QM-region. Atoms not in list are treated as MM atoms.
+   * - ``mm_theory``
+     - ASHTheory
+     - None
+     - Required: The theory level for the MM-region. Must be an object of class OpenMMTheory or NonbondedTheory.
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - Required: ASH fragment, needed for setting up QM-region and MM-region.
+   * - ``qm_charge``
+     - integer
+     - None
+     - Optional: Specify the charge of the QM-region. This takes precedence over other charge specifications.
+   * - ``qm_mult``
+     - integer
+     - None
+     - Optional: Specify the spin multiplicity of the QM-region. This takes precedence over other mult specifications.
+   * - ``charges``
+     - list
+     - None
+     - Optional: list of atom charges. If not defined then charges will be read from mm_theory.
+   * - ``printlevel``
+     - integer
+     - 2
+     - Optional: The printlevel setting. If printlevel >= 3 then more printing and gradient files are written to disk.
+   * - ``numcores``
+     - integer
+     - 1
+     - Optional: Number of CPU cores to use for qm_theory. If defined, takes precedence over QMTheory setting.
+   * - ``excludeboundaryatomlist``
+     - list
+     - None
+     - Optional: List of atoms that are excluded from adding linkatoms to.
+   * - ``unusualboundary``
+     - Boolean
+     - False
+     - Optional: Boundary-option: overrides ASH from quitting if an unusual QM-MM boundary is found. 
+   * - ``openmm_externalforce``
+     - Boolean
+     - False
+     - Optional: Option for passing QM/MM force as an external force to OpenMMTheory.
+   * - ``TruncatedPC``
+     - Boolean
+     - False
+     - Optional: Truncated Pointcharge Option on or off.
+   * - ``TruncPCRadius``
+     - float
+     - 55
+     - Optional: Truncated PC option; Radius (Å) for the truncated PC region.
+   * - ``TruncatedPC_recalc_iter``
+     - integer
+     - 50
+     - Optional: Truncated PC option; frequency for recalculating with full PC field.
+   * - ``TruncPCcorrection_option``
+     - string
+     - "addition"
+     - Optional: Option for how the TruncPCcorrection approximation is handled. 
+   * - ``actatoms``
+     - list
+     - None
+     - Optional: List of active atoms in QM/MM. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
+   * - ``frozenatoms``
+     - list
+     - None
+     - Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
+
+
+
+
+
 
 Example:
 
 .. code-block:: python
 
-    frag=Fragment(xyzfile="system.xyz", charge=-1, mult=6)
+    frag=Fragment(xyzfile="system.xyz")
 
     #List of qmatom indices defined
     qmatoms=[500,501,502,503]
@@ -57,23 +127,36 @@ Example:
                 platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM/MM theory object
-    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2)
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2,
+            qm_charge=-1, qm_mult=6)
 
 
 **Defining the charge of the QM-region**
 
-To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose to either provide this information in the fragment definition or alternatively as input to the job-function.
-This information will be passed onto the QM-program when running. Charge/mult definitions in the job-type (e.g. Singlepoint) take precedence.
+To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose between 3 options:
+
+\- Define qm_charge and qm_mult attributes when defining the QMMMTheory object (**recommended**):
+
+.. code-block:: python
+
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, qm_charge=-1, qm_mult=6)
+
+\- Define as input to the job-function (e.g. Singlepoint):
+
+.. code-block:: python
+
+    Singlepoint(theory=qmmm, fragment=frag, charge=-1, mult=6)
+
+\- Provide the information in the fragment definition:
 
 .. code-block:: python
 
     frag=Fragment(xyzfile="system.xyz", charge=-1, mult=6)
 
-or 
+This information will be passed onto the QM-program when called. The qm_charge/qm_mult option takes precedence over the other options, followed by the job-type keyword.
 
-.. code-block:: python
+ 
 
-    Singlepoint(theory=qmmm, fragment=frag, charge=-1, mult=6)
 
 ######################################
 QM/MM Truncated PC approximation

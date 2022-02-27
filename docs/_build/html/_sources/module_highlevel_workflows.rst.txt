@@ -19,61 +19,139 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
 
 .. code-block:: python
 
-  class CC_CBS_Theory:
-      def __init__(self, elements=None, cardinals = [2,3], basisfamily="def2", relativity=None, orcadir=None,
-                stabilityanalysis=False, numcores=1, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, 
-                DFTreference=None, DFT_RI=False, auxbasis="autoaux-max", memory=5000, scfsetting='TightSCF', DLPNO=False, T1=True, 
-                pnosetting='extrapolation', pnoextrapolation=[6,7], FullLMP2Guess=False, alpha=None, beta=None, 
-                extrainputkeyword='', extrablocks='', FCI=False, guessmode='Cmatrix', atomicSOcorrection=False):
+    class CC_CBS_Theory:
+        def __init__(self, elements=None, cardinals = None, basisfamily=None, relativity=None, orcadir=None, 
+            stabilityanalysis=False, numcores=1, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, DFTreference=None, DFT_RI=False, auxbasis="autoaux-max",
+                            DLPNO=False, memory=5000, pnosetting='extrapolation', pnoextrapolation=[6,7], FullLMP2Guess=False, T1=True, scfsetting='TightSCF',
+                            alpha=None, beta=None, extrainputkeyword='', extrablocks='', FCI=False, guessmode='Cmatrix', atomicSOcorrection=False):
+
+**CC_CBS_Theory** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``elements``
+     - list of strings.
+     - None
+     - Required: List of all elements of the molecular system (reaction). Needed to set up basis set information. Duplicates are OK. fragment.elems is a valid list.
+   * - ``cardinals``
+     - list of integers
+     - [2,3]
+     - Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).
+   * - ``basisfamily``
+     - string
+     - "cc"
+     - Required: Name of basis-set family to use. Various options. See table below. 
+   * - ``relativity``
+     - string
+     - None
+     - Scalar relativity treatment. Options: 'DKH', 'ZORA', 'NoRel', None. 
+   * - ``orcadir``
+     - string
+     - None
+     - Path to ORCA.
+   * - ``stabilityanalysis``
+     - Boolean
+     - False
+     - Perform SCF stability analysis for each SCF calculation.
+   * - ``numcores``
+     - integer
+     - 1
+     - Number of cores to use in ORCA calculation.
+   * - ``Openshellreference``
+     - string
+     - None
+     - Use alternative reference WF in open-shell calculation. Options: 'UHF', 'QRO', None.
+   * - ``DFTreference``
+     - string
+     - None
+     - Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid ORCA DFT keyword). Default: None
+   * - ``DFT_RI``
+     - Boolean
+     - False
+     - If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to calculate DFT orbitals.
+   * - ``auxbasis``
+     - string
+     - "autoaux-max"
+     - Auxiliary basis set for CC integrals (/C type). Options: 'autoaux, 'autoaux-max' Default:  "autoaux-max"
+   * - ``memory``
+     - integer
+     - 5000
+     - Memory in MBs to use by ORCA.
+   * - ``scfsetting``
+     - string
+     - 'TightSCF'
+     - SCF-convergence setting. Options: 'NormalSCF', 'TightSCF', 'VeryTightSCF', 'ExtremeSCF'.
+   * - ``DLPNO``
+     - Boolean
+     - False
+     - Use of DLPNO approximation for coupled cluster calculations or not.
+   * - ``T1``
+     - Boolean
+     - True
+     - Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) (more accurate, more expensive).
+   * - ``pnosetting``
+     - string
+     - 'extrapolation'
+     - Accuracy-threshold of the DLPNO approximation. Options: 'LoosePNO', 'NormalPNO', 'TightPNO', 'extrapolation'.
+   * - ``pnoextrapolation``
+     - list of 2 integers
+     - [6,7]
+     - If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and TCutPNO=1e-Y and extrapolated to PNO limit.
+   * - ``FullLMP2Guess``
+     - Boolean
+     - None
+     - Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell.
+   * - ``alpha``
+     - float
+     - False
+     - Manual alpha extrapolation parameter for SCF-energy extrapolation.
+   * - ``beta``
+     - float
+     - None
+     -  Manual beta extrapolation parameter for correlation-energy extrapolation.
+   * - ``extrainputkeyword``
+     - string
+     - None
+     - Optional extra simple-input-keyword to add in ORCA inputfile.
+   * - ``extrablocks``
+     - string
+     - None
+     - Optional extra ORCA block-input lines to add to ORCA inputfile.
+   * - ``guessmode``
+     - string
+     - 'CMatrix'
+     - What ORCA Guessmode to use when doing basis-set projections of orbitals. Options: 'CMatrix' (more robust), 'FMatrix' (cheaper).
+   * - ``atomicSOcorrection``
+     - Boolean
+     - False
+     - Whether to add the experimental atomic spin-orbit energy to system if the system is an atom.
+   * - ``FCI``
+     - Boolean
+     - False
+     - Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.
+   * - ``F12``
+     - Boolean
+     - False
+     - Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS extrapolation. Use with basisfamily='cc-f12'.
+   * - ``CVSR``
+     - Boolean
+     - False
+     - Perform additional core-valence+scalar-relativistic correction.
+   * - ``CVbasis``
+     - string
+     - "W1-mtsmall"
+     - The core-valence basis set to use. The default "W1-mtsmall" is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.
 
 
-.. code-block:: text
-
-  Options:
-
-  - elements (list of strings): A list of elements need to be provided when creating the object. This list must contain all the elements 
-  found in the molecular system (duplicates are fine). This list of elements is used to select an appropriate basis-set member for the 
-  chosen basis-set-family for each element. 
-  - cardinals (list of ints): Cardinals can be set to [2,3], [3,4], [4,5] or [5,6] (though 5Z and 6Z basis-sets are not always available 
-  for all elements or basis set families).
-  - basisfamily (string): Can be set to various options. See table below. 
-  - relativity (string): Options: 'DKH', 'ZORA', 'NoRel', None. Default: None
-  - orcadir(string): Path-to-ORCA. Default: None
-  - stabilityanalysis (Boolean): Perform SCF stability analysis. Default: False
-  - numcores (integer): Number of cores to use in ORCA calculation.
-  - Openshellreference (string): Use alternative reference WF in open-shell calculation. Options: 'UHF', 'QRO' Default: None
-  - DFTreference (string): Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid DFT keyword). Default: None
-  - DFT_RI (Boolean): If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to 
-  calculate DFT orbitals. Default: False
-  - auxbasis (string): Auxiliary basis set for CC integrals (/C type). Options: 'autoaux, 'autoaux-max' Default:  "autoaux-max"
-  - memory (integer): Memory in MBs to use by ORCA. Default: 5000
-  - scfsetting (string): SCF-convergence setting. Options: 'NormalSCF', 'TightSCF', 'VeryTightSCF', 'ExtremeSCF'. Default: 'TightSCF'
-  - DLPNO (Boolean): Use of DLPNO approximation or not. Default False.
-  - T1 (Boolean): option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) 
-  (more accurate, more expensive). Default: True
-  - pnosetting (string): Accuracy-threshold of the DLPNO approximation. Options: 'LoosePNO', 'NormalPNO', 'TightPNO', 'extrapolation'.
-  Default: 'extrapolation'
-  - pnoextrapolation (list of 2 ints, X and Y): If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and 
-  TCutPNO=1e-Y and extrapolated to PNO limit. Default: [6,7] 
-  - FullLMP2Guess (Boolean): Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell. Default: False
-  - alpha(float): Manual extrapolation parameter for SCF-extrapolation. Default: None
-  - beta(float): Manual extrapolation parameter for correlation-energy extrapolation. Default: None
-  - extrainputkeyword (string): Optional extra simple-input-keyword to add in ORCA inputfile. Default: None
-  - extrablocks (string): Optional extra ORCA block-input lines to add to ORCA inputfile. Default: None
-  - guessmode(string): What ORCA Guessmode to use when doing basis-set projections of orbitals. 
-  Options: 'CMatrix' (more robust), 'FMatrix' (cheaper). Default: 'CMatrix'
-  - atomicSOcorrection (Boolean). Whether to add the experimental atomic spin-orbit energy to system if the 
-  system is an atom. Default: False
-  - FCI (Boolean): Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.
-  - F12 (Boolean): Use CCSD(T)-F12 approach with a single basis-set instead of extrapolation. Use with basisfamily='cc-f12'. Default: False
-  - CVSR (Boolean). Perform additional core-valence+scalar-relativistic correction. Default: False  (NOT ACTIVE)
-  - CVbasis (string): The core-valence basis set to use. Default: "W1-mtsmall" (NOT ACTIVE)
 
 
-
-#########################################
-Basis-family options
-#########################################
+**Basis-family options**
 
 Appropriate all-electron or valence+ECP basis sets for each element with basis-families such as : cc, aug-cc, def2, ma-def2. 
 If instead an all-electron relativistic approch is desired for all elements then basisfamily="cc-dk", "def2-zora", "def2-dkh" and relativity='DKH' or 'ZORA' can be chosen instead.

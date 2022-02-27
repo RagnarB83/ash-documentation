@@ -120,7 +120,6 @@
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory">CC_CBS_Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#basis-family-options">Basis-family options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory-examples">CC_CBS_Theory Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reaction-highlevel-analysis">Reaction_Highlevel_Analysis</a></li>
 </ul>
@@ -236,57 +235,171 @@ Various options affecting the accuracy, efficiency and robustness of the protoco
 Many basis set families can be chosen that are available for most of the periodic table.
 Atomic spin-orbit coupling can be automatically included if system is an atom.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CC_CBS_Theory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">FullLMP2Guess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">FCI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">guessmode</span><span class="o">=</span><span class="s1">&#39;Cmatrix&#39;</span><span class="p">,</span> <span class="n">atomicSOcorrection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">basisfamily</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span>
+                        <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">FullLMP2Guess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">FCI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">guessmode</span><span class="o">=</span><span class="s1">&#39;Cmatrix&#39;</span><span class="p">,</span> <span class="n">atomicSOcorrection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </pre></div>
 </div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Options:
-
-- elements (list of strings): A list of elements need to be provided when creating the object. This list must contain all the elements
-found in the molecular system (duplicates are fine). This list of elements is used to select an appropriate basis-set member for the
-chosen basis-set-family for each element.
-- cardinals (list of ints): Cardinals can be set to [2,3], [3,4], [4,5] or [5,6] (though 5Z and 6Z basis-sets are not always available
-for all elements or basis set families).
-- basisfamily (string): Can be set to various options. See table below.
-- relativity (string): Options: &#39;DKH&#39;, &#39;ZORA&#39;, &#39;NoRel&#39;, None. Default: None
-- orcadir(string): Path-to-ORCA. Default: None
-- stabilityanalysis (Boolean): Perform SCF stability analysis. Default: False
-- numcores (integer): Number of cores to use in ORCA calculation.
-- Openshellreference (string): Use alternative reference WF in open-shell calculation. Options: &#39;UHF&#39;, &#39;QRO&#39; Default: None
-- DFTreference (string): Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid DFT keyword). Default: None
-- DFT_RI (Boolean): If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to
-calculate DFT orbitals. Default: False
-- auxbasis (string): Auxiliary basis set for CC integrals (/C type). Options: &#39;autoaux, &#39;autoaux-max&#39; Default:  &quot;autoaux-max&quot;
-- memory (integer): Memory in MBs to use by ORCA. Default: 5000
-- scfsetting (string): SCF-convergence setting. Options: &#39;NormalSCF&#39;, &#39;TightSCF&#39;, &#39;VeryTightSCF&#39;, &#39;ExtremeSCF&#39;. Default: &#39;TightSCF&#39;
-- DLPNO (Boolean): Use of DLPNO approximation or not. Default False.
-- T1 (Boolean): option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0)
-(more accurate, more expensive). Default: True
-- pnosetting (string): Accuracy-threshold of the DLPNO approximation. Options: &#39;LoosePNO&#39;, &#39;NormalPNO&#39;, &#39;TightPNO&#39;, &#39;extrapolation&#39;.
-Default: &#39;extrapolation&#39;
-- pnoextrapolation (list of 2 ints, X and Y): If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and
-TCutPNO=1e-Y and extrapolated to PNO limit. Default: [6,7]
-- FullLMP2Guess (Boolean): Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell. Default: False
-- alpha(float): Manual extrapolation parameter for SCF-extrapolation. Default: None
-- beta(float): Manual extrapolation parameter for correlation-energy extrapolation. Default: None
-- extrainputkeyword (string): Optional extra simple-input-keyword to add in ORCA inputfile. Default: None
-- extrablocks (string): Optional extra ORCA block-input lines to add to ORCA inputfile. Default: None
-- guessmode(string): What ORCA Guessmode to use when doing basis-set projections of orbitals.
-Options: &#39;CMatrix&#39; (more robust), &#39;FMatrix&#39; (cheaper). Default: &#39;CMatrix&#39;
-- atomicSOcorrection (Boolean). Whether to add the experimental atomic spin-orbit energy to system if the
-system is an atom. Default: False
-- FCI (Boolean): Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.
-- F12 (Boolean): Use CCSD(T)-F12 approach with a single basis-set instead of extrapolation. Use with basisfamily=&#39;cc-f12&#39;. Default: False
-- CVSR (Boolean). Perform additional core-valence+scalar-relativistic correction. Default: False  (NOT ACTIVE)
-- CVbasis (string): The core-valence basis set to use. Default: &quot;W1-mtsmall&quot; (NOT ACTIVE)
-</pre></div>
-</div>
-</div>
-<div class="section" id="basis-family-options">
-<h2>Basis-family options<a class="headerlink" href="#basis-family-options" title="Permalink to this headline">¶</a></h2>
+<p><strong>CC_CBS_Theory</strong> options:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">elements</span></code></p></td>
+<td><p>list of strings.</p></td>
+<td><p>None</p></td>
+<td><p>Required: List of all elements of the molecular system (reaction). Needed to set up basis set information. Duplicates are OK. fragment.elems is a valid list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cardinals</span></code></p></td>
+<td><p>list of integers</p></td>
+<td><p>[2,3]</p></td>
+<td><p>Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basisfamily</span></code></p></td>
+<td><p>string</p></td>
+<td><p>“cc”</p></td>
+<td><p>Required: Name of basis-set family to use. Various options. See table below.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">relativity</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Scalar relativity treatment. Options: ‘DKH’, ‘ZORA’, ‘NoRel’, None.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orcadir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Path to ORCA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stabilityanalysis</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Perform SCF stability analysis for each SCF calculation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Number of cores to use in ORCA calculation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Openshellreference</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Use alternative reference WF in open-shell calculation. Options: ‘UHF’, ‘QRO’, None.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DFTreference</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid ORCA DFT keyword). Default: None</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DFT_RI</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to calculate DFT orbitals.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">auxbasis</span></code></p></td>
+<td><p>string</p></td>
+<td><p>“autoaux-max”</p></td>
+<td><p>Auxiliary basis set for CC integrals (/C type). Options: ‘autoaux, ‘autoaux-max’ Default:  “autoaux-max”</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">memory</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>5000</p></td>
+<td><p>Memory in MBs to use by ORCA.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scfsetting</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘TightSCF’</p></td>
+<td><p>SCF-convergence setting. Options: ‘NormalSCF’, ‘TightSCF’, ‘VeryTightSCF’, ‘ExtremeSCF’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DLPNO</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Use of DLPNO approximation for coupled cluster calculations or not.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>True</p></td>
+<td><p>Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) (more accurate, more expensive).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pnosetting</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘extrapolation’</p></td>
+<td><p>Accuracy-threshold of the DLPNO approximation. Options: ‘LoosePNO’, ‘NormalPNO’, ‘TightPNO’, ‘extrapolation’.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pnoextrapolation</span></code></p></td>
+<td><p>list of 2 integers</p></td>
+<td><p>[6,7]</p></td>
+<td><p>If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and TCutPNO=1e-Y and extrapolated to PNO limit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FullLMP2Guess</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>None</p></td>
+<td><p>Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
+<td><p>float</p></td>
+<td><p>False</p></td>
+<td><p>Manual alpha extrapolation parameter for SCF-energy extrapolation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beta</span></code></p></td>
+<td><p>float</p></td>
+<td><p>None</p></td>
+<td><p>Manual beta extrapolation parameter for correlation-energy extrapolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">extrainputkeyword</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Optional extra simple-input-keyword to add in ORCA inputfile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">extrablocks</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Optional extra ORCA block-input lines to add to ORCA inputfile.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">guessmode</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘CMatrix’</p></td>
+<td><p>What ORCA Guessmode to use when doing basis-set projections of orbitals. Options: ‘CMatrix’ (more robust), ‘FMatrix’ (cheaper).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">atomicSOcorrection</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to add the experimental atomic spin-orbit energy to system if the system is an atom.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FCI</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">F12</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS extrapolation. Use with basisfamily=’cc-f12’.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CVSR</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Perform additional core-valence+scalar-relativistic correction.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CVbasis</span></code></p></td>
+<td><p>string</p></td>
+<td><p>“W1-mtsmall”</p></td>
+<td><p>The core-valence basis set to use. The default “W1-mtsmall” is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Basis-family options</strong></p>
 <p>Appropriate all-electron or valence+ECP basis sets for each element with basis-families such as : cc, aug-cc, def2, ma-def2.
 If instead an all-electron relativistic approch is desired for all elements then basisfamily=”cc-dk”, “def2-zora”, “def2-dkh” and relativity=’DKH’ or ‘ZORA’ can be chosen instead.</p>
 <div class="admonition note">

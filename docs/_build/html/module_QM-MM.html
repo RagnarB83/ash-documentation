@@ -233,32 +233,122 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 <div class="section" id="qmmmtheory-class">
 <h2>QMMMTheory class<a class="headerlink" href="#qmmmtheory-class" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QMMMTheory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozenatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">unusualboundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">openmm_externalforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+                <span class="n">unusualboundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">openmm_externalforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">TruncPCcorrection_option</span><span class="o">=</span><span class="s2">&quot;addition&quot;</span><span class="p">,</span>
+                <span class="n">qm_charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>Options:</p>
-<ul class="simple">
-<li><p>qm_theory (ASH Theory): Any ASH QMTheory object. Default: None</p></li>
-<li><p>mm_theory (ASH Theory): An ASH MMTheory object. Default: None</p></li>
-<li><p>qmatoms (list): List of atom-indices that define the QM-region. Default: None</p></li>
-<li><p>fragment (ASH Fragment): An ASH Default: None</p></li>
-<li><p>charges (list): Optional list of MM charges for whole system. Will override charges from mm_theory. Default: None</p></li>
-<li><p>embedding (string): Embedding keyword, ‘Elstat’ or ‘Mechanical’ Default: ‘Elstat’</p></li>
-<li><p>printlevel (integer): Printlevel setting of QMMMTheory. Default: 2</p></li>
-<li><p>numcores (integer): Optional setting for how many cores to use. Will override qm_theory setting. Default: 1</p></li>
-<li><p>excludeboundaryatomlist (list): List of atoms that are excluded from adding linkatoms to. Default: None</p></li>
-<li><p>unusualboundary (Boolean): Boundary-option; overrides ASH quitting if an unusual QM-MM boundary is defined.  Default: False</p></li>
-<li><p>openmm_externalforce (Boolean): Option for passing QM/MM force as an external force to OpenMMTheory. Default: False</p></li>
-<li><p>TruncatedPC (Boolean): Truncated PC option; True or False . Default: False</p></li>
-<li><p>TruncPCRadius (float): Truncated PC option; Radius (Å) for the truncated PC region. Default: 35</p></li>
-<li><p>TruncatedPC_recalc_iter (integer): Truncated PC option; frequency for recalculating with full PC field. Default: 50</p></li>
-<li><p>actatoms (list): List of active atoms in QM/MM. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)</p></li>
-<li><p>frozenatoms (list): List of frozen atoms in QM/MM, alternative to actatoms. Default: None (NOTE: only applicable to mm_theory=NonBondedTheory)</p></li>
-</ul>
+<p><strong>QMMMTheory</strong> options:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qm_theory</span></code></p></td>
+<td><p>ASHTheory</p></td>
+<td><p>None</p></td>
+<td><p>Required: The theory level for the QM-region. Must be a valid ASH Theory that supports electrostatic embedding.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qmatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Required: List of QM-atom indices that defined the QM-region. Atoms not in list are treated as MM atoms.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mm_theory</span></code></p></td>
+<td><p>ASHTheory</p></td>
+<td><p>None</p></td>
+<td><p>Required: The theory level for the MM-region. Must be an object of class OpenMMTheory or NonbondedTheory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fragment</span></code></p></td>
+<td><p>ASH Fragment</p></td>
+<td><p>None</p></td>
+<td><p>Required: ASH fragment, needed for setting up QM-region and MM-region.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qm_charge</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>None</p></td>
+<td><p>Optional: Specify the charge of the QM-region. This takes precedence over other charge specifications.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qm_mult</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>None</p></td>
+<td><p>Optional: Specify the spin multiplicity of the QM-region. This takes precedence over other mult specifications.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">charges</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Optional: list of atom charges. If not defined then charges will be read from mm_theory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>2</p></td>
+<td><p>Optional: The printlevel setting. If printlevel &gt;= 3 then more printing and gradient files are written to disk.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Optional: Number of CPU cores to use for qm_theory. If defined, takes precedence over QMTheory setting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">excludeboundaryatomlist</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Optional: List of atoms that are excluded from adding linkatoms to.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">unusualboundary</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Optional: Boundary-option: overrides ASH from quitting if an unusual QM-MM boundary is found.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">openmm_externalforce</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Optional: Option for passing QM/MM force as an external force to OpenMMTheory.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TruncatedPC</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Optional: Truncated Pointcharge Option on or off.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TruncPCRadius</span></code></p></td>
+<td><p>float</p></td>
+<td><p>55</p></td>
+<td><p>Optional: Truncated PC option; Radius (Å) for the truncated PC region.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TruncatedPC_recalc_iter</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>50</p></td>
+<td><p>Optional: Truncated PC option; frequency for recalculating with full PC field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TruncPCcorrection_option</span></code></p></td>
+<td><p>string</p></td>
+<td><p>“addition”</p></td>
+<td><p>Optional: Option for how the TruncPCcorrection approximation is handled.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">actatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Optional: List of active atoms in QM/MM. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frozenatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
+</tr>
+</tbody>
+</table>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">)</span>
 
 <span class="c1">#List of qmatom indices defined</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">502</span><span class="p">,</span><span class="mi">503</span><span class="p">]</span>
@@ -271,19 +361,25 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
             <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#QM/MM theory object</span>
-<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">qm_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Defining the charge of the QM-region</strong></p>
-<p>To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose to either provide this information in the fragment definition or alternatively as input to the job-function.
-This information will be passed onto the QM-program when running. Charge/mult definitions in the job-type (e.g. Singlepoint) take precedence.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<p>To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose between 3 options:</p>
+<p>- Define qm_charge and qm_mult attributes when defining the QMMMTheory object (<strong>recommended</strong>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">qm_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>or</p>
+<p>- Define as input to the job-function (e.g. Singlepoint):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">qmmm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>- Provide the information in the fragment definition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This information will be passed onto the QM-program when called. The qm_charge/qm_mult option takes precedence over the other options, followed by the job-type keyword.</p>
 </div>
 <div class="section" id="qm-mm-truncated-pc-approximation">
 <h2>QM/MM Truncated PC approximation<a class="headerlink" href="#qm-mm-truncated-pc-approximation" title="Permalink to this headline">¶</a></h2>

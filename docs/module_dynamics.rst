@@ -2,12 +2,10 @@
 Molecular dynamics
 =================================================
 
-Molecular dynamics in ASH is currently available via 2 different approaches: dynamics routines via the OpenMM library or the ASE library.
+Molecular dynamics in ASH is currently available via 2 different approaches: 1) dynamics routines via the OpenMM library or 2) the ASE library.
 Both approaches support all available ASH Theory levels.
 
-- The OpenMM approach uses an interface to the MM dynamics routines of OpenMM library. It is particularly recommended for running MM simulations and QM/MM. This is by far the best option when a significant part of time is spent on calculating the MM energy+gradient.
-This approach also allows QM dynamics. It requires the OpenMM library to be installed
-
+- The OpenMM approach uses an interface to the MM dynamics routines of OpenMM library. It is particularly recommended for running MM and QM/MM simulations when system size is larger. This is by far the best option when a significant part of time is spent on calculating the MM energy+gradient. This approach also allows QM dynamics. It requires the OpenMM library to be installed
 - The ASE approach uses dynamics routines of the ASE library. This also allows molecular dynamics to be performed via any theory level in ASH: QM, MM or QM/MM theory. This requires the `ASE <https://wiki.fysik.dtu.dk/ase/>`_  library to be installed (simple Python pip installation). 
 
 In the future, ASH may feature it's own native dynamics.
@@ -18,33 +16,36 @@ In the future, ASH may feature it's own native dynamics.
 Dynamics via OpenMM_MD
 ######################################################
 
-For pure classical forcefield-based MD it is strongly recommended to run the dynamics via the OpenMM library  via the ASH **OpenMM_MD** function.
-The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE. 
-Dynamics via OpenMM_MD requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See :doc:`OpenMM-interface` for details.
-Running OpenMM via the GPU code (if a GPU is available) will allow particularly fast MM dynamics.
+Dynamics via **OpenMM_MD** is becoming the recommended way of running molecular dynamics in ASH via any Hamiltonian: QM, MM or QM/MM.
+See :doc:`OpenMM-interface` for details on the **OpenMM_MD** function.
 
 **Pure MM example:**
+
+For pure classical forcefield-based MD it is strongly recommended to run the dynamics via the OpenMM library via the ASH **OpenMM_MD** function. 
+The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE. 
+Running OpenMM via the GPU code (if a GPU is available) will allow particularly fast MM dynamics.
 
 .. code-block:: python
 
 	from ash import *
 
-	#Fragment
+	#Fragment from XYZ-file
 	frag=Fragment(xyzfile="frag.xyz")
 	#Defining frozen region. Taking difference of all-atom region and active region
 	actatoms=[14,15,16]
 	frozen_atoms=listdiff(frag.allatoms,actatoms)
-
+	#Defining OpenMM object 
 	openmmobject = OpenMMTheory(cluster_fragment=frag, ASH_FF_file="Cluster_forcefield.ff", frozen_atoms=frozen_atoms)
-
+	#Calling OpenMM_MD function
 	OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
 	    integrator='LangevinIntegrator', coupling_frequency=1)
 
 
-For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use OpenMM_MD to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce)
-This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See :doc:`OpenMM-interface` for details.
 
 **QM/MM example:**
+
+For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use **OpenMM_MD** to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce).
+This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See :doc:`OpenMM-interface` for details.
 
 .. code-block:: python
 
@@ -66,6 +67,9 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 
 **QM example:**
 
+It is even possible to use the dynamics routines of the OpenMM library to drive an MD simulation at the QM-level. This is possible by setting up a dummy MM system and reading in the QM-theory forces (via ASH) as a custom external force to the OpenMM theory.
+
+
 .. code-block:: python
 
 	from ash import *
@@ -80,7 +84,8 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 	#Running NVE dynamics (initial temp=300 K) on butane using xTBTheory.
 	# 0.001 ps timestep, 2 ps , writing every 10th step to trajectory. A velocity Verlet algorithm is used.
 	OpenMM_MD(fragment=butane, theory=xtbcalc, timestep=0.001, simulation_time=2, traj_frequency=10, temperature=300,
-	    integrator='LangevinIntegrator', coupling_frequency=1, charge=0, mult=1)
+		integrator='LangevinIntegrator', coupling_frequency=1)
+
 
 ######################################################
 Metadynamics via OpenMM_MD and Plumed

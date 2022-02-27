@@ -110,10 +110,10 @@
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Molecular dynamics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dynamics-via-ase">Dynamics via ASE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dynamics-via-openmm-md">Dynamics via OpenMM_MD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#metadynamics-via-ase-and-plumed">Metadynamics via ASE and Plumed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#metadynamics-via-openmm-md-and-plumed">Metadynamics via OpenMM_MD and Plumed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamics-via-ase">Dynamics via ASE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metadynamics-via-ase-and-plumed">Metadynamics via ASE and Plumed</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -224,11 +224,77 @@
             
   <div class="section" id="molecular-dynamics">
 <h1>Molecular dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h1>
-<p>Molecular dynamics in ASH is currently available via 2 different approaches.</p>
+<p>Molecular dynamics in ASH is currently available via 2 different approaches: 1) dynamics routines via the OpenMM library or 2) the ASE library.
+Both approaches support all available ASH Theory levels.</p>
 <ul class="simple">
-<li><p>The more general approach make use of an interface to the dynamics routines of the ASE library. This allows molecular dynamics to be performed via any theory level in ASH: QM, MM or QM/MM theory. This requires the <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a>  library to be installed (simple Python pip installation). In the future, ASH will feature it’s own native dynamics.</p></li>
-<li><p>The more specialized approach uses an interface to the MM dynamics routines of OpenMM library. This is only available for theory levels: OpenMMTheory (i.e. pure classical simulations) and QMMMTheory (with mm_theory=OpenMMTheoryobject). This approach makes the most sense when a considerable amount of time is spent on calculating the MM energy+gradient via OpenMM (faster than the Dynamics_ASE approach)</p></li>
+<li><p>The OpenMM approach uses an interface to the MM dynamics routines of OpenMM library. It is particularly recommended for running MM and QM/MM simulations when system size is larger. This is by far the best option when a significant part of time is spent on calculating the MM energy+gradient. This approach also allows QM dynamics. It requires the OpenMM library to be installed</p></li>
+<li><p>The ASE approach uses dynamics routines of the ASE library. This also allows molecular dynamics to be performed via any theory level in ASH: QM, MM or QM/MM theory. This requires the <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a>  library to be installed (simple Python pip installation).</p></li>
 </ul>
+<p>In the future, ASH may feature it’s own native dynamics.</p>
+<div class="section" id="dynamics-via-openmm-md">
+<h2>Dynamics via OpenMM_MD<a class="headerlink" href="#dynamics-via-openmm-md" title="Permalink to this headline">¶</a></h2>
+<p>Dynamics via <strong>OpenMM_MD</strong> is becoming the recommended way of running molecular dynamics in ASH via any Hamiltonian: QM, MM or QM/MM.
+See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details on the <strong>OpenMM_MD</strong> function.</p>
+<p><strong>Pure MM example:</strong></p>
+<p>For pure classical forcefield-based MD it is strongly recommended to run the dynamics via the OpenMM library via the ASH <strong>OpenMM_MD</strong> function.
+The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE.
+Running OpenMM via the GPU code (if a GPU is available) will allow particularly fast MM dynamics.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Fragment from XYZ-file</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
+<span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
+<span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
+<span class="c1">#Defining OpenMM object</span>
+<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
+<span class="c1">#Calling OpenMM_MD function</span>
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>QM/MM example:</strong></p>
+<p>For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use <strong>OpenMM_MD</strong> to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce).
+This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+    <span class="c1">#Fragment</span>
+    <span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
+    <span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
+    <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
+    <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
+
+    <span class="n">xtbtheory</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;inputfile&#39;</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+    <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
+    <span class="n">QMMMTheory</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">xtbtheory</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
+<span class="n">qmatoms</span><span class="o">=</span><span class="n">qm_region</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+    <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMTheory</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>QM example:</strong></p>
+<p>It is even possible to use the dynamics routines of the OpenMM library to drive an MD simulation at the QM-level. This is possible by setting up a dummy MM system and reading in the QM-theory forces (via ASH) as a custom external force to the OpenMM theory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span><span class="o">=</span><span class="mi">12</span>
+<span class="c1">#Simple n-butane system</span>
+<span class="n">butane</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;butane.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Creating xTBTheory object (Note: runmode=&#39;library&#39; runs faster) that is parallelized. Using GFN1-xTB.</span>
+<span class="n">xtbcalc</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">,</span> <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;library&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+
+<span class="c1">#Running NVE dynamics (initial temp=300 K) on butane using xTBTheory.</span>
+<span class="c1"># 0.001 ps timestep, 2 ps , writing every 10th step to trajectory. A velocity Verlet algorithm is used.</span>
+<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">butane</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="metadynamics-via-openmm-md-and-plumed">
+<h2>Metadynamics via OpenMM_MD and Plumed<a class="headerlink" href="#metadynamics-via-openmm-md-and-plumed" title="Permalink to this headline">¶</a></h2>
+<p>to be documented</p>
+</div>
 <div class="section" id="dynamics-via-ase">
 <h2>Dynamics via ASE<a class="headerlink" href="#dynamics-via-ase" title="Permalink to this headline">¶</a></h2>
 <p>The Dynamics_ASE function allows NVE and NVT based molecular dynamics in ASH using any available QM, MM or QM/MM theory.</p>
@@ -264,45 +330,6 @@
 <p>coupling_freq determines friction-coefficient in Langevin, collions probability in Andersen.</p>
 <p>It is possible to freeze atoms using frozen_atoms= option. Provide list of atom indices.</p>
 <p>Bonds, angles and dihedrals can be frozen using frozen_bonds=, frozen_angles= and frozen_dihedrals= options.</p>
-</div>
-<div class="section" id="dynamics-via-openmm-md">
-<h2>Dynamics via OpenMM_MD<a class="headerlink" href="#dynamics-via-openmm-md" title="Permalink to this headline">¶</a></h2>
-<p>For pure classical forcefield-based MD it is recommended to run the dynamics via the OpenMM library instead via the ASH <strong>OpenMM_MD</strong> function. The reason is that this results in essentially no data transfer between the C++ layer (of OpenMM) and Python layer (of OpenMM and ASH) while this is the case if running via Dynamics_ASE. Dynamics via OpenMM_MD requires the system to have been set up using OpenMMTheory and utilizes the OpenMM library for energy, forces and dynamics. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
-<p><strong>Pure MM example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c1">#Fragment</span>
-<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
-<span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
-<span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
-<span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
-
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
-
-<span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-    <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For a QM/MM system that utilizes OpenMMTheory as mm_theory and any QM-theory as qm_theory, it is also possible to use OpenMM_MD to do QM/MM dynamics. In this case the QM+PC gradient is used to update the forces of the OpenMM system (as a CustomExternalForce)
-This is beneficial if a considerable amount of time of the QM/MM energy+gradient is spent on calculating the MM energy+gradient and then there the reduced data transfer (and unnecessary data conversion) between the Python and C++ layers results in faster MM energy+gradient steps. This is only the case if the QM-theory is really cheap (i.e. a semi-empirical method like xTB or AM1, PM3), otherwise the QM energy+gradient will dominate the total cost. See <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a> for details.</p>
-<p><strong>QM/MM example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
-
-    <span class="c1">#Fragment</span>
-    <span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;frag.xyz&quot;</span><span class="p">)</span>
-    <span class="c1">#Defining frozen region. Taking difference of all-atom region and active region</span>
-    <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">]</span>
-    <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">listdiff</span><span class="p">(</span><span class="n">frag</span><span class="o">.</span><span class="n">allatoms</span><span class="p">,</span><span class="n">actatoms</span><span class="p">)</span>
-
-    <span class="n">xtbtheory</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;inputfile&#39;</span><span class="p">,</span> <span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN2&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
-    <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">cluster_fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">ASH_FF_file</span><span class="o">=</span><span class="s2">&quot;Cluster_forcefield.ff&quot;</span><span class="p">,</span> <span class="n">frozen_atoms</span><span class="o">=</span><span class="n">frozen_atoms</span><span class="p">)</span>
-    <span class="n">QMMMTheory</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">xtbtheory</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">openmmobject</span><span class="p">,</span>
-<span class="n">qmatoms</span><span class="o">=</span><span class="n">qm_region</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
-
-    <span class="n">OpenMM_MD</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMTheory</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">simulation_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">traj_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-        <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;LangevinIntegrator&#39;</span><span class="p">,</span> <span class="n">coupling_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="metadynamics-via-ase-and-plumed">
 <h2>Metadynamics via ASE and Plumed<a class="headerlink" href="#metadynamics-via-ase-and-plumed" title="Permalink to this headline">¶</a></h2>
@@ -389,10 +416,6 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 <p class="admonition-title">Note</p>
 <p>Not yet available: multiple-walker metadynamics</p>
 </div>
-</div>
-<div class="section" id="metadynamics-via-openmm-md-and-plumed">
-<h2>Metadynamics via OpenMM_MD and Plumed<a class="headerlink" href="#metadynamics-via-openmm-md-and-plumed" title="Permalink to this headline">¶</a></h2>
-<p>to be documented</p>
 </div>
 </div>
 
