@@ -222,7 +222,7 @@
   <div class="section" id="parallelization-in-ash">
 <h1>Parallelization in ASH<a class="headerlink" href="#parallelization-in-ash" title="Permalink to this headline">¶</a></h1>
 <p>ASH can utilize parallelization in a few different ways: either via independent parallelization of the external QM program or MM program or via Python multiprocessing (running independent jobs in parallel).
-For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created contains parallelization information)
+For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created by ASH will contains parallelization information)
 and will run its calculations in parallel using OpenMPI parallelization.
 This requires, however, OpenMPI to be set up (define PATH and LD_LIBRARY_PATH) correctly in the environment that ASH runs in (typically the jobscript used to submit calculations to the queuing system).
 OpenMM and some QM programs may utilize simpler threads-based parallelization. The number of threads launched is usually controlled by ASH via. numcores=X option.</p>
@@ -231,14 +231,14 @@ OpenMM and some QM programs may utilize simpler threads-based parallelization. T
 ASH modules that use multiprocessing parallelization are currently: NumFreq and Singlepoint_parallel (see below).</p>
 <div class="section" id="singlepoint-parallel">
 <h2>Singlepoint_parallel<a class="headerlink" href="#singlepoint-parallel" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragmentfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mofilesdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Singlepoint_parallel</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragmentfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mofilesdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_theory_parallelization</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>The Singlepoint_parallel function allows one to run many independent single-point energy jobs in complete parallelization via the Python multiprocessing library.
 Typically the QM program parallelization is turned off in this case as it is more efficient to run as many calculations simultaneously as possible with each calculation utilizing a single core.
 Example: if you have 120 single-point jobs to do (with roughly equivalent cost) and 24 cores available, it scales perfectly to occupy all CPU cores by 24 jobs at once (each job utilizing 1 core) and thus run through the list of 120 jobs in 5 batches.
-This would be faster than running each job 1-by-1 utilizing QM-program parallelization (using 24 cores) as the QM-program parallelization will simply not scale as well (due to intrinsic parallelization limitations of the QM algorithms).</p>
-<p>Singlepoint_parallel allows you to conveniently launch such parallelization jobs. The function distinguishes betwen 2 types of Singlepoint jobs: multiple fragments vs. multiple theories</p>
+This would be faster than running each job 1-by-1 utilizing QM-program parallelization (using 24 cores) as the QM-program parallelization will simply not scale as well (due to intrinsic parallelization limitations of the QM algorithms).
+Singlepoint_parallel allows you to conveniently launch such parallelization jobs. The function distinguishes betwen 2 types of Singlepoint jobs: multiple fragments vs. multiple theories</p>
 <ul class="simple">
 <li><p><strong>multiple fragments with 1 theory</strong></p></li>
 </ul>
@@ -286,6 +286,26 @@ To do this using Singlepoint_parallel you would just need to create a list of AS
 <li><p><strong>multiple theories for multiple fragments</strong></p></li>
 </ul>
 <p>TODO: This is currently not available</p>
+<p><strong>Enabling QM-code parallelization</strong></p>
+<p>There is also an option that allows both Python multiprocessing parallelization and the QMTheory parallelization to be active in a <strong>Singlepoint_parallel</strong> job. This option is turned off by default but can be enabled by the
+allow_theory_parallelization=True keyword argument. However, care needs to be taken to make sure that the number of used CPU cores by ASH does not exceed the number of available CPU cores to the job (e.g. that requested by the queuing system).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">numcores</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1">#Total number of cores used by ASH. Should be equal to poolcores*QMcores. If using the subash script then this line may be grepped.</span>
+<span class="n">poolcores</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1">#The cores used by Singlepoint_parallel to run that many simulteaneous jobs</span>
+<span class="n">QMcores</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#How many cores are available to the external QM-code</span>
+
+<span class="n">xyzfiles_dir</span><span class="o">=</span><span class="s2">&quot;/path/to/xyzfiles&quot;</span>
+
+<span class="c1">#Creating list of ASH fragments from XYZ files. Using filename as label. Using readchargemult=True, charge and mult will be read from header of XYZ-file.</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="n">read_xyzfiles</span><span class="p">(</span><span class="n">xyzfiles_dir</span><span class="p">,</span><span class="n">readchargemult</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label_from_filename</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">orcacalc</span><span class="o">=</span><span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! HF def2-SVP&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">QMcores</span><span class="p">)</span>
+<span class="n">energydict</span> <span class="o">=</span> <span class="n">Singlepoint_parallel</span><span class="p">(</span><span class="n">theories</span><span class="o">=</span><span class="p">[</span><span class="n">orcacalc</span><span class="p">],</span> <span class="n">fragments</span><span class="o">=</span><span class="n">fragments</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">poolcores</span><span class="p">,</span> <span class="n">allow_theory_parallelization</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final energydict:&quot;</span><span class="p">,</span> <span class="n">energydict</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 

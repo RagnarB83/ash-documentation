@@ -3,8 +3,8 @@ Parallelization in ASH
 ======================================
 
 ASH can utilize parallelization in a few different ways: either via independent parallelization of the external QM program or MM program or via Python multiprocessing (running independent jobs in parallel).
-For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created contains parallelization information)
-and will run its calculations in parallel using OpenMPI parallelization. 
+For example if you create an ORCATheory object with numcores=X option, when ASH tells ORCA to run a calculation, ORCA will launch in parallel mode (as the ORCA inputfile created by ASH will contains parallelization information)
+and will run its calculations in parallel using OpenMPI parallelization.
 This requires, however, OpenMPI to be set up (define PATH and LD_LIBRARY_PATH) correctly in the environment that ASH runs in (typically the jobscript used to submit calculations to the queuing system).
 OpenMM and some QM programs may utilize simpler threads-based parallelization. The number of threads launched is usually controlled by ASH via. numcores=X option. 
 
@@ -22,14 +22,13 @@ Singlepoint_parallel
 
 .. code-block:: python
 
-	def Singlepoint_parallel(fragments=None, fragmentfiles=None, theories=None, numcores=None, mofilesdir=None):
+	def Singlepoint_parallel(fragments=None, fragmentfiles=None, theories=None, numcores=None, mofilesdir=None, allow_theory_parallelization=False):
 
 
 The Singlepoint_parallel function allows one to run many independent single-point energy jobs in complete parallelization via the Python multiprocessing library. 
 Typically the QM program parallelization is turned off in this case as it is more efficient to run as many calculations simultaneously as possible with each calculation utilizing a single core.
 Example: if you have 120 single-point jobs to do (with roughly equivalent cost) and 24 cores available, it scales perfectly to occupy all CPU cores by 24 jobs at once (each job utilizing 1 core) and thus run through the list of 120 jobs in 5 batches.
 This would be faster than running each job 1-by-1 utilizing QM-program parallelization (using 24 cores) as the QM-program parallelization will simply not scale as well (due to intrinsic parallelization limitations of the QM algorithms).
-
 Singlepoint_parallel allows you to conveniently launch such parallelization jobs. The function distinguishes betwen 2 types of Singlepoint jobs: multiple fragments vs. multiple theories
 
 - **multiple fragments with 1 theory**
@@ -85,3 +84,25 @@ For multiple theories you instead have to create a list of multiple Theory objec
 TODO: This is currently not available
 
 
+**Enabling QM-code parallelization**
+
+There is also an option that allows both Python multiprocessing parallelization and the QMTheory parallelization to be active in a **Singlepoint_parallel** job. This option is turned off by default but can be enabled by the
+allow_theory_parallelization=True keyword argument. However, care needs to be taken to make sure that the number of used CPU cores by ASH does not exceed the number of available CPU cores to the job (e.g. that requested by the queuing system). 
+
+.. code-block:: python
+
+	from ash import *
+
+	numcores = 8 #Total number of cores used by ASH. Should be equal to poolcores*QMcores. If using the subash script then this line may be grepped.
+	poolcores = 4 #The cores used by Singlepoint_parallel to run that many simulteaneous jobs
+	QMcores = 2 #How many cores are available to the external QM-code 
+
+	xyzfiles_dir="/path/to/xyzfiles"
+
+	#Creating list of ASH fragments from XYZ files. Using filename as label. Using readchargemult=True, charge and mult will be read from header of XYZ-file.
+	fragments = read_xyzfiles(xyzfiles_dir,readchargemult=True, label_from_filename=True)
+
+	orcacalc=ORCATheory(orcasimpleinput="! HF def2-SVP", numcores=QMcores)
+	energydict = Singlepoint_parallel(theories=[orcacalc], fragments=fragments, numcores=poolcores, allow_theory_parallelization=True)
+
+	print("Final energydict:", energydict)
