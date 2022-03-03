@@ -1,7 +1,7 @@
 Workflow examples in ASH
 ======================================
 
-As an ASH-script is pure Python and the user has access to various ASH functionality for manipulating coordinates, create fragments,
+As an ASH-script is pure Python and the user has access to various ASH functionality for reading in coordinates, create fragments,
 call QM and MM codes, calculate energy, minimize geometry, run dynamics etc. this allows one to easily create advanced workflows in a single script.
 ASH already contains a lot of pre-made workflow to automize things but the user can easily write their own ASH-Python scripts to automize
 more complex workflows, not yet available directly in ASH.
@@ -10,12 +10,12 @@ This page goes through several examples of workflows showing both the use of pre
 
 
 ##############################################################################
-Example 1 : Optimization + Frequency + HL-singlepoint
+Example 1 : Optimization + Frequency + HighLevel-singlepoint
 ##############################################################################
 
 Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
 using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
-In ASH you can use the **thermochemprotocol_single** to automize such a workflow. 
+In ASH you can use the **thermochemprotocol_single** to automate such a workflow. 
 
 See: :doc:`module_workflows` for details.
 
@@ -40,7 +40,7 @@ See: :doc:`module_workflows` for details.
     print("Final HL energy:", energy, "Eh")
     print("ZPVE: ", thermochem['ZPVE'], "Eh")
 
-But you could of course also write this kind of workflow manually, allowing you possibly more flexibility that better suits your needs:
+But you could of course also write this kind of simple workflow manually, allowing you possibly more flexibility that better suits your needs:
 
 .. code-block:: python
 
@@ -93,22 +93,20 @@ that calculates the single-point energy for each fragment.
     # List of species from reactant to product
     specieslist=[N2, H2, NH3] #Use same order as stoichiometry
 
-    #Equation stoichiometry : negative integer for reactant, positive integer for product
-    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
-    stoichiometry=[-1, -3, 2] #Use same order as specieslist
-
     #Defining ORCA theory object.
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
 
     FinalEnergies=[] #Defining empty list to collect energies
+    #Python for-loop that loops over each molecule in list specieslist
     for molecule in specieslist:
         energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
-        #Storing energy as list. Energy is also stored as part of fragment.
+        #Adding energy to list. Note: Energy is also stored as part of fragment.
         FinalEnergies.append(energy)
         ORCAcalc.cleanup()
 
     print("Final list of energies:", FinalEnergies)
-
+    reaction_energy = (2*FinalEnergies[2]-(1*FinalEnergies[0]+3*FinalEnergies[1]))*627.509
+    print("Reaction energy:", reaction_energy, "kcal/mol")
 
 The script above is verbose but the structure gives you a lot of flexibility that you can adapt to your needs.
 Of course, ASH already contains functions to carry out such a job in a simpler way: **Singlepoint_fragments** and **ReactionEnergy**.
@@ -121,7 +119,7 @@ See :doc:`singlepoint` and :doc:`module_workflows` for more information.
     numcores=1
     #Haber-Bosch reaction: N2 + 3H2 => 2NH3
     N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", diatomic_bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
@@ -132,15 +130,15 @@ See :doc:`singlepoint` and :doc:`module_workflows` for more information.
     reaction_energy, unused = ReactionEnergy(stoichiometry=stoichiometry, list_of_energies=energies, unit='kcal/mol', label='ΔE')
 
 
-.. code-block:: shell
+.. code-block:: text
 
-      Reaction_energy: -65.12668956189346 kcalpermol
+      Reaction_energy: -37.157156917851935 kcal/permol
 
 #######################################################################################################
 Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol
 #######################################################################################################
 
-You can of course also combine the Opt+Freq+HL protocol from Example 1 with the multiple fragments-at-the-same-time approach from Example 2
+You can also combine the Opt+Freq+HL protocol from Example 1 with the multiple fragments-at-the-same-time approach from Example 2
 and calculate the reaction energy directly at a high-level of theory together with thermochemical corrections from a frequency job.
 
 
@@ -195,6 +193,7 @@ Such a job could be written directly like this:
 .. code-block:: python
 
     from ash import *
+    import os
 
     numcores=4
     h2string="""
@@ -257,7 +256,8 @@ But could also be written a bit more succinctly using the **Singlepoint_theories
     from ash import *
 
     numcores=4
-    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+    #Readomg h2.xyz from internal database
+    H2=Fragment(databasefile="h2.xyz", charge=0, mult=1)
 
     #List of functional keywords (strings) to loop over. Need to be valid ORCA keywords.
     functionals=['BP86', 'B3LYP', 'TPSS', 'TPSSh', 'PBE0', 'BHLYP', 'CAM-B3LYP']
@@ -269,10 +269,24 @@ But could also be written a bit more succinctly using the **Singlepoint_theories
         theories.append(ORCAcalc)
     #Use Singlepoint_theories to run a SP calculation on fragment with each theory
     energies = Singlepoint_theories(theories=theories, fragment=H2)
-    print(" Functional   Energy (Eh)")
-    print("----------------------------")
-    for func, e in zip(functionals,energies):
-        print("{:10} {:13.10f}".format(func,e))
+
+with a final table being printed:
+
+.. code-block:: text
+
+    ======================================================================
+    Singlepoint_theories: Table of energies of each theory:
+    ======================================================================
+
+    Theory class    Theory Label     Charge    Mult           Energy(Eh)
+    ----------------------------------------------------------------------
+    ORCATheory      BP86                  0       1        -1.1716903176
+    ORCATheory      B3LYP                 0       1        -1.1668726382
+    ORCATheory      TPSS                  0       1        -1.1756974430
+    ORCATheory      TPSSh                 0       1        -1.1753091518
+    ORCATheory      PBE0                  0       1        -1.1636152299
+    ORCATheory      BHLYP                 0       1        -1.1646744530
+    ORCATheory      CAM-B3LYP             0       1        -1.1653189937
 
 ############################################################################################
 Example 3b : Running multiple single-point energies with different functionals (in parallel)
@@ -281,7 +295,7 @@ Example 3b : Running multiple single-point energies with different functionals (
 The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
 This can be accomplished using the **Singlepoint_parallel** function inside ASH.
-Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+Here Python multiprocessing (pool.apply_async) is utilized. In this case ORCA parallelization is by default turned off, though it can be enabled if done carefully.
 See :doc:`parallelization` for more information.
 
 .. code-block:: python
@@ -311,7 +325,8 @@ Example 4a : Running single-point energies on a collection of XYZ files (sequent
 ###########################################################################################
 
 At other times you are interested in using a single theory to run single-point energies on a collection of molecules.
-This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), and then use glob to find all files with an ".xyz" file suffix.
+This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), 
+and then use glob to find all files with an ".xyz" file suffix.
 Next, loop over those XYZ-files, define a fragment from each XYZ-file and then run a single-point calculation.
 
 .. code-block:: python
@@ -370,7 +385,7 @@ See: :doc:`coordinate-input` and :doc:`singlepoint` for more information.
 
     #This function reads in all XYZ-files from the chosen directory and returns a list of ASH fragments
     #Note: Each XYZ-file must have charge/mult defined in 2nd line of header for readchargemult=True to work
-    fragments = read_xyzfiles(xyzdir,readchargemult=True, label_from_filename=True)
+    fragments = read_xyzfiles(xyzdir, readchargemult=True, label_from_filename=True)
     #Define theory
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
 
@@ -396,7 +411,7 @@ Output:
     N2         n2.xyz                     0       1      -109.4002889693
     H6O2C1     h2o_MeOH.xyz               0       1      -192.0023967568
 
-This can also be accomplished using the **calc_xyzfiles** function that further allows you to even run a thermochemistry workflow on each XYZ-file. 
+Such a protocol can be further simplified using the **calc_xyzfiles** function that even allows you to even run a thermochemistry workflow on each XYZ-file. 
 See: :doc:`module_workflows`
 
 .. code-block:: python
@@ -419,8 +434,8 @@ Example 4b : Running single-point energies on a collection of XYZ files (paralle
 ############################################################################################
 The examples in 4a had each job run sequentially, one job after the other, according to the list of XYZ-files available.
 While ORCA parallelization was utilized, it may be more economical to run such embarrassingly parallel jobs simultaneously instead, especially if there are lot of XYZ-files.
-This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.map).
-In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.apply_async).
+ORCA parallelization is here turned off.
 
 See :doc:`parallelization` for more information.
 
@@ -533,7 +548,7 @@ From the conformational sampling we get a collection of low-energy conformers fo
 The conformational sampling is then followed by a DFT geometry optimization for each conformer.
 Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.
 
-Such an example can be written in ASH like this:
+Such an example can be written in ASH like this in a rather verbose manner:
 
 .. code-block:: python
 
@@ -647,7 +662,7 @@ The manually defined workflow above is a bit verbose and can of course also be m
                             HLtheory=HL_CC, numcores=numcores)
 
 
-Final result table of calculated conformers at 3 different theory levels:
+Final result table of total and relative energies of calculated conformers at 3 different theory levels:
 
 .. code-block:: text
 
