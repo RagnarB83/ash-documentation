@@ -392,7 +392,7 @@ ORCATheory      CAM-B3LYP             0       1        -1.1653189937
 <p>The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
 This can be accomplished using the <strong>Singlepoint_parallel</strong> function inside ASH.
-Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+Here Python multiprocessing (pool.apply_async) is utilized. In this case ORCA parallelization is by default turned off, though it can be enabled if done carefully.
 See <a class="reference internal" href="parallelization.html"><span class="doc">Parallelization in ASH</span></a> for more information.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
@@ -419,7 +419,8 @@ See <a class="reference internal" href="parallelization.html"><span class="doc">
 <div class="section" id="example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential">
 <h2>Example 4a : Running single-point energies on a collection of XYZ files (sequential)<a class="headerlink" href="#example-4a-running-single-point-energies-on-a-collection-of-xyz-files-sequential" title="Permalink to this headline"></a></h2>
 <p>At other times you are interested in using a single theory to run single-point energies on a collection of molecules.
-This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), and then use glob to find all files with an “.xyz” file suffix.
+This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir),
+and then use glob to find all files with an “.xyz” file suffix.
 Next, loop over those XYZ-files, define a fragment from each XYZ-file and then run a single-point calculation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -470,7 +471,7 @@ See: <a class="reference internal" href="coordinate-input.html"><span class="doc
 
 <span class="c1">#This function reads in all XYZ-files from the chosen directory and returns a list of ASH fragments</span>
 <span class="c1">#Note: Each XYZ-file must have charge/mult defined in 2nd line of header for readchargemult=True to work</span>
-<span class="n">fragments</span> <span class="o">=</span> <span class="n">read_xyzfiles</span><span class="p">(</span><span class="n">xyzdir</span><span class="p">,</span><span class="n">readchargemult</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label_from_filename</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="n">read_xyzfiles</span><span class="p">(</span><span class="n">xyzdir</span><span class="p">,</span> <span class="n">readchargemult</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label_from_filename</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1">#Define theory</span>
 <span class="n">ORCAcalc</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! BP86 def2-SVP def2/J&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 
@@ -494,7 +495,7 @@ N2         n2.xyz                     0       1      -109.4002889693
 H6O2C1     h2o_MeOH.xyz               0       1      -192.0023967568
 </pre></div>
 </div>
-<p>This can also be accomplished using the <strong>calc_xyzfiles</strong> function that further allows you to even run a thermochemistry workflow on each XYZ-file.
+<p>Such a protocol can be further simplified using the <strong>calc_xyzfiles</strong> function that even allows you to even run a thermochemistry workflow on each XYZ-file.
 See: <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -515,8 +516,8 @@ See: <a class="reference internal" href="module_workflows.html"><span class="doc
 <h2>Example 4b : Running single-point energies on a collection of XYZ files (parallel)<a class="headerlink" href="#example-4b-running-single-point-energies-on-a-collection-of-xyz-files-parallel" title="Permalink to this headline"></a></h2>
 <p>The examples in 4a had each job run sequentially, one job after the other, according to the list of XYZ-files available.
 While ORCA parallelization was utilized, it may be more economical to run such embarrassingly parallel jobs simultaneously instead, especially if there are lot of XYZ-files.
-This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.map).
-In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.</p>
+This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.apply_async).
+ORCA parallelization is here turned off.</p>
 <p>See <a class="reference internal" href="parallelization.html"><span class="doc">Parallelization in ASH</span></a> for more information.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -613,7 +614,7 @@ via a workflow involving single-point DFT, orbital localization and Cube-file cr
 From the conformational sampling we get a collection of low-energy conformers for that molecule (based on the GFN1-xTB or GFN2-xTB semi-empirical tightbinding Hamiltonian)
 The conformational sampling is then followed by a DFT geometry optimization for each conformer.
 Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.</p>
-<p>Such an example can be written in ASH like this:</p>
+<p>Such an example can be written in ASH like this in a rather verbose manner:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">4</span>
@@ -721,7 +722,7 @@ Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)
                         <span class="n">HLtheory</span><span class="o">=</span><span class="n">HL_CC</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Final result table of calculated conformers at 3 different theory levels:</p>
+<p>Final result table of total and relative energies of calculated conformers at 3 different theory levels:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=================
 FINAL RESULTS
 =================

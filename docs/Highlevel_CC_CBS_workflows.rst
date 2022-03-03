@@ -163,10 +163,11 @@ Example: Atomization energy and formation enthalpy of Methane
 
 Enthalpies of formation are a common quantity for describing the stability of molecules, referring to the relative energy of the molecule with respect to its elements in their standard state.
 The most direct way of calculating the enthalpy of formation is usually via the atomization energy where one calculates the energy of the molecule relative to its atomic components and then via the known experimental enthalpies of formation of the atoms
-one can derive the enthalpy of formation. Note th
-The atomization energy, however, tends to be the most difficult quantity to calculate accurately as it requires the calculation to accurately capture all associated electron correlation effects, possible relativistic and vibratational effects.
+one can derive the enthalpy of formation.
+The atomization energy, however, tends to be the most difficult quantity to calculate accurately as it requires the calculation to accurately capture all associated electron correlation effects, possible relativistic and vibratational effects
+associated with turning a molecule into its constitutent atoms.
 
-Atomization energies and formation enthalpies can be straightforwardly calculated in ASH, via the tools of : CC_CBS_Theory, thermochemprotol_reaction function and the FormationEnthalpy function.
+Atomization energies and formation enthalpies can be straightforwardly calculated in ASH, via the tools of : **CC_CBS_Theory**, **thermochemprotol_reaction** function and the **FormationEnthalpy** function.
 
 Shown below is a script for calculating the atomization energy of methane.
 As before, we must create the necessary fragments: methane, C and H (making sure to specify the correct spin multiplicites).
@@ -302,8 +303,8 @@ For 3d transition metal complexes (with the complicated 3d shell of the metal), 
 
 
 Here the Douglas-Kroll-Hess scalar relativistic Hamiltonian is used and this requires one to choose a basis-set family that has been recontracted for DKH Hamiltonians.
-We could choose to use the 'cc-dk' but here we utilize the 'cc-CV-dk' family that in addition to being DKH-recontracted, features additional basis-functions typically used to describe core-valence 
-correlation. The frozen-core approximation is still in use here, meaning that the extra basis functions instead serve to improve the valence-electron correlation problem instead.
+We could choose to use the 'cc-dk' but here we utilize the 'cc-CV_3dTM-cc_L' family that in addition to being DKH-recontracted, features additional basis-functions typically used to describe core-valence 
+correlation on Fe (cc-pwCVnZ-DK) while cc-pVnZ-DK is used on C and H.
 
 https://pubs.acs.org/doi/abs/10.1021/acs.jctc.9b01109
 

@@ -295,7 +295,7 @@ Example 3b : Running multiple single-point energies with different functionals (
 The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.
 This can be accomplished using the **Singlepoint_parallel** function inside ASH.
-Here Python multiprocessing (pool.map) is utilized. In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+Here Python multiprocessing (pool.apply_async) is utilized. In this case ORCA parallelization is by default turned off, though it can be enabled if done carefully.
 See :doc:`parallelization` for more information.
 
 .. code-block:: python
@@ -325,7 +325,8 @@ Example 4a : Running single-point energies on a collection of XYZ files (sequent
 ###########################################################################################
 
 At other times you are interested in using a single theory to run single-point energies on a collection of molecules.
-This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), and then use glob to find all files with an ".xyz" file suffix.
+This could again be accomplished using a straightforward for-loop where we first define the path to the XYZ-file directory, change directory to it (os.chdir), 
+and then use glob to find all files with an ".xyz" file suffix.
 Next, loop over those XYZ-files, define a fragment from each XYZ-file and then run a single-point calculation.
 
 .. code-block:: python
@@ -384,7 +385,7 @@ See: :doc:`coordinate-input` and :doc:`singlepoint` for more information.
 
     #This function reads in all XYZ-files from the chosen directory and returns a list of ASH fragments
     #Note: Each XYZ-file must have charge/mult defined in 2nd line of header for readchargemult=True to work
-    fragments = read_xyzfiles(xyzdir,readchargemult=True, label_from_filename=True)
+    fragments = read_xyzfiles(xyzdir, readchargemult=True, label_from_filename=True)
     #Define theory
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
 
@@ -410,7 +411,7 @@ Output:
     N2         n2.xyz                     0       1      -109.4002889693
     H6O2C1     h2o_MeOH.xyz               0       1      -192.0023967568
 
-This can also be accomplished using the **calc_xyzfiles** function that further allows you to even run a thermochemistry workflow on each XYZ-file. 
+Such a protocol can be further simplified using the **calc_xyzfiles** function that even allows you to even run a thermochemistry workflow on each XYZ-file. 
 See: :doc:`module_workflows`
 
 .. code-block:: python
@@ -433,8 +434,8 @@ Example 4b : Running single-point energies on a collection of XYZ files (paralle
 ############################################################################################
 The examples in 4a had each job run sequentially, one job after the other, according to the list of XYZ-files available.
 While ORCA parallelization was utilized, it may be more economical to run such embarrassingly parallel jobs simultaneously instead, especially if there are lot of XYZ-files.
-This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.map).
-In this case ORCA parallelization must be turned off as the parallelization strategies are not compatible.
+This can be accomplished using the Singlepoint_parallel function inside ASH. This utilizes Python multiprocessing (pool.apply_async).
+ORCA parallelization is here turned off.
 
 See :doc:`parallelization` for more information.
 
@@ -547,7 +548,7 @@ From the conformational sampling we get a collection of low-energy conformers fo
 The conformational sampling is then followed by a DFT geometry optimization for each conformer.
 Finally high-level coupled cluster single-point calculations (here DLPNO-CCSD(T)/CBS extrapolations) are performed for each conformer.
 
-Such an example can be written in ASH like this:
+Such an example can be written in ASH like this in a rather verbose manner:
 
 .. code-block:: python
 
@@ -661,7 +662,7 @@ The manually defined workflow above is a bit verbose and can of course also be m
                             HLtheory=HL_CC, numcores=numcores)
 
 
-Final result table of calculated conformers at 3 different theory levels:
+Final result table of total and relative energies of calculated conformers at 3 different theory levels:
 
 .. code-block:: text
 
