@@ -235,8 +235,6 @@ check_stability_in_output(file)
 
 grabEOMIPs(file)
 
-
-
 grabatomcharges_ORCA(chargemodel,outputfile)
 
 chargemodel_select(chargemodel)
@@ -264,3 +262,52 @@ scfenergygrab(file)
 finalenergiesgrab(file)
 
 checkORCAfinished(file)
+
+grab_coordinates_from_ORCA_output(outfile)
+
+################################################################################
+Useful ORCA workflows
+################################################################################
+
+Examples of useful ways to automate various ORCA calculations.
+
+
+**Plot ORCA-calculated spectra (using orca_mapspc) and normalize**
+
+Uses ASH functions: **grab_coordinates_from_ORCA_output**, **run_orca_mapspc**, **read_datafile**, **write_datafile**
+
+.. code-block:: python
+
+  from ash import *
+  import glob
+
+  #Simple ASH script to plot XES spectra from multiple ORCA XES-job outputfiles and normalize w.r.t. to number of absorber elements
+  absorber_element="Fe"
+
+  #orca_mapspc settings
+  orca_mapspc_option='XESQ'
+  broadening=1.0
+  numpoints=5000
+  start_value=0
+  end_value=8000
+  unit='eV'
+
+  #Loop over ORCA outputfiles and run orca_mapspc
+  for outfile in glob.glob("*.out"):
+      print("Outfile:", outfile)
+      #Get number of absorber elements in molecule from outputfile
+      elems,coords = grab_coordinates_from_ORCA_output(outfile)
+      elementcount = elems.count(absorber_element)
+      print(f"Number of {absorber_element} atoms in file:", elementcount)
+      #Get XES .at and .stk files via orca_mapspc
+      run_orca_mapspc(outfile, orca_mapspc_option, start=start_value, end=end_value, unit=unit, broadening=broadening, points=numpoints)
+      #Read .dat file. Get x and y values as numpy arrays
+      x, y = read_datafile(outfile+".xesq.dat")
+      #Scale y-values
+      scalingfactor=elementcount
+      write_datafile(x,y/scalingfactor, filename=outfile+f"_SCALED_by_{scalingfactor}.xesq.dat")
+      #Read .stk file
+      x, y = read_datafile(outfile+".xesq.stk")
+      #Scale y-values
+      write_datafile(x,y/scalingfactor, filename=outfile+f"_SCALED_by_{scalingfactor}.xesq.stk")
+  #
