@@ -21,22 +21,27 @@ Strict dependencies:
 
 * `Python version 3.6 <https://www.python.org>`_ >=
 * `Numpy <https://numpy.org>`_ library.
-* `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip).
 
-Strongly recommended (necessary for some parts):
 
+Strongly recommended (necessary for some ASH functionality):
+
+* `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip). Required for geometry optimizations.
+* `OpenMM <http://openmm.org>`_ version 7.6 or later. Required for most MM and MD functionality in ASH.
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ or `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
-* `OpenMM <http://openmm.org>`_ version 7.6 or later. For MM and MD functionality of ASH.
 
-Useful:
+Recommended external codes (most ASH examples will use these):
+
+* `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ The semi-empirical tightbinding DFT code by Grimme and coworkers.
+* `ORCA <https://orcaforum.kofo.mpg.de>`_ The popular free-for-academic-use HF,DFT,WFT program by Neese and coworkers.
+
+
+Useful libraries for specific functionality:
 
 * `Matplotlib <https://matplotlib.org>`_ library. Used to plot graphs/surfaces.
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces and in molecular crystal QM/MM.
-* `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ The semi-empirical tightbinding DFT code by Grimme and coworkers.
 * `Plumed <https://www.plumed.org>`_ Plumed library
 * `Parmed <https://parmed.github.io/ParmEd/html/index.html>`_ May be used by OpenMM interface.
-
 * `Plumed <https://www.plumed.org>`_ MDanalysis
 * `MDAnalysis <https://www.mdanalysis.org>`_ MD trajectory analysis
 * `MDtraj <https://www.mdtraj.org>`_ MD trajectory analysis
@@ -64,7 +69,7 @@ If you are impatient and want to get ASH going immediately without all features 
 1. Download the ASH repository
 2. Make sure there is a python3 interpreter on your system (with numpy)
 3. Set: export PYTHONPATH=/path/to/ash   (where /path/to/ash is the directory containing the ASH source code)
-4. Try to run an ASH script (the ASH import line will fail if PYTHONPATH is set incorrectly)
+4. Test ASH by launching: **python3**  and then do: from ash import *        (this will fail if PYTHONPATH is set incorrectly)
 
 
 *****************************************************
@@ -222,7 +227,7 @@ Then execute in shell: rm -rf ~/.julia/registries/General
 
 ASH requires a Python-Julia library in order to enable communication between Python and Julia.
 The options are: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ and `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
-ASH currently supports both but the newer PythonCall is currently recommended due to PyJulia requiring calling ASH with a modified interpreter (python-jl) due to static libpython issues.
+ASH currently supports both but the newer PythonCall is currently recommended due to PyJulia currently requiring to call ASH with a modified Python interpreter (python-jl) due to static libpython issues.
 
 :red:`Important:` Make sure the correct Python environment is active before proceeding. Check that the pip or pip3 executable is available and corresponds to the Python you want:
 
@@ -320,7 +325,7 @@ D. Test ASH
 
 Test if things work in general:
 python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
-python-jl /path/to/ash/test_ash.py   #Required when PyJulia is used
+python-jl /path/to/ash/test_ash.py   #Only required when PyJulia is used
 
 
 
@@ -354,7 +359,14 @@ first-ash-job.py:
     geomeTRICOptimizer(fragment=H2O, theory=ORCAcalc, coordsystem='tric')
 
 
-If you get an error message when launching python-jl that looks like the following:
+
+#########################################
+E. Installation problems
+#########################################
+
+**python-jl (PyJulia) problem**
+
+If you get an error message when launching python-jl (only when PyJulia has been installed) that looks like the following:
 
 .. code-block:: text
 

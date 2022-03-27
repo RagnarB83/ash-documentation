@@ -3,26 +3,36 @@ QM Interfaces
 ==========================
 
 Quantum chemistry codes that you can currently use with ASH are: ORCA, xTB, PySCF, Psi4, Dalton, CFour, MRCC.
+
 To use the interfaces you define a QMtheory object of the appropriate Class.
-The QM-interface Classes available are: ORCATheory, xTBTheory, PySCFTheory, Psi4Theory, DaltonTheory, CFourTheory, MRCCTheory.
+The QM-interface Classes are called: 
+
+- ORCATheory (:doc:`ORCA-interface`)
+- xTBTheory (:doc:`xTB-interface`)
+- PySCFTheory (:doc:`PySCF-interface`)
+- Psi4Theory (:doc:`Psi4-interface`)
+- DaltonTheory (:doc:`Dalton-interface`)
+- CFourTheory (:doc:`CFour-interface`)
+- MRCCTheory (:doc:`MRCC-interface`)
+
 
 When defining a QMtheory object you are creating an instance of one of the QMTheory classes.
 When defining the object, a few keyword arguments are required, that differs between classes.
-Parallelization of the QM codes differs behind the scenes but is controlled by a numcores=X keyword for all interfaces.
+Parallelization of the QM codes also differs behind the scenes but is all controlled by ASH with the numcores=X keyword for all interfaces.
 
-Example:
+
+**Example**
 
 Below, we create a dummy QMcalc object of the dummy class QMTheory. 
 The arguments that QMTheory takes will depend on the interface but typically we would at least set the numcores keyword (available for all QM theories) that defines how many CPU cores the QM program is allowed to use.
-numcores=1 is the default and the keyword can be skipped if one wants a serial calculation.
+numcores=1 is always the default and the keyword can be skipped if one wants a serial calculation.
 One would then add other keywords that are specific to the QMtheory used that will define the QM method and basis etc.).
 Note that it is a design choice in ASH to not define general variables such as functional, basis set (that could in theory be used for all interfaces) as this would heavily restrict the flexibility of the interface.
-Instead, each interface differs in how the electronic structure details are defined, with the aim of allowing you to select any method you prefer to use in the respective QM code.
+Instead, each interface differs in how the electronic structure details are defined, with the aim of allowing you to select any method you prefer to use in the respective QM code and with the options in the program you like to use.
 
-Once both a fragment object and a theory object has been created we can run a basic single-point energy calculation.
-This is done using the Singlepoint function that requires both theory and fragment keyword arguments. Additionally charge and multiplicity information needs to be provided.
+Once both a fragment object and a theory object has been created we can run a job, e.g. a single-point energy calculation.
+This is done by calling a job-function (here Singlepoint) that usually requires both theory and fragment keyword arguments.
 
-Charge and multiplicity information is either provided to the fragment object:
 
 .. code-block:: python
 
@@ -34,22 +44,7 @@ Charge and multiplicity information is either provided to the fragment object:
     #Run a single-point energy job
     Singlepoint(theory=QMcalc, fragment=HF_frag)
 
-or it can be provided to the jobtype function (here Singlepoint):
 
-.. code-block:: python
-
-    #Create fragment object from XYZ-file
-    HF_frag=Fragment(xyzfile='hf.xyz')
-    # Defining an object of the (dummy) class QMTheory
-    QMcalc = QMTheory(numcores=8)
-
-    #Run a single-point energy job
-    Singlepoint(theory=QMcalc, fragment=HF_frag, charge=0, mult=1)
-
-
-
-When running an ASH script involving multiple fragments (that differ w.r.t. charge/mult), it is best to associate charge/mult attributes to the fragment.
-The charge/mult information from the fragment will then be provided to the theory object when run via the respective job-function (Singlepoint, geomeTRICOptimizer etc.) instead.
 
 #############################################################
 Attributes and methods available to all QM interfaces
