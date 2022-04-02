@@ -1,6 +1,80 @@
 Psi4 interface
 ======================================
 
+Psi4Theory class:
+
+.. code-block:: python
+    
+    class Psi4Theory:
+        def __init__(self, psi4dir=None, runmode='library', printsetting='False', psi4settings=None, 
+                    psi4method=None, pe=False, potfile='', filename='psi4_', label='psi4input',
+                    psi4memory=3000, numcores=1, printlevel=2, fchkwrite=False):
+
+
+
+**Psi4Theory** options:
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``psi4dir``
+     - string
+     - None
+     - Path to Psi4 directory. Used by runmode='psithon'
+   * - ``runmode``
+     - string
+     - 'library'
+     - Psi4 runmode. Options: runmode='library' or runmode='psithon'
+   * - ``printsetting``
+     - Boolean
+     - False
+     - Printsetting. If True: Psi4 output is printed to stdout. If False, printing to disk.
+   * - ``psi4settings``
+     - dict
+     - None
+     - Psi4 settings dictionary
+   * - ``psi4method``
+     - string
+     - None
+     - Psi4 method 
+   * - ``pe``
+     - Boolean
+     - False
+     - Whether to use polarizable embedding in Psi4 via CPPE library.
+   * - ``potfile``
+     - string
+     - ''
+     - Name of potential file for in Psi4 CPPE polarizable embedding
+   * - ``filename``
+     - string
+     - 'psi4_'
+     - Name of Psi4 inputfile for psithon runmode.
+   * - ``label``
+     - string
+     - None
+     - Optional label of object
+   * - ``psi4memory``
+     - integer
+     - 3000
+     - Memory in MB used by Psi4
+   * - ``numcores``
+     - integer
+     - 1
+     - Number of CPU cores Psi4 will use
+   * - ``printlevel``
+     - integer
+     - 2
+     - The printlevel.
+   * - ``fchkwrite``
+     - Boolean
+     - False
+     - XXXX
+
 The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
 The library interface means that Ash will load Psi4 Python libraries that have to be part of the same Python installation.
 In the inputfile-based interface (Psithon), ASH will create a Psi4 inputfile in Psithon syntax and will then call

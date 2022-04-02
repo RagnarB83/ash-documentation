@@ -6,9 +6,9 @@ ORCATheory class:
 .. code-block:: python
     
   class ORCATheory:
-      def __init__(self, orcadir=None, fragment=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
+      def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
                   orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, moreadfile=None, 
-                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False):
+                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True):
 
 
 
@@ -26,10 +26,6 @@ ORCATheory class:
      - string
      - None
      - Path to ORCA directory.
-   * - ``fragment``
-     - ASH Fragment
-     - None
-     - ASH Fragment object.
    * - ``orcasimpleinput``
      - string
      - ''
