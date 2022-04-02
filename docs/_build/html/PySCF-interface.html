@@ -126,13 +126,12 @@
              
   <div class="section" id="pyscf-interface">
 <h1>PySCF interface<a class="headerlink" href="#pyscf-interface" title="Permalink to this headline"></a></h1>
-<p>PySCFTheory class:</p>
+<p><strong>PySCFTheory class:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PySCFTheory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pyscfbasis</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                 <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">potfile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pyscf&#39;</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3100</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 </pre></div>
 </div>
-<p><strong>PySCFTheory</strong> options:</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 14%" />
@@ -200,6 +199,7 @@ At the moment, the interface is not very flexible and only allows for simple DFT
 <p>Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, numcores, outputname and printsetting.
 Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).</p>
 <p>The interface will become more flexible in the future.</p>
+<p><strong>Example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create fragment object from XYZ-file</span>
 <span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;hf.xyz&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#PySCF</span>

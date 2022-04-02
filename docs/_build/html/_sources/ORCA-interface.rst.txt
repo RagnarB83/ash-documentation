@@ -10,10 +10,6 @@ ORCATheory class:
                   orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, moreadfile=None, 
                   autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True):
 
-
-
-**ORCATheory** options:
-
 .. list-table::
    :widths: 15 15 15 60
    :header-rows: 1
@@ -86,6 +82,10 @@ ORCATheory class:
      - integer
      - 1
      - Number of cores to use for ORCA
+   * - ``filename``
+     - string
+     - 'orca'
+     - Name of inputfile and outputfile
    * - ``label``
      - string
      - None
@@ -102,6 +102,18 @@ ORCATheory class:
      - Boolean
      - False
      - Whether to print Mulliken population analysis for each step
+   * - ``print_population_analysis``
+     - Boolean
+     - False
+     - Whether to print Mulliken population analysis for each step
+   * - ``check_for_errors``
+     - Boolean
+     - True
+     - Whether to check for errors in ORCA output once ORCA calculation is done.
+   * - ``check_for_warnings``
+     - Boolean
+     - True
+     - Whether to check for warnings in ORCA output once ORCA calculation is done.
 
 
 ################################

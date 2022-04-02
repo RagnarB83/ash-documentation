@@ -126,6 +126,92 @@
              
   <div class="section" id="cfour-interface">
 <h1>CFour interface<a class="headerlink" href="#cfour-interface" title="Permalink to this headline"></a></h1>
+<p><strong>CFourTheory class:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CFourTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfourdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cfouroptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;cfourjob&#39;</span><span class="p">,</span><span class="n">specialbasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ash_basisfile</span><span class="o">=</span><span class="s1">&#39;def2-SVP&#39;</span><span class="p">):</span>
+</pre></div>
+</div>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cfourdir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Path to CFour directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>2</p></td>
+<td><p>Printlevel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cfouroptions</span></code></p></td>
+<td><p>dict</p></td>
+<td><p>None</p></td>
+<td><p>CFour keywords as a Python dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Number of CPU cores CFour will use</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filename</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘cfourjob’</p></td>
+<td><p>Name of CFour inputfile</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">specialbasis</span></code></p></td>
+<td><p>dictionary</p></td>
+<td><p>None</p></td>
+<td><p>Optional specialbasis option.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ash_basisfile</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘def2-SVP’</p></td>
+<td><p>ASH-internal basis set file for CFour. Options: ‘def2-SVP’</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Add coordinates to fragment</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">cfouroptions</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s1">&#39;CALC&#39;</span><span class="p">:</span><span class="s1">&#39;CCSD&#39;</span><span class="p">,</span>
+<span class="s1">&#39;BASIS&#39;</span><span class="p">:</span><span class="s1">&#39;PVTZ&#39;</span><span class="p">,</span>
+<span class="s1">&#39;REF&#39;</span><span class="p">:</span><span class="s1">&#39;RHF&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FROZEN_CORE&#39;</span><span class="p">:</span><span class="s1">&#39;ON&#39;</span><span class="p">,</span>
+<span class="s1">&#39;MEM_UNIT&#39;</span><span class="p">:</span><span class="s1">&#39;MB&#39;</span><span class="p">,</span>
+<span class="s1">&#39;MEMORY&#39;</span><span class="p">:</span><span class="mi">3100</span><span class="p">,</span>
+<span class="s1">&#39;PROP&#39;</span><span class="p">:</span><span class="s1">&#39;FIRST_ORDER&#39;</span><span class="p">,</span>
+<span class="s1">&#39;CC_PROG&#39;</span><span class="p">:</span><span class="s1">&#39;ECC&#39;</span><span class="p">,</span>
+<span class="s1">&#39;SCF_CONV&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="s1">&#39;LINEQ_CONV&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="s1">&#39;CC_MAXCYC&#39;</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span>
+<span class="s1">&#39;SYMMETRY&#39;</span><span class="p">:</span><span class="s1">&#39;OFF&#39;</span><span class="p">,</span>
+<span class="s1">&#39;HFSTABILITY&#39;</span><span class="p">:</span><span class="s1">&#39;OFF&#39;</span>
+<span class="p">}</span>
+
+<span class="n">cfourcalc</span> <span class="o">=</span> <span class="n">CFourTheory</span><span class="p">(</span><span class="n">cfourdir</span><span class="o">=</span><span class="s1">&#39;/path/to/cfour&#39;</span><span class="p">,</span> <span class="n">cfouroptions</span><span class="o">=</span><span class="n">cfouroptions</span><span class="p">)</span>
+
+<span class="c1">#Simple Energy SP calc</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cfourcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">HF_frag</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 

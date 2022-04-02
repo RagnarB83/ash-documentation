@@ -320,7 +320,7 @@ The error from the approximation depends on the TruncPCRadius parameter (smaller
 </div>
 <div class="section" id="qm-mm-boundary-treatment">
 <h2>QM/MM boundary treatment<a class="headerlink" href="#qm-mm-boundary-treatment" title="Permalink to this headline"></a></h2>
-<p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
+<p>If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied.
 In ASH this is treated by the popular linkatom method, combined with charge-shifting.
 A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
@@ -335,6 +335,14 @@ To override this behaviour add “unusualboundary=True” as keyword argument wh
          <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="p">[</span><span class="mi">5785</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>Special care should be taken when defining a QM-region for a biomolecular system
+General recommendations:</p>
+<ul class="simple">
+<li><p>Always cut a C-C bond that is as nonpolar as possible.</p></li>
+<li><p>Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding.</p></li>
+<li><p>Amino acid sidechains are straighforward but make sure to not through CHARMM charge groups</p></li>
+<li><p>Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.</p></li>
+</ul>
 </div>
 <div class="section" id="example-qm-mm-with-orca-and-nonbondedtheory">
 <h2>Example: QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline"></a></h2>

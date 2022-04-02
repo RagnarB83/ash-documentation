@@ -1,18 +1,13 @@
 PySCF interface
 ======================================
 
-
-PySCFTheory class:
+**PySCFTheory class:**
 
 .. code-block:: python
     
     class PySCFTheory:
         def __init__(self, printsetting=False, printlevel=2, pyscfbasis='', pyscffunctional='',
                     pe=False, potfile='', filename='pyscf', pyscfmemory=3100, numcores=1):
-
-
-
-**PySCFTheory** options:
 
 .. list-table::
    :widths: 15 15 15 60
@@ -66,6 +61,9 @@ Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfme
 Printsetting controls whether to write pyscf-output to a file (False) or to stdout (True).
 
 The interface will become more flexible in the future.
+
+
+**Example:**
 
 .. code-block:: python
 

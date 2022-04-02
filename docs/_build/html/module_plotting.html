@@ -145,12 +145,13 @@ These are essentially wrapper-functions around Matplotlib functionality.</p>
 Contact the developer if you have suggestions for simple improvements in ASH_plot.</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ASH_plot</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figuretitle</span><span class="o">=</span><span class="s1">&#39;Plottyplot&#39;</span><span class="p">,</span> <span class="n">num_subplots</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
-        <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;X-axis&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy (X)&#39;</span><span class="p">,</span> <span class="n">x_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Plot-title&#39;</span><span class="p">,</span> <span class="n">subplot_titles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">print_line_with_mainheader</span><span class="p">(</span><span class="s2">&quot;ASH_energy_plot&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">addseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subplot</span><span class="p">,</span> <span class="n">surfacedictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-                <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figuretitle</span><span class="o">=</span><span class="s1">&#39;Plottyplot&#39;</span><span class="p">,</span> <span class="n">num_subplots</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+      <span class="n">x_axislabel</span><span class="o">=</span><span class="s1">&#39;X-axis&#39;</span><span class="p">,</span> <span class="n">y_axislabel</span><span class="o">=</span><span class="s1">&#39;Energy (X)&#39;</span><span class="p">,</span> <span class="n">x_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_axislabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Plot-title&#39;</span><span class="p">,</span>
+      <span class="n">subplot_titles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">invert_x_axis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">invert_y_axis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlimit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylimit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">legend_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">addseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subplot</span><span class="p">,</span> <span class="n">surfacedictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                  <span class="n">scatter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scatter_linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">imageformat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
 <p><strong>ASH_plot</strong> options:</p>
@@ -223,6 +224,31 @@ Contact the developer if you have suggestions for simple improvements in ASH_plo
 <td><p>list of strings</p></td>
 <td><p>None</p></td>
 <td><p>Titles for each subplot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">invert_x_axis</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Invert x-axis or not</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">invert_y_axis</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Invert y-axis or not</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xlimit</span></code></p></td>
+<td><p>list of floats</p></td>
+<td><p>None</p></td>
+<td><p>x-axis limit</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ylimit</span></code></p></td>
+<td><p>list of floats</p></td>
+<td><p>None</p></td>
+<td><p>y-axis limit</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">legend_pos</span></code></p></td>
+<td><p>list of floats</p></td>
+<td><p>None</p></td>
+<td><p>Position of legend on plot</p></td>
 </tr>
 </tbody>
 </table>

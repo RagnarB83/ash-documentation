@@ -106,10 +106,6 @@ QMMMTheory class
      - Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
 
 
-
-
-
-
 Example:
 
 .. code-block:: python
@@ -199,7 +195,7 @@ The error from the approximation depends on the TruncPCRadius parameter (smaller
 QM/MM boundary treatment
 ######################################
 
-If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction need to be applied.
+If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied.
 In ASH this is treated by the popular linkatom method, combined with charge-shifting.
 A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
@@ -219,7 +215,15 @@ In rare cases you may want to prevent ASH from adding a linkatom for a specific 
             qmatoms=qmatoms, excludeboundaryatomlist=[5785])
 
 
+Special care should be taken when defining a QM-region for a biomolecular system
+General recommendations:
 
+- Always cut a C-C bond that is as nonpolar as possible.
+- Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
+- Amino acid sidechains are straighforward but make sure to not through CHARMM charge groups
+- Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.
+  
+  
 #############################################
 Example: QM/MM with ORCA and NonbondedTheory
 #############################################

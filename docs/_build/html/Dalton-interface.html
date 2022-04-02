@@ -126,6 +126,107 @@
              
   <div class="section" id="dalton-interface">
 <h1>Dalton interface<a class="headerlink" href="#dalton-interface" title="Permalink to this headline"></a></h1>
+<p><strong>DaltonTheory class:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DaltonTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrccdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mrcc&#39;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">mrccinput</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+</pre></div>
+</div>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">daltondir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Path to Dalton directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dalton_input</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Dalton input as a multi-line string</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Number of CPU cores Dalton will use</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filename</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘dalton’</p></td>
+<td><p>Name of Dalton inputfile</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basis_name</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Name of Dalton basis set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">basis_dir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Name of basis set directory</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pe</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to use polarizable embedding in Dalton.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">potfile</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Name of potential file for polarizable embedding option.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>2</p></td>
+<td><p>Printlevel</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Optional label for object</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Add coordinates to fragment</span>
+<span class="n">HF_frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;hf.xyz&quot;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Defining DaltonTheory object</span>
+<span class="n">input_string</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">**DALTON</span>
+<span class="s2">.RUN RESPONSE</span>
+<span class="s2">.DIRECT</span>
+<span class="s2">**WAVE FUNCTIONS</span>
+<span class="s2">.DFT</span>
+<span class="s2">CAMB3LYP</span>
+<span class="s2">**RESPONSE</span>
+<span class="s2">.TDA</span>
+<span class="s2">*LINEAR</span>
+<span class="s2">.SINGLE RESIDUE</span>
+<span class="s2">.ROOTS</span>
+<span class="s2">5</span>
+<span class="s2">**END OF</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">Daltonobject</span> <span class="o">=</span> <span class="n">DaltonTheory</span><span class="p">(</span><span class="n">daltondir</span><span class="o">=</span><span class="s2">&quot;/path/to/daltondir&quot;</span><span class="p">,</span><span class="n">dalton_input</span><span class="o">=</span><span class="n">input_string</span><span class="p">)</span>
+
+<span class="c1">#Running single-point job</span>
+<span class="n">energy</span><span class="o">=</span><span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">Daltonobject</span><span class="p">,</span><span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 

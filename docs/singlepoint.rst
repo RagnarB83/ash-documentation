@@ -2,7 +2,8 @@ Singlepoint
 ======================================
 
 The Singlepoint jobtype is the most basic job to perform in ASH.
-The main function is **Singlepoint** and special versions are **Singlepoint_fragments**, **Singlepoint_theories** and **Singlepoint_parallel**.
+The main function is **Singlepoint** and special versions are **Singlepoint_fragments**, **Singlepoint_theories**, 
+**Singlepoint_fragments_and_theories**, **Singlepoint_reaction** and **Singlepoint_parallel**.
 
 
 ########################
@@ -312,6 +313,55 @@ This gives the output:
     Reaction_energy(ORCA-r2SCAN-3c):  -42.98445901864511 kcal/mol
 
 A final list of lists of total energies is returned (each list containing the total energies of the fragment for each theory level )
+
+#############################################
+Singlepoint_reaction function
+#############################################
+
+Finally it is possible to use an ASH Reaction object together with  **Singlepoint_reaction** to run
+calculations for each fragment defined within the reaction and get the reaction energy back.
+See :doc:`module_workflows` about ASH Reaction class.
+
+.. code-block:: python
+
+    def Singlepoint_reaction(theory=None, reaction=None, unit='kcal/mol'):
+
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining Haber-Bosch reaction: N2 + 3H2 => 2NH3 Reaction object
+    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+    specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
+    stoichiometry=[-1, -3, 2] #Using same order as specieslist.
+    HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
+
+    #Defining theory
+    xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
+
+    #Running singlepoint calculation on reaction
+    reaction_energy = Singlepoint_reaction(theory=xtbcalc, reaction=HB_reaction, unit='kcal/mol')
+
+This gives the output:
+
+.. code-block:: text
+
+    ======================================================================
+    Singlepoint_reaction: Table of energies of each fragment:
+    ======================================================================
+    Formula    Label                 Charge    Mult           Energy(Eh)
+    ----------------------------------------------------------------------
+    N2         None                       0       1        -6.3335016263
+    H2         None                       0       1        -1.0361629322
+    H3N1       nh3                        0       1        -4.8300824317
+
+    Reaction_energy():  -136.9065273640026 kcal/mol
+   
 
 ##################################
 Singlepoint_parallel function

@@ -1,7 +1,7 @@
 Psi4 interface
 ======================================
 
-Psi4Theory class:
+**Psi4Theory class:**
 
 .. code-block:: python
     
@@ -9,10 +9,6 @@ Psi4Theory class:
         def __init__(self, psi4dir=None, runmode='library', printsetting='False', psi4settings=None, 
                     psi4method=None, pe=False, potfile='', filename='psi4_', label='psi4input',
                     psi4memory=3000, numcores=1, printlevel=2, fchkwrite=False):
-
-
-
-**Psi4Theory** options:
 
 .. list-table::
    :widths: 15 15 15 60

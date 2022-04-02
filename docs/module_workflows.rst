@@ -6,6 +6,45 @@ See also :doc:`workflows-examples` for a tutorial on how you can build your own 
 
 
 #####################
+Reaction class
+#####################
+
+The Reaction class is a simple convenient ASH object to define a molecular reaction object that can be used
+as input in various multistep workflows.
+
+
+.. code-block:: python
+
+	class Reaction:
+		def __init__(self, fragments, stoichiometry, label=None):
+
+To create a Reaction object one first defines all molecular species of reaction as ASH fragments (with charge and multiplicity defined).
+The ASH fragments are collected in a list and a stoichiometry is defined (same order as list of fragments):
+
+**Example:**
+
+.. code-block:: python
+
+	N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+	H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+	NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+	# List of species from reactant to product
+	specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+	#Equation stoichiometry : negative integer for reactant, positive integer for product
+	# Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
+	stoichiometry=[-1, -3, 2] #Use same order as specieslist
+	HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
+
+	#Running a job-type that supports a Reaction object as input
+	Singlepoint_reaction(reaction=HB_reaction)
+
+Job-types that can take a Reaction as inputobject:
+
+- Singlepoint_reaction (See :doc:`singlepoint`)
+- thermochemprotocol_reaction (see below)
+
+
+#####################
 ReactionEnergy
 #####################
 
@@ -94,12 +133,13 @@ The **thermochemprotocol_reaction** and **thermochemprotocol_single** functions 
 perform a multi-step Opt+Freq+HL-single-point protocol on either a reaction or a single species.
 
 
-The **thermochemprotocol_reaction** is used for chemical reactions by giving a list of ASH fragments, stoichiometry and theory levels.
+The **thermochemprotocol_reaction** is used for chemical reactions by providing multiple theory level (for Opt+Freq and High-level singlepoint)
+and an ASH Reaction object.
 
 .. code-block:: python
 
-    def thermochemprotocol_reaction(fraglist=None, stoichiometry=None, Opt_theory=None, SP_theory=None, orcadir=None, numcores=None, memory=5000,
-                       analyticHessian=False, temp=298.15, pressure=1.0)
+	def thermochemprotocol_reaction(Opt_theory=None, SP_theory=None, reaction=None, fraglist=None, stoichiometry=None, numcores=1, memory=5000,
+						analyticHessian=True, temp=298.15, pressure=1.0):
 
 while **thermochemprotocol_single** is used for a single fragment (**thermochemprotocol_reaction** calls **thermochemprotocol_single**).
 
@@ -109,39 +149,54 @@ while **thermochemprotocol_single** is used for a single fragment (**thermochemp
                        analyticHessian=True, temp=298.15, pressure=1.0):
 
 
-The reaction is defined via a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
+The reaction must first be defined for a list of defined fragments and stoichiometry, a theory object for Opt+Freq steps is defined (Opt_theory)
 and then a theory for the high-level single-point level is chosen (SP_theory). Can be any ASH Theory including ORCATheory, CC_CBS_Theory etc.
+
+**thermochemprotocol_reaction example:**
 
 .. code-block:: python
 
-    from ash import *
+	from ash import *
 
-    #
-    numcores=4
+	#
+	numcores=4
 
-    N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
-    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
-    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+	N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+	H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+	NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
 
-    # List of species from reactant to product
-    specieslist=[N2, H2, NH3] #Use same order as stoichiometry
-    #Equation stoichiometry : negative integer for reactant, positive integer for product
-    # Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
-    stoichiometry=[-1, -3, 2] #Use same order as specieslist
+	# List of species from reactant to product
+	specieslist=[N2, H2, NH3] #Use same order as stoichiometry
+	#Equation stoichiometry : negative integer for reactant, positive integer for product
+	# Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
+	stoichiometry=[-1, -3, 2] #Use same order as specieslist
+	#ASH reaction object
+	HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
 
-    #Opt+Freq theory
+	#Opt+Freq theory
 	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
 	#HL theory
 	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
-                  pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
+					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
+	#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
+	thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
+						numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
 
-	#Example: Thermochemistry protocol on the single N2 species
-    thermochemprotocol_single(fragment=N2, stoichiometry=stoichiometry,
-                        numcores=numcores, Opt_theory=None, SP_theory=DLPNO_CC_calc)
 
-    #Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
-    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
-                        numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
+**thermochemprotocol_single example:**
+
+.. code-block:: python
+
+	from ash import *
+
+	#Fragment
+	N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
+	#Theories
+	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
+	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
+					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
+	#Job
+	thermochemprotocol_single(fragment=N2, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
 
 ###############################################################
 calc_xyzfiles: Run calculations on a collection of XYZ-files

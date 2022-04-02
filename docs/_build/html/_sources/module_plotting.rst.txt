@@ -19,13 +19,14 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
 
 .. code-block:: python
 
-    class ASH_plot():
-        def __init__(self, figuretitle='Plottyplot', num_subplots=1, dpi=200, imageformat='png', figsize=(9,5),
-            x_axislabel='X-axis', y_axislabel='Energy (X)', x_axislabels=None, y_axislabels=None, title='Plot-title', subplot_titles=None):
-            print_line_with_mainheader("ASH_energy_plot")
-        def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
+  class ASH_plot():
+    def __init__(self, figuretitle='Plottyplot', num_subplots=1, dpi=200, imageformat='png', figsize=(9,5),
+        x_axislabel='X-axis', y_axislabel='Energy (X)', x_axislabels=None, y_axislabels=None, title='Plot-title', 
+        subplot_titles=None, invert_x_axis=False, invert_y_axis=False, xlimit=None, ylimit=None,
+        legend_pos=None):
+    def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
                     scatter=True, line=True, scatter_linewidth=2, line_linewidth=1, marker='o', legend=True):
-        def savefig(self, filename, imageformat=None, dpi=None):
+    def savefig(self, filename, imageformat=None, dpi=None):
 
 ..  https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html
 
@@ -83,7 +84,26 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
      - list of strings
      - None
      - Titles for each subplot.
-
+   * - ``invert_x_axis``
+     - Boolean
+     - False
+     - Invert x-axis or not
+   * - ``invert_y_axis``
+     - Boolean
+     - False
+     - Invert y-axis or not
+   * - ``xlimit``
+     - list of floats
+     - None
+     - x-axis limit
+   * - ``ylimit``
+     - list of floats
+     - None
+     - y-axis limit
+   * - ``legend_pos``
+     - list of floats
+     - None
+     - Position of legend on plot
 
 **ASH_plot.add_series** options:
 

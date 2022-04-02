@@ -140,7 +140,6 @@
                 <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keep_each_run_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_population_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;orca&quot;</span><span class="p">,</span> <span class="n">check_for_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_for_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 </pre></div>
 </div>
-<p><strong>ORCATheory</strong> options:</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 14%" />
@@ -236,25 +235,45 @@
 <td><p>1</p></td>
 <td><p>Number of cores to use for ORCA</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filename</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘orca’</p></td>
+<td><p>Name of inputfile and outputfile</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
 <td><p>Label for ORCA object. Useful if working with many ORCATheory objects to distinguish them.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">propertyblock</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">propertyblock</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
 <td><p>String containing ORCA-block input (e.g. %eprnmr) that must come after the coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">keep_each_run_output</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">keep_each_run_output</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Whether to keep copy of each ORCA outputfile from each run-call (e.g. each Opt-step).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_population_analysis</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to print Mulliken population analysis for each step</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">print_population_analysis</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Whether to print Mulliken population analysis for each step</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">check_for_errors</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>True</p></td>
+<td><p>Whether to check for errors in ORCA output once ORCA calculation is done.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">check_for_warnings</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>True</p></td>
+<td><p>Whether to check for warnings in ORCA output once ORCA calculation is done.</p></td>
 </tr>
 </tbody>
 </table>
