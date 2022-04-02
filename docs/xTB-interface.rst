@@ -6,7 +6,7 @@ xTBTheory class:
 .. code-block:: python
 
     class xTBTheory:
-        def __init__(self, xtbdir=None, fragment=None, xtbmethod='GFN1', runmode='inputfile', numcores=1, printlevel=2, filename='xtb_',
+        def __init__(self, xtbdir=None, xtbmethod='GFN1', runmode='inputfile', numcores=1, printlevel=2, filename='xtb_',
                     maxiter=500, electronic_temp=300, label=None, accuracy=0.1, hardness_PC=1000, solvent=None):
 
 **xTBTheory** options:
@@ -23,10 +23,6 @@ xTBTheory class:
      - string
      - None
      - Path to xTB directory. Optional. See "Finding the xTB program"
-   * - ``fragment``
-     - ASH Fragment
-     - None
-     - ASH Fragment object. Optional.
    * - ``xtbmethod``
      - string
      - 'GFN1'

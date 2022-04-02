@@ -126,6 +126,75 @@
              
   <div class="section" id="pyscf-interface">
 <h1>PySCF interface<a class="headerlink" href="#pyscf-interface" title="Permalink to this headline"></a></h1>
+<p>PySCFTheory class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PySCFTheory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printsetting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pyscfbasis</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pyscffunctional</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">pe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">potfile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pyscf&#39;</span><span class="p">,</span> <span class="n">pyscfmemory</span><span class="o">=</span><span class="mi">3100</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+</pre></div>
+</div>
+<p><strong>PySCFTheory</strong> options:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pyscfbasis</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Name of PySCF basis set</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pyscffunctional</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Name of PySCF DFT functional</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pe</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to use polarizable embedding in PySCF via CPPE library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">potfile</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘’</p></td>
+<td><p>Name of potential file for in PySCF CPPE polarizable embedding</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filename</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘pyscf’</p></td>
+<td><p>Filename used for PySCF output</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pyscfmemory</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>3100</p></td>
+<td><p>Memory (in MB) used by PySCF .</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>1</p></td>
+<td><p>Number of CPU cores used by PySCF</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printsetting</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Printsetting. if True: printing to standard output otherwise disk.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>2</p></td>
+<td><p>Printlevel</p></td>
+</tr>
+</tbody>
+</table>
 <p>The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
 At the moment, the interface is not very flexible and only allows for simple DFT calculations with a specific basis set.</p>
 <p>Valid keywords are: pyscfbasis, pyscffunctional, fragment, charge, mult, pyscfmemory, numcores, outputname and printsetting.
