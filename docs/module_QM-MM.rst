@@ -16,11 +16,11 @@ QMMMTheory class
 
 .. code-block:: python
  
-    class QMMMTheory:
-        def __init__(self, qm_theory=None, qmatoms=None, fragment=None, mm_theory=None, charges=None,
-                    embedding="Elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
-                    unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50, TruncPCcorrection_option="addition",
-                    qm_charge=None, qm_mult=None):
+  class QMMMTheory:
+      def __init__(self, qm_theory=None, qmatoms=None, fragment=None, mm_theory=None, charges=None,
+                  embedding="Elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
+                  unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50,
+                  qm_charge=None, qm_mult=None):
 
 **QMMMTheory** options:
 
@@ -168,12 +168,12 @@ The algorith works like this:
 .. code-block:: text
 
     Opt cycle 1: 
-        Use full pointcharge field. Store the full-system pointcharge gradient.
+        Calculate truncated and full pointcharge field. Calculate gradient and energy correction.
     Opt cycle n: 
         if Opt cycle n is a multiple of TruncatedPC_recalc_iter then: 
-            Use full pointcharge field. Store the full system pointcharge gradient.
+            Recalculate correction using both full pointcharge field and truncated.
         else: 
-            Use truncated PC field (defined by TruncPCRadius) in each QM run. Update the available full-system pointcharge gradient (the rest of the full gradient comes from last full-system update).
+            Use truncated PC field (defined by TruncPCRadius) in each QM run. Combine with energy and gradient corrections.
     Final Opt cycle: 
         Recalculate final geometry using full pointcharge field.
 
