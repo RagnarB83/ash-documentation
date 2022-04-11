@@ -92,10 +92,6 @@ QMMMTheory class
      - integer
      - 50
      - Optional: Truncated PC option; frequency for recalculating with full PC field.
-   * - ``TruncPCcorrection_option``
-     - string
-     - "addition"
-     - Optional: Option for how the TruncPCcorrection approximation is handled. 
    * - ``actatoms``
      - list
      - None
