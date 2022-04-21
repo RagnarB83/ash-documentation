@@ -143,7 +143,7 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QMMMTheory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frozenatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludeboundaryatomlist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">unusualboundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">openmm_externalforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">TruncPCcorrection_option</span><span class="o">=</span><span class="s2">&quot;addition&quot;</span><span class="p">,</span>
+                <span class="n">unusualboundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">openmm_externalforce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncatedPC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TruncPCRadius</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">TruncatedPC_recalc_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                 <span class="n">qm_charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -238,17 +238,12 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 <td><p>50</p></td>
 <td><p>Optional: Truncated PC option; frequency for recalculating with full PC field.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TruncPCcorrection_option</span></code></p></td>
-<td><p>string</p></td>
-<td><p>“addition”</p></td>
-<td><p>Optional: Option for how the TruncPCcorrection approximation is handled.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">actatoms</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">actatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
 <td><p>Optional: List of active atoms in QM/MM. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frozenatoms</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">frozenatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
 <td><p>Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
@@ -297,12 +292,12 @@ ASH features a convenient workaround for this problem in QM/MM geometry optimiza
 The size of the truncated PC field is controlled by the TruncPCRadius variable (radius in Å) which results in a truncated spherical PC field.</p>
 <p>The algorith works like this:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Opt cycle 1:
-    Use full pointcharge field. Store the full-system pointcharge gradient.
+    Calculate truncated and full pointcharge field. Calculate gradient and energy correction.
 Opt cycle n:
     if Opt cycle n is a multiple of TruncatedPC_recalc_iter then:
-        Use full pointcharge field. Store the full system pointcharge gradient.
+        Recalculate correction using both full pointcharge field and truncated.
     else:
-        Use truncated PC field (defined by TruncPCRadius) in each QM run. Update the available full-system pointcharge gradient (the rest of the full gradient comes from last full-system update).
+        Use truncated PC field (defined by TruncPCRadius) in each QM run. Combine with energy and gradient corrections.
 Final Opt cycle:
     Recalculate final geometry using full pointcharge field.
 </pre></div>

@@ -8,7 +8,8 @@ ORCATheory class:
   class ORCATheory:
       def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
                   orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, moreadfile=None, 
-                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True):
+                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True,
+                  fragment_indices=None):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -75,9 +76,9 @@ ORCATheory class:
      - None
      - Name of file or path to file of a GBWfile to read in to the ORCA calculation
    * - ``autostart``
-     - string
-     - 'Plottyplot'
-     - X
+     - Boolean
+     - True
+     - Whether ORCA will automatically try to read orbitals from a GBW file with same basename.
    * - ``numcores``
      - integer
      - 1
@@ -114,6 +115,10 @@ ORCATheory class:
      - Boolean
      - True
      - Whether to check for warnings in ORCA output once ORCA calculation is done.
+   * - ``fragment_indices``
+     - list of lists
+     - None
+     - Optional: list of lists of atom indices that specify whether atoms belong to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block in the ORCA inputfile. For QM/MM: atom indices must be in QM-region. 
 
 
 ################################

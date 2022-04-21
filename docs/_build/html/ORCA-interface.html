@@ -137,7 +137,8 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCATheory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">extrabasisatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrabasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">TDDFT</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TDDFTroots</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">FollowRoot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extraline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">first_iteration_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">moreadfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keep_each_run_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_population_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;orca&quot;</span><span class="p">,</span> <span class="n">check_for_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_for_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keep_each_run_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_population_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;orca&quot;</span><span class="p">,</span> <span class="n">check_for_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_for_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">fragment_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
 <table class="colwidths-given docutils align-default">
@@ -226,9 +227,9 @@
 <td><p>Name of file or path to file of a GBWfile to read in to the ORCA calculation</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">autostart</span></code></p></td>
-<td><p>string</p></td>
-<td><p>‘Plottyplot’</p></td>
-<td><p>X</p></td>
+<td><p>Boolean</p></td>
+<td><p>True</p></td>
+<td><p>Whether ORCA will automatically try to read orbitals from a GBW file with same basename.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
 <td><p>integer</p></td>
@@ -274,6 +275,11 @@
 <td><p>Boolean</p></td>
 <td><p>True</p></td>
 <td><p>Whether to check for warnings in ORCA output once ORCA calculation is done.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fragment_indices</span></code></p></td>
+<td><p>list of lists</p></td>
+<td><p>None</p></td>
+<td><p>Optional: list of lists of atom indices that specify whether atoms belong to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block in the ORCA inputfile. For QM/MM: atom indices must be in QM-region.</p></td>
 </tr>
 </tbody>
 </table>
