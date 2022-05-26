@@ -10,12 +10,12 @@ Python basics
 
 An ASH inputfile is a Python script/program with ASH loaded as a library that gives access to specific ASH functionality (the Fragment, ORCATheory, Singlepoint, geomeTRICOptimizer etc. names are ASH object, only available once ASH has been imported).
 This means that ASH does not behave like a regular QM program with a specific inputfile syntax for a specific job.
-Instead, an ASH inputfile is its own program (in Python), written by the user that when executed will carry out all instructions in the file.
+Instead, an ASH inputfile is its own program/script (in Python), written by the user that when executed (by the Python interpreter) will carry out all instructions in the file.
 This means that when a user's ASH script is executed, the Python interpreter will carry out all of the instructions defined in the script but nothing else.
 This gives a lot of flexiblity as it allows the user to create simple or complex, specific or general, single-job or multi-job calculations depending on the need or taste.
 
 The only drawback is that it requires the user to learn some Python programming basics in order to use the program.
-There are many many resources available for learning Python.
+There are many, many resources available for learning Python.
 
 Examples:
 

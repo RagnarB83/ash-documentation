@@ -6,7 +6,7 @@
 
 Setup
 ======================================
-Contact Ragnar if you want access to the code.
+To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository.
 
 ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via conda or pip.
@@ -51,7 +51,8 @@ Useful libraries for specific functionality:
 ##############################################
 A. Download ASH
 ##############################################
-Clone or download the archive containing ASH and put the directory (named ash) in your home directory or wherever you want it. The ash directory contains the Python source code files, e.g. ash.py and several directories.
+Clone or download the archive from `Github <https://github.com/RagnarB83/ash>`_ containing ASH and put the directory (named ash) in some appropriate location.
+The ash directory contains the Python source code files, e.g. ash.py and several directories.
 
 
 ##################################################
@@ -64,19 +65,21 @@ B0. The lazy/impatient way to set up ASH (easy but incomplete)
 
 If you are impatient and want to get ASH going immediately without all features enabled.
 
-**Note:** ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc)
-
-1. Download the ASH repository
+1. Download the ASH repository from `Github <https://github.com/RagnarB83/ash>`_
 2. Make sure there is a python3 interpreter on your system (with numpy)
-3. Set: export PYTHONPATH=/path/to/ash   (where /path/to/ash is the directory containing the ASH source code)
+3. Set: export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing the source-code directory (called "ash"))
 4. Test ASH by launching: **python3**  and then do: from ash import *        (this will fail if PYTHONPATH is set incorrectly)
+
+.. note:: ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc)
+
+.. warning:: If your installation path is e.g. /home/ragnar/ASH-program/ash  (where the ash directory contains bunch of files including ash_header.py) then you should set PYTHONPATH like this: export PYTHONPATH=/home/ragnar/ASH-program:$PYTHONPATH   but NOT:  export PYTHONPATH=/home/ragnar/ASH-program/ash:$PYTHONPATH
 
 
 *****************************************************
 B1. Semi-Automatic Miniconda setup (easiest)
 *****************************************************
 
-This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda).
+This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/miniconda).
 
 1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_.  Install it in a location where your user has access (e.g. your home-directory)
 2. Create new environment (not required but recommended): **conda create --name ASH**
@@ -84,7 +87,7 @@ This is the recommended way. Required if you intend to do MM or QM/MM using the 
 4. Change directory to ASH location 
 5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).
 6. Make sure the chosen Python-Julia interface works. PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.
-7. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM
+7. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
 8. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
 9. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
 10. Test ASH by launching: **python3**  and then do: from ash import *
@@ -123,7 +126,7 @@ B3. Manual
 **Step 1.** 
 
 Make sure ASH has been downloaded and moved to some location where it will stay.
-The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual loction on your machine).
+The location of the ASH directory will be referred to as /path/to/ash below (substitute /path/to/ash for the actual location on your machine).
 
 **Step 2.** 
 
@@ -188,7 +191,7 @@ Follow Anaconda/Miniconda installation instructions. Install numpy unless alread
     export PATH=$ASHPATH:$PATH
     export LD_LIBRARY_PATH=$ASHPATH/lib:$LD_LIBRARY_PATH
 
-where */path/to/ash* is the dir where all the ASH sourcefiles are (e.g. ash.py) .
+where */path/to/ash* is the dir that contains the "ash" source-code diretory .
 Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.
 This step will be necessary for each user on the cluster.
 
@@ -200,7 +203,6 @@ This step will be necessary for each user on the cluster.
 
 This requires you to be able ot install packages to your Python installation. It may also be possible to install Python packages
 locally to your user's home directory by the "--user" option:  pip3 install geometric --user
-
 
 
 **Step 5a.** Install Julia from the `Julia official site <https://julialang.org/downloads>`_.
@@ -324,8 +326,8 @@ D. Test ASH
 #########################################
 
 Test if things work in general:
-python3 /path/to/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
-python-jl /path/to/ash/test_ash.py   #Only required when PyJulia is used
+python3 /path/to/ash/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
+python-jl /path/to/ash/ash/test_ash.py   #Only required when PyJulia is used
 
 
 

@@ -8,12 +8,14 @@ molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonian
 Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
 can be performed using the nudged elastic band method (NEB).
 
+The code is open-source and available on `Github <https://github.com/RagnarB83/ash>`_
+
 Strict requirements:
 
 - Python3 installation (version 3.6 or higher)
 - Numpy Python library
 
-Strongly recommended:
+Strongly recommended (and mostly necessary):
 
 - geomeTRIC (optimizer). Python library, easily installed via pip.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.

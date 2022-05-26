@@ -11,6 +11,7 @@ The primary job-types available in ASH:
 - Molecular dynamics.
 - Surface scans.
 
+Note that jobs in ASH are almost always simple Python functions.
 
 Additionally ASH features various workflows that perform some combination of multiple jobtypes.  
 The job-types can be used with any theory object available (with some exceptions), e.g. one of the QMTheories in :doc:`QM-interfaces` or using

@@ -6,7 +6,8 @@
 Ash: Documentation
 ======================================
 
-These are the documentation pages of ASH, a multiscale modelling program.
+These are the documentation pages of ASH, an open-source multiscale modelling program.
+The code is available on `Github <https://github.com/RagnarB83/ash>`_
 
 .. raw:: html
 

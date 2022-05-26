@@ -2,6 +2,8 @@
 Basic usage
 ==========================
 
+This page shows how to use ASH once you have correctly set up ASH as a Python library.
+See :doc:`setup` for information on installing ASH.
 
 #####################
 Input structure
@@ -110,7 +112,7 @@ The PythonCall/juliacall library is recommended.
 ASH settings
 #####################
 
-Global settings are stored in  */path/to/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
+Global settings are stored in  */path/to/ash/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
 ASH will attempt to read this file on startup.
 
@@ -257,7 +259,7 @@ where jobscript.sh is:
     export PATH=/path/to/julia/bin:$PATH
 
     #Put ASH in PYTHONPATH and LD_LIBRARY_PATH
-    export PYTHONPATH=/path/to/ash:$PYTHONPATH
+    export PYTHONPATH=/path/to/dir-containing-ash-dir:$PYTHONPATH
     export LD_LIBRARY_PATH=/path/to/ash:/path/to/ash/lib:$LD_LIBRARY_PATH
 
     #Print out environment variables for debuggin.
