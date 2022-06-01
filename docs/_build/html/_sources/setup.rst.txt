@@ -52,7 +52,7 @@ Useful libraries for specific functionality:
 A. Download ASH
 ##############################################
 Clone or download the archive from `Github <https://github.com/RagnarB83/ash>`_ containing ASH and put the directory (named ash) in some appropriate location.
-The ash directory contains the Python source code files, e.g. ash.py and several directories.
+The ash directory contains the Python source code files, e.g. ash_header.py and several directories.
 
 
 ##################################################

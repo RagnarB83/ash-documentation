@@ -214,7 +214,7 @@ The PythonCall/juliacall library is recommended.</p>
 </div>
 <div class="section" id="ash-settings">
 <h2>ASH settings<a class="headerlink" href="#ash-settings" title="Permalink to this headline"></a></h2>
-<p>Global settings are stored in  <em>/path/to/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
+<p>Global settings are stored in  <em>/path/to/ash/ash/settings_ash.py</em> and can in principle be modified. However, it is better to instead create a settings file called <strong>ash_user_settings.ini</strong> for your user in your home-directory that should look like below.
 Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
 ASH will attempt to read this file on startup.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Settings]
@@ -344,7 +344,7 @@ cp <span class="nv">$SLURM_SUBMIT_DIR</span>/Centralmainfrag <span class="nv">$t
 <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/path/to/julia/bin:<span class="nv">$PATH</span>
 
 <span class="c1">#Put ASH in PYTHONPATH and LD_LIBRARY_PATH</span>
-<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/ash:<span class="nv">$PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span>/path/to/dir-containing-ash-dir:<span class="nv">$PYTHONPATH</span>
 <span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/ash:/path/to/ash/lib:<span class="nv">$LD_LIBRARY_PATH</span>
 
 <span class="c1">#Print out environment variables for debuggin.</span>

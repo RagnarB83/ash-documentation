@@ -6,8 +6,8 @@ QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that su
 
 To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
-Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
-the QMMMTheory object can define the division of QM-region and MM-region.
+Note that in contrast to a QMtheory object or an MMtheory object, we also pass a fragment object to a QMMMTheory object so that
+the QMMMTheory object can define the division of QM-region and MM-regions.
 
 
 ######################################
@@ -102,25 +102,20 @@ QMMMTheory class
      - Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
 
 
-Example:
+Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMTheory object:
 
 .. code-block:: python
-
-    frag=Fragment(xyzfile="system.xyz")
-
-    #List of qmatom indices defined
-    qmatoms=[500,501,502,503]
 
     #QM theory: xTB
     qm = xTBTheory(xtbmethod='GFN1')
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
-    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
-                platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="topology.pdb", 
+              periodic=True, platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM/MM theory object
-    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2,
-            qm_charge=-1, qm_mult=6)
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment="coordinates.xyz", embedding="Elstat", 
+              qmatoms=[500,501,502,503], printlevel=2, qm_charge=-1, qm_mult=6)
 
 
 **Defining the charge of the QM-region**
@@ -224,37 +219,46 @@ General recommendations:
 Example: QM/MM with ORCA and NonbondedTheory
 #############################################
 
-Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
-Here we read in a forcefield-file (see :doc:`MM-interfaces`)
+Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM. 
+Here we read in a forcefield-file containing a nonbonded forcefield (see :doc:`MM-interfaces`).
+The files for this example are available in the `examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory <https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory>`_ directory of the ASH repository.  
+
 
 .. code-block:: python
 
     from ash import *
 
-    #H2O...MeOH fragment defined
+    #H2O...MeOH fragment defined. Reading XYZ file
     H2O_MeOH = Fragment(xyzfile="h2o_MeOH.xyz")
 
-    # Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM.
+    # Specifying the QM atoms (3-8) by atom indices (MeOH). The other atoms (0,1,2) is the H2O and MM.
     #IMPORTANT: atom indices begin at 0.
     qmatoms=[3,4,5,6,7,8]
 
-    # Charge definitions for whole fragment.
+    # Charge definitions for whole fragment. Charges for the QM atoms are not important (ASH will always set QM atoms to zero)
     atomcharges=[-0.8, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
     #Defining atomtypes for whole system
     atomtypes=['OT','HT','HT','CX','HX', 'HX', 'HX', 'OT', 'HT']
 
-    #Read forcefield (LJ-part only) from file
-    MM_forcefield=MMforcefield_read('MeOH_H2O.ff')
+    #Read forcefield (here containing LJ-part only) from file
+    MM_forcefield=MMforcefield_read('MeOH_H2O-sigma.ff')
 
     #QM and MM objects
-    ORCAQMpart = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks)
-    MMpart = NonBondedTheory(charges = atomcharges, atomtypes=atomtypes, forcefield=MM_forcefield, LJcombrule='geometric')
+    ORCAQMpart = ORCATheory(orcasimpleinput="!BP86 def2-SVP def2/J tightscf", orcablocks="")
+    MMpart = NonBondedTheory(charges = atomcharges, atomtypes=atomtypes, forcefield=MM_forcefield, 
+        LJcombrule='geometric', codeversion="py")
     QMMMobject = QMMMTheory(fragment=H2O_MeOH, qm_theory=ORCAQMpart, mm_theory=MMpart, qmatoms=qmatoms,
                             charges=atomcharges, embedding='Elstat')
 
-    #Geometry optimzation of QM/MM object
-    geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8], charge=0, mult=1)
+    #Single-point energy calculation of QM/MM object
+    energy = Singlepoint(theory=QMMMobject, fragment=H2O_MeOH, charge=0, mult=1)
+
+    print("Single-point QM/MM energy:", energy)
+
+    #Geometry optimization of QM/MM object (this may not converge)
+    energy2 = geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8], charge=0, mult=1)
+    print("Optimized QM/MM energy:", energy2)
 
 
 ##########################################
@@ -263,52 +267,54 @@ Example: QM/MM with ORCA and OpenMMTheory
 
 See also :doc:`QM-MM-protein`.
 
-The files for this example (DHFR protein) are available in the examples/QM-MM-CHARMM-example directory in the main ASH directory
+The files for this example (DHFR protein) are available in the `examples/QM-MM-examples/QM-MM-CHARMM-example <https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-CHARMM-example>`_ directory of the ASH repository.  
 
 
 .. code-block:: python
 
-    from ash import *
+  from ash import *
 
-    numcores=1
+  numcores=1
 
-    forcefielddir="./"
-    psffile=forcefielddir+"step3_pbcsetup.psf"
-    topfile=forcefielddir+"top_all36_prot.rtf"
-    prmfile=forcefielddir+"par_all36_prot.prm"
-    xyzfile=forcefielddir+"coordinates.xyz"
+  #Defining path to dir containing forcefield files and coordinates
+  forcefielddir="./"
+  psffile=forcefielddir+"step3_pbcsetup.psf"
+  topfile=forcefielddir+"top_all36_prot.rtf"
+  prmfile=forcefielddir+"par_all36_prot.prm"
+  xyzfile=forcefielddir+"coordinates.xyz"
 
-    #Read coordinates from XYZ-file
-    frag = Fragment(xyzfile=xyzfile)
+  #Read coordinates from XYZ-file
+  frag = Fragment(xyzfile=xyzfile)
 
-    #Creating OpenMM object
-    openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0], do_energy_decomposition=True)
-
-
-    #Creating ORCATheory object
-    ORCAinpline="! HF-3c tightscf"
-    ORCAblocklines="""
-    %maxcore 2000
-    """
-    #Create ORCA QM object. Attaching numcores so that ORCA runs in parallel
-    orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
-                            orcablocks=ORCAblocklines, numcores=numcores)
-
-    #act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)
-    #IMPORTANT: atom indices begin at 0.
-    #Here selecting the side-chain of threonine
-    qmatoms = [569,570,571,572,573,574,575,576]
-    actatoms = qmatoms
+  #Creating OpenMM object
+  openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+      charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
+      do_energy_decomposition=True, autoconstraints=None, rigidwater=False)
 
 
-    # Create QM/MM OBJECT by combining QM and MM objects above
-    qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, printlevel=2,
-                            fragment=frag, embedding="Elstat", qmatoms=qmatoms)
+  #Creating ORCATheory object
+  ORCAinpline="! HF-3c tightscf"
+  ORCAblocklines="""
+  %maxcore 2000
+  """
+  #Create ORCA QM object. Attaching numcores so that ORCA runs in parallel
+  orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
+                          orcablocks=ORCAblocklines, numcores=numcores)
 
-    #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
-    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
-                        maxiter=500, coordsystem='hdlc', charge=0,mult=1)
+  #act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)
+  #IMPORTANT: atom indices begin at 0.
+  #Here selecting the side-chain of threonine
+  qmatoms = [569,570,571,572,573,574,575,576]
+  actatoms = qmatoms #Same active region as QM-region here
+
+
+  # Create QM/MM OBJECT by combining QM and MM objects above
+  qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, printlevel=2,
+                          fragment=frag, embedding="Elstat", qmatoms=qmatoms)
+
+  #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
+  geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
+                      maxiter=500, coordsystem='hdlc', charge=0,mult=1)
 
 
 

@@ -136,8 +136,8 @@
 <p>QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that supports pointcharge embedding) with an MMTheory object of class NonbondedTheory (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>) or OpenMMTheory (see <a class="reference internal" href="OpenMM-interface.html"><span class="doc">OpenMM interface</span></a>).</p>
 <p>To do QM/MM, one combines a defined QMtheory object (<a class="reference internal" href="QM-interfaces.html"><span class="doc">QM Interfaces</span></a>) and an MMtheory object in QMMMTheory object
 and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
-Note that in contrast to a QMtheory object or an MMtheory object, we pass a fragment object to a QMMMTheory object so that
-the QMMMTheory object can define the division of QM-region and MM-region.</p>
+Note that in contrast to a QMtheory object or an MMtheory object, we also pass a fragment object to a QMMMTheory object so that
+the QMMMTheory object can define the division of QM-region and MM-regions.</p>
 <div class="section" id="qmmmtheory-class">
 <h2>QMMMTheory class<a class="headerlink" href="#qmmmtheory-class" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QMMMTheory</span><span class="p">:</span>
@@ -250,22 +250,17 @@ the QMMMTheory object can define the division of QM-region and MM-region.</p>
 </tr>
 </tbody>
 </table>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;system.xyz&quot;</span><span class="p">)</span>
-
-<span class="c1">#List of qmatom indices defined</span>
-<span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">502</span><span class="p">,</span><span class="mi">503</span><span class="p">]</span>
-
-<span class="c1">#QM theory: xTB</span>
+<p>Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMTheory object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#QM theory: xTB</span>
 <span class="n">qm</span> <span class="o">=</span> <span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
 
 <span class="c1">#Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)</span>
-<span class="n">omm</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;./specialresidue.xml&quot;</span><span class="p">],</span> <span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;finalsystem.pdb&quot;</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">omm</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;./specialresidue.xml&quot;</span><span class="p">],</span> <span class="n">pdbfile</span><span class="o">=</span><span class="s2">&quot;topology.pdb&quot;</span><span class="p">,</span>
+          <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1">#QM/MM theory object</span>
-<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">qm_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">qm</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="s2">&quot;coordinates.xyz&quot;</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span>
+          <span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">502</span><span class="p">,</span><span class="mi">503</span><span class="p">],</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">qm_charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">qm_mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Defining the charge of the QM-region</strong></p>
@@ -342,44 +337,53 @@ General recommendations:</p>
 <div class="section" id="example-qm-mm-with-orca-and-nonbondedtheory">
 <h2>Example: QM/MM with ORCA and NonbondedTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-nonbondedtheory" title="Permalink to this headline"></a></h2>
 <p>Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM.
-Here we read in a forcefield-file (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>)</p>
+Here we read in a forcefield-file containing a nonbonded forcefield (see <a class="reference internal" href="MM-interfaces.html"><span class="doc">MM Interfaces</span></a>).
+The files for this example are available in the <a class="reference external" href="https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory">examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory</a> directory of the ASH repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="c1">#H2O...MeOH fragment defined</span>
+<span class="c1">#H2O...MeOH fragment defined. Reading XYZ file</span>
 <span class="n">H2O_MeOH</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o_MeOH.xyz&quot;</span><span class="p">)</span>
 
-<span class="c1"># Specifying MeOH QM atoms. Rest: 0,1,2 is H2O and MM.</span>
+<span class="c1"># Specifying the QM atoms (3-8) by atom indices (MeOH). The other atoms (0,1,2) is the H2O and MM.</span>
 <span class="c1">#IMPORTANT: atom indices begin at 0.</span>
 <span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
 
-<span class="c1"># Charge definitions for whole fragment.</span>
+<span class="c1"># Charge definitions for whole fragment. Charges for the QM atoms are not important (ASH will always set QM atoms to zero)</span>
 <span class="n">atomcharges</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
 
 <span class="c1">#Defining atomtypes for whole system</span>
 <span class="n">atomtypes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;OT&#39;</span><span class="p">,</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span><span class="s1">&#39;HT&#39;</span><span class="p">,</span><span class="s1">&#39;CX&#39;</span><span class="p">,</span><span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;HX&#39;</span><span class="p">,</span> <span class="s1">&#39;OT&#39;</span><span class="p">,</span> <span class="s1">&#39;HT&#39;</span><span class="p">]</span>
 
-<span class="c1">#Read forcefield (LJ-part only) from file</span>
-<span class="n">MM_forcefield</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;MeOH_H2O.ff&#39;</span><span class="p">)</span>
+<span class="c1">#Read forcefield (here containing LJ-part only) from file</span>
+<span class="n">MM_forcefield</span><span class="o">=</span><span class="n">MMforcefield_read</span><span class="p">(</span><span class="s1">&#39;MeOH_H2O-sigma.ff&#39;</span><span class="p">)</span>
 
 <span class="c1">#QM and MM objects</span>
-<span class="n">ORCAQMpart</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="n">orcasimpleinput</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="n">orcablocks</span><span class="p">)</span>
-<span class="n">MMpart</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">charges</span> <span class="o">=</span> <span class="n">atomcharges</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span> <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
+<span class="n">ORCAQMpart</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;!BP86 def2-SVP def2/J tightscf&quot;</span><span class="p">,</span> <span class="n">orcablocks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">MMpart</span> <span class="o">=</span> <span class="n">NonBondedTheory</span><span class="p">(</span><span class="n">charges</span> <span class="o">=</span> <span class="n">atomcharges</span><span class="p">,</span> <span class="n">atomtypes</span><span class="o">=</span><span class="n">atomtypes</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">MM_forcefield</span><span class="p">,</span>
+    <span class="n">LJcombrule</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">,</span> <span class="n">codeversion</span><span class="o">=</span><span class="s2">&quot;py&quot;</span><span class="p">)</span>
 <span class="n">QMMMobject</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">qm_theory</span><span class="o">=</span><span class="n">ORCAQMpart</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">MMpart</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span>
                         <span class="n">charges</span><span class="o">=</span><span class="n">atomcharges</span><span class="p">,</span> <span class="n">embedding</span><span class="o">=</span><span class="s1">&#39;Elstat&#39;</span><span class="p">)</span>
 
-<span class="c1">#Geometry optimzation of QM/MM object</span>
-<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMobject</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#Single-point energy calculation of QM/MM object</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">QMMMobject</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Single-point QM/MM energy:&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+
+<span class="c1">#Geometry optimization of QM/MM object (this may not converge)</span>
+<span class="n">energy2</span> <span class="o">=</span> <span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">H2O_MeOH</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">QMMMobject</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized QM/MM energy:&quot;</span><span class="p">,</span> <span class="n">energy2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="example-qm-mm-with-orca-and-openmmtheory">
 <h2>Example: QM/MM with ORCA and OpenMMTheory<a class="headerlink" href="#example-qm-mm-with-orca-and-openmmtheory" title="Permalink to this headline"></a></h2>
 <p>See also <a class="reference internal" href="QM-MM-protein.html"><span class="doc">QM/MM on a protein</span></a>.</p>
-<p>The files for this example (DHFR protein) are available in the examples/QM-MM-CHARMM-example directory in the main ASH directory</p>
+<p>The files for this example (DHFR protein) are available in the <a class="reference external" href="https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-CHARMM-example">examples/QM-MM-examples/QM-MM-CHARMM-example</a> directory of the ASH repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span>
 
+<span class="c1">#Defining path to dir containing forcefield files and coordinates</span>
 <span class="n">forcefielddir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span>
 <span class="n">psffile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;step3_pbcsetup.psf&quot;</span>
 <span class="n">topfile</span><span class="o">=</span><span class="n">forcefielddir</span><span class="o">+</span><span class="s2">&quot;top_all36_prot.rtf&quot;</span>
@@ -391,7 +395,8 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 
 <span class="c1">#Creating OpenMM object</span>
 <span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">CHARMMfiles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmmtopfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
-    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span> <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">charmmprmfile</span><span class="o">=</span><span class="n">prmfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charmm_periodic_cell_dimensions</span><span class="o">=</span><span class="p">[</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span>
+    <span class="n">do_energy_decomposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
 <span class="c1">#Creating ORCATheory object</span>
@@ -407,7 +412,7 @@ Here we read in a forcefield-file (see <a class="reference internal" href="MM-in
 <span class="c1">#IMPORTANT: atom indices begin at 0.</span>
 <span class="c1">#Here selecting the side-chain of threonine</span>
 <span class="n">qmatoms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">569</span><span class="p">,</span><span class="mi">570</span><span class="p">,</span><span class="mi">571</span><span class="p">,</span><span class="mi">572</span><span class="p">,</span><span class="mi">573</span><span class="p">,</span><span class="mi">574</span><span class="p">,</span><span class="mi">575</span><span class="p">,</span><span class="mi">576</span><span class="p">]</span>
-<span class="n">actatoms</span> <span class="o">=</span> <span class="n">qmatoms</span>
+<span class="n">actatoms</span> <span class="o">=</span> <span class="n">qmatoms</span> <span class="c1">#Same active region as QM-region here</span>
 
 
 <span class="c1"># Create QM/MM OBJECT by combining QM and MM objects above</span>
