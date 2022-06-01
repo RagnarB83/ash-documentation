@@ -167,8 +167,8 @@ The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
     #Individual items from the dictionary can be accessed by specifying the dictionary key:
     # Available keys: frequencies, ZPVE, vibenergy, transenergy, rotenergy, vibenergy, vibenergycorr
     # TO BE FINISHED...
-    print("Frequencies : ", freqresult['frequencies])
-    print("ZPVE : ", freqresult['ZPVE])
+    print("Frequencies : ", freqresult['frequencies'])
+    print("ZPVE : ", freqresult['ZPVE'])
 
 
 
