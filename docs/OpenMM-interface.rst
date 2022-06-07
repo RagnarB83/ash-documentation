@@ -593,10 +593,10 @@ As ASH features a highly convenient interface to these programs and OpenMM itsel
 
     def OpenMM_Modeller(pdbfile=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0,
                         solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
-                        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-'):
+                        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-', platform='CPU'):
 
 
-The OpenMM_Modeller function returns an ASH OpenMMTheory object that can be used directly as theory level for future calculations.
+The OpenMM_Modeller function returns an ASH OpenMMTheory object and ASH fragment object that can be used directly as theory level for future calculations.
 OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.) that can be visualized for correctness.
 An XML file associated with the system is created that can be used to create future OpenMMtheory objects from.
 
@@ -619,7 +619,7 @@ Lysozyme example (simple, no modifications required):
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+    openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
         solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
     #MM minimization for 100 steps
@@ -635,7 +635,7 @@ then these need to be provided using the extraxmlfile option.
 
 .. code-block:: python
 
-    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+    openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
         solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants, extraxmlfile="cofactor.xml")
 
 
