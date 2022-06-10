@@ -64,7 +64,7 @@ Example on lysozyme:
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    openmmobject = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
+    openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
         solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
     #MM minimization for 1000 steps
@@ -549,20 +549,18 @@ to deal with and it will simply make more sense to split up the system-setup, cl
 
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
-    forcefield, topology, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
-        solvent_padding=10.0, ionicstrength=0.1)
+    openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0,
+        solvent_padding=10.0, ionicstrength=0.1, platform='OpenCL')
 
-    #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='CPU', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology,
-                     do_energy_decomposition=True, periodic=True,
-                     autoconstraints='HBonds', rigidwater=True)
+    #Alternatively: openmmobject can be recreated like this:
+    #openmmobject = OpenMMTheory(xmlfiles=[charmm36.xml, charmm36/water.xml], pdbfile="finalsystem.pdb", periodic=True)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1)
 
     #Classical MD simulation for 10 ps
-    OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
+    #OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+    #    integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
     #Setting up QM/MM model with QM-region: side-chain of ASP66
     qmatomlist = [1013,1014,1015,1016,1017,1018]
@@ -577,6 +575,10 @@ to deal with and it will simply make more sense to split up the system-setup, cl
     """
     orcaobject = ORCATheory(orcasimpleinput=ORCAinpline,
                             orcablocks=ORCAblocklines, numcores=1)
+
+    #OpenMMTheory needs to be redefined with constraints disabled for QM/MM
+    openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml"], pdbfile="finalsystem.pdb", periodic=True,
+        autoconstraints=None, rigidwater=False)
 
     # Create QM/MM OBJECT
     qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject,

@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#simple-minimization-via-openmm">Simple minimization via OpenMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#system-setup-via-openmm-modeller">System setup via OpenMM: Modeller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#small-molecule-solvation">Small molecule solvation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-nonbonded-forcefield-file-for-ligand">Create nonbonded forcefield file for ligand</a></li>
 </ul>
 </li>
 </ul>
@@ -741,10 +742,10 @@ that together are capable of setting up a new biomolecular system from scratch. 
 As ASH features a highly convenient interface to these programs and OpenMM itself this allows near-automatic system-setup for biomolecular systems.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">waterxmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
                     <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">solvent_boxdims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">pos_iontype</span><span class="o">=</span><span class="s1">&#39;Na+&#39;</span><span class="p">,</span> <span class="n">neg_iontype</span><span class="o">=</span><span class="s1">&#39;Cl-&#39;</span><span class="p">):</span>
+                    <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">pos_iontype</span><span class="o">=</span><span class="s1">&#39;Na+&#39;</span><span class="p">,</span> <span class="n">neg_iontype</span><span class="o">=</span><span class="s1">&#39;Cl-&#39;</span><span class="p">,</span> <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>The OpenMM_Modeller function returns an ASH OpenMMTheory object that can be used directly as theory level for future calculations.
+<p>The OpenMM_Modeller function returns an ASH OpenMMTheory object and ASH fragment object that can be used directly as theory level for future calculations.
 OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.) that can be visualized for correctness.
 An XML file associated with the system is created that can be used to create future OpenMMtheory objects from.</p>
 <p>Lysozyme example (simple, no modifications required):</p>
@@ -763,7 +764,7 @@ An XML file associated with the system is created that can be used to create fut
 <span class="n">residue_variants</span><span class="o">=</span><span class="p">{}</span>
 
 <span class="c1">#Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology</span>
-<span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+<span class="n">openmmobject</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
     <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">)</span>
 
 <span class="c1">#MM minimization for 100 steps</span>
@@ -776,7 +777,7 @@ An XML file associated with the system is created that can be used to create fut
 </div>
 <p>If the protein contains nonstandard residues (e.g. metallocofactors) that are not present in a typical protein forcefield (OpenMM_Modeller will exit with errors),
 then these need to be provided using the extraxmlfile option.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">openmmobject</span><span class="p">,</span> <span class="n">ashfragment</span> <span class="o">=</span> <span class="n">OpenMM_Modeller</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">pdbfile</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="s1">&#39;CHARMM36&#39;</span><span class="p">,</span> <span class="n">watermodel</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
     <span class="n">solvent_padding</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">ionicstrength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">residue_variants</span><span class="o">=</span><span class="n">residue_variants</span><span class="p">,</span> <span class="n">extraxmlfile</span><span class="o">=</span><span class="s2">&quot;cofactor.xml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -800,12 +801,12 @@ Here defining a simple Fe(III) ion:</p>
 &lt;/ForceField&gt;
 </pre></div>
 </div>
-<p>See e.g. <a class="reference external" href="https://education.molssi.org/mm-tools/01-introduction/index.html">Molecular Mechanics Tools</a> for information on the format of the XML file.</p>
+<p>See e.g. <a class="reference external" href="https://education.molssi.org/mm-tools/01-introduction/index.html">Molecular Mechanics Tools</a> for information on the format of the XML file.
+See also information on the <strong>write_nonbonded_FF_for_ligand</strong> function on this page.</p>
 <p>See <a class="reference internal" href="#"><span class="doc">OpenMM interface</span></a> for details and the <a class="reference internal" href="Metalloprotein-I.html"><span class="doc">Metalloprotein tutorial I: Rubredoxin</span></a> and <a class="reference internal" href="Metalloprotein-II.html"><span class="doc">Metalloprotein tutorial II: Ferredoxin</span></a> for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.</p>
 <p>Common error messages encountered when reading in user-defined XML-files:</p>
 <p>-<strong>ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.</strong></p>
-<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the
-PDBfile as in the XML file.</em></p>
+<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file.</em></p>
 <ul class="simple">
 <li><p><strong>ValueError: Found multiple definitions for atom type: X</strong>  :</p></li>
 </ul>
@@ -886,6 +887,44 @@ how the nonbonded parameters should be prepared, an optional ORCATheory object a
 </div>
 <p>The OpenMMTheory object can then be used on its own or can be combined with a QM theory to define a QM/MM theory object etc.
 See <a class="reference internal" href="Explicit-solvation.html"><span class="doc">Explicit solvation (small molecule)</span></a> workflow for more information on how to use solvate_small_molecule in a multi-step workflow.</p>
+</div>
+<div class="section" id="create-nonbonded-forcefield-file-for-ligand">
+<h2>Create nonbonded forcefield file for ligand<a class="headerlink" href="#create-nonbonded-forcefield-file-for-ligand" title="Permalink to this headline"></a></h2>
+<p><strong>WORK IN PROGRESS</strong></p>
+<p>ASH features a function (<strong>write_nonbonded_FF_for_ligand</strong>) that allows one to quickly
+create an XML forcefield file for any residue based on xTB-derived or DFT-derived atomic charges (CM5 charges) together with element-specific
+Lennard-Jones parameters.</p>
+<p>DFT-example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from ash import *
+
+#Script to get nonbonded model parameters for a ligand
+orcatheory=ORCATheory(orcasimpleinput=&quot;!r2scan ZORA ZORA-def2-TZVP tightscf CPCM&quot;, numcores=1)
+write_nonbonded_FF_for_ligand(xyzfile=&quot;ligand.xyz&quot;, charge=2, mult=1, resname=&quot;MCMtest&quot;,
+    coulomb14scale=1.0, lj14scale=1.0, charge_model=&quot;CM5_ORCA&quot;, theory=orcatheory, LJ_model=&quot;UFF&quot;, charmm=True)
+</pre></div>
+</div>
+<p>xTB-example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from ash import *
+
+#Script to get nonbonded model parameters for a ligand
+write_nonbonded_FF_for_ligand(xyzfile=&quot;mcm.xyz&quot;, charge=-3, mult=1, resname=&quot;MCMtest&quot;,
+    coulomb14scale=1.0, lj14scale=1.0, charge_model=&quot;xTB&quot;, LJ_model=&quot;UFF&quot;, charmm=True)
+</pre></div>
+</div>
+<p><strong>Options:</strong></p>
+<ul class="simple">
+<li><p>coulomb14scale and lj14scale parameters can be changed, depending on what other forcefield this ligand-forcefield will be combined with.</p></li>
+<li><p>charmm=True keyword writes the forcefield file so that it is compatible with the CHARMM36 forcefield (i.e. containing both a NonbondedForce and LennardJonesForce block)</p></li>
+</ul>
+<p><strong>NOTES</strong></p>
+<ul class="simple">
+<li><p>Parameters will be derived for each atom in the XYZ-file. Symmetry is currently not incorporated and this means that very
+similar atoms in the structure will have their own charge/LJ parameters. Since this is not always desired, the user
+should take care to combine and symmetrize the parameters in the XML-file manually.</p></li>
+<li><p>For a ligand bound to the protein, special care must be taken. Charges are best derived from a ligand structure with all metal ions
+coordinated (e.g. including an amino acid side chain) but then the calculation will contain those extra atoms.
+This requires manual tweaking of the final charges (make sure that the sum of atom charges add up to the correct total charge).</p></li>
+</ul>
 </div>
 </div>
 

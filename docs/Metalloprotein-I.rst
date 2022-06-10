@@ -159,6 +159,8 @@ The form of the XML file will be different if using another forcefield than CHAR
 
 Now that we have created an XML-file (*specialresidue.xml*) associated with the Fe ion residue that OpenMM complained about, we can try to call OpenMM_Modeller again, this time telling OpenMM_Modeller about the extra forcefield file.
 
+.. warning:: For OpenMM to correctly parse the specialresidue.xml file, it is important that the PDB-file contains an element definition (column 77-78) for
+    each element of the special residue.
 
 *1-modelsetup-bad2.py:*
 

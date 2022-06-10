@@ -663,6 +663,7 @@ Here defining a simple Fe(III) ion:
 
 
 See e.g. `Molecular Mechanics Tools <https://education.molssi.org/mm-tools/01-introduction/index.html>`_ for information on the format of the XML file.
+See also information on the **write_nonbonded_FF_for_ligand** function on this page.
 
 See :doc:`OpenMM-interface` for details and the :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.
 
@@ -670,8 +671,7 @@ Common error messages encountered when reading in user-defined XML-files:
 
 -**ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.**
 
-*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the
-PDBfile as in the XML file.*
+*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file.*
 
 - **ValueError: Found multiple definitions for atom type: X**  :  
 
@@ -774,3 +774,48 @@ The OpenMMTheory object can then be used on its own or can be combined with a QM
 See :doc:`Explicit-solvation` workflow for more information on how to use solvate_small_molecule in a multi-step workflow.
 
 
+##############################################
+Create nonbonded forcefield file for ligand
+##############################################
+
+**WORK IN PROGRESS**
+
+ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly
+create an XML forcefield file for any residue based on xTB-derived or DFT-derived atomic charges (CM5 charges) together with element-specific
+Lennard-Jones parameters.
+
+DFT-example:
+
+.. code-block:: text
+
+    from ash import *
+
+    #Script to get nonbonded model parameters for a ligand
+    orcatheory=ORCATheory(orcasimpleinput="!r2scan ZORA ZORA-def2-TZVP tightscf CPCM", numcores=1)
+    write_nonbonded_FF_for_ligand(xyzfile="ligand.xyz", charge=2, mult=1, resname="MCMtest",
+        coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA", theory=orcatheory, LJ_model="UFF", charmm=True)
+
+xTB-example:
+
+.. code-block:: text
+
+  from ash import *
+
+  #Script to get nonbonded model parameters for a ligand
+  write_nonbonded_FF_for_ligand(xyzfile="mcm.xyz", charge=-3, mult=1, resname="MCMtest",
+      coulomb14scale=1.0, lj14scale=1.0, charge_model="xTB", LJ_model="UFF", charmm=True)
+
+**Options:**
+
+- coulomb14scale and lj14scale parameters can be changed, depending on what other forcefield this ligand-forcefield will be combined with.
+- charmm=True keyword writes the forcefield file so that it is compatible with the CHARMM36 forcefield (i.e. containing both a NonbondedForce and LennardJonesForce block)
+
+
+**NOTES**
+
+- Parameters will be derived for each atom in the XYZ-file. Symmetry is currently not incorporated and this means that very 
+  similar atoms in the structure will have their own charge/LJ parameters. Since this is not always desired, the user
+  should take care to combine and symmetrize the parameters in the XML-file manually.
+- For a ligand bound to the protein, special care must be taken. Charges are best derived from a ligand structure with all metal ions
+  coordinated (e.g. including an amino acid side chain) but then the calculation will contain those extra atoms.
+  This requires manual tweaking of the final charges (make sure that the sum of atom charges add up to the correct total charge).

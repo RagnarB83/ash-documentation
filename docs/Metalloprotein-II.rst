@@ -80,6 +80,8 @@ where specialresidue.xml contains:
     </LennardJonesForce>
     </ForceField>
 
+.. warning:: For OpenMM to correctly parse the specialresidue.xml file, it is important that the PDB-file contains element definitions (column 77-78) for
+    each element of the special residue and the atom names in the XML file much match the atom names in the PDB-file.
 
 and run this script we get instead another error:
 
@@ -213,7 +215,8 @@ forces are present between [2Fe-2S] and other atoms, meaning that other atoms co
 Thus a more realistic scenario is to come up with a proper nonbonded model for the [2Fe-2S] cluster: i.e. charges and Lennard-Jones parameters.
 There are two main choices here:
 1. Search the literature for a study using nonbonded MM parameters for the same/similar residue. Ideally with the same protein forcefield.
-2. Derive the parameters using similar residues in the forcefield.
+2. Derive the parameters using similar residues already present in the forcefield.
 3. Derive the parameters from a DFT calculation and a population analysis.
 
+Option 3 is the most general solution. 
 ----THIS IS NOT YET FINISHED----
