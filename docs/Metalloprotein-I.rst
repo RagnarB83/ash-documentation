@@ -561,7 +561,7 @@ of course on how well the semi-empirical method handles the system).
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM full system file
-    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
                 numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #QM theory: GFN1-xTB
@@ -615,7 +615,7 @@ as via the bonded terms occurring at the QM and MM boundary.
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
-    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
                 platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM theory: r2SCAN-3c DFT-composite method using ORCA
