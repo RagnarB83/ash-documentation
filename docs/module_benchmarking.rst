@@ -24,13 +24,11 @@ Currently available test sets are:
 -   IE-benzenes (reference-data: experiment)
 
 #########################################
-The module_benchmarking module
+Available benchmarking options
 #########################################
 
-The module_benchmarking module contains :
-
-    - run_benchmark
-    - run_geobenchmark (not ready)
+- run_benchmark
+- run_geobenchmark (not ready)
 
 
 #########################################
@@ -46,7 +44,7 @@ The run_benchmark function needs at minimum the set keyword argument and either 
 - set: Name of benchmark test set.
 - theory: ASH Theory object
 - reuseorbs: Whether orbitals should be reused for each species in reaction. Only makes sense if geometries are similar (e.g. IE/EA reactions). Boolean True/False.
-- corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats. Can also be defined within testset.
+- corrections: Corrections to be applied to the calculated reaction energies, e.g. ZPE or thermal correction etc. List of floats (same number as number of reactions). Can also be defined within testset.
 
 #########################################
 Running a test set with a chosen QMtheory
