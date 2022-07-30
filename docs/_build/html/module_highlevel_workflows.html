@@ -119,8 +119,8 @@
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Highlevel workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory">CC_CBS_Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cc-cbs-theory-examples">CC_CBS_Theory Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#orca-cc-cbs-theory">ORCA_CC_CBS_Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#orca-cc-cbs-theory-examples">ORCA_CC_CBS_Theory Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reaction-highlevel-analysis">Reaction_Highlevel_Analysis</a></li>
 </ul>
 </li>
@@ -223,25 +223,30 @@
             
   <div class="section" id="highlevel-workflows">
 <h1>Highlevel workflows<a class="headerlink" href="#highlevel-workflows" title="Permalink to this headline">¶</a></h1>
-<p>These high-level workflows (singlepoint energy protocols) can either be used on their own as a theory-level in Singlepoint calculations or used as a SP_theory in workflows such as <strong>thermochemprotocol</strong>, <strong>calc_xyzfiles</strong>, <strong>confsampler_protocol</strong> (see <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a>)
+<p>These high-level workflows are multi-step singlepoint energy protocols can either be used on their own as a theory-level in Singlepoint calculations or used as a SP_theory in workflows such as <strong>thermochemprotocol</strong>, <strong>calc_xyzfiles</strong>, <strong>confsampler_protocol</strong> (see <a class="reference internal" href="module_workflows.html"><span class="doc">Workflows</span></a>)
 or as a theory in <strong>run_benchmark</strong> (see <a class="reference internal" href="module_benchmarking.html"><span class="doc">Benchmarking in ASH</span></a>) .
-All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.</p>
-<div class="section" id="cc-cbs-theory">
-<h2>CC_CBS_Theory<a class="headerlink" href="#cc-cbs-theory" title="Permalink to this headline">¶</a></h2>
-<p>This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
+The ORCA_CC_CBS_Theory uses the ORCA quantum chemistry code for all steps of the workflows and gives a final 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.
+The MRCC_CC_CBS_Theory uses the MRCC program (not yet available)</p>
+<div class="section" id="orca-cc-cbs-theory">
+<h2>ORCA_CC_CBS_Theory<a class="headerlink" href="#orca-cc-cbs-theory" title="Permalink to this headline">¶</a></h2>
+<p>ORCA_CC_CBS_Theory is synonymous with CC_CBS_Theory.</p>
+<p>This is an ASH Theory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
 Multiple ORCA calculations for the given geometry are carried out and the SCF and correlation energies extrapolated to the CCSD(T)/CBS limit using either regular CCSD(T) theory or DLPNO-CCSD(T) theory.
-This workflow is flexible and features multiple ways of approaching the CBS limit and the PNO limit.
+This workflow is flexible and features multiple ways of approaching the complete basis set limit (CBS) or the complete PNO space limit (CPS).
 Various options affecting the accuracy, efficiency and robustness of the protocol can be chosen.
 Many basis set families can be chosen that are available for most of the periodic table.
 Atomic spin-orbit coupling can be automatically included if system is an atom.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CC_CBS_Theory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">basisfamily</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span>
-                        <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;extrapolation&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="n">FullLMP2Guess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span>
-                        <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">FCI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">guessmode</span><span class="o">=</span><span class="s1">&#39;Cmatrix&#39;</span><span class="p">,</span> <span class="n">atomicSOcorrection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCA_CC_CBS_Theory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span> <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">guessmode</span><span class="o">=</span><span class="s1">&#39;Cmatrix&#39;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">cardinals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basisfamily</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SCFextrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span>
+            <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNO&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">1e-7</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;TightPNO&#39;</span><span class="p">],</span> <span class="n">FullLMP2Guess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1corrbasis_size</span><span class="o">=</span><span class="s1">&#39;Large&#39;</span><span class="p">,</span> <span class="n">T1corrpnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNOreduced&#39;</span><span class="p">,</span>
+            <span class="n">relativity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">FCI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">atomicSOcorrection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </pre></div>
 </div>
-<p><strong>CC_CBS_Theory</strong> options:</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 14%" />
@@ -264,12 +269,12 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cardinals</span></code></p></td>
 <td><p>list of integers</p></td>
-<td><p>[2,3]</p></td>
+<td><p>None</p></td>
 <td><p>Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basisfamily</span></code></p></td>
 <td><p>string</p></td>
-<td><p>“cc”</p></td>
+<td><p>None</p></td>
 <td><p>Required: Name of basis-set family to use. Various options. See table below.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">relativity</span></code></p></td>
@@ -280,7 +285,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orcadir</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
-<td><p>Path to ORCA.</p></td>
+<td><p>Path to ORCA. Optional.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stabilityanalysis</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -320,7 +325,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scfsetting</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘TightSCF’</p></td>
-<td><p>SCF-convergence setting. Options: ‘NormalSCF’, ‘TightSCF’, ‘VeryTightSCF’, ‘ExtremeSCF’.</p></td>
+<td><p>SCF-convergence setting in ORCA. Options: ‘NormalSCF’, ‘TightSCF’, ‘VeryTightSCF’, ‘ExtremeSCF’.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DLPNO</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -329,18 +334,38 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1</span></code></p></td>
 <td><p>Boolean</p></td>
-<td><p>True</p></td>
-<td><p>Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) (more accurate, more expensive).</p></td>
+<td><p>False</p></td>
+<td><p>Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) in all steps.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pnosetting</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">T1correction</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Option to calculate T1 as a single-step correction instead.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1correction</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Option to calculate T1 as a single-step correction instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">T1correction</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Option to calculate T1 as a single-step correction instead.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1corrbasis_size</span></code></p></td>
 <td><p>string</p></td>
-<td><p>‘extrapolation’</p></td>
-<td><p>Accuracy-threshold of the DLPNO approximation. Options: ‘LoosePNO’, ‘NormalPNO’, ‘TightPNO’, ‘extrapolation’.</p></td>
+<td><p>‘Large’</p></td>
+<td><p>Size of basis set in T1 correction. Options: ‘Large’ (larger cardinal basis), ‘Small’ (smaller cardinal basis).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">T1corrpnosetting</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘NormalPNOreduced’</p></td>
+<td><p>PNO setting for the T1  correction. Options: ‘LoosePNO’, ‘NormalPNO’, ‘NormalPNOreduced’ (TCutPNO=1e-6), ‘TightPNO’.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pnoextrapolation</span></code></p></td>
-<td><p>list of 2 integers</p></td>
-<td><p>[6,7]</p></td>
-<td><p>If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and TCutPNO=1e-Y and extrapolated to PNO limit.</p></td>
+<td><p>list of 2 integers and 1 string</p></td>
+<td><p>[1e-6,1e-7,1.5,’TightPNO’]</p></td>
+<td><p>Parameters for PNO-extrapolation (X,Y,Z): X and Y being TCutPNO thresholds while Z signifies the setting for the other thresholds.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FullLMP2Guess</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -396,6 +421,11 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <td><p>string</p></td>
 <td><p>“W1-mtsmall”</p></td>
 <td><p>The core-valence basis set to use. The default “W1-mtsmall” is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SCFextrapolation</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>True</p></td>
+<td><p>Whether the SCF energies are extrapolated or not. If False then the largest SCF energy calculated will be used (e.g. the def2-QZVPP energy in a def2/[3,4] job).</p></td>
 </tr>
 </tbody>
 </table>
@@ -741,20 +771,20 @@ Ba,Ra,U</p></td>
 <p>Note: often missing basis sets for K and Ca. Sometimes there are missing basis sets for specific elements and specific cardinals.</p>
 </div>
 </div>
-<div class="section" id="cc-cbs-theory-examples">
-<h2>CC_CBS_Theory Examples<a class="headerlink" href="#cc-cbs-theory-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="orca-cc-cbs-theory-examples">
+<h2>ORCA_CC_CBS_Theory Examples<a class="headerlink" href="#orca-cc-cbs-theory-examples" title="Permalink to this headline">¶</a></h2>
 <p><strong>Basic examples</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N2</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;n2.xyz&#39;</span><span class="p">)</span>
-<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">ORCA_CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">N2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The example above defines an N2 fragment (from file n2.xyz) and runs a single-point calculation using the defined CC_CBS_Theory object.
+<p>The example above defines an N2 fragment (from file n2.xyz) and runs a single-point calculation using the defined ORCA_CC_CBS_Theory object.
 Multiple CCSD(T) calculations are then carried out using the different basis sets specified by the basis-family and the cardinals.
 Cardinals=[2,3] and basisfamily=”cc” means that the cc-pVDZ and cc-pVTZ basis sets will be used.
 Separate basis-set extrapolation of SCF and correlation energies is then performed. Appropriate extrapolation parameters for 2-point extrapolations with this basis set family are chosen.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ferrocene</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ferrocene.xyz&#39;</span><span class="p">)</span>
-<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">ORCA_CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;def2&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s2">&quot;NormalPNO&quot;</span><span class="p">,</span> <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ferrocene</span><span class="p">)</span>
 </pre></div>
@@ -764,7 +794,7 @@ We use the ‘def2’ basis family here with cardinals=[2,3] meaning that the de
 The DLPNO approximation error can be controlled via threshold keywords (‘LoosePNO’, ‘NormalPNO’, ‘TightPNO’), here we choose ‘NormalPNO’.
 We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 to False.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ferrocene</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s1">&#39;ferrocene.xyz&#39;</span><span class="p">)</span>
-<span class="n">cc</span> <span class="o">=</span> <span class="n">CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">ferrocene</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-CV_3dTM-cc_L&quot;</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="s1">&#39;DKH&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">ORCA_CC_CBS_Theory</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="n">ferrocene</span><span class="o">.</span><span class="n">elems</span><span class="p">,</span> <span class="n">cardinals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">basisfamily</span><span class="o">=</span><span class="s2">&quot;cc-CV_3dTM-cc_L&quot;</span><span class="p">,</span> <span class="n">relativity</span><span class="o">=</span><span class="s1">&#39;DKH&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">DLPNO</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s2">&quot;extrapolation&quot;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span> <span class="n">T1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">Singlepoint</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">ferrocene</span><span class="p">)</span>
 </pre></div>
@@ -773,7 +803,7 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
 This calculation will utilize a mixed metal-ligands basis set: cc-pwCVTZ-DK/cc-pwCVQZ-DK on Fe and cc-pVDZ-DK/cc-pVTZ-DK on C,H.
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.</p>
-<p>For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  <a class="reference internal" href="Highlevel_CC_CBS_workflows.html"><span class="doc">Tutorial: High-level CCSD(T)/CBS workflows</span></a></p>
+<p>For additional examples on using ORCA_CC_CBS_Theory on real-world systems and showing real data see:  <a class="reference internal" href="Highlevel_CC_CBS_workflows.html"><span class="doc">Tutorial: High-level CCSD(T)/CBS workflows</span></a></p>
 </div>
 <div class="section" id="reaction-highlevel-analysis">
 <h2>Reaction_Highlevel_Analysis<a class="headerlink" href="#reaction-highlevel-analysis" title="Permalink to this headline">¶</a></h2>

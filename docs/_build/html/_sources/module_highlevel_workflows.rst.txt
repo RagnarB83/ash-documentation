@@ -1,31 +1,36 @@
 Highlevel workflows
 ======================================
 
-These high-level workflows (singlepoint energy protocols) can either be used on their own as a theory-level in Singlepoint calculations or used as a SP_theory in workflows such as **thermochemprotocol**, **calc_xyzfiles**, **confsampler_protocol** (see :doc:`module_workflows`) 
+These high-level workflows are multi-step singlepoint energy protocols can either be used on their own as a theory-level in Singlepoint calculations or used as a SP_theory in workflows such as **thermochemprotocol**, **calc_xyzfiles**, **confsampler_protocol** (see :doc:`module_workflows`) 
 or as a theory in **run_benchmark** (see :doc:`module_benchmarking`) .
-All of these protocols use the ORCA quantum chemistry code and give the 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.
+The ORCA_CC_CBS_Theory uses the ORCA quantum chemistry code for all steps of the workflows and gives a final 0 K electronic energy (no ZPVE). Gradients are not available and these can thus not be used in geometry optimizations or dynamics jobs.
+The MRCC_CC_CBS_Theory uses the MRCC program (not yet available)
 
 
 #########################################
-CC_CBS_Theory
+ORCA_CC_CBS_Theory
 #########################################
 
-This is an ASHTheory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
+ORCA_CC_CBS_Theory is synonymous with CC_CBS_Theory.
+
+This is an ASH Theory that carries out a multi-step single-point protocol to give a CCSD(T)/CBS estimated energy.
 Multiple ORCA calculations for the given geometry are carried out and the SCF and correlation energies extrapolated to the CCSD(T)/CBS limit using either regular CCSD(T) theory or DLPNO-CCSD(T) theory.
-This workflow is flexible and features multiple ways of approaching the CBS limit and the PNO limit.
+This workflow is flexible and features multiple ways of approaching the complete basis set limit (CBS) or the complete PNO space limit (CPS).
 Various options affecting the accuracy, efficiency and robustness of the protocol can be chosen.
 Many basis set families can be chosen that are available for most of the periodic table.
 Atomic spin-orbit coupling can be automatically included if system is an atom.
 
 .. code-block:: python
 
-    class CC_CBS_Theory:
-        def __init__(self, elements=None, cardinals = None, basisfamily=None, relativity=None, orcadir=None, 
-            stabilityanalysis=False, numcores=1, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, DFTreference=None, DFT_RI=False, auxbasis="autoaux-max",
-                            DLPNO=False, memory=5000, pnosetting='extrapolation', pnoextrapolation=[6,7], FullLMP2Guess=False, T1=True, scfsetting='TightSCF',
-                            alpha=None, beta=None, extrainputkeyword='', extrablocks='', FCI=False, guessmode='Cmatrix', atomicSOcorrection=False):
-
-**CC_CBS_Theory** options:
+  class ORCA_CC_CBS_Theory:
+      def __init__(self, elements=None, scfsetting='TightSCF', extrainputkeyword='', extrablocks='', 
+              guessmode='Cmatrix', memory=5000, numcores=1, 
+              cardinals=None, basisfamily=None, SCFextrapolation=True, alpha=None, beta=None, 
+              stabilityanalysis=False, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, 
+              DFTreference=None, DFT_RI=False, auxbasis="autoaux-max",
+              DLPNO=False, pnosetting='NormalPNO', pnoextrapolation=[1e-6,1e-7,1.5,'TightPNO'], FullLMP2Guess=False, 
+              T1=False, T1correction=False, T1corrbasis_size='Large', T1corrpnosetting='NormalPNOreduced', 
+              relativity=None, orcadir=None, FCI=False, atomicSOcorrection=False):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -41,11 +46,11 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
      - Required: List of all elements of the molecular system (reaction). Needed to set up basis set information. Duplicates are OK. fragment.elems is a valid list.
    * - ``cardinals``
      - list of integers
-     - [2,3]
+     - None
      - Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).
    * - ``basisfamily``
      - string
-     - "cc"
+     - None
      - Required: Name of basis-set family to use. Various options. See table below. 
    * - ``relativity``
      - string
@@ -54,7 +59,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``orcadir``
      - string
      - None
-     - Path to ORCA.
+     - Path to ORCA. Optional. 
    * - ``stabilityanalysis``
      - Boolean
      - False
@@ -86,23 +91,39 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``scfsetting``
      - string
      - 'TightSCF'
-     - SCF-convergence setting. Options: 'NormalSCF', 'TightSCF', 'VeryTightSCF', 'ExtremeSCF'.
+     - SCF-convergence setting in ORCA. Options: 'NormalSCF', 'TightSCF', 'VeryTightSCF', 'ExtremeSCF'.
    * - ``DLPNO``
      - Boolean
      - False
      - Use of DLPNO approximation for coupled cluster calculations or not.
    * - ``T1``
      - Boolean
-     - True
-     - Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) (more accurate, more expensive).
-   * - ``pnosetting``
+     - False
+     - Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) in all steps.
+   * - ``T1correction``
+     - Boolean
+     - False
+     - Option to calculate T1 as a single-step correction instead.
+   * - ``T1correction``
+     - Boolean
+     - False
+     - Option to calculate T1 as a single-step correction instead.
+   * - ``T1correction``
+     - Boolean
+     - False
+     - Option to calculate T1 as a single-step correction instead.
+   * - ``T1corrbasis_size``
      - string
-     - 'extrapolation'
-     - Accuracy-threshold of the DLPNO approximation. Options: 'LoosePNO', 'NormalPNO', 'TightPNO', 'extrapolation'.
+     - 'Large'
+     - Size of basis set in T1 correction. Options: 'Large' (larger cardinal basis), 'Small' (smaller cardinal basis).
+   * - ``T1corrpnosetting``
+     - string
+     - 'NormalPNOreduced'
+     - PNO setting for the T1  correction. Options: 'LoosePNO', 'NormalPNO', 'NormalPNOreduced' (TCutPNO=1e-6), 'TightPNO'.
    * - ``pnoextrapolation``
-     - list of 2 integers
-     - [6,7]
-     - If using PNO-extrapolation then 2 DLPNO-calculations will be performed with TCutPNO=1e-X and TCutPNO=1e-Y and extrapolated to PNO limit.
+     - list of 2 integers and 1 string
+     - [1e-6,1e-7,1.5,'TightPNO']
+     - Parameters for PNO-extrapolation (X,Y,Z): X and Y being TCutPNO thresholds while Z signifies the setting for the other thresholds. 
    * - ``FullLMP2Guess``
      - Boolean
      - None
@@ -147,8 +168,10 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
      - string
      - "W1-mtsmall"
      - The core-valence basis set to use. The default "W1-mtsmall" is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.
-
-
+   * - ``SCFextrapolation``
+     - Boolean
+     - True
+     - Whether the SCF energies are extrapolated or not. If False then the largest SCF energy calculated will be used (e.g. the def2-QZVPP energy in a def2/[3,4] job).
 
 
 **Basis-family options**
@@ -277,7 +300,7 @@ If instead an all-electron relativistic approch is desired for all elements then
 
 
 #########################################
-CC_CBS_Theory Examples
+ORCA_CC_CBS_Theory Examples
 #########################################
 
 **Basic examples**
@@ -285,11 +308,11 @@ CC_CBS_Theory Examples
 .. code-block:: python
     
     N2=Fragment(xyzfile='n2.xyz')
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=1)
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=1)
     Singlepoint(theory=cc, fragment=N2)
 
 
-The example above defines an N2 fragment (from file n2.xyz) and runs a single-point calculation using the defined CC_CBS_Theory object. 
+The example above defines an N2 fragment (from file n2.xyz) and runs a single-point calculation using the defined ORCA_CC_CBS_Theory object. 
 Multiple CCSD(T) calculations are then carried out using the different basis sets specified by the basis-family and the cardinals.
 Cardinals=[2,3] and basisfamily="cc" means that the cc-pVDZ and cc-pVTZ basis sets will be used.
 Separate basis-set extrapolation of SCF and correlation energies is then performed. Appropriate extrapolation parameters for 2-point extrapolations with this basis set family are chosen.
@@ -297,7 +320,7 @@ Separate basis-set extrapolation of SCF and correlation energies is then perform
 .. code-block:: python
 
     ferrocene=Fragment(xyzfile='ferrocene.xyz')
-    cc = CC_CBS_Theory(elements=["Fe", "C", "H"], cardinals = [2,3], basisfamily="def2", numcores=1, 
+    cc = ORCA_CC_CBS_Theory(elements=["Fe", "C", "H"], cardinals = [2,3], basisfamily="def2", numcores=1, 
         DLPNO=True, pnosetting="NormalPNO", T1=False)
     Singlepoint(theory=cc, fragment=ferrocene)
 
@@ -309,7 +332,7 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
 .. code-block:: python
 
     ferrocene=Fragment(xyzfile='ferrocene.xyz')
-    cc = CC_CBS_Theory(elements=ferrocene.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", relativity='DKH', numcores=1, 
+    cc = ORCA_CC_CBS_Theory(elements=ferrocene.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", relativity='DKH', numcores=1, 
         DLPNO=True, pnosetting="extrapolation", pnoextrapolation=[6,7] T1=True)
     Singlepoint(theory=cc, fragment=ferrocene)
 
@@ -318,7 +341,7 @@ This calculation will utilize a mixed metal-ligands basis set: cc-pwCVTZ-DK/cc-p
 Instead of using a single DLPNO threshold we here calculate DLPNO-CCSD(T) energies using 2 PNO tresholds and extrapolate to the PNO-limit.
 Finally we set T1 keyword to True which will tell ORCA to do a more accurate iterative triples DLPNO-CCSD(T1) approximation.
 
-For additional examples on using CC_CBS_Theory on real-world systems and showing real data see:  :doc:`Highlevel_CC_CBS_workflows`
+For additional examples on using ORCA_CC_CBS_Theory on real-world systems and showing real data see:  :doc:`Highlevel_CC_CBS_workflows`
 
 
 ##############################
