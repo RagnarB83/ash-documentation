@@ -667,11 +667,12 @@ See also information on the **write_nonbonded_FF_for_ligand** function on this p
 
 See :doc:`OpenMM-interface` for details and the :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.
 
-Common error messages encountered when reading in user-defined XML-files:
+Common error messages encountered when using OpenMM_Modeller on PDB-files:
 
 -**ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.**
 
-*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file.*
+*This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file. 
+It is also possible that PDB-file does not contain a valid N- or C-terminus for each peptide chain. Note that for a C-terminus, a terminal oxygen atom with atomname OXT is required.*
 
 - **ValueError: Found multiple definitions for atom type: X**  :  
 

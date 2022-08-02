@@ -896,9 +896,10 @@ Here defining a simple Fe(III) ion:</p>
 <p>See e.g. <a class="reference external" href="https://education.molssi.org/mm-tools/01-introduction/index.html">Molecular Mechanics Tools</a> for information on the format of the XML file.
 See also information on the <strong>write_nonbonded_FF_for_ligand</strong> function on this page.</p>
 <p>See <a class="reference internal" href="#"><span class="doc">OpenMM interface</span></a> for details and the <a class="reference internal" href="Metalloprotein-I.html"><span class="doc">Metalloprotein tutorial I: Rubredoxin</span></a> and <a class="reference internal" href="Metalloprotein-II.html"><span class="doc">Metalloprotein tutorial II: Ferredoxin</span></a> for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.</p>
-<p>Common error messages encountered when reading in user-defined XML-files:</p>
+<p>Common error messages encountered when using OpenMM_Modeller on PDB-files:</p>
 <p>-<strong>ValueError: No template found for residue X (YYY).  This might mean your input topology is missing some atoms or bonds, or possibly that you are using the wrong force field.</strong></p>
-<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file.</em></p>
+<p><em>This means that the parser encountered a completely unknown residue. You might have forgotten to read in the XML file to OpenMM_Modeller or the resname is not the same in the PDBfile as in the XML file. The atomnames and residue name in PDB-file must match the atomnames and residue name in the XML file. Also, element information (column 77-78) must be present in the PDB-file.
+It is also possible that PDB-file does not contain a valid N- or C-terminus for each peptide chain. Note that for a C-terminus, a terminal oxygen atom with atomname OXT is required.</em></p>
 <ul class="simple">
 <li><p><strong>ValueError: Found multiple definitions for atom type: X</strong>  :</p></li>
 </ul>

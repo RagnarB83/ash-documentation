@@ -104,14 +104,6 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
      - Boolean
      - False
      - Option to calculate T1 as a single-step correction instead.
-   * - ``T1correction``
-     - Boolean
-     - False
-     - Option to calculate T1 as a single-step correction instead.
-   * - ``T1correction``
-     - Boolean
-     - False
-     - Option to calculate T1 as a single-step correction instead.
    * - ``T1corrbasis_size``
      - string
      - 'Large'
