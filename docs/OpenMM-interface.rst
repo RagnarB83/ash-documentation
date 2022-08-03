@@ -779,7 +779,6 @@ See :doc:`Explicit-solvation` workflow for more information on how to use solvat
 Create nonbonded forcefield file for ligand
 ##############################################
 
-**WORK IN PROGRESS**
 
 ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly
 create an XML forcefield file for any residue based on xTB-derived or DFT-derived atomic charges (CM5 charges) together with element-specific
@@ -791,9 +790,12 @@ DFT-example:
 
     from ash import *
 
+    frag=Fragment(xyzfile="ligand.xyz")
+
     #Script to get nonbonded model parameters for a ligand
-    orcatheory=ORCATheory(orcasimpleinput="!r2scan ZORA ZORA-def2-TZVP tightscf CPCM", numcores=1)
-    write_nonbonded_FF_for_ligand(xyzfile="ligand.xyz", charge=2, mult=1, resname="MCMtest",
+    orcatheory=ORCATheory(orcasimpleinput="!r2scan ZORA ZORA-def2-TZVP tightscf CPCM", numcores=8)
+
+    write_nonbonded_FF_for_ligand(fragment=frag, resname="MCMtest", charge=0, mult=1,
         coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA", theory=orcatheory, LJ_model="UFF", charmm=True)
 
 xTB-example:
@@ -802,8 +804,9 @@ xTB-example:
 
   from ash import *
 
+  frag=Fragment(xyzfile="ligand.xyz")
   #Script to get nonbonded model parameters for a ligand
-  write_nonbonded_FF_for_ligand(xyzfile="mcm.xyz", charge=-3, mult=1, resname="MCMtest",
+  write_nonbonded_FF_for_ligand(fragment=frag, charge=-3, mult=1, resname="MCMtest",
       coulomb14scale=1.0, lj14scale=1.0, charge_model="xTB", LJ_model="UFF", charmm=True)
 
 **Options:**

@@ -990,17 +990,21 @@ Lennard-Jones parameters.</p>
 <p>DFT-example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from ash import *
 
+frag=Fragment(xyzfile=&quot;ligand.xyz&quot;)
+
 #Script to get nonbonded model parameters for a ligand
-orcatheory=ORCATheory(orcasimpleinput=&quot;!r2scan ZORA ZORA-def2-TZVP tightscf CPCM&quot;, numcores=1)
-write_nonbonded_FF_for_ligand(xyzfile=&quot;ligand.xyz&quot;, charge=2, mult=1, resname=&quot;MCMtest&quot;,
+orcatheory=ORCATheory(orcasimpleinput=&quot;!r2scan ZORA ZORA-def2-TZVP tightscf CPCM&quot;, numcores=8)
+
+write_nonbonded_FF_for_ligand(fragment=frag, resname=&quot;MCMtest&quot;, charge=0, mult=1,
     coulomb14scale=1.0, lj14scale=1.0, charge_model=&quot;CM5_ORCA&quot;, theory=orcatheory, LJ_model=&quot;UFF&quot;, charmm=True)
 </pre></div>
 </div>
 <p>xTB-example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from ash import *
 
+frag=Fragment(xyzfile=&quot;ligand.xyz&quot;)
 #Script to get nonbonded model parameters for a ligand
-write_nonbonded_FF_for_ligand(xyzfile=&quot;mcm.xyz&quot;, charge=-3, mult=1, resname=&quot;MCMtest&quot;,
+write_nonbonded_FF_for_ligand(fragment=frag, charge=-3, mult=1, resname=&quot;MCMtest&quot;,
     coulomb14scale=1.0, lj14scale=1.0, charge_model=&quot;xTB&quot;, LJ_model=&quot;UFF&quot;, charmm=True)
 </pre></div>
 </div>
