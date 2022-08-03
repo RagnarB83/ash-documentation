@@ -299,7 +299,7 @@ Valid alternative residue names for alternative protonation states of titratable
 1d. Final setup
 -----------------------------------
 
-Script 1-modelsetup_simple.py is the version of the setup script that will correctly setup the rubredoxin model, at least with respect to the coordinated Fe ion.
+Script *1-modelsetup_simple.py* is the final version of the setup script that will setup a more-or-less good model for solvated rubredoxin.
 When OpenMM_Modeller runs through the whole protocol without errors, it will print out the the following output in the end:
 
 
@@ -362,7 +362,7 @@ control protonation state of titratable residues according to pH value, change i
     extraxmlfile="./specialresidue.xml"
 
     #Setting some manual protonation states.
-    #Here defining residues in chain A with resid values: 6,9,39,42 to be deprotonated cysteines (CYX). 
+    #Here defining residues in chain A with resid values: 6,9,39,42 to belsetup_sime deprotonated cysteines (CYX). 
     #NOTE: Here the actual resid values in the PDB-file are used (ASH's 0-based indexing does not apply)
     residue_variants={'A':{6:'CYX',9:'CYX',39:'CYX',42:'CYX'}}
 
