@@ -19,7 +19,7 @@ The files for this tutorial can be found in the ASH source code directory under 
 We will set up a model for rubredoxin based on the `2DSX PDB file <https://www.rcsb.org/structure/2DSX>`_, a 0.68 Å X-ray structure.
 First we download the PDB-file and save it as 2dsx.pdb in our working directory.
 If we inspect the file in a text editor we see at lot of crystallographic header information band beginning at line 275 we get the list of atom coordinates.
-Note that typically only the lines beginning with ATOM or HETATM are processed by ASH or OpenMM and header information can usually be deleted. 
+Note that typically only the lines beginning with ATOM or HETATM are processed by ASH or OpenMM and header information can be safely deleted. 
 The ANISOU line for each atom give anisotropic temperature factors, typically not of relevance either.
 
 .. code-block:: text
@@ -51,19 +51,25 @@ Next we create a simple naive ASH script (here called *1-modelsetup-bad1.py*) th
 
 The script calls the OpenMM_Modeller function taking the PDB-file as input. See :doc:`OpenMM-interface` for details on all the options to OpenMM_Modeller.
 OpenMM_Modeller will read the unmodified PDB-file and attempt to set up the system using the CHARMM36 protein forcefield.
+
+-----------------------------------
+1a. Multiple occupancy problems
+-----------------------------------
+
 The script will exit almost immediately with an error, however:
 
 .. code-block:: text
 
     Now checking PDB-file for alternate locations, i.e. multiple occupancies:
     Found residues in PDB-file that have alternate location labels i.e. multiple occupancies:
-
+    ...
     Chain A:
     VAL5
     GLU12
     PRO15
     PRO34
     LYS51
+
     These residues should be manually inspected and fixed in the PDB-file before continuing
     You should delete either the labelled A or B location of the residue-atom/atoms and then remove the A/B label from column 17 in the file
     Alternatively, you can choose use_higher_occupancy=True keyword in OpenMM_Modeller and ASH will keep the higher occupied form and go on
@@ -104,10 +110,40 @@ If you have inspected the residue-atoms carefully and have concluded that the ch
 option: use_higher_occupancy=True as a keyword argument to OpenMM_Modeller.
 Then ASH will keep the atom with the highest occupancy available.
 
+
+-----------------------------------
+1b. Unknown residue
+-----------------------------------
+
+If we continue using the use_higher_occupancy=True option:
+
+*1-modelsetup-bad2.py:*
+
+.. code-block:: python
+
+    from ash import *
+
+    #Define pdbfile that points to the original raw PDB-file (typically without hydrogens and solvent)
+    pdbfile="2dsx.pdb"
+
+    # Setting up system via OpenMM_Modeller and requesting the CHARMM36 forcefield
+    OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', use_higher_occupancy=True)
+
+we next come across another error:
+
 .. code-block:: text
 
-    ValueError: No template found for residue 53 (FE).  This might mean your input topology is missing some 
-        atoms or bonds, or possibly that you are using the wrong force field.
+    Error: OpenMM modeller.addHydrogens signalled a ValueError
+    This is a common error and suggests a problem in PDB-file or missing residue information in the forcefield.
+    Non-standard inorganic/organic residues require providing an additional XML-file via extraxmlfile= option
+    Note that C-terminii require the dangling O-atom to be named OXT
+    Read the ASH documentation or the OpenMM documentation on dealing with this problem.
+
+    Full error message from OpenMM:
+    No template found for residue 53 (FE).  This might mean your input topology is missing some atoms or bonds, 
+    or possibly that you are using the wrong force field.
+
+    ASH exiting with code: 1
 
 The relevant line in the PDB-file is:
 
@@ -160,17 +196,24 @@ Now that we have created an XML-file (*specialresidue.xml*) associated with the 
 .. warning:: For OpenMM to correctly parse the specialresidue.xml file, it is important that the PDB-file contains an element definition (column 77-78) for
     each element of the special residue.
 
-*1-modelsetup-bad2.py:*
+-----------------------------------
+1c. Protonation states
+-----------------------------------
+
+*1-modelsetup-bad3.py:*
 
 .. code-block:: python
 
     from ash import *
 
-    #Define variable pdbfile that poitns to the original raw PDB-file (no hydrogens, nosolvent)
+    #Define pdbfile that points to the original raw PDB-file (typically without hydrogens and solvent)
     pdbfile="2dsx.pdb"
 
+    #XML-file to deal with cofactor
+    extraxmlfile="./specialresidue.xml"
+
     # Setting up system via OpenMM_Modeller and requesting the CHARMM36 forcefield
-    OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', extraxmlfile="specialresidue.xml")
+    OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', use_higher_occupancy=True, extraxmlfile=extraxmlfile)
 
 
 While this script runs to completion in just a few seconds, we are not quite ready. The Fe ion is now defined in the combined forcefield, however, OpenMM does not know that the Fe ion is actually chemically bonded to 4 deprotonated cysteine
@@ -212,7 +255,8 @@ Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residu
 
     # Setting up system via Modeller
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36',
-        extraxmlfile=extraxmlfile, residue_variants=residue_variants)
+        extraxmlfile=extraxmlfile, residue_variants=residue_variants, use_higher_occupancy=True)
+
 
 OpenMM_Modeller prints a table with to-be-modified residues indicated, that confirms that we have selected the correct residues (though best to visually confirm):
 
@@ -251,7 +295,11 @@ Valid alternative residue names for alternative protonation states of titratable
 
 .. note:: These names can not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
 
-This is the final version of the setup script that will correctly setup the rubredoxin model, at least with respect to the coordinated Fe ion.
+-----------------------------------
+1d. Final setup
+-----------------------------------
+
+Script 1-modelsetup_simple.py is the version of the setup script that will correctly setup the rubredoxin model, at least with respect to the coordinated Fe ion.
 When OpenMM_Modeller runs through the whole protocol without errors, it will print out the the following output in the end:
 
 
@@ -297,7 +345,7 @@ Figure above shows a visualization of the PDB after basic fixes (missing heavy a
     e.g. by analyzing hydrogen bonding networks.
     Histidine protonation states are especially important (and C/N assignments may even be wrong in the X-ray structure).
 
-The final version of the script shows how additional options can be used to control the size of the solvation box (solvent_padding), choose watermodel, 
+Another version of the script below shows how additional options can be used to control the size of the solvation box (solvent_padding), choose watermodel, 
 control protonation state of titratable residues according to pH value, change ionicstrength, positive and negative iontypes to add etc.
 
 
@@ -321,7 +369,7 @@ control protonation state of titratable residues according to pH value, change i
     # Setting up system via Modeller
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36',
         extraxmlfile=extraxmlfile, watermodel="tip3p", pH=7.0, solvent_padding=10.0,
-        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-', residue_variants=residue_variants)
+        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-', residue_variants=residue_variants, use_higher_occupancy=True)
 
 
 
