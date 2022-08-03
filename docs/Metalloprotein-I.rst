@@ -9,10 +9,8 @@ This tutorial shows how to set up a classical model of the rubredoxin metallopro
 Rubredoxin is one of the simplest metalloproteins having only a single metal-ion (Fe), bound to the protein via 4 cysteine residues but that makes
 the system a good first test system to demonstrate how to set up a relatively simple metalloprotein using the ASH-OpenMM interface with minimal modifications.
 
-The files for this tutorial can be found in the ASH source code directory under:
-$ASHDIR/examples/OpenMM_Modeller-setups/rubredoxin or https://github.com/RagnarB83/ash/tree/master/examples/OpenMM_Modeller-setups/rubredoxin
-
-
+The files for this tutorial can be found in the ASH source code directory under $ASHDIR/examples/OpenMM_Modeller-setups/rubredoxin or 
+`Github-repository <https://github.com/RagnarB83/ash/tree/master/examples/OpenMM_Modeller-setups/rubredoxin>`_
 
 ######################################################
 **1. Use OpenMM_Modeller to set up the system**

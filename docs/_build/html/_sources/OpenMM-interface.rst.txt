@@ -779,7 +779,6 @@ See :doc:`Explicit-solvation` workflow for more information on how to use solvat
 Create nonbonded forcefield file for ligand
 ##############################################
 
-**WORK IN PROGRESS**
 
 ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly
 create an XML forcefield file for any residue based on xTB-derived or DFT-derived atomic charges (CM5 charges) together with element-specific
