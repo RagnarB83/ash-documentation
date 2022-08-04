@@ -186,8 +186,8 @@ where specialresidue.xml contains:
 Here we have chosen, like for rubredoxin, to define LJ parameters (sigma and epsilon) for the Fe ion, using available parameters in the CHARMM forcefield for Zn.
 Charges for Fe and S in the [2Fe-2S] cluster are for now set to 0.0 but will be changed to appropriate values later.
 
-.. warning:: For OpenMM to correctly parse the specialresidue.xml file, it is important that the PDB-file contains element definitions (column 77-78) for
-    each element of the special residue and the atom names in the XML file much match the atom names in the PDB-file.
+.. warning:: For OpenMM to correctly map the information from the specialresidue.xml onto the PDB-file topology, it is important that the PDB-file contains an element definition (column 77-78) for
+    each element of the special residue.
 
 Running this script we may get instead another error (OpenMM version specific):
 
@@ -275,8 +275,8 @@ As previously occurred for rubredoxin, OpenMM Modeller protonates the cysteine r
 
 
 Since we want to avoid this, we again define a dictionary with information about abnormal residues and pass this on to OpenMM_Modeller.
-Since the protein contains two protein chains (named 'A' and 'B' in the PDB-file) with the [2Fe-2S] cofactor coordinates to 4 cysteines in each chain,
-we need to define these cysteines as deprotonated ('CYX' label)
+Since the protein contains two protein chains (named 'A' and 'B' in the PDB-file) with the [2Fe-2S] cofactor coordinated to 4 cysteines in each chain,
+we need to define all of these cysteines to be deprotonated ('CYX' label) in each chain.
 
 .. code-block:: python
 
@@ -337,9 +337,9 @@ https://server.poissonboltzmann.org
 
 When the X-ray structure of the protein is of sufficient quality the hydrogen bonding network may more clearly reveal whether a residue should be protonated or not.
 Special attention should be paid to the protonation state of HIS residue as it can be both doubly and singly protonated and when singly protonated, it can protonated on the delta-nitrogen or the epsilon-nitrogen
-of the imidazole ring. The hydrogen bonding pattern is often useful
-In rare cases, note that the atoms of the imidazole ring of HIS may have been mis-assigned due to the similar electron densities around carbon and nitrogen. This can be spotted if you see a carbon atom of the imidazole ring
-in hydrogen-bonding distance to another heavy atom.
+of the imidazole ring. The hydrogen bonding network in the X-ray structure can often be used to make this assignment.
+In rare cases, note that the atoms of the imidazole ring of HIS may have been mis-assigned due to the similar electron densities around carbon and nitrogen. This can be spotted if you see e.g. a carbon atom of the imidazole ring
+in hydrogen-bonding distance to another heavy atom. To fix such a problem requires modifying the coordinates in the PDB-file.
 
 
 ###########################################################

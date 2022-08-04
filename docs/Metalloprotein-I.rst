@@ -18,9 +18,9 @@ The files for this tutorial can be found in the ASH source code directory under 
 
 We will set up a model for rubredoxin based on the `2DSX PDB file <https://www.rcsb.org/structure/2DSX>`_, a 0.68 Å X-ray structure.
 First we download the PDB-file and save it as 2dsx.pdb in our working directory.
-If we inspect the file in a text editor we see at lot of crystallographic header information band beginning at line 275 we get the list of atom coordinates.
-Note that typically only the lines beginning with ATOM or HETATM are processed by ASH or OpenMM and header information can be safely deleted. 
-The ANISOU line for each atom give anisotropic temperature factors, typically not of relevance either.
+If we inspect the file in a text editor we see at lot of crystallographic header information and beginning at line 275 we get the list of atom coordinates.
+Note that typically only the lines beginning with ATOM or HETATM are parsed by ASH or OpenMM and header information can be safely deleted. 
+The ANISOU line for each atom give anisotropic temperature factors, which will not be parsed either.
 
 .. code-block:: text
 
@@ -34,7 +34,7 @@ The ANISOU line for each atom give anisotropic temperature factors, typically no
     ANISOU    4  O   MET A   1     1878    774   1182   -330    454   -142       O
     ATOM      5  CB  MET A   1      -1.819 -14.319  -4.216  1.00  9.28           C
 
-As seen, the PDB-file does not contain information about hydrogen atom positions and this needs to be fixed.
+As seen, the PDB-file does not contain information about hydrogen atom positions which of course needs to be fixed for the final model.
 Next we create a simple naive ASH script (here called *1-modelsetup-bad1.py*) that looks like:
 
 *1-modelsetup-bad1.py:*
@@ -78,7 +78,7 @@ The script will exit almost immediately with an error, however:
     ASH exiting with code: 1
 
 This occurs due to the fact that the PDB-file contains alternate location lines for some atoms due to either low or multiple occupancies.
-See https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dealing-with-coordinates (bottom of page) for more information.
+See https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dealing-with-coordinates (bottom of page) for more information on how this is reported in PDB files.
 Inspection of the PDB-file for residue VAL5 as an example reveals:
 
 .. code-block:: text
@@ -106,9 +106,9 @@ This seems to be due to the isopropyl group of valine existing in multiple confo
 As suggested by the error message the solution is to modify manually the PDB-file here and make a conscious choice about which atoms to keep.
 Visualization of the relevant residue-atoms with a program like VMD is recommended. 
 For a residue like valine where the multiple conformations arise due to the free rotation of the sidechain the choice of which conformation is not critical.
-If you have inspected the residue-atoms carefully and have concluded that the choice of which residue to pick is not critical you can also choose to use the 
+If you have inspected the residue carefully and have concluded that the choice of which residue to pick is not critical you can also choose to use the 
 option: use_higher_occupancy=True as a keyword argument to OpenMM_Modeller.
-Then ASH will keep the atom with the highest occupancy available.
+With this option active, ASH will keep the atom with the highest occupancy and delete the other.
 
 
 -----------------------------------
@@ -154,7 +154,8 @@ The relevant line in the PDB-file is:
 The line indicates that atom 401 has the atomname: FE, residuename: FE, chain: A, resid: 501, followed by xyz coordinates: 2.866  -0.198   9.125), 
 occupancy: 1.00, thermal factor: 4.06 and element name: FE
 
-To fix this problem we need to modify the forcefield and make a residue definition for the Fe ion so that it matches the information in the PDB-file.
+To fix this problem we need to extend our forcefield (currently CHARMM36, covering only protein residues and solvent) and make a residue definition for the Fe ion 
+so that it matches the information in the PDB-file.
 
 Let's create an OpenMM forcefield XML file that looks like:
 
@@ -193,7 +194,7 @@ The form of the XML file will be different if using another forcefield than CHAR
 
 Now that we have created an XML-file (*specialresidue.xml*) associated with the Fe ion residue that OpenMM complained about, we can try to call OpenMM_Modeller again, this time telling OpenMM_Modeller about the extra forcefield file.
 
-.. warning:: For OpenMM to correctly parse the specialresidue.xml file, it is important that the PDB-file contains an element definition (column 77-78) for
+.. warning:: For OpenMM to correctly map the information from the specialresidue.xml onto the PDB-file topology, it is important that the PDB-file contains an element definition (column 77-78) for
     each element of the special residue.
 
 -----------------------------------
@@ -299,7 +300,7 @@ Valid alternative residue names for alternative protonation states of titratable
 1d. Final setup
 -----------------------------------
 
-Script *1-modelsetup_simple.py* is the final version of the setup script that will setup a more-or-less good model for solvated rubredoxin.
+Script *1-modelsetup_simple.py* is the final version of the setup script that will setup a more-or-less acceptable model for solvated rubredoxin.
 When OpenMM_Modeller runs through the whole protocol without errors, it will print out the the following output in the end:
 
 
@@ -346,7 +347,7 @@ Figure above shows a visualization of the PDB after basic fixes (missing heavy a
     Histidine protonation states are especially important (and C/N assignments may even be wrong in the X-ray structure).
 
 Another version of the script below shows how additional options can be used to control the size of the solvation box (solvent_padding), choose watermodel, 
-control protonation state of titratable residues according to pH value, change ionicstrength, positive and negative iontypes to add etc.
+control protonation state of titratable residues according to pH value, change ionic strength, positive and negative iontypes to add etc.
 
 
 *1-modelsetup_advanced.py:*
@@ -378,8 +379,9 @@ control protonation state of titratable residues according to pH value, change i
 ###############################################################
 
 Once OpenMM_Modeller has finished setting up the system we need to do some basic classical simulations to make sure 
-the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD. While OpenMM_Modeller returns a valid OpenMMTheory ASH object that could be used as input in the next steps, it is often more
-convenient to separate the OpenMM_Modeller setup in one script and simulations in another script. It is also required in this case because we
+the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD. While OpenMM_Modeller returns a valid OpenMMTheory ASH object that could be used 
+as input in the next steps, it is more
+convenient to separate the OpenMM_Modeller setup in one script and simulations in another script. It is also required in this case as we
 need to be able define bond-constraints for the metal ion in the OpenMMTheory definition. 
 
 To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup we can read in a list of forcefield XML files that were used in the original setup together with the PDB-file:
@@ -451,7 +453,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 
 This script defines an ASH fragment from the final PDB-file created by OpenMM_Modeller. It then defines an OpenMM_Theory object using the 
 full system XML file (and PDB topology). In addition to basic automatic X-H bondconstraints and rigid-water constraints we also have to
-add constraints associated with the Fe-S cysteine bonds as our simple forcefield did not define bonded parameters associated with this interaction.
+add constraints associated with the Fe-S cysteine bonds as our simple forcefield does not define bonded parameters associated with the Fe-Cysteine interaction.
 The bond constraints are easily defined as a list of lists using the atom indices of the Fe (755) and the sulfurs (96,136,567,607). Note that ASH counts from 0.
 Alternatively, we could also have added harmonic bond restraints instead of rigid constraints.
 
@@ -580,8 +582,8 @@ for other calculations.
 Once we have performed an acceptable classical simulation (with the Fe-S bonds of the metal site constrained) and demonstrated that the system is stable 
 we can move on to QM/MM calculations that allow a more realistic description of the metal site and allows us to remove artificial constraints associated 
 with the Fe-S bonds (we constrained them because we did not have bonded MM parameters available).
-Typical QM/MM calculations involved geometry optimizations of a system-subset : see step 4 below.
 
+Typical QM/MM calculations involve geometry optimizations of a system-subset : see step 4 below.
 But here, due to the small cofactor involved and the availability of a decent cheap semi-empirical method (GFN-XTB) that can handle transition metals we can perform
 GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds and explore the dynamic nature of the metal site properly (the accuracy of such a simulations depends 
 of course on how well the semi-empirical method handles the system).
