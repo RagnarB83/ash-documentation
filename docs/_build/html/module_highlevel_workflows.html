@@ -239,9 +239,9 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCA_CC_CBS_Theory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scfsetting</span><span class="o">=</span><span class="s1">&#39;TightSCF&#39;</span><span class="p">,</span> <span class="n">extrainputkeyword</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extrablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
             <span class="n">guessmode</span><span class="o">=</span><span class="s1">&#39;Cmatrix&#39;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">cardinals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basisfamily</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SCFextrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span>
+            <span class="n">cardinals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">basisfamily</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Triplesextrapolation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">SCFextrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">stabilityanalysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVSR</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CVbasis</span><span class="o">=</span><span class="s2">&quot;W1-mtsmall&quot;</span><span class="p">,</span> <span class="n">F12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">Openshellreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">DFTreference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">DFT_RI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="s2">&quot;autoaux-max&quot;</span><span class="p">,</span>
             <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNO&#39;</span><span class="p">,</span> <span class="n">pnoextrapolation</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">1e-7</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;TightPNO&#39;</span><span class="p">],</span> <span class="n">FullLMP2Guess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">T1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1correction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">T1corrbasis_size</span><span class="o">=</span><span class="s1">&#39;Large&#39;</span><span class="p">,</span> <span class="n">T1corrpnosetting</span><span class="o">=</span><span class="s1">&#39;NormalPNOreduced&#39;</span><span class="p">,</span>
             <span class="n">relativity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">FCI</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">atomicSOcorrection</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -352,67 +352,72 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <td><p>‘NormalPNOreduced’</p></td>
 <td><p>PNO setting for the T1  correction. Options: ‘LoosePNO’, ‘NormalPNO’, ‘NormalPNOreduced’ (TCutPNO=1e-6), ‘TightPNO’.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pnoextrapolation</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Triplesextrapolation</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to do separate cheaper triples energies extrapolation with smaller basis sets than singles-doubles. Requires setting cardinals to 3 values, e.g. [2,3,4]</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pnoextrapolation</span></code></p></td>
 <td><p>list of 2 integers and 1 string</p></td>
 <td><p>[1e-6,1e-7,1.5,’TightPNO’]</p></td>
 <td><p>Parameters for PNO-extrapolation (X,Y,Z): X and Y being TCutPNO thresholds while Z signifies the setting for the other thresholds.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FullLMP2Guess</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FullLMP2Guess</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>None</p></td>
 <td><p>Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
 <td><p>float</p></td>
 <td><p>False</p></td>
 <td><p>Manual alpha extrapolation parameter for SCF-energy extrapolation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beta</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beta</span></code></p></td>
 <td><p>float</p></td>
 <td><p>None</p></td>
 <td><p>Manual beta extrapolation parameter for correlation-energy extrapolation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">extrainputkeyword</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">extrainputkeyword</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
 <td><p>Optional extra simple-input-keyword to add in ORCA inputfile.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">extrablocks</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">extrablocks</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
 <td><p>Optional extra ORCA block-input lines to add to ORCA inputfile.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">guessmode</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">guessmode</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘CMatrix’</p></td>
 <td><p>What ORCA Guessmode to use when doing basis-set projections of orbitals. Options: ‘CMatrix’ (more robust), ‘FMatrix’ (cheaper).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">atomicSOcorrection</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">atomicSOcorrection</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Whether to add the experimental atomic spin-orbit energy to system if the system is an atom.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FCI</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FCI</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">F12</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">F12</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS extrapolation. Use with basisfamily=’cc-f12’.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CVSR</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CVSR</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
 <td><p>Perform additional core-valence+scalar-relativistic correction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CVbasis</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CVbasis</span></code></p></td>
 <td><p>string</p></td>
 <td><p>“W1-mtsmall”</p></td>
 <td><p>The core-valence basis set to use. The default “W1-mtsmall” is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SCFextrapolation</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SCFextrapolation</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>True</p></td>
 <td><p>Whether the SCF energies are extrapolated or not. If False then the largest SCF energy calculated will be used (e.g. the def2-QZVPP energy in a def2/[3,4] job).</p></td>

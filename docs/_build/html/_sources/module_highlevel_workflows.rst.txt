@@ -25,9 +25,9 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
   class ORCA_CC_CBS_Theory:
       def __init__(self, elements=None, scfsetting='TightSCF', extrainputkeyword='', extrablocks='', 
               guessmode='Cmatrix', memory=5000, numcores=1, 
-              cardinals=None, basisfamily=None, SCFextrapolation=True, alpha=None, beta=None, 
-              stabilityanalysis=False, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, 
-              DFTreference=None, DFT_RI=False, auxbasis="autoaux-max",
+              cardinals=None, basisfamily=None, Triplesextrapolation=False, SCFextrapolation=True, alpha=None, beta=None, 
+              stabilityanalysis=False, CVSR=False, CVbasis="W1-mtsmall", F12=False, Openshellreference=None, DFTreference=None, 
+              DFT_RI=False, auxbasis="autoaux-max",
               DLPNO=False, pnosetting='NormalPNO', pnoextrapolation=[1e-6,1e-7,1.5,'TightPNO'], FullLMP2Guess=False, 
               T1=False, T1correction=False, T1corrbasis_size='Large', T1corrpnosetting='NormalPNOreduced', 
               relativity=None, orcadir=None, FCI=False, atomicSOcorrection=False):
@@ -112,6 +112,10 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
      - string
      - 'NormalPNOreduced'
      - PNO setting for the T1  correction. Options: 'LoosePNO', 'NormalPNO', 'NormalPNOreduced' (TCutPNO=1e-6), 'TightPNO'.
+   * - ``Triplesextrapolation``
+     - Boolean
+     - False
+     - Whether to do separate cheaper triples energies extrapolation with smaller basis sets than singles-doubles. Requires setting cardinals to 3 values, e.g. [2,3,4]
    * - ``pnoextrapolation``
      - list of 2 integers and 1 string
      - [1e-6,1e-7,1.5,'TightPNO']
