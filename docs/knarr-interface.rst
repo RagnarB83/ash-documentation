@@ -362,6 +362,7 @@ As each E+G image calculation is independent from the others it is possible to u
 It is generally recommended to prioritize parallelization over images rather than the Theory level (QM parallelization never scales perfectly)
 Theory parallelization is also available, however, and can be used to further speed up NEB job.
 
+NEB-parallelization with a QM/MM Hamiltonian is currently not possible due to problems with the multiprocessing library and OpenMM.
 
 **Example: 8-image NEB calculation at the XTB level of theory (NEB parallelization):**
 
