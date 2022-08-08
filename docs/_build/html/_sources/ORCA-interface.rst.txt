@@ -7,8 +7,9 @@ ORCATheory class:
     
   class ORCATheory:
       def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
-                  orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, moreadfile=None, 
-                  autostart=True, propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True,
+                  orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, 
+                  moreadfile=None,moreadfile_always=False, autostart=True,
+                  propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True,
                   fragment_indices=None):
 
 .. list-table::
@@ -75,6 +76,10 @@ ORCATheory class:
      - string
      - None
      - Name of file or path to file of a GBWfile to read in to the ORCA calculation
+   * - ``moreadfile_always``
+     - Boolean
+     - False
+     - Whether moreadfile option is constantly applied for all runs using this ORCATheory object or only for first run. Default: False meaning moreadfile is only used for first run using ORCATHeory object.
    * - ``autostart``
      - Boolean
      - True

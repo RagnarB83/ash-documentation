@@ -1,14 +1,24 @@
 KNARR interface
 ======================================
 
-Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) are possible in ASH using any theory level via an interface to the KNARR code.
+Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) are possible in ASH using any theory level via an interface to the state-of-the-art NEB code, KNARR code, Vilhjálmur Ásgeirsson.
+This NEB code uses energy-weighted springs (instead of a single spring constant for all images), together with a global L-BFGS optimizer that results in a greatly improved NEB algorithm for molecular systems.
+The Knarr implementation predates the ORCA implementation but is overall very similar to the one described there:
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+DOI: 10.1021/acs.jctc.1c00462
+
+Note that NEB-TS is not yet available. Furthermode, while QM/MM NEB calculations are possible, running NEB in parallel with a QM/MM Hamiltonian is currently not possible.
+
+
 
 .. code-block:: python
 
-    def NEB(reactant=None, product=None, theory=None, images=None, interpolation=None, CI=None, free_end=None, restart_file=None,
-            conv_type=None, tol_scale=None, tol_max_fci=None, tol_rms_fci=None, tol_max_f=None, tol_rms_f=None,
-            tol_turn_on_ci=None, ActiveRegion=False, actatoms=None, runmode='serial', printlevel=0,
-            idpp_maxiter=None, charge=None, mult=None):
+  def NEB(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, 
+          conv_type="ALL", tol_scale=10, tol_max_fci=0.026, tol_rms_fci=0.013, tol_max_f=0.26, tol_rms_f=0.13,
+          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, 
+          charge=None, mult=None,printlevel=0, ActiveRegion=False, actatoms=None,
+          interpolation="IDPP", idpp_maxiter=300, 
+          restart_file=None, TS_guess_file=None, mofilesdir=None):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -32,56 +42,64 @@ Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) ar
      - An ASH Theory. This will be used to supply energy+gradient information for each image during the NEB.
    * - ``images``
      - integer
-     - None
-     - The number of images to use during the NEB.
+     - 8
+     - The number of images to use during the NEB. For free_end=False (recommended) this means that this number of intermediate images will be active and calculated. For free_end=True, the reactant and product images will also be included i.e. total_images = images+2 
    * - ``interpolation``
      - string
-     - None
+     - 'IDPP'
      - The type of interpolation used. Default: 'IDPP'. Other options: 'linear'
    * - ``CI``
      - Boolean
-     - None
-     - Whether to use a climbing image or not during NEB.
+     - True
+     - Whether to use a climbing image or not during NEB. CI is always recommended.
    * - ``free_end``
      - Boolean
-     - None
-     - Whether initial images are free or frozen.
+     - False
+     - Whether initial images are free or frozen. Warning: the number of active images will be images+2 when this is True.
    * - ``restart_file``
      - 'string'
      - None
      - Name of restart-file (XYZ-file) to use as initial guess path instead of IDPP/linear.
+   * - ``TS_guess_file``
+     - 'string'
+     - None
+     - Name of XYZ-file containing a guess for the saddlepoint("TS"). The TS guess will be used during the interpolation step to provide a better guess for the overall guess-path.
+   * - ``mofilesdir``
+     - 'string'
+     - None
+     - Path (absolute or relative path) to a directory with MO-files to be used as guess orbitals in the first NEB iterations. For ORCATheory these should be GBW-files named: "current_image0.gbw" etc.
    * - ``conv_type``
      - string
-     - None
-     - Convergence type. Default: 'all'
+     - 'ALL'
+     - Convergence type. Options: 'ALL', 'CIONLY'. 
    * - ``tol_scale``
      - float
-     - None
-     - Scaling tolerance during NEB.
+     - 10
+     - Scaling tolerance during NEB. Units: eV/Å
    * - ``tol_max_fci``
      - float
-     - None
-     - Max tolerance for when the climbing image is converged.
+     - 0.026
+     - The Max Force convergence tolerance for the Climbing IMage. Units: eV/Å
    * - ``tol_rms_fci``
      - float
-     - None
-     - RMS tolerance for when the climbing image is converged.
+     - 0.013
+     - The RMS Force convergence tolerance for the Climbing IMage. Units: eV/Å
    * - ``tol_max_f``
      - float
-     - None
-     - Max tolerance for when images are converged (all except CI.)
+     - 0.26
+     - The Max Force convergence tolerance for all other images except CI. Units: eV/Å
    * - ``tol_rms_f``
      - float
-     - None
-     - RMS tolerance for when images are converged (all except CI.)
+     - 0.13
+     - The RMS Force convergence tolerance for all other images except CI. Units: eV/Å
    * - ``tol_turn_on_ci``
      - float
-     - None
-     - The threshold for turning on the climbing image.
+     - 1.0
+     - The threshold on Max Force for turning on the climbing image. Units: eV/Å
    * - ``ActiveRegion``
      - Boolean
      - False
-     - Whether to use an Active Region during the NEB job. This requires setting the number of active atoms (actatoms list).
+     - Whether to use an Active Region during the NEB job. This requires setting the number of active atoms (actatoms list) below.
    * - ``actatoms``
      - list
      - None
@@ -89,14 +107,18 @@ Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) ar
    * - ``runmode``
      - string
      - 'serial'
-     - Runmode: 'serial' or 'parallel'. 'parallel' is not yet available.
+     - Runmode: 'serial' or 'parallel'. Runmode 'parallel' requires setting numcores keyword below.
+   * - ``numcores``
+     - integer
+     - 1
+     - Numcores of cores to use in a parallel NEB job. Recommended: use same number of cores as there are active images.
    * - ``printlevel``
      - integer
      - 0
-     - The printlevel to use in NEB calculations. This printlevel is enforced in the Theory object.
+     - The printlevel to use in NEB calculations. This same printlevel is enforced in the Theory object. Change to 1,2 or 3 to get more printing.
    * - ``idpp_maxiter``
      - integer
-     - None
+     - 300
      - Maximum number of iterations to use in the IDPP guess path calculations
    * - ``charge``
      - integer
@@ -108,28 +130,62 @@ Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) ar
      - Optional specification of the spin multiplicity of the system (if QM).
 
 ################################################################################
-How to use
+Recommendations and how to use
 ################################################################################
 
-- Generally, the default settings are quite reliable and should not be touched.
-- CI-NEB is almost always desired.
+- Generally, the default settings are reasonably reliable and need not be touched. The number of images is the most important parameter.
+- CI-NEB is almost always desired. A NEB job without CI, gives only a crude estimate of the barrier.
+- Frozen endpoints (free_end=False, i.e. reactant and product frozen) is usually recommended (more efficient). Reactant and product should have been previously optimized.
+- If you want to explore active endpoints (free_end=True), note that the number of active images will be images+2,
 - The most important parameter is the number of images. Few images will result in fewer energy+gradient calculations but may hinder convergence. Many images will give a high resolution of the minimum energy path, will have fewer convergence problems but will result in an expensive calculation. A good number is usually 5-11 or so.
-- When a partially converged NEB path reveals that there probably is an intermediate inbetween, it is best to cancel the calculation and split the job into 2 jobs, i.e. start a new job from reactant to intermediate and another from intermediate to product.
+- In runmode = 'parallel' you should generally choose the number of active images to be equal to the number of CPU cores provided to NEB.
+- If you activate parallelization of the theory level also, this will be the number of cores used per image. So if you do ORCATheory(...numcores=2) and NEB(...images=8,numcores=8) ASH will be attempting to use 2x8 = 16 cores. 
+- When a partially converged NEB path reveals that there probably is an intermediate inbetween, it is best to cancel the calculation and split the job into 2 jobs, i.e. start a new job from reactant to intermediate and another from intermediate to product. A CI-NEB job would only converge to the higher energy saddlepoint in such a case.
 - It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess.
-- If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job.
+- If you already know approximately what the saddlepoint geometry should look like you can provide such a geometry using the TS_guess_file option. The geometry will be used during the interpolation to provide a more accurate guess path. This could also be a previously obtained saddlepoint at another level of theory.
+- If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job. NEB returns an ASH Fragment of the saddlepoint geometry as well as an XYZ-file.
+- Any ASH Theory level can in principle be used (although only ORCA and xTB have been tested). In practice you want to use a QM method and code with an analytical gradient available.
 
 
 ################################################################################
 Examples
 ################################################################################
 
-10-image NEB calculation at the XTB level of theory
+**8-image NEB calculation at the XTB level of theory (Theory parallelization):**
 
 .. code-block:: python
 
     from ash import *
 
-    numcores=2
+    numcores=8
+
+    ################################################
+    # Defining reactant and product ASH fragments
+    #################################################
+    react=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    prod=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+
+    #Theory to use for NEB. Setting number of cores for xTB.
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
+
+    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=8)
+
+    #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
+    NumFreq(theory=xtbcalc, fragment=SP)
+
+
+**Restarting a calculation with user-defined path-file.**
+
+Here, using the *restart_file* option to the NEB we read in a previous Knarr path-file ("knarr_MEP.xyz") instead of doing the regular IDPP interpolation
+This file must contain the coordinates of the same number of images (here 10) as number of images specified.
+The file can come from a previously unconverged NEB calculation or perhaps a converged MEP from a calculation at another level of theory.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
 
     ################################################
     # Defining reactant and product ASH fragments
@@ -142,22 +198,17 @@ Examples
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10)
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, restart_file="knarr_MEP.xyz")
 
-    #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
-    NumFreq(theory=xtbcalc, fragment=SP)
+** A calculation with user-defined guess for the saddlepoint.**
 
-
-Restarting a calculation with user-defined path-file. 
-Here, using the *restart_file* option to the NEB we read in a previous Knarr path-file ("knarr_MEP.xyz") instead of doing the regular IDPP interpolation
-This file must contain the coordinates of the same number of images (here 10) as number of images specified.
-The file can come from a previously unconverged NEB calculation or perhaps a converged MEP from a calculation at another level of theory.
+Here, using the *TS_guess_file* option. This will influence the initial interpolation path generation by interpolating between reactant and guess_TS structure and guess_TS structure and product.
 
 .. code-block:: python
 
     from ash import *
 
-    numcores=4
+    numcores=1
 
     ################################################
     # Defining reactant and product ASH fragments
@@ -165,13 +216,11 @@ The file can come from a previously unconverged NEB calculation or perhaps a con
     react=Fragment(xyzfile="react.xyz", charge=0, mult=1)
     prod=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
 
-
     #Theory to use for NEB
-    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, restart_file="knarr_MEP.xyz")
-
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, TS_guess_file="guess_TS_geometry.xyz")
 
 ################################################################################
 Controlling printout
@@ -179,9 +228,10 @@ Controlling printout
 
 During a NEB calculation the theory code is called multiple times to calculate the energy and gradient.
 As the printout can become excessive (especially if using a QMMMTheory object) it is usually desirable to reduce printout considerably for NEB calculations.
-Currently this is performed by default by setting the printlevel in the NEB calculation as a keyword argument.
+This is performed by setting the printlevel in the NEB calculation as a keyword argument.
 The NEB printlevel is then used to set the printlevel in the Theory objects.
-The default printlevel is 0 (barely any output from other modules) but this can be increased to 1,2 or 3 to get more output.
+The default printlevel is 0 (barely any output from other modules) but this can be increased to 1,2 or 3 to get more output, both from the NEB function and the Theory level etc.
+Printlevel 1 is useful for getting more useful information from the NEB module (especially regarding guess orbital logic) as well as slightly more information from the Theory object. Printlevel 2 will probably give too much output in general but can be useful for diagnostic purposes.
 
 Example:
 
@@ -190,10 +240,183 @@ Example:
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
     SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, printlevel=1)
 
+################################################################################
+Controlling guess orbitals during SCF of Theory level
+################################################################################
+
+During the NEB job the Theory level object is called multiple times using each iteration. The Theory level object will handle what guess orbitals are used during this step and you can modify the Theory object as desired 
+(e.g. for ORCATheory you can change autostart and moreadfile keywords as desired).
+
+For a default NEB calculation in runmode='serial':
+for e.g. ORCATheory, the first calculation in the NEB job (NEB iteration -1) will be on the reactant. ORCA will in this case use brand-new guess orbitals (from PModel guess typically). 
+Once converged, the orca.gbw file will be copied and stored as current_image0.gbw by the NEB module.
+Next calculation on the product will use the previous orca.gbw file (from reactant) since ORCA will by default try to read orbitals from that file (since the inputfile has the same basename) but once ORCA is finished we will store the file as e.g. current_image11.gbw
+This is repeated for intermediate images: image1, image2, ..., image10.gbw in NEB iteration 0.
+However, in the next NEB iterations, the code will find and use current_image1.gbw for image no. 1 etc. since these files have been stored. These files will be updated during the job, ensuring that each image has converged image-specific orbitals from the last iteration available.
+In order to see detailed printout for what is going on w.r.t. ORCA GBW-file book-keeping during the NEB job, set the NEB printlevel to 1. 
+
+For parallel NEB calculations with ORCATheory, things are just slightly different as there will be different directories for each Python multiprocessing worker, called e.g. 'Pooljob_image_9'. Orbitals inside file 'orca.gbw' from last NEB iteration for that image will be read each time.
+
+Generally this behaviour works well as previously converged orbitals, specific to each image are being used.
+If you require even more control over which orbitals should be used there are a few options.
+
+**1. Reading in a single initial guess orbital-file (ORCATheory) :**
+
+By doing ORCATheory(...moreadfile="test.gbw"), ORCA will read in orbitals from file "test.gbw" (make sure to copy file "test.gbw" to scratch or provide full path) in the first calculation by NEB(reactant calculation).
+This option is primarily useful if the system is tough to converge (e.g. a BS-DFT job on a spin-coupled system).
+Note: By default, the moreadfile option is turned off in the ORCATheory object after that so if you want to enforce moreadfile behaviour for every calculation during the NEB job, you could do: ORCATheory(...moreadfile="test.gbw", moreadfile_always=True).
+This is probably unlikely to be useful though.
+
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  #SN2 reaction
+  Reactant=Fragment(xyzfile="react.xyz", charge=-1, mult=1)
+  Product=Fragment(xyzfile="prod.xyz",charge=-1, mult=1)
+
+  #Calculator object without frag
+  calc = ORCATheory(orcasimpleinput="!r2scan-3c tightscf CPCM", numcores=numcores, moreadfile="test.gbw")
+
+  SP = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0)
+
+**2. Reading in guess orbitals for each image separately from a directory (ORCATheory):**
+
+A better way to control the original guess is to provide to the NEB function, a mofilesdir keyword pointing to a directory-path that contains GBW files for each image.
+The directory should contain GBW files for each image and should be called: 
+
+*current_image0.gbw, current_image1.gbw, current_image2.gbw, ..., current_image11.gbw* etc.
+
+This allows you more flexibility in choosing precisely what orbitals will be read in initially.
+
+**Note:** Orbitals will only be read from the mofilesdir directory in NEB-iteration -1 (first reactant and product calcs) and NEB-iteration 0 (first intermediate image calculations). In the subsequent NEB iterations, the program will use image-specific GBW files from the previous iteration.
+
+**Note:**  The mofilesdir path must either be a full path to a directory that is available to the computing node (e.g. /home/bjornsson/NEBjob1/mofilesdir or something) or a directory that is copied over to the the scratch
+directory by your job-submission script.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  #SN2 reaction
+  Reactant=Fragment(xyzfile="react.xyz", charge=-1, mult=1)
+  Product=Fragment(xyzfile="prod.xyz",charge=-1, mult=1)
+
+  #Calculator object without frag
+  calc = ORCATheory(orcasimpleinput="!r2scan-3c tightscf CPCM", numcores=numcores)
+
+  SP = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0, mofilesdir="/home/bjornsson/NEBjob1/mofiles_dir")
+
+################################################################################
+Controlling convergence
+################################################################################
+
+NEB convergence is controlled by a number of thresholds. Note that Knarr internally utilizes units of Å (distances and coordinates), eV (energies), eV/Å (forces), eV/Å^2 (force constants).
+For now, the interface requires you to specify convergence tolerances in these units as well.
+
+conv_type: 'ALL' or 'CIONLY' options specifies whether the NEB job should end when all the tolerances of the images have been met ('ALL') or only on the CI ('CIONLY')
+The default is 'ALL' and is recommended. All 4 threshold belows have to be met in this case (only the first 2 in the case of 'CIONLY').
+
+**Convergence tolerances:**
+
+- tol_max_fci : This tolerance (default: 0.026 eV/Å) species when the Max Force on the CI is met.
+- tol_rms_fci : This tolerance (default: 0.013 eV/Å) species when the RMS Force on the CI is met.
+- tol_max_f : This tolerance (default: 0.026 eV/Å) species when the Max Force on all other images is met.
+- tol_rms_f : This tolerance (default: 0.013 eV/Å) species when the RMS Force on all other images is met.
+
+**Other thresholds:**
+
+- tol_turn_on_ci : This tolerance (default: 1.0 eV/Å on the Max Force) specifies when the CI image option should be turned on, in which one of the images will start minimizing towards a saddlepoint.
+- tol_scale  : This tolerance (default 10) specifies
+
+################################################################################
+Free-end NEB calculations
+################################################################################
+
+A recommended NEB job has endpoints (reactant and product) previously optimized at the same level of theory and are then kept frozen during the NEB job.
+This usually results in a more efficient NEB job as it constrains the possibilities for the minimum energy path and saddlepoint search.
+
+A free_end = True option where the endpoints are also minimized during the NEB is also possible but as there are more degrees of freedom, it can be trickier to converge.
+This may be a good option when the endpoints have deliberately not been minimized in an effort to explore multiple potential reaction pathways.
+
+################################################################################
+NEB on systems with an active region (e.g. QM/MM)
+################################################################################
+
+For large systems, e.g. a QM/MM model of a protein active site, it is possible to perform a NEB calculation of only a selected group of atoms, with other atoms being frozen during the NEB iterations.
+You should set ActiveRegion=True in this case and then specify the list of active atoms by their indices via e.g. actatoms=[17,18,19,20,21,22,23,24]
+As a NEB calculation is a difficult minimization problem it is advised to keep the active region as small as possible, at least to begin with. For a QM/MM job it might be a good idea to first set actatoms = qmatoms. i.e. only allow the QM atoms to move during the NEB path minimization.
+Future version of the code may further allow one to use weights 
+
+Note: When an active region is used, the RMSD minimization for images is turned off automatically (used to superimpose images to avoid complicated NEB paths).
 
 ################################################################################
 Parallelization
 ################################################################################
 
-Currently, NEB calculations can only be parallelized via the Theory object, i.e. in the example above, xTB utilizes 4 CPU cores each time it is called.
-In the future it will be possible to run multiple NEB images in parallel (more efficient parallelization).
+During each NEB iteration, X number of images are active and their energy+gradient needs to be calculated for each new geometry in each iteration.
+As each E+G image calculation is independent from the others it is possible to utilize parallelization very effectively in a NEB job.
+It is generally recommended to prioritize parallelization over images rather than the Theory level (QM parallelization never scales perfectly)
+Theory parallelization is also available, however, and can be used to further speed up NEB job.
+
+
+**Example: 8-image NEB calculation at the XTB level of theory (NEB parallelization):**
+
+If you are calculating 8 images then you should set runmode='parallel' and use numcores=8.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=8
+    numimages=numcores
+    ################################################
+    # Defining reactant and product ASH fragments
+    #################################################
+    react=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    prod=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+
+    #Theory to use for NEB
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
+
+    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numcores)
+
+    #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
+    NumFreq(theory=xtbcalc, fragment=SP)
+
+If you have additional CPU cores available on your computing node that you would like to use to speed up an NEB job you have 2 options:
+
+- You could increase the number of images as well as CPU cores to e.g. 16. Such a 16-image/core-job would run each NEB iteration at the same speed as the 8 image/core job but since there are more images it may facilitate convergence and locate the saddlepoint more efficiently.
+- Or you could active Theory parallelization by setting the numcores keyword for the Theory level. If you have 16 cores available on your node, you could set Theory parallelization to 2 which would result in each of the 8 images utilizing 2 CPU cores to speed up the E+G step, resulting in 16 cores being used. Note that if the Theory parallelization utilizes MPI it is possible that problems could occur.
+
+
+**Example: 16-core job using 8-image NEB parallelization + Theory parallelization:**
+
+This NEB job would run 8 active images simultaneously (via Python multiprocessing library) while parallelizing each xTB E+G calculation by 2 cores.
+This job requires 16 available CPU cores.
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=16 #Total number of CPU cores to be used (makes sure to submit a job with this number of slots)
+    numimages=8 #Number of images in NEB job and the number of cores available to the NEB parallelization
+    cores_theory=numcores/numimages #Number of cores used to parallelize the Theory level
+    ################################################
+    # Defining reactant and product ASH fragments
+    #################################################
+    react=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    prod=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+
+    #Theory to use for NEB. Parallelizing
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=cores_theory)
+
+    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
+    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numimages)
+
+    #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
+    NumFreq(theory=xtbcalc, fragment=SP)
