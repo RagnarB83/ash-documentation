@@ -119,6 +119,7 @@
 <p class="caption"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_Hybrid_Theory.html">Hybrid Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
@@ -233,7 +234,7 @@ can be performed using the nudged elastic band method (NEB).</p>
 </ul>
 <p>Strongly recommended (and mostly necessary):</p>
 <ul class="simple">
-<li><p>geomeTRIC (optimizer). Python library, easily installed via pip.</p></li>
+<li><p>geomeTRIC (optimizer). Python library, easily installed via pip. Required for geometry optimizations.</p></li>
 <li><p>OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.</p></li>
 <li><p>Julia installation. Only required for faster Julia versions of routines in molcrys-QM/MM code.</p></li>
 <li><p>Matplotlib. Only for plotting options.</p></li>
@@ -306,8 +307,6 @@ can be performed using the nudged elastic band method (NEB).</p>
 <p><strong>Geometry optimization with internal coordinates</strong></p>
 <ul class="simple">
 <li><p>geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.</p></li>
-<li><p>Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.</p></li>
-<li><p>PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.</p></li>
 </ul>
 <p><strong>QM/MM Geometry optimization:</strong></p>
 <ul class="simple">
@@ -329,7 +328,7 @@ can be performed using the nudged elastic band method (NEB).</p>
 <li><p>Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity</p></li>
 <li><p>Read/write ORCA-style Hessian files</p></li>
 <li><p>Print XYZ-trajectory file for individual modes</p></li>
-<li><p>Thermochemistry printing. <strong>TODO:</strong> finish</p></li>
+<li><p>Thermochemistry according to RRHO approximation.</p></li>
 <li><p>Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)</p></li>
 </ul>
 <p><strong>Molecular dynamics</strong></p>

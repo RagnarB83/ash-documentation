@@ -1,9 +1,10 @@
 Frequency calculation
 ======================================
 
-A frequency calculation can be performed either numerically or analytically. The numerical approach is highly general and can always be applied to any QM, MM or QM/MM theory while the analytical approach
-is only available if the QM program contains the functionality.
-For QM/MM Hamiltonians, the numerical approach is currently the only available option.
+A frequency calculation can be performed either numerically or analytically. The numerical approach is implemented directly in ASH and can always be applied to any QM, MM or QM/MM theory (requires the method to have an analytical gradient, however)
+while the analytical approach is only available if the QM program contains the functionality and if the ASH interface to that theory supports it (see below)
+
+For QM/MM Hamiltonians, the numerical approach is the only available option.
 
 #########################################
 Numerical frequencies
@@ -98,7 +99,7 @@ The Energy+Gradient step can still be run in parallel if e.g. the QM or QM/MM ob
 e.g. if an ORCA object has been defined with numcores=8 then ORCA will run each Energy+Gradient evaluation with 8 cores using the OpenMPI parallelization of ORCA.
 For numerical frequencies, it is usually much more efficient, however, to run the displacement jobs simutaneously in parallel fashion.
 This is accomplished using runmode='parallel' and the parallelization will be linear scaling (almost always recommended).
-As there are almost always many more displacements available than CPUs, the parallelization of the QM or QM/MM object is turned off and instead as many displacements
+As there are almost always many more displacements available than CPUs, the parallelization of the QM or QM/MM object should usually be turned off and instead as many displacements
 are run simultaneously as there are number of cores. For example, for a 30-atom system, there are 90 XYZ coordinates. For a 2-point Hessian, this means
 that 180 displacements to be calculated. If 20 cores are available, then 20 displacements can be run simultaneously, fully utilizing all 20 cores.
 This will require 9 runs in total (20*9=180).

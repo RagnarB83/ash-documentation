@@ -45,6 +45,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    :caption: Modules
 
    module_QM-MM
+   module_Hybrid_Theory
    module_benchmarking
    module_workflows
    module_highlevel_workflows

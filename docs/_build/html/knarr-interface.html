@@ -116,6 +116,7 @@
 <p class="caption"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_Hybrid_Theory.html">Hybrid Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
@@ -233,7 +234,7 @@ This NEB code uses energy-weighted springs (instead of a single spring constant 
 The Knarr implementation predates the ORCA implementation but is overall very similar to the one described there:
 V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462</p>
-<p>Note that NEB-TS is not yet available.</p>
+<p>Note that NEB-TS is not yet available. Furthermode, while QM/MM NEB calculations are possible, running NEB in parallel with a QM/MM Hamiltonian is currently not possible.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">NEB</span><span class="p">(</span><span class="n">reactant</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">CI</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">free_end</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">conv_type</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">tol_scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tol_max_fci</span><span class="o">=</span><span class="mf">0.026</span><span class="p">,</span> <span class="n">tol_rms_fci</span><span class="o">=</span><span class="mf">0.013</span><span class="p">,</span> <span class="n">tol_max_f</span><span class="o">=</span><span class="mf">0.26</span><span class="p">,</span> <span class="n">tol_rms_f</span><span class="o">=</span><span class="mf">0.13</span><span class="p">,</span>
         <span class="n">tol_turn_on_ci</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="n">runmode</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -484,13 +485,14 @@ Printlevel 1 is useful for getting more useful information from the NEB module (
 <h2>Controlling guess orbitals during SCF of Theory level<a class="headerlink" href="#controlling-guess-orbitals-during-scf-of-theory-level" title="Permalink to this headline">¶</a></h2>
 <p>During the NEB job the Theory level object is called multiple times using each iteration. The Theory level object will handle what guess orbitals are used during this step and you can modify the Theory object as desired
 (e.g. for ORCATheory you can change autostart and moreadfile keywords as desired).</p>
-<p>By default, for e.g. ORCATheory, the first calculation in the NEB job (NEB iteration -1) will be on the reactant. ORCA will in this case use brand-new guess orbitals (from PModel guess typically).
+<p>For a default NEB calculation in runmode=’serial’:
+for e.g. ORCATheory, the first calculation in the NEB job (NEB iteration -1) will be on the reactant. ORCA will in this case use brand-new guess orbitals (from PModel guess typically).
 Once converged, the orca.gbw file will be copied and stored as current_image0.gbw by the NEB module.
 Next calculation on the product will use the previous orca.gbw file (from reactant) since ORCA will by default try to read orbitals from that file (since the inputfile has the same basename) but once ORCA is finished we will store the file as e.g. current_image11.gbw
 This is repeated for intermediate images: image1, image2, …, image10.gbw in NEB iteration 0.
-However, in the next NEB iterations, the code will find and use current_image1.gbw for image no. 1 etc. since these files have been stored. These files will be updated during the job, ensuring that each image has converged image-specific orbitals from the last iteration available.</p>
-<p>In order to see detailed printout for what is going on w.r.t. ORCA GBW-file book-keeping during the NEB job, set the NEB printlevel to 1.</p>
-<p>For parallel NEB calculations, things will differ slightly.</p>
+However, in the next NEB iterations, the code will find and use current_image1.gbw for image no. 1 etc. since these files have been stored. These files will be updated during the job, ensuring that each image has converged image-specific orbitals from the last iteration available.
+In order to see detailed printout for what is going on w.r.t. ORCA GBW-file book-keeping during the NEB job, set the NEB printlevel to 1.</p>
+<p>For parallel NEB calculations with ORCATheory, things are just slightly different as there will be different directories for each Python multiprocessing worker, called e.g. ‘Pooljob_image_9’. Orbitals inside file ‘orca.gbw’ from last NEB iteration for that image will be read each time.</p>
 <p>Generally this behaviour works well as previously converged orbitals, specific to each image are being used.
 If you require even more control over which orbitals should be used there are a few options.</p>
 <p><strong>1. Reading in a single initial guess orbital-file (ORCATheory) :</strong></p>
@@ -573,6 +575,7 @@ Future version of the code may further allow one to use weights</p>
 As each E+G image calculation is independent from the others it is possible to utilize parallelization very effectively in a NEB job.
 It is generally recommended to prioritize parallelization over images rather than the Theory level (QM parallelization never scales perfectly)
 Theory parallelization is also available, however, and can be used to further speed up NEB job.</p>
+<p>NEB-parallelization with a QM/MM Hamiltonian is currently not possible due to problems with the multiprocessing library and OpenMM.</p>
 <p><strong>Example: 8-image NEB calculation at the XTB level of theory (NEB parallelization):</strong></p>
 <p>If you are calculating 8 images then you should set runmode=’parallel’ and use numcores=8.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -598,7 +601,7 @@ Theory parallelization is also available, however, and can be used to further sp
 <p>If you have additional CPU cores available on your computing node that you would like to use to speed up an NEB job you have 2 options:</p>
 <ul class="simple">
 <li><p>You could increase the number of images as well as CPU cores to e.g. 16. Such a 16-image/core-job would run each NEB iteration at the same speed as the 8 image/core job but since there are more images it may facilitate convergence and locate the saddlepoint more efficiently.</p></li>
-<li><p>Or you could active Theory parallelization by setting the numcores keyword for the Theory level. If you have 16 cores available on your node, you could set Theory parallelization to 2 which would result in each of the 8 images utilizing 2 CPU cores to speed up the E+G step, resulting in 16 cores being used.</p></li>
+<li><p>Or you could active Theory parallelization by setting the numcores keyword for the Theory level. If you have 16 cores available on your node, you could set Theory parallelization to 2 which would result in each of the 8 images utilizing 2 CPU cores to speed up the E+G step, resulting in 16 cores being used. Note that if the Theory parallelization utilizes MPI it is possible that problems could occur.</p></li>
 </ul>
 <p><strong>Example: 16-core job using 8-image NEB parallelization + Theory parallelization:</strong></p>
 <p>This NEB job would run 8 active images simultaneously (via Python multiprocessing library) while parallelizing each xTB E+G calculation by 2 cores.

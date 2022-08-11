@@ -116,6 +116,7 @@
 <p class="caption"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_Hybrid_Theory.html">Hybrid Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
@@ -133,7 +134,14 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">geomeTRIC interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">geomeTRIC interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#geometricoptimizer">geomeTRICOptimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convergence-criteria">Convergence criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-geometricoptimizer-class">The geomeTRICOptimizer class</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
@@ -218,31 +226,337 @@
             
   <div class="section" id="geometric-interface">
 <h1>geomeTRIC interface<a class="headerlink" href="#geometric-interface" title="Permalink to this headline">¶</a></h1>
-<p>Options to <strong>geometricOptimizer</strong>:</p>
-<ul>
-<li><p>coordsystem (Default: ‘hdlc’, other options: ‘tric’, ‘dlc’, ‘cart’, ‘prim’)</p></li>
-<li><p>frozenatoms (default: None, provide list of atoms to be frozen in space)</p></li>
-<li><p>constraintsinputfile (default: None, provide name of constraints-inputfile according to geomeTRIC syntax.</p></li>
-<li><p>constraints (default: None, provide dictionary of constraint definitions, with or without the value of the constraint. Example: constraints = { ‘bond’ : [[0,1]]}</p></li>
-<li><p>constrainvalue (default: False, Boolean, whether constrain-value is provided in constraints dictionary or not)</p></li>
-<li><p>maxiter (default: 50, maximum number of iterations)</p></li>
-<li><p>ActiveRegion (default:False, whether to use an active region or not. Requires accompanying actatoms list.</p></li>
-<li><p>actatoms (default: None, list of atoms that are active during optimization, all others are frozen)</p></li>
-<li><p>convergence_setting (default: ‘ORCA’. What type of convergence criteria to use. Valid options are: ‘ORCA’, ‘Chemshell’, ‘ORCA_TIGHT’, ‘GAU’, ‘GAU_TIGHT’, ‘GAU_VERYTIGHT’, ‘SuperLoose’.</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>ORCA:    conv_criteria = {‘convergence_energy’ : 5e-6, ‘convergence_grms’ : 1e-4, ‘convergence_gmax’ : 3.0e-4, ‘convergence_drms’ : 2.0e-3, ‘convergence_dmax’ : 4.0e-3 }</p></li>
-<li><p>Chemshell:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-4, ‘convergence_gmax’ : 4.5e-4, ‘convergence_drms’ : 1.2e-3, ‘convergence_dmax’ : 1.8e-3 }</p></li>
-<li><p>ORCA_TIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-5, ‘convergence_gmax’ : 1.0e-4, ‘convergence_drms’ : 6.0e-4, ‘convergence_dmax’ : 1.0e-3 }</p></li>
-<li><p>GAU:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 3e-4, ‘convergence_gmax’ : 4.5e-4, ‘convergence_drms’ : 1.2e-3, ‘convergence_dmax’ : 1.8e-3 }</p></li>
-<li><p>GAU_TIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 1e-5, ‘convergence_gmax’ : 1.5e-5, ‘convergence_drms’ : 4.0e-5, ‘convergence_dmax’ : 6e-5 }</p></li>
-<li><p>GAU_VERYTIGHT:    conv_criteria = {‘convergence_energy’ : 1e-6, ‘convergence_grms’ : 1e-6, ‘convergence_gmax’ : 2e-6, ‘convergence_drms’ : 4.0e-6, ‘convergence_dmax’ : 6e-6 }</p></li>
-<li><p>SuperLoose:            conv_criteria = { ‘convergence_energy’ : 1e-1, ‘convergence_grms’ : 1e-1, ‘convergence_gmax’ : 1e-1, ‘convergence_drms’ : 1e-1, ‘convergence_dmax’ : 1e-1 }</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>conv_criteria (Default: see ORCA setting above. Optionally provide your own dictionary of settings using syntax above.</p></li>
-</ul>
+<p>Geometry optimizations in ASH are nowadays almost exclusive performed via the interface to the powerful geomeTRIC optimizer library  (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>).</p>
+<p>geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively.
+Furthermore, the “ActiveRegion” feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are in this case passed to geomeTRIC.
+ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.</p>
+<p>If you use geometry optimizations in ASH using the geomeTRIC library make sure to cite the article:</p>
+<p><em>Geometry optimization made simple with translation and rotation coordinates</em>  by    Lee-Ping Wang, Chenchen Song, <em>J. Chem. Phys.</em> <strong>2016</strong>, <em>144</em>, 214108.</p>
+<div class="section" id="geometricoptimizer">
+<h2>geomeTRICOptimizer<a class="headerlink" href="#geometricoptimizer" title="Permalink to this headline">¶</a></h2>
+<p>The geomeTRICOptimizer function can also be called via the shorter aliases: <strong>Optimizer</strong> or <strong>Opt</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">frozenatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraintsinputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">constrainvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convergence_setting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">conv_criteria</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">print_atoms_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Keyword</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">theory</span></code></p></td>
+<td><p>ASH THeory</p></td>
+<td><p>None</p></td>
+<td><p>An ASH Theory. This will be used to supply energy+gradient information during the optimization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fragment</span></code></p></td>
+<td><p>ASH Fragment</p></td>
+<td><p>None</p></td>
+<td><p>An ASH fragment.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">coordsystem</span></code></p></td>
+<td><p>string</p></td>
+<td><p>‘tric’</p></td>
+<td><p>Which coordinate system to use during optimization. Options: ‘tric’, ‘hdlc’, ‘dlc’, ‘prim’, ‘cart’ Default: ‘tric’ (TRIC: translation+rotation internal coordinates), for an active region ‘hdlc’ is used instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxiter</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>100</p></td>
+<td><p>Maximum number of optimization iterations before giving up.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">frozenatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>List of frozen atoms during the optimization. The specified atoms will be added as Cartesian constraints.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">constraints</span></code></p></td>
+<td><p>Dict</p></td>
+<td><p>None</p></td>
+<td><p>Dictionary that specifies bond, angle or dihedral constraints. See Constraints section for syntax.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">constrainvalue</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>Fale</p></td>
+<td><p>Whether the value of the constraint is specified in the constraint specification or not (constraints dict above).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">constraintsinputfile</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None</p></td>
+<td><p>Alternative to the constraints dictionary. The file name of a constraints input file. See Constraints section for syntax.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">convergence_setting</span></code></p></td>
+<td><p>string</p></td>
+<td><p>None.</p></td>
+<td><p>Specifies the type of convergence criteria. Options: ‘ORCA’, ‘Chemshell’, ‘ORCA_TIGHT’, ‘GAU’, ‘GAU_TIGHT’, ‘GAU_VERYTIGHT’, ‘SuperLoose’. See Convergence section for details.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">conv_criteria</span></code></p></td>
+<td><p>Dict</p></td>
+<td><p>None</p></td>
+<td><p>Alternative manual way of defining convergence criteria. See Convergence section for details.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_atoms_list</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>Optional list of atom indices for which the Cartesian coordinates will be printed out in each optimization step. Defaults to all atoms in general, active-atoms if ActiveRegion is True or QM-region for QM/MM theories.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ActiveRegion</span></code></p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
+<td><p>Whether to use an Active Region during the optimization. This requires setting the number of active atoms (actatoms list) below.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">actatoms</span></code></p></td>
+<td><p>list</p></td>
+<td><p>None</p></td>
+<td><p>List of atom indices that are active during the optimization job. All other atoms are frozen.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>0</p></td>
+<td><p>The printlevel to use during optimization.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">charge</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>None</p></td>
+<td><p>Optional specification of the charge of the system (if QM) if the information is not present in the fragment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mult</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>None</p></td>
+<td><p>Optional specification of the spin multiplicity of the system (if QM) if the information is not present in the fragment.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><em>Geometry optimization of an H2O fragment at the xTB level, with default options.</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">databasefile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">,</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Geometry optimization of a QM/MM system with an active region:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Fe(SCH2)4 indices (inspect system_aftersolvent.pdb file to get indices)</span>
+<span class="n">qmatoms</span><span class="o">=</span><span class="p">[</span><span class="mi">93</span><span class="p">,</span><span class="mi">94</span><span class="p">,</span><span class="mi">95</span><span class="p">,</span><span class="mi">96</span><span class="p">,</span><span class="mi">133</span><span class="p">,</span><span class="mi">134</span><span class="p">,</span><span class="mi">135</span><span class="p">,</span><span class="mi">136</span><span class="p">,</span><span class="mi">564</span><span class="p">,</span><span class="mi">565</span><span class="p">,</span><span class="mi">566</span><span class="p">,</span><span class="mi">567</span><span class="p">,</span><span class="mi">604</span><span class="p">,</span><span class="mi">605</span><span class="p">,</span><span class="mi">606</span><span class="p">,</span><span class="mi">607</span><span class="p">,</span><span class="mi">755</span><span class="p">]</span>
+
+<span class="c1">#Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)</span>
+<span class="n">lastpdbfile</span><span class="o">=</span><span class="s2">&quot;final_MDfrag_laststep_imaged.pdb&quot;</span>
+<span class="n">fragment</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">pdbfile</span><span class="o">=</span><span class="n">lastpdbfile</span><span class="p">)</span>
+<span class="c1">#Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)</span>
+<span class="n">omm</span> <span class="o">=</span> <span class="n">OpenMMTheory</span><span class="p">(</span><span class="n">xmlfiles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;charmm36.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;charmm36/water.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;./specialresidue.xml&quot;</span><span class="p">],</span> <span class="n">pdbfile</span><span class="o">=</span><span class="n">lastpdbfile</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">platform</span><span class="o">=</span><span class="s1">&#39;CPU&#39;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">,</span> <span class="n">autoconstraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rigidwater</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#QM theory: r2SCAN-3c DFT-composite method using ORCA</span>
+<span class="n">orca</span> <span class="o">=</span> <span class="n">ORCATheory</span><span class="p">(</span><span class="n">orcasimpleinput</span><span class="o">=</span><span class="s2">&quot;! r2SCAN-3c tightscf&quot;</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="n">numcores</span><span class="p">)</span>
+<span class="c1">#QM/MM theory</span>
+<span class="n">qmmm</span> <span class="o">=</span> <span class="n">QMMMTheory</span><span class="p">(</span><span class="n">qm_theory</span><span class="o">=</span><span class="n">orca</span><span class="p">,</span> <span class="n">mm_theory</span><span class="o">=</span><span class="n">omm</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span>
+        <span class="n">embedding</span><span class="o">=</span><span class="s2">&quot;Elstat&quot;</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># QM/MM geometry optimization with an active region (here QM-region only)</span>
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">theory</span><span class="o">=</span><span class="n">qmmm</span><span class="p">,</span> <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="constraints">
+<h2>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline">¶</a></h2>
+<p>Constraints can be provided to the Optimizer in two different ways: either via providing a dictionary definition of the constrains (<em>constraints</em> keyword) or alternative by providing a valid constraint-parameter file (<em>constraintsinputfile</em> keyword) in geomeTRIC library syntax.
+The former way is recommended.
+Syntax to use for the constraints dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">constraints_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]}</span> <span class="c1">#This defines a bond/distance constraint between atoms 0 and 1</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]}</span> <span class="c1">#This defines multiple bond constraints: between atoms 0 and 1 AND also between atoms 3 and 4</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;angle&#39;</span><span class="p">:[[</span><span class="mi">98</span><span class="p">,</span><span class="mi">99</span><span class="p">,</span><span class="mi">100</span><span class="p">]]}</span> <span class="c1">#This defines a angle constraint between atoms 98,99 and 100</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;dihedral&#39;</span><span class="p">:[[</span><span class="mi">98</span><span class="p">,</span><span class="mi">99</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">]]}</span> <span class="c1">#This defines a dihedral constraint between atoms 98,99,100 and 101.</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span> <span class="s1">&#39;angle&#39;</span><span class="p">:[[</span><span class="mi">98</span><span class="p">,</span><span class="mi">99</span><span class="p">,</span><span class="mi">100</span><span class="p">]]}</span> <span class="c1">#This defines 2 bond constraints and 1 angle constraint.</span>
+</pre></div>
+</div>
+<p><em>Example:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">h2ostring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">O        1.586357512      0.000000000     -6.179217668</span>
+<span class="s2">H        1.586357512      0.759337000     -5.583174668</span>
+<span class="s2">H        1.586357512     -0.759337000     -5.583174668</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2ostring</span><span class="p">,</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="c1">#Defining constraints: 1 O-H bond is constrained to its current value</span>
+<span class="n">constraints_dict</span> <span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]}</span>
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraints_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When the above syntax is used, the constraint is applied according to the initial geometry provided (the first O-H bond is constrained to 0.965 Å)). If one wants to constrain e.g. a bond distance to a specific value
+then this can be done by providing an extra value to the list while also providing the <em>constrainvalue=True</em> option.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">constraints_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.97</span><span class="p">]]}</span> <span class="c1">#This defines a bond/distance constraint of 0.97 Å between atoms 0 and 1</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.97</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mf">0.97</span><span class="p">]]}</span> <span class="c1">#This defines multiple bond constraints of 0.97 Å.</span>
+<span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;angle&#39;</span><span class="p">:[[</span><span class="mi">98</span><span class="p">,</span><span class="mi">99</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mf">104.5</span><span class="p">]]}</span> <span class="c1">#This defines an angle constraint of 104.5° between atoms 98,99 and 100</span>
+</pre></div>
+</div>
+<p><em>Example:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">h2ostring</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">O        1.586357512      0.000000000     -6.179217668</span>
+<span class="s2">H        1.586357512      0.759337000     -5.583174668</span>
+<span class="s2">H        1.586357512     -0.759337000     -5.583174668</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">coordsstring</span><span class="o">=</span><span class="n">h2ostring</span><span class="p">,</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="c1">#Defining constraints: 1 O-H bond is constrained to to 0.97 Å</span>
+<span class="n">constraints_dict</span> <span class="o">=</span><span class="p">{</span><span class="s1">&#39;bond&#39;</span><span class="p">:[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.97</span><span class="p">]]}</span>
+<span class="n">Optimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraints_dict</span><span class="p">,</span> <span class="n">constrainvalue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally an alternative way of specifying constraint is to provide a file with the constraints defined according to the syntax of the geomeTRIC library.
+See <a class="reference external" href="https://github.com/leeping/geomeTRIC/blob/master/examples/constraints.txt">geomeTRIC constraints file format</a> for more information.
+The drawback of this approach is that atom indices used 1-based indexing (unlike ASH in general), indices would have to be modified in case of an Active Region,
+and finally either a global path to this file needs to be provided (so that the computing node can access it) or the file copied over to the scratch on the node.</p>
+<p>Format of the constraint file (<em>Warning: geomeTRIC counts from 1 (unlike ASH).</em>)</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$freeze
+bond 5 6
+xyz 5 xyz
+xy 5-11,13,35
+$set
+angle 3 1 2 30.0
+z 36 10.0
+$scan
+dihedral 4 2 3 5 0.0 180.0 19
+</pre></div>
+</div>
+</div>
+<div class="section" id="convergence-criteria">
+<h2>Convergence criteria<a class="headerlink" href="#convergence-criteria" title="Permalink to this headline">¶</a></h2>
+<p>The default convergence criteria of <strong>geomeTRICOptimizer</strong> are the same as used by the ORCA program by default. It is possible to change these default criteria by either specifying a string (<em>convergence_setting</em> keyword)
+or manually setting all the criteria by providing a dictionary (<em>conv_criteria</em> keyword)</p>
+<p>convergence_setting options (default: ‘ORCA’). What type of convergence criteria to use. Valid options are: ‘ORCA’, ‘ORCA_TIGHT’, ‘Chemshell’, ‘GAU’, ‘GAU_TIGHT’, ‘GAU_VERYTIGHT’, ‘SuperLoose’.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>String keyword</p></th>
+<th class="head"><p>convergence_energy</p></th>
+<th class="head"><p>convergence_grms value</p></th>
+<th class="head"><p>convergence_gmax</p></th>
+<th class="head"><p>convergence_drms</p></th>
+<th class="head"><p>convergence_dmax</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ORCA</span></code></p></td>
+<td><p>5.0e-6</p></td>
+<td><p>1.0e-4</p></td>
+<td><p>3.0e-4</p></td>
+<td><p>2.0e-3</p></td>
+<td><p>4.0e-3</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ORCA_TIGHT</span></code></p></td>
+<td><p>1.0e-6</p></td>
+<td><p>3.0e-5</p></td>
+<td><p>1.0e-4</p></td>
+<td><p>6.0e-4</p></td>
+<td><p>1.0e-3</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Chemshell</span></code></p></td>
+<td><p>1.0e-6</p></td>
+<td><p>3.0e-4</p></td>
+<td><p>4.5e-4</p></td>
+<td><p>1.2e-3</p></td>
+<td><p>1.8e-3</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GAU</span></code></p></td>
+<td><p>1.0e-6</p></td>
+<td><p>3.0e-4</p></td>
+<td><p>4.5e-4</p></td>
+<td><p>1.2e-3</p></td>
+<td><p>1.8e-3</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GAU_TIGHT</span></code></p></td>
+<td><p>1.0e-6</p></td>
+<td><p>1.0e-5</p></td>
+<td><p>1.5e-5</p></td>
+<td><p>4.0e-5</p></td>
+<td><p>6.0e-5</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GAU_VERYTIGHT</span></code></p></td>
+<td><p>1.0e-6</p></td>
+<td><p>1.0e-6</p></td>
+<td><p>2.0e-6</p></td>
+<td><p>4.0e-6</p></td>
+<td><p>6.0e-6</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SuperLoose</span></code></p></td>
+<td><p>1.0e-1</p></td>
+<td><p>1.0e-1</p></td>
+<td><p>1.0e-1</p></td>
+<td><p>1.0e-1</p></td>
+<td><p>1.0e-1</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example: Setting convergence criteria to GAU_TIGHT:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">,</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">convergence_setting</span><span class="o">=</span><span class="s1">&#39;GAU_TIGHT&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Example: Setting convergence criteria manually:</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">frag</span><span class="o">=</span><span class="n">Fragment</span><span class="p">(</span><span class="n">xyzfile</span><span class="o">=</span><span class="s2">&quot;h2o.xyz&quot;</span><span class="p">,</span><span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xtbcalc</span><span class="o">=</span><span class="n">xTBTheory</span><span class="p">(</span><span class="n">xtbmethod</span><span class="o">=</span><span class="s1">&#39;GFN1&#39;</span><span class="p">)</span>
+
+<span class="n">conv_criteria_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;convergence_energy&#39;</span> <span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">&#39;convergence_grms&#39;</span> <span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="s1">&#39;convergence_gmax&#39;</span> <span class="p">:</span> <span class="mf">1.5e-5</span><span class="p">,</span>
+    <span class="s1">&#39;convergence_drms&#39;</span> <span class="p">:</span> <span class="mf">4.0e-5</span><span class="p">,</span> <span class="s1">&#39;convergence_dmax&#39;</span> <span class="p">:</span> <span class="mf">6.0e-5</span> <span class="p">}</span>
+<span class="n">geomeTRICOptimizer</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">xtbcalc</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">frag</span><span class="p">,</span> <span class="n">conv_criteria</span><span class="o">=</span><span class="n">conv_criteria_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-geometricoptimizer-class">
+<h2>The geomeTRICOptimizer class<a class="headerlink" href="#the-geometricoptimizer-class" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>geomeTRICOptimizer</strong> described above is actually a wrapper function around a class: <strong>GeomeTRICOptimizerClass</strong>.</p>
+<p>It is strongly recommended to use the function described above, however, if you do require more flexibility for your
+ASH script then it is also possible to create an object from the class directly and use the built-in <em>run</em> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GeomeTRICOptimizerClass</span><span class="p">:</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">theory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coordsystem</span><span class="o">=</span><span class="s1">&#39;tric&#39;</span><span class="p">,</span> <span class="n">frozenatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">constraintsinputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constrainvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">print_atoms_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ActiveRegion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convergence_setting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">conv_criteria</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Example on how to use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create optimizer object</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">GeomeTRICOptimizerClass</span><span class="p">(</span><span class="n">theory</span><span class="o">=</span><span class="n">theory</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">fragment</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="c1">#Run the optimizer object</span>
+<span class="n">finalenergy</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

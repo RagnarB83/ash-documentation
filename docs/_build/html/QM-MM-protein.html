@@ -116,6 +116,7 @@
 <p class="caption"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_QM-MM.html">QM/MM Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_Hybrid_Theory.html">Hybrid Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_benchmarking.html">Benchmarking in ASH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_workflows.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_highlevel_workflows.html">Highlevel workflows</a></li>
@@ -229,7 +230,9 @@
   <div class="section" id="qm-mm-on-a-protein">
 <h1>QM/MM on a protein<a class="headerlink" href="#qm-mm-on-a-protein" title="Permalink to this headline">¶</a></h1>
 <p>How to do QM/MM calculations of a protein in ASH in general.
-See also  <a class="reference internal" href="Metalloprotein-I.html"><span class="doc">Metalloprotein tutorial I: Rubredoxin</span></a> and <a class="reference internal" href="Metalloprotein-II.html"><span class="doc">Metalloprotein tutorial II: Ferredoxin</span></a> for tutorials on the rubredoxin and ferredoxin metalloproteins.</p>
+See <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a> for documentation on how QM/MM works in ASH in general.
+This tutorial page will discuss the general aspects of doing QM/MM on a protein in ASH.
+See also  <a class="reference internal" href="Metalloprotein-I.html"><span class="doc">Metalloprotein tutorial I: Rubredoxin</span></a> and <a class="reference internal" href="Metalloprotein-II.html"><span class="doc">Metalloprotein tutorial II: Ferredoxin</span></a> for tutorials on setting up MM and QM/MM models on the rubredoxin and ferredoxin metalloproteins.</p>
 <a class="reference internal image-reference" href="_images/fefeh2ase-nosolv.png"><img alt="_images/fefeh2ase-nosolv.png" class="align-right" src="_images/fefeh2ase-nosolv.png" style="width: 400px;" /></a>
 <div class="section" id="prepare-a-classical-mm-model-of-the-system">
 <h2><strong>1. Prepare a classical MM model of the system.</strong><a class="headerlink" href="#prepare-a-classical-mm-model-of-the-system" title="Permalink to this headline">¶</a></h2>
@@ -373,6 +376,7 @@ The forcefield can be read in using CHARMM files,Amber files, GROMACS files or O
 <div class="section" id="create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation">
 <h2><strong>3. Create the QM/MM model and test it by running an energy calculation</strong><a class="headerlink" href="#create-the-qm-mm-model-and-test-it-by-running-an-energy-calculation" title="Permalink to this headline">¶</a></h2>
 <p>Assuming step 2 worked well, the next step is to setup the QM/MM model.
+See <a class="reference internal" href="module_QM-MM.html"><span class="doc">QM/MM Theory</span></a> for documentation on QM/MM in ASH in general.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
 run a single-point energy job for testing purposes.
 The division of the system into a QM-region and an MM-region is handled by defining a list of atom-indices that are

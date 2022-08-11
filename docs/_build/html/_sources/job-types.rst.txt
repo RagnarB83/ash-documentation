@@ -59,8 +59,8 @@ Example:
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Geometry optimization of the ORCA using geomeTRIC optimizer
-    geomeTRICOptimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
-
+    Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
+    #Optimizer and Opt are aliases for the geomeTRICOptimizer function name.
 
 See :doc:`geomeTRIC-interface` for all features.
 

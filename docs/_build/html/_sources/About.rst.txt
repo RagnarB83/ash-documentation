@@ -17,7 +17,7 @@ Strict requirements:
 
 Strongly recommended (and mostly necessary):
 
-- geomeTRIC (optimizer). Python library, easily installed via pip.
+- geomeTRIC (optimizer). Python library, easily installed via pip. Required for geometry optimizations.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
 - Julia installation. Only required for faster Julia versions of routines in molcrys-QM/MM code.
 - Matplotlib. Only for plotting options.
@@ -96,8 +96,6 @@ Features
 **Geometry optimization with internal coordinates**
 
 - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
-- Knarr, Python LBFGS-optimizer in Cartesian coordinates (credit: Vilhjálmur Ásgeirsson). No internal coordinates but frozen atom support.
-- PyBerny optimizer interface with internal coordinates. Limitation: No frozen atoms or constraints. Todo: Manual frozen-atom feature to be done.
 
 
 **QM/MM Geometry optimization:**
@@ -120,7 +118,7 @@ Features
 - Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity
 - Read/write ORCA-style Hessian files
 - Print XYZ-trajectory file for individual modes
-- Thermochemistry printing. **TODO:** finish
+- Thermochemistry according to RRHO approximation.
 - Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)
 
 **Molecular dynamics**

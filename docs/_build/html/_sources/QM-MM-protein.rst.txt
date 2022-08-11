@@ -2,7 +2,9 @@ QM/MM on a protein
 ======================================
 
 How to do QM/MM calculations of a protein in ASH in general.
-See also  :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for tutorials on the rubredoxin and ferredoxin metalloproteins.
+See :doc:`module_QM-MM` for documentation on how QM/MM works in ASH in general.
+This tutorial page will discuss the general aspects of doing QM/MM on a protein in ASH.
+See also  :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for tutorials on setting up MM and QM/MM models on the rubredoxin and ferredoxin metalloproteins.
 
 .. image:: figures/fefeh2ase-nosolv.png
    :align: right
@@ -192,6 +194,7 @@ It should finish in just a few seconds (or 1-2 minutes at most).
 ############################################################################
 
 Assuming step 2 worked well, the next step is to setup the QM/MM model.
+See :doc:`module_QM-MM` for documentation on QM/MM in ASH in general.
 We reuse most of the script above and add information about the QM-theory, create a QM/MM object and then
 run a single-point energy job for testing purposes.
 The division of the system into a QM-region and an MM-region is handled by defining a list of atom-indices that are
