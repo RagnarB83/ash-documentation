@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Molecular dynamics" href="module_dynamics.html" />
-    <link rel="prev" title="Singlepoint" href="singlepoint.html" /> 
+    <link rel="prev" title="Geometry optimization" href="Geometry-optimization.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,6 +108,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Frequency calculation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#numerical-frequencies">Numerical frequencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#analytical-frequencies">Analytical frequencies</a></li>
@@ -139,8 +140,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -262,12 +261,20 @@ while the analytical approach is only available if the QM program contains the f
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runmode</span></code></p></td>
 <td><p>String</p></td>
 <td><p>‘serial</p></td>
-<td><p>Whether to run the numerical frequency displacement calculations in serial (sequentially) or in parallel using Python multiprocessing.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to run the numerical frequency displacement calculations in serial (sequentially)</div>
+<div class="line">or in parallel using Python multiprocessing.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">npoint</span></code></p></td>
 <td><p>Integer</p></td>
 <td><p>2</p></td>
-<td><p>Whether to do a 1-point or 2-point approximation for the Hessian. 1-point takes half as many displacements as 2-point and is less accurate.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to do a 1-point or 2-point approximation for the Hessian. 1-point takes half as many</div>
+<div class="line">displacements as 2-point and is less accurate.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">displacement</span></code></p></td>
 <td><p>Float</p></td>
@@ -277,7 +284,11 @@ while the analytical approach is only available if the QM program contains the f
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hessatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Optional list of atom indices that will be displaced and define a partial Hessian instead of a full Hessian. If None, all atoms in Fragment will be displaced.</p></td>
+<td><div class="line-block">
+<div class="line">Optional list of atom indices that will be displaced and define a partial Hessian instead</div>
+<div class="line">of a full Hessian. If None, all atoms in Fragment will be displaced.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temp</span></code></p></td>
 <td><p>Float</p></td>
@@ -346,7 +357,7 @@ will only be calculated for the list of “hessatoms” and the result is a part
 The Hessian is then mass-weighted and diagonalized. (Limitation: translational and rotational modes are currently not projected out).
 This gives the frequencies as eigenvalues and the normal mode eigenvectors.
 A normal mode composition factor analysis is automatically performed as well as thermochemistry based on the rigid-rotor-harmonic-oscillator (RRHO) approximation.</p>
-<p>Example script below demonstrates a combined geometry optimization (using geomeTRIC).
+<p>Example script below demonstrates a combined geometry optimization (using the geomeTRIC optimizer, see <a class="reference internal" href="Geometry-optimization.html"><span class="doc">Geometry optimization</span></a>).
 The QM code used here is ORCA but any QM, MM or QM/MM object can be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -450,7 +461,7 @@ The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be speci
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="module_dynamics.html" class="btn btn-neutral float-right" title="Molecular dynamics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="singlepoint.html" class="btn btn-neutral float-left" title="Singlepoint" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Geometry-optimization.html" class="btn btn-neutral float-left" title="Geometry optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

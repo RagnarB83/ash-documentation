@@ -6,10 +6,13 @@ ORCATheory class:
 .. code-block:: python
     
   class ORCATheory:
-      def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
-                  orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, 
+      def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, 
+                  TDDFT=False, TDDFTroots=5, FollowRoot=1,
+                  orcablocks='', extraline='', first_iteration_input=None, 
+                  brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, 
                   moreadfile=None,moreadfile_always=False, autostart=True,
-                  propertyblock=None, keep_each_run_output=False, print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True,
+                  propertyblock=None, keep_each_run_output=False, print_population_analysis=False, 
+                  filename="orca", check_for_errors=True, check_for_warnings=True,
                   fragment_indices=None):
 
 .. list-table::
@@ -51,7 +54,8 @@ ORCATheory class:
    * - ``TDDFT``
      - Boolean
      - False
-     - Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.
+     - | Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state
+       | gradient is calculated and used.
    * - ``TDDFTroots``
      - integer
      - 5
@@ -63,7 +67,8 @@ ORCATheory class:
    * - ``brokensym``
      - Boolean
      - False
-     - Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.
+     - | Whether to do a Flipspin ORCA calculation to find a BS solution. 
+       | Requires HSmult and atomstoflip options.
    * - ``HSmult``
      - integer
      - None
@@ -79,7 +84,9 @@ ORCATheory class:
    * - ``moreadfile_always``
      - Boolean
      - False
-     - Whether moreadfile option is constantly applied for all runs using this ORCATheory object or only for first run. Default: False meaning moreadfile is only used for first run using ORCATHeory object.
+     - | Whether moreadfile option is constantly applied for all runs using this ORCATheory
+       | object or only for first run. Default: False meaning moreadfile is only used for 
+       | first run using ORCATHeory object.
    * - ``autostart``
      - Boolean
      - True
@@ -123,7 +130,10 @@ ORCATheory class:
    * - ``fragment_indices``
      - list of lists
      - None
-     - Optional: list of lists of atom indices that specify whether atoms belong to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block in the ORCA inputfile. For QM/MM: atom indices must be in QM-region. 
+     - | Optional: list of lists of atom indices that specify whether atoms belong 
+       | to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). 
+       | Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block
+       | in the ORCA inputfile. For QM/MM: atom indices must be in QM-region. 
 
 
 ################################

@@ -57,12 +57,12 @@ Here is a basic ASH Python script, e.g. named: ashtest.py
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
     #Geometry Optimization using geomeTRIC
-    geomeTRICOptimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
+    Optimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
 
 
 The script above loads ASH, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces` and :doc:`ORCA-interface` ), and runs a geometry optimization using the geomeTRICOptimizer optimizer function  (see :doc:`job-types` and :doc:`geomeTRIC-interface` ).
+(see :doc:`QM-interfaces` and :doc:`ORCA-interface` ), and runs a geometry optimization using the geomeTRICOptimizer optimizer function  (see :doc:`job-types` and :doc:`Geometry-optimization` ).
 
 
 ######################################

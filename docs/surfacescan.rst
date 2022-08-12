@@ -1,7 +1,7 @@
 Surface Scans
 ======================================
 
-Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** that uses the **geometric** optimization library.
+Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** . The function uses the **geometric** optimization library.
 Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction coordinates.
 
 .. code-block:: python
@@ -79,6 +79,8 @@ Other options to calc_surface:
 - convergence_setting (for geomeTRICOptimizer, same syntax as in **geomeTRICOptimizer**)
 - keepoutputfiles  (Boolean, keep outputfiles for each point. Default is True. )
 - keepmofiles (Boolean, keep MO files for each point in a directory. Default is False.)
+
+Note: See :doc:`Geometry-optimization` for geomeTRICOptimizer-related features.
 
 **Working with a previous scan from collection of XYZ files**
 

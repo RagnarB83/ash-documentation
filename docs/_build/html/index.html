@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Ash: Documentation &mdash; Ash 0.1 documentation</title>
+  <title>ASH: Documentation &mdash; Ash 0.1 documentation</title>
   
 
   
@@ -107,6 +107,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -133,8 +134,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -197,7 +196,7 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Ash: Documentation</li>
+      <li>ASH: Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -217,7 +216,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="ash-documentation">
-<h1>Ash: Documentation<a class="headerlink" href="#ash-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>ASH: Documentation<a class="headerlink" href="#ash-documentation" title="Permalink to this headline">¶</a></h1>
 <p>These are the documentation pages of ASH, an open-source multiscale modelling program.
 The code is available on <a class="reference external" href="https://github.com/RagnarB83/ash">Github</a></p>
  <div align=center>
@@ -309,6 +308,14 @@ The code is available on <a class="reference external" href="https://github.com/
 <li class="toctree-l2"><a class="reference internal" href="singlepoint.html#singlepoint-parallel-function">Singlepoint_parallel function</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Geometry-optimization.html#geometricoptimizer">geomeTRICOptimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometry-optimization.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometry-optimization.html#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometry-optimization.html#convergence-criteria">Convergence criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometry-optimization.html#the-geometricoptimizer-class">The geomeTRICOptimizer class</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="module_freq.html#numerical-frequencies">Numerical frequencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_freq.html#analytical-frequencies">Analytical frequencies</a></li>
@@ -322,7 +329,17 @@ The code is available on <a class="reference external" href="https://github.com/
 <li class="toctree-l2"><a class="reference internal" href="module_dynamics.html#metadynamics-via-ase-and-plumed">Metadynamics via ASE and Plumed</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#recommendations-and-how-to-use">Recommendations and how to use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#controlling-printout">Controlling printout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#controlling-guess-orbitals-during-scf-of-theory-level">Controlling guess orbitals during SCF of Theory level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#controlling-convergence">Controlling convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#free-end-neb-calculations">Free-end NEB calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#neb-on-systems-with-an-active-region-e-g-qm-mm">NEB on systems with an active region (e.g. QM/MM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neb.html#parallelization">Parallelization</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="surfacescan.html">Surface Scans</a></li>
 </ul>
 </div>
@@ -423,25 +440,6 @@ The code is available on <a class="reference external" href="https://github.com/
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="crest-interface.html#example-workflow-1-call-crest-to-get-low-energy-conformers-as-ash-fragments">Example workflow 1. Call crest to get low-energy conformers as ASH fragments.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="crest-interface.html#confsampler-protocol-automatic-crest-dftopt-dlpno-ccsd-t-workflow">confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geomeTRIC-interface.html#geometricoptimizer">geomeTRICOptimizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomeTRIC-interface.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomeTRIC-interface.html#constraints">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomeTRIC-interface.html#convergence-criteria">Convergence criteria</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geomeTRIC-interface.html#the-geometricoptimizer-class">The geomeTRICOptimizer class</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#recommendations-and-how-to-use">Recommendations and how to use</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#controlling-printout">Controlling printout</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#controlling-guess-orbitals-during-scf-of-theory-level">Controlling guess orbitals during SCF of Theory level</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#controlling-convergence">Controlling convergence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#free-end-neb-calculations">Free-end NEB calculations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#neb-on-systems-with-an-active-region-e-g-qm-mm">NEB on systems with an active region (e.g. QM/MM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="knarr-interface.html#parallelization">Parallelization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a><ul>

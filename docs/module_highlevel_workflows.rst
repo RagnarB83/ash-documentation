@@ -43,11 +43,15 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``elements``
      - list of strings.
      - None
-     - Required: List of all elements of the molecular system (reaction). Needed to set up basis set information. Duplicates are OK. fragment.elems is a valid list.
+     - | Required: List of all elements of the molecular system (reaction). 
+       | Needed to set up basis set information. Duplicates are OK. 
+       | fragment.elems is a valid list.
    * - ``cardinals``
      - list of integers
      - None
-     - Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).
+     - | Required: List of cardinal numbers for basis-set extrapolation. 
+       | Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: 
+       | e.g. [4] (for a single QZ level calculation).
    * - ``basisfamily``
      - string
      - None
@@ -71,19 +75,23 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``Openshellreference``
      - string
      - None
-     - Use alternative reference WF in open-shell calculation. Options: 'UHF', 'QRO', None.
+     - | Use alternative reference WF in open-shell calculation. 
+       | Options: 'UHF', 'QRO', None.
    * - ``DFTreference``
      - string
      - None
-     - Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid ORCA DFT keyword). Default: None
+     - | Use DFT reference WF (orbitals) in all CC calculations. 
+       | Options: (any valid ORCA DFT keyword). Default: None
    * - ``DFT_RI``
      - Boolean
      - False
-     - If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to calculate DFT orbitals.
+     - | If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with 
+       | SARC/J and defgrid3 is used to calculate DFT orbitals.
    * - ``auxbasis``
      - string
      - "autoaux-max"
-     - Auxiliary basis set for CC integrals (/C type). Options: 'autoaux, 'autoaux-max' Default:  "autoaux-max"
+     - | Auxiliary basis set for CC integrals (/C type). Options: 'autoaux,
+       | 'autoaux-max' Default:  "autoaux-max"
    * - ``memory``
      - integer
      - 5000
@@ -91,7 +99,8 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``scfsetting``
      - string
      - 'TightSCF'
-     - SCF-convergence setting in ORCA. Options: 'NormalSCF', 'TightSCF', 'VeryTightSCF', 'ExtremeSCF'.
+     - | SCF-convergence setting in ORCA. Options: 'NormalSCF', 'TightSCF',
+       | 'VeryTightSCF', 'ExtremeSCF'.
    * - ``DLPNO``
      - Boolean
      - False
@@ -99,7 +108,8 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``T1``
      - Boolean
      - False
-     - Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) in all steps.
+     - | Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of 
+       | the default DLPNO-CCSD(T0) in all steps.
    * - ``T1correction``
      - Boolean
      - False
@@ -107,23 +117,29 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``T1corrbasis_size``
      - string
      - 'Large'
-     - Size of basis set in T1 correction. Options: 'Large' (larger cardinal basis), 'Small' (smaller cardinal basis).
+     - | Size of basis set in T1 correction. Options: 'Large' (larger cardinal basis),
+       | 'Small' (smaller cardinal basis).
    * - ``T1corrpnosetting``
      - string
      - 'NormalPNOreduced'
-     - PNO setting for the T1  correction. Options: 'LoosePNO', 'NormalPNO', 'NormalPNOreduced' (TCutPNO=1e-6), 'TightPNO'.
+     - | PNO setting for the T1  correction. Options: 'LoosePNO', 'NormalPNO', 
+       | 'NormalPNOreduced' (TCutPNO=1e-6), 'TightPNO'.
    * - ``Triplesextrapolation``
      - Boolean
      - False
-     - Whether to do separate cheaper triples energies extrapolation with smaller basis sets than singles-doubles. Requires setting cardinals to 3 values, e.g. [2,3,4]
+     - | Whether to do separate cheaper triples energies extrapolation with 
+       | smaller basis sets than singles-doubles. Requires setting cardinals
+       | to 3 values, e.g. [2,3,4]
    * - ``pnoextrapolation``
      - list of 2 integers and 1 string
      - [1e-6,1e-7,1.5,'TightPNO']
-     - Parameters for PNO-extrapolation (X,Y,Z): X and Y being TCutPNO thresholds while Z signifies the setting for the other thresholds. 
+     - | Parameters for PNO-extrapolation (X,Y,Z): X and Y being 
+       | TCutPNO thresholds while Z signifies the setting for the other thresholds. 
    * - ``FullLMP2Guess``
      - Boolean
      - None
-     - Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell.
+     - | Whether to use Full-local MP2 guess in DLPNO calculations. 
+       | Only use if all systems are closed-shell.
    * - ``alpha``
      - float
      - False
@@ -143,19 +159,23 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``guessmode``
      - string
      - 'CMatrix'
-     - What ORCA Guessmode to use when doing basis-set projections of orbitals. Options: 'CMatrix' (more robust), 'FMatrix' (cheaper).
+     - | What ORCA Guessmode to use when doing basis-set projections of
+       | orbitals. Options: 'CMatrix' (more robust), 'FMatrix' (cheaper).
    * - ``atomicSOcorrection``
      - Boolean
      - False
-     - Whether to add the experimental atomic spin-orbit energy to system if the system is an atom.
+     - | Whether to add the experimental atomic spin-orbit energy to system
+       | if the system is an atom.
    * - ``FCI``
      - Boolean
      - False
-     - Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.
+     - | Whether to extrapolate the CCSD(T) calculation to the Full-CI limit 
+       | by the Goodson formula.
    * - ``F12``
      - Boolean
      - False
-     - Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS extrapolation. Use with basisfamily='cc-f12'.
+     - | Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS 
+       | extrapolation. Use with basisfamily='cc-f12'.
    * - ``CVSR``
      - Boolean
      - False
@@ -163,11 +183,14 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
    * - ``CVbasis``
      - string
      - "W1-mtsmall"
-     - The core-valence basis set to use. The default "W1-mtsmall" is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.
+     - | The core-valence basis set to use. The default "W1-mtsmall" is only available
+       | for elements H-Ar. Alternative: some other appropriate core-valence basis set.
    * - ``SCFextrapolation``
      - Boolean
      - True
-     - Whether the SCF energies are extrapolated or not. If False then the largest SCF energy calculated will be used (e.g. the def2-QZVPP energy in a def2/[3,4] job).
+     - | Whether the SCF energies are extrapolated or not. If False then the 
+       | largest SCF energy calculated will be used (e.g. the def2-QZVPP 
+       | energy in a def2/[3,4] job).
 
 
 **Basis-family options**
@@ -359,9 +382,9 @@ To be added: PNO-extrapolation options
 
 .. code-block:: python
 
-    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', energy_unit='kcal/mol',
-                                    def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False, extrapolation=True, highest_cardinal=6,
-                                    plot=True ):
+    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', 
+                                    nergy_unit='kcal/mol', extrapolation=True, highest_cardinal=6, plot=True 
+                                    def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False):
         """Function to perform high-level CCSD(T) calculations for a reaction with associated plots.
         Performs CCSD(T) with cc and def2 basis sets, CCSD(T)-F12 and CCSD(T)/CBS extrapolations
 

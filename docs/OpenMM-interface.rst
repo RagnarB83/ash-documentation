@@ -62,7 +62,8 @@ The OpenMMTheory class:
    * - ``topoforce``
      - Boolean
      - False
-     - Whether to read in topology and forcefield objects created by OpenMM manually. Requires setting topology and forcefield also.
+     - | Whether to read in topology and forcefield objects created by 
+       | OpenMM manually. Requires setting topology and forcefield also.
    * - ``forcefield``
      - OpenMM forcefield object
      - None
@@ -130,11 +131,13 @@ The OpenMMTheory class:
    * - ``pdbfile``
      - string
      - None
-     - Name of PDB-file. Used for reading topology for xmlfiles, xmlsystemfile and ASH_FF_file options.
+     - | Name of PDB-file. Used for reading topology for xmlfiles, xmlsystemfile 
+       | and ASH_FF_file options.
    * - ``use_parmed``
      - Boolean
      - False
-     - Whether to use the Parmed library to help read in CHARMM/Amber/GROMACS files. Requires install of Parmed Python library.
+     - | Whether to use Parmed library to help read in CHARMM/Amber/GROMACS
+       | files. Requires install of Parmed Python library.
    * - ``xmlsystemfile``
      - string
      - None
@@ -142,7 +145,8 @@ The OpenMMTheory class:
    * - ``do_energy_decomposition``
      - Boolean
      - False
-     - Do energy decomposition of each energy evaluation (when called by Singlepoint or optimizer).
+     - | Do energy decomposition of each energy evaluation 
+       | (when called by Singlepoint or optimizer).
    * - ``periodic``
      - Boolean
      - False
@@ -150,11 +154,13 @@ The OpenMMTheory class:
    * - ``charmm_periodic_cell_dimensions``
      - None
      - None
-     - Periodic cell dimension for CHARMM-setup of system. Example: charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]
+     - | Periodic cell dimension for CHARMM-setup of system. Example: 
+       | charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]
    * - ``customnonbondedforce``
      - Boolean
      - False
-     - Expert option: whether CustomNonbondedForce is used instead of NonbondedForce.
+     - | Expert option: whether CustomNonbondedForce is used instead 
+       | of NonbondedForce.
    * - ``periodic_nonbonded_cutoff``
      - float
      - 12.0
@@ -174,7 +180,8 @@ The OpenMMTheory class:
    * - ``PMEparameters``
      - list
      - None
-     - Optional manual parameters for the Particle Mess Ewald algorithm. Alternative to ewalderrortolerance keyword.
+     - | Optional manual parameters for the Particle Mess Ewald algorithm. 
+       | Alternative to ewalderrortolerance keyword.
    * - ``delete_QM1_MM1_bonded``
      - Boolean
      - False
@@ -186,11 +193,14 @@ The OpenMMTheory class:
    * - ``constraints``
      - list of lists
      - None
-     - List of lists of constraint definitions based on atom indices. Either [[atom_i,atom_j]] or [[atom_i,atom_j, d]], e.g. [[700,701],[703,704]] or [[700,701, 1.05],[702,703, 1.14]], where d: distance (Å))
+     - | List of lists of constraint definitions based on atom indices. Either 
+       | [[atom_i,atom_j]] or [[atom_i,atom_j, d]], e.g. [[700,701],[703,704]]
+       | or [[700,701, 1.05],[702,703, 1.14]], where d: distance (Å))
    * - ``restraints``
      - list of lists
      - None
-     - List of lists of restraint definitions ([[atom_i,atom_j, d, k ]], e.g. [[700,701, 1.05, 5.0 ]], d: distance (Å) k: force constant (kcal/mol*Å^-2))
+     - | List of lists of restraint definitions ([[atom_i,atom_j, d, k ]], e.g.
+       | [[700,701, 1.05, 5.0 ]], d: distance (Å) k: force constant (kcal/mol*Å^-2))
    * - ``frozen_atoms``
      - list
      - None
@@ -198,7 +208,8 @@ The OpenMMTheory class:
    * - ``dummy_system``
      - Boolean
      - False
-     - If True, OpenMM will set up a dummy MM system based on provided fragment (see below). Used for QM dynamics option in OpenMM_MD.
+     - | If True, OpenMM will set up a dummy MM system based on provided fragment
+       | (see below). Used for QM dynamics option in OpenMM_MD.
    * - ``fragment``
      - ASH Fragment
      - None
@@ -206,15 +217,20 @@ The OpenMMTheory class:
    * - ``autoconstraints``
      - string
      - 'HBonds'
-     - Type of automatic constraints to apply to system. Options: 'HBonds' (constrain all X-H bonds), 'AllBonds' (constrain all bonds), 'HAngles' (constrain all bonds and  H-X-H and H-O-X angles).
+     - | Type of automatic constraints to apply to system. Options: 'HBonds' 
+       | (constrain all X-H bonds), 'AllBonds' (constrain all bonds), 'HAngles'
+       | (constrain all bonds and  H-X-H and H-O-X angles).
    * - ``hydrogenmass``
      - float
      - 1.5
-     - Hydrogen mass repartioning value. 1.5 is OpenMM and ASH default. Improves numerical stability.
+     - | Hydrogen mass repartioning value. 1.5 is OpenMM and ASH default. 
+       | Improves numerical stability.
    * - ``rigidwater``
      - Boolean
      - True
-     - Whether to automatically apply rigid water constraints for recognized water models (e.g. TIP3P) found in system. Note: needs to be turned off for Singlepoint/Optimizations.
+     - | Whether to automatically apply rigid water constraints for recognized 
+       | water models (e.g. TIP3P) found in system. Note: needs to be turned off for 
+       | Singlepoint/Optimizations.
 
 
 
@@ -321,7 +337,8 @@ See `OpenMM documentation page <http://docs.openmm.org/latest/userguide/applicat
    * - ``timestep``
      - float
      - 0.004
-     - The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator dynamics with frozen X-H bonds)
+     - | The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator 
+       | dynamics with frozen X-H bonds)
    * - ``simulation_steps``
      - integer
      - None
@@ -337,7 +354,9 @@ See `OpenMM documentation page <http://docs.openmm.org/latest/userguide/applicat
    * - ``integrator``
      - string
      - LangevinMiddleIntegrator
-     - The integrator to use. Options: 'Langevin', 'LangevinMiddleIntegrator', 'NoseHooverIntegrator', 'VerletIntegrator', 'VariableLangevinIntegrator', 'VariableVerletIntegrator'
+     - | The integrator to use. Options: 'Langevin', 'LangevinMiddleIntegrator', 
+       | 'NoseHooverIntegrator', 'VerletIntegrator', 'VariableLangevinIntegrator',
+       | 'VariableVerletIntegrator'
    * - ``coupling_frequency``
      - integer
      - 1
@@ -361,7 +380,8 @@ See `OpenMM documentation page <http://docs.openmm.org/latest/userguide/applicat
    * - ``trajectory_file_option``
      - string
      - 'DCD'
-     - Type of trajectory file. Options: 'DCD' (compressed), 'PDB', 'NetCDFReporter' (compressed), 'HDF5Reporter' (compressed). Applies only to pure MM simulations.
+     - | Type of trajectory file. Options: 'DCD' (compressed), 'PDB', 'NetCDFReporter' 
+       | (compressed), 'HDF5Reporter' (compressed). Applies only to pure MM simulations.
    * - ``traj_frequency``
      - integer
      - 1000
@@ -612,7 +632,8 @@ Lysozyme example (simple, no modifications required):
 
 
     #Defining residues with special user-wanted protonation states for residues in each indicated chain
-    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary and the resids being keys for the inner dictionary
+    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary 
+    #and the resids being keys for the inner dictionary
     #Example: residue_variants={'A':{0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' }}
     #resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP, 
     #resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.

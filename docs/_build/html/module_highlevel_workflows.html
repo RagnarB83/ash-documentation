@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -139,8 +140,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -266,12 +265,22 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">elements</span></code></p></td>
 <td><p>list of strings.</p></td>
 <td><p>None</p></td>
-<td><p>Required: List of all elements of the molecular system (reaction). Needed to set up basis set information. Duplicates are OK. fragment.elems is a valid list.</p></td>
+<td><div class="line-block">
+<div class="line">Required: List of all elements of the molecular system (reaction).</div>
+<div class="line">Needed to set up basis set information. Duplicates are OK.</div>
+<div class="line">fragment.elems is a valid list.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cardinals</span></code></p></td>
 <td><p>list of integers</p></td>
 <td><p>None</p></td>
-<td><p>Required: List of cardinal numbers for basis-set extrapolation. Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid: e.g. [4] (for a single QZ level calculation).</p></td>
+<td><div class="line-block">
+<div class="line">Required: List of cardinal numbers for basis-set extrapolation.</div>
+<div class="line">Options: [2,3], [3,4], [4,5] or [5,6]. Single-item lists also valid:</div>
+<div class="line">e.g. [4] (for a single QZ level calculation).</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basisfamily</span></code></p></td>
 <td><p>string</p></td>
@@ -301,22 +310,38 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Openshellreference</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
-<td><p>Use alternative reference WF in open-shell calculation. Options: ‘UHF’, ‘QRO’, None.</p></td>
+<td><div class="line-block">
+<div class="line">Use alternative reference WF in open-shell calculation.</div>
+<div class="line">Options: ‘UHF’, ‘QRO’, None.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DFTreference</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
-<td><p>Use DFT reference WF (orbitals) in all CC calculations. Options: (any valid ORCA DFT keyword). Default: None</p></td>
+<td><div class="line-block">
+<div class="line">Use DFT reference WF (orbitals) in all CC calculations.</div>
+<div class="line">Options: (any valid ORCA DFT keyword). Default: None</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DFT_RI</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with SARC/J and defgrid3 is used to calculate DFT orbitals.</p></td>
+<td><div class="line-block">
+<div class="line">If using DFT-reference, if DFT_RI is True then RIJ/RIJCOSX with</div>
+<div class="line">SARC/J and defgrid3 is used to calculate DFT orbitals.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">auxbasis</span></code></p></td>
 <td><p>string</p></td>
 <td><p>“autoaux-max”</p></td>
-<td><p>Auxiliary basis set for CC integrals (/C type). Options: ‘autoaux, ‘autoaux-max’ Default:  “autoaux-max”</p></td>
+<td><div class="line-block">
+<div class="line">Auxiliary basis set for CC integrals (/C type). Options: ‘autoaux,</div>
+<div class="line">‘autoaux-max’ Default:  “autoaux-max”</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">memory</span></code></p></td>
 <td><p>integer</p></td>
@@ -326,7 +351,11 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scfsetting</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘TightSCF’</p></td>
-<td><p>SCF-convergence setting in ORCA. Options: ‘NormalSCF’, ‘TightSCF’, ‘VeryTightSCF’, ‘ExtremeSCF’.</p></td>
+<td><div class="line-block">
+<div class="line">SCF-convergence setting in ORCA. Options: ‘NormalSCF’, ‘TightSCF’,</div>
+<div class="line">‘VeryTightSCF’, ‘ExtremeSCF’.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DLPNO</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -336,7 +365,11 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of the default DLPNO-CCSD(T0) in all steps.</p></td>
+<td><div class="line-block">
+<div class="line">Option to use iterative triples, i.e. DLPNO-CCSD(T1) instead of</div>
+<div class="line">the default DLPNO-CCSD(T0) in all steps.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">T1correction</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -346,27 +379,48 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1corrbasis_size</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘Large’</p></td>
-<td><p>Size of basis set in T1 correction. Options: ‘Large’ (larger cardinal basis), ‘Small’ (smaller cardinal basis).</p></td>
+<td><div class="line-block">
+<div class="line">Size of basis set in T1 correction. Options: ‘Large’ (larger cardinal basis),</div>
+<div class="line">‘Small’ (smaller cardinal basis).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">T1corrpnosetting</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘NormalPNOreduced’</p></td>
-<td><p>PNO setting for the T1  correction. Options: ‘LoosePNO’, ‘NormalPNO’, ‘NormalPNOreduced’ (TCutPNO=1e-6), ‘TightPNO’.</p></td>
+<td><div class="line-block">
+<div class="line">PNO setting for the T1  correction. Options: ‘LoosePNO’, ‘NormalPNO’,</div>
+<div class="line">‘NormalPNOreduced’ (TCutPNO=1e-6), ‘TightPNO’.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Triplesextrapolation</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to do separate cheaper triples energies extrapolation with smaller basis sets than singles-doubles. Requires setting cardinals to 3 values, e.g. [2,3,4]</p></td>
+<td><div class="line-block">
+<div class="line">Whether to do separate cheaper triples energies extrapolation with</div>
+<div class="line">smaller basis sets than singles-doubles. Requires setting cardinals</div>
+<div class="line">to 3 values, e.g. [2,3,4]</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pnoextrapolation</span></code></p></td>
 <td><p>list of 2 integers and 1 string</p></td>
 <td><p>[1e-6,1e-7,1.5,’TightPNO’]</p></td>
-<td><p>Parameters for PNO-extrapolation (X,Y,Z): X and Y being TCutPNO thresholds while Z signifies the setting for the other thresholds.</p></td>
+<td><div class="line-block">
+<div class="line">Parameters for PNO-extrapolation (X,Y,Z): X and Y being</div>
+<div class="line">TCutPNO thresholds while Z signifies the setting for the other thresholds.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FullLMP2Guess</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>None</p></td>
-<td><p>Whether to use Full-local MP2 guess in DLPNO calculations. Only use if all systems are closed-shell.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to use Full-local MP2 guess in DLPNO calculations.</div>
+<div class="line">Only use if all systems are closed-shell.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
 <td><p>float</p></td>
@@ -391,22 +445,38 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">guessmode</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘CMatrix’</p></td>
-<td><p>What ORCA Guessmode to use when doing basis-set projections of orbitals. Options: ‘CMatrix’ (more robust), ‘FMatrix’ (cheaper).</p></td>
+<td><div class="line-block">
+<div class="line">What ORCA Guessmode to use when doing basis-set projections of</div>
+<div class="line">orbitals. Options: ‘CMatrix’ (more robust), ‘FMatrix’ (cheaper).</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">atomicSOcorrection</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to add the experimental atomic spin-orbit energy to system if the system is an atom.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to add the experimental atomic spin-orbit energy to system</div>
+<div class="line">if the system is an atom.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FCI</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to extrapolate the CCSD(T) calculation to the Full-CI limit by the Goodson formula.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to extrapolate the CCSD(T) calculation to the Full-CI limit</div>
+<div class="line">by the Goodson formula.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">F12</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS extrapolation. Use with basisfamily=’cc-f12’.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to do explicitly correlated CCSD(T)-F12 instead of CCSD(T)/CBS</div>
+<div class="line">extrapolation. Use with basisfamily=’cc-f12’.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CVSR</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -416,12 +486,21 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.</
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CVbasis</span></code></p></td>
 <td><p>string</p></td>
 <td><p>“W1-mtsmall”</p></td>
-<td><p>The core-valence basis set to use. The default “W1-mtsmall” is only available for elements H-Ar. Alternative: some other appropriate core-valence basis set.</p></td>
+<td><div class="line-block">
+<div class="line">The core-valence basis set to use. The default “W1-mtsmall” is only available</div>
+<div class="line">for elements H-Ar. Alternative: some other appropriate core-valence basis set.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SCFextrapolation</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>True</p></td>
-<td><p>Whether the SCF energies are extrapolated or not. If False then the largest SCF energy calculated will be used (e.g. the def2-QZVPP energy in a def2/[3,4] job).</p></td>
+<td><div class="line-block">
+<div class="line">Whether the SCF energies are extrapolated or not. If False then the</div>
+<div class="line">largest SCF energy calculated will be used (e.g. the def2-QZVPP</div>
+<div class="line">energy in a def2/[3,4] job).</div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -814,9 +893,9 @@ Note that the large-basis cc-pV5Z and cc-pV6Z calculations can not be carried ou
 <p>The plots require the Matplotlib library to be installed.</p>
 </div>
 <p>To be added: PNO-extrapolation options</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;Reactionlabel&#39;</span><span class="p">,</span> <span class="n">energy_unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span>
-                                <span class="n">def2_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cc_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aug_cc_family</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">F12_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">highest_cardinal</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-                                <span class="n">plot</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Reaction_Highlevel_Analysis</span><span class="p">(</span><span class="n">fraglist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">7000</span><span class="p">,</span> <span class="n">reactionlabel</span><span class="o">=</span><span class="s1">&#39;Reactionlabel&#39;</span><span class="p">,</span>
+                                <span class="n">nergy_unit</span><span class="o">=</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">,</span> <span class="n">extrapolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">highest_cardinal</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span>
+                                <span class="n">def2_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cc_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aug_cc_family</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">F12_family</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">DLPNO</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function to perform high-level CCSD(T) calculations for a reaction with associated plots.</span>
 <span class="sd">    Performs CCSD(T) with cc and def2 basis sets, CCSD(T)-F12 and CCSD(T)/CBS extrapolations</span>
 

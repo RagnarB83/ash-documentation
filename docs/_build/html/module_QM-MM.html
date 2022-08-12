@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -141,8 +142,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -259,17 +258,29 @@ the QMMMTheory object can define the division of QM-region and MM-regions.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qm_theory</span></code></p></td>
 <td><p>ASHTheory</p></td>
 <td><p>None</p></td>
-<td><p>Required: The theory level for the QM-region. Must be a valid ASH Theory that supports electrostatic embedding.</p></td>
+<td><div class="line-block">
+<div class="line">Required: The theory level for the QM-region. Must be a valid ASH Theory</div>
+<div class="line">that supports electrostatic embedding.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qmatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Required: List of QM-atom indices that defined the QM-region. Atoms not in list are treated as MM atoms.</p></td>
+<td><div class="line-block">
+<div class="line">Required: List of QM-atom indices that defined the QM-region. Atoms not</div>
+<div class="line">in list are treated as MM atoms.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mm_theory</span></code></p></td>
 <td><p>ASHTheory</p></td>
 <td><p>None</p></td>
-<td><p>Required: The theory level for the MM-region. Must be an object of class OpenMMTheory or NonbondedTheory.</p></td>
+<td><div class="line-block">
+<div class="line">Required: The theory level for the MM-region. Must be an object of class</div>
+<div class="line">OpenMMTheory or NonbondedTheory.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fragment</span></code></p></td>
 <td><p>ASH Fragment</p></td>
@@ -279,27 +290,47 @@ the QMMMTheory object can define the division of QM-region and MM-regions.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qm_charge</span></code></p></td>
 <td><p>integer</p></td>
 <td><p>None</p></td>
-<td><p>Optional: Specify the charge of the QM-region. This takes precedence over other charge specifications.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: Specify the charge of the QM-region. This takes precedence</div>
+<div class="line">over other charge specifications.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qm_mult</span></code></p></td>
 <td><p>integer</p></td>
 <td><p>None</p></td>
-<td><p>Optional: Specify the spin multiplicity of the QM-region. This takes precedence over other mult specifications.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: Specify the spin multiplicity of the QM-region. This takes</div>
+<div class="line">precedence over other mult specifications.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">charges</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Optional: list of atom charges. If not defined then charges will be read from mm_theory.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: list of atom charges. If not defined then charges will be read</div>
+<div class="line">from mm_theory.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">printlevel</span></code></p></td>
 <td><p>integer</p></td>
 <td><p>2</p></td>
-<td><p>Optional: The printlevel setting. If printlevel &gt;= 3 then more printing and gradient files are written to disk.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: The printlevel setting. If printlevel &gt;= 3 then more printing</div>
+<div class="line">and gradient files are written to disk.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numcores</span></code></p></td>
 <td><p>integer</p></td>
 <td><p>1</p></td>
-<td><p>Optional: Number of CPU cores to use for qm_theory. If defined, takes precedence over QMTheory setting.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: Number of CPU cores to use for qm_theory. If defined, takes</div>
+<div class="line">precedence over QMTheory setting.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">excludeboundaryatomlist</span></code></p></td>
 <td><p>list</p></td>
@@ -334,12 +365,20 @@ the QMMMTheory object can define the division of QM-region and MM-regions.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">actatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Optional: List of active atoms in QM/MM. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: List of active atoms in QM/MM. NOTE: Only compatible if</div>
+<div class="line">mm_theory is of NonBondedTheory class.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">frozenatoms</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: List of frozen atoms in QM/MM, alternative to actatoms.</div>
+<div class="line">NOTE: Only compatible if mm_theory is of NonBondedTheory class.</div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>

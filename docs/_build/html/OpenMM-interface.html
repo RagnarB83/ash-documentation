@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Explicit solvation (small molecule)" href="Explicit-solvation.html" />
-    <link rel="prev" title="KNARR interface" href="knarr-interface.html" /> 
+    <link rel="prev" title="CREST interface" href="crest-interface.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -134,8 +135,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenMM interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-openmmtheory-class">The OpenMMTheory class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics-via-openmm">Molecular Dynamics via OpenMM</a></li>
@@ -288,7 +287,11 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">topoforce</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to read in topology and forcefield objects created by OpenMM manually. Requires setting topology and forcefield also.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to read in topology and forcefield objects created by</div>
+<div class="line">OpenMM manually. Requires setting topology and forcefield also.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forcefield</span></code></p></td>
 <td><p>OpenMM forcefield object</p></td>
@@ -373,12 +376,20 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pdbfile</span></code></p></td>
 <td><p>string</p></td>
 <td><p>None</p></td>
-<td><p>Name of PDB-file. Used for reading topology for xmlfiles, xmlsystemfile and ASH_FF_file options.</p></td>
+<td><div class="line-block">
+<div class="line">Name of PDB-file. Used for reading topology for xmlfiles, xmlsystemfile</div>
+<div class="line">and ASH_FF_file options.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">use_parmed</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to use the Parmed library to help read in CHARMM/Amber/GROMACS files. Requires install of Parmed Python library.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to use Parmed library to help read in CHARMM/Amber/GROMACS</div>
+<div class="line">files. Requires install of Parmed Python library.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xmlsystemfile</span></code></p></td>
 <td><p>string</p></td>
@@ -388,7 +399,11 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">do_energy_decomposition</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Do energy decomposition of each energy evaluation (when called by Singlepoint or optimizer).</p></td>
+<td><div class="line-block">
+<div class="line">Do energy decomposition of each energy evaluation</div>
+<div class="line">(when called by Singlepoint or optimizer).</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">periodic</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -398,12 +413,20 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">charmm_periodic_cell_dimensions</span></code></p></td>
 <td><p>None</p></td>
 <td><p>None</p></td>
-<td><p>Periodic cell dimension for CHARMM-setup of system. Example: charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]</p></td>
+<td><div class="line-block">
+<div class="line">Periodic cell dimension for CHARMM-setup of system. Example:</div>
+<div class="line">charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">customnonbondedforce</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Expert option: whether CustomNonbondedForce is used instead of NonbondedForce.</p></td>
+<td><div class="line-block">
+<div class="line">Expert option: whether CustomNonbondedForce is used instead</div>
+<div class="line">of NonbondedForce.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">periodic_nonbonded_cutoff</span></code></p></td>
 <td><p>float</p></td>
@@ -428,7 +451,11 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PMEparameters</span></code></p></td>
 <td><p>list</p></td>
 <td><p>None</p></td>
-<td><p>Optional manual parameters for the Particle Mess Ewald algorithm. Alternative to ewalderrortolerance keyword.</p></td>
+<td><div class="line-block">
+<div class="line">Optional manual parameters for the Particle Mess Ewald algorithm.</div>
+<div class="line">Alternative to ewalderrortolerance keyword.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">delete_QM1_MM1_bonded</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -443,12 +470,21 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">constraints</span></code></p></td>
 <td><p>list of lists</p></td>
 <td><p>None</p></td>
-<td><p>List of lists of constraint definitions based on atom indices. Either [[atom_i,atom_j]] or [[atom_i,atom_j, d]], e.g. [[700,701],[703,704]] or [[700,701, 1.05],[702,703, 1.14]], where d: distance (Å))</p></td>
+<td><div class="line-block">
+<div class="line">List of lists of constraint definitions based on atom indices. Either</div>
+<div class="line">[[atom_i,atom_j]] or [[atom_i,atom_j, d]], e.g. [[700,701],[703,704]]</div>
+<div class="line">or [[700,701, 1.05],[702,703, 1.14]], where d: distance (Å))</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">restraints</span></code></p></td>
 <td><p>list of lists</p></td>
 <td><p>None</p></td>
-<td><p>List of lists of restraint definitions ([[atom_i,atom_j, d, k ]], e.g. [[700,701, 1.05, 5.0 ]], d: distance (Å) k: force constant (kcal/mol*Å^-2))</p></td>
+<td><div class="line-block">
+<div class="line">List of lists of restraint definitions ([[atom_i,atom_j, d, k ]], e.g.</div>
+<div class="line">[[700,701, 1.05, 5.0 ]], d: distance (Å) k: force constant (kcal/mol*Å^-2))</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">frozen_atoms</span></code></p></td>
 <td><p>list</p></td>
@@ -458,7 +494,11 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dummy_system</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>If True, OpenMM will set up a dummy MM system based on provided fragment (see below). Used for QM dynamics option in OpenMM_MD.</p></td>
+<td><div class="line-block">
+<div class="line">If True, OpenMM will set up a dummy MM system based on provided fragment</div>
+<div class="line">(see below). Used for QM dynamics option in OpenMM_MD.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fragment</span></code></p></td>
 <td><p>ASH Fragment</p></td>
@@ -468,17 +508,31 @@ to control the number of CPU cores that OpenMM will use. If neither numcores key
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">autoconstraints</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘HBonds’</p></td>
-<td><p>Type of automatic constraints to apply to system. Options: ‘HBonds’ (constrain all X-H bonds), ‘AllBonds’ (constrain all bonds), ‘HAngles’ (constrain all bonds and  H-X-H and H-O-X angles).</p></td>
+<td><div class="line-block">
+<div class="line">Type of automatic constraints to apply to system. Options: ‘HBonds’</div>
+<div class="line">(constrain all X-H bonds), ‘AllBonds’ (constrain all bonds), ‘HAngles’</div>
+<div class="line">(constrain all bonds and  H-X-H and H-O-X angles).</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hydrogenmass</span></code></p></td>
 <td><p>float</p></td>
 <td><p>1.5</p></td>
-<td><p>Hydrogen mass repartioning value. 1.5 is OpenMM and ASH default. Improves numerical stability.</p></td>
+<td><div class="line-block">
+<div class="line">Hydrogen mass repartioning value. 1.5 is OpenMM and ASH default.</div>
+<div class="line">Improves numerical stability.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rigidwater</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>True</p></td>
-<td><p>Whether to automatically apply rigid water constraints for recognized water models (e.g. TIP3P) found in system. Note: needs to be turned off for Singlepoint/Optimizations.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to automatically apply rigid water constraints for recognized</div>
+<div class="line">water models (e.g. TIP3P) found in system. Note: needs to be turned off for</div>
+<div class="line">Singlepoint/Optimizations.</div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -576,7 +630,11 @@ Some options are only available for OpenMMTheory.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timestep</span></code></p></td>
 <td><p>float</p></td>
 <td><p>0.004</p></td>
-<td><p>The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator dynamics with frozen X-H bonds)</p></td>
+<td><div class="line-block">
+<div class="line">The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator</div>
+<div class="line">dynamics with frozen X-H bonds)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simulation_steps</span></code></p></td>
 <td><p>integer</p></td>
@@ -596,7 +654,12 @@ Some options are only available for OpenMMTheory.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">integrator</span></code></p></td>
 <td><p>string</p></td>
 <td><p>LangevinMiddleIntegrator</p></td>
-<td><p>The integrator to use. Options: ‘Langevin’, ‘LangevinMiddleIntegrator’, ‘NoseHooverIntegrator’, ‘VerletIntegrator’, ‘VariableLangevinIntegrator’, ‘VariableVerletIntegrator’</p></td>
+<td><div class="line-block">
+<div class="line">The integrator to use. Options: ‘Langevin’, ‘LangevinMiddleIntegrator’,</div>
+<div class="line">‘NoseHooverIntegrator’, ‘VerletIntegrator’, ‘VariableLangevinIntegrator’,</div>
+<div class="line">‘VariableVerletIntegrator’</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">coupling_frequency</span></code></p></td>
 <td><p>integer</p></td>
@@ -626,7 +689,11 @@ Some options are only available for OpenMMTheory.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">trajectory_file_option</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘DCD’</p></td>
-<td><p>Type of trajectory file. Options: ‘DCD’ (compressed), ‘PDB’, ‘NetCDFReporter’ (compressed), ‘HDF5Reporter’ (compressed). Applies only to pure MM simulations.</p></td>
+<td><div class="line-block">
+<div class="line">Type of trajectory file. Options: ‘DCD’ (compressed), ‘PDB’, ‘NetCDFReporter’</div>
+<div class="line">(compressed), ‘HDF5Reporter’ (compressed). Applies only to pure MM simulations.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">traj_frequency</span></code></p></td>
 <td><p>integer</p></td>
@@ -850,7 +917,8 @@ An XML file associated with the system is created that can be used to create fut
 
 
 <span class="c1">#Defining residues with special user-wanted protonation states for residues in each indicated chain</span>
-<span class="c1">#Dictionary of dictionaries with the chainname (e.g. &#39;A&#39;,&#39;B&#39;) acting as keys for the outer dictionary and the resids being keys for the inner dictionary</span>
+<span class="c1">#Dictionary of dictionaries with the chainname (e.g. &#39;A&#39;,&#39;B&#39;) acting as keys for the outer dictionary</span>
+<span class="c1">#and the resids being keys for the inner dictionary</span>
 <span class="c1">#Example: residue_variants={&#39;A&#39;:{0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39;, 20:&#39;HID&#39;, 21:&#39;GLH&#39; }}</span>
 <span class="c1">#resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP,</span>
 <span class="c1">#resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.</span>
@@ -1032,7 +1100,7 @@ This requires manual tweaking of the final charges (make sure that the sum of at
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="Explicit-solvation.html" class="btn btn-neutral float-right" title="Explicit solvation (small molecule)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="knarr-interface.html" class="btn btn-neutral float-left" title="KNARR interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="crest-interface.html" class="btn btn-neutral float-left" title="CREST interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -146,8 +147,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -260,8 +259,8 @@ The ASH fragments are collected in a list and a stoichiometry is defined (same o
 </div>
 <p>Job-types that can take a Reaction as inputobject:</p>
 <ul class="simple">
-<li><p>Singlepoint_reaction (See <a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a>)</p></li>
-<li><p>thermochemprotocol_reaction (see below)</p></li>
+<li><p><strong>Singlepoint_reaction</strong> (See <a class="reference internal" href="singlepoint.html"><span class="doc">Singlepoint</span></a>)</p></li>
+<li><p><strong>thermochemprotocol_reaction</strong> (see below)</p></li>
 </ul>
 </div>
 <div class="section" id="reactionenergy">
@@ -293,7 +292,7 @@ The ASH fragments are collected in a list and a stoichiometry is defined (same o
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stoichiometry</span></code></p></td>
 <td><p>ASH Theory</p></td>
 <td><p>list of integers</p></td>
-<td><p>Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.</p></td>
+<td><p>Integers for stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_of_fragments</span></code></p></td>
 <td><p>list of ASH Fragments</p></td>
@@ -303,12 +302,12 @@ The ASH fragments are collected in a list and a stoichiometry is defined (same o
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">unit</span></code></p></td>
 <td><p>string</p></td>
 <td><p>‘kcal/mol’</p></td>
-<td><p>String that indicates the final unit to convert reaction energy to. Options: ‘kcal/mol’, ‘eV’, ‘kJ/mol’, ‘cm-1’.</p></td>
+<td><p>String for final unit to convert reaction energy to. Options: ‘kcal/mol’, ‘eV’, ‘kJ/mol’, ‘cm-1’.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
 <td><p>float</p></td>
 <td><p>None</p></td>
-<td><p>If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference.</p></td>
+<td><p>If set, will print both energy and error w.r.t. reference.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">silent</span></code></p></td>
 <td><p>Boolean</p></td>

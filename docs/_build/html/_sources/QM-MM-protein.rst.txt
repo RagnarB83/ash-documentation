@@ -59,7 +59,8 @@ Example on lysozyme:
 
 
     #Defining residues with special user-wanted protonation states for residues in each indicated chain
-    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary and the resids being keys for the inner dictionary
+    #Dictionary of dictionaries with the chainname (e.g. 'A','B') acting as keys for the outer dictionary
+    #and the resids being keys for the inner dictionary
     #Example: residue_variants={'A':{0:'LYN', 17:'CYX', 18:'ASH', 19:'HIE', 20:'HID', 21:'GLH' }}
     #resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP, 
     #resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.
@@ -277,7 +278,10 @@ run directly in the shell.
 ######################################################
 
 Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
-optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).
+optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). 
+The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).
+
+See :doc:`Geometry-optimization` for more information on the geometry optimizer.
 
 actregiondefine.py:
 

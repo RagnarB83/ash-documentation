@@ -1,12 +1,11 @@
-geomeTRIC interface
+Geometry optimization
 ======================================
 
-Geometry optimizations in ASH are nowadays almost exclusive performed via the interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
+Geometry optimizations in ASH are almost exclusive performed via an interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
 
-geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively. 
+The interface to the geomeTRIC optimization library allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively. 
 Furthermore, the "ActiveRegion" feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are in this case passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
-
 
 If you use geometry optimizations in ASH using the geomeTRIC library make sure to cite the article:
 
@@ -16,7 +15,8 @@ If you use geometry optimizations in ASH using the geomeTRIC library make sure t
 geomeTRICOptimizer
 ######################################################
 
-The geomeTRICOptimizer function can also be called via the shorter aliases: **Optimizer** or **Opt**.
+The geomeTRICOptimizer function can also be called via the shorter aliases: 
+**Optimizer** or **Opt**.
 
 .. code-block:: python
 
@@ -44,7 +44,8 @@ The geomeTRICOptimizer function can also be called via the shorter aliases: **Op
    * - ``coordsystem``
      - string
      - 'tric'
-     - Which coordinate system to use during optimization. Options: 'tric', 'hdlc', 'dlc', 'prim', 'cart' Default: 'tric' (TRIC: translation+rotation internal coordinates), for an active region 'hdlc' is used instead.
+     - | Which coordinate system to use during optimization. Options: 'tric', 'hdlc', 'dlc', 'prim', 'cart'  
+       | Default: 'tric' (TRIC: translation+rotation internal coordinates), for an active region 'hdlc' is used instead.
    * - ``maxiter``
      - integer
      - 100
@@ -59,16 +60,19 @@ The geomeTRICOptimizer function can also be called via the shorter aliases: **Op
      - Dictionary that specifies bond, angle or dihedral constraints. See Constraints section for syntax.
    * - ``constrainvalue``
      - Boolean
-     - Fale
-     - Whether the value of the constraint is specified in the constraint specification or not (constraints dict above).
+     - False
+     - | Whether the value of the constraint is specified in the constraint 
+       | specification or not (constraints dict above).
    * - ``constraintsinputfile``
      - string
      - None
-     - Alternative to the constraints dictionary. The file name of a constraints input file. See Constraints section for syntax. 
+     - | Alternative to the constraints dictionary. The file name of a constraints input file. 
+       | See Constraints section for syntax. 
    * - ``convergence_setting``
      - string
      - None.
-     - Specifies the type of convergence criteria. Options: 'ORCA', 'Chemshell', 'ORCA_TIGHT', 'GAU', 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'. See Convergence section for details.
+     - | Specifies the type of convergence criteria. Options: 'ORCA', 'Chemshell', 'ORCA_TIGHT', 'GAU',
+       | 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'. See Convergence section for details.
    * - ``conv_criteria``
      - Dict
      - None
@@ -76,11 +80,14 @@ The geomeTRICOptimizer function can also be called via the shorter aliases: **Op
    * - ``print_atoms_list``
      - list
      - None
-     - Optional list of atom indices for which the Cartesian coordinates will be printed out in each optimization step. Defaults to all atoms in general, active-atoms if ActiveRegion is True or QM-region for QM/MM theories.
+     - | Optional list of atom indices for which the Cartesian coordinates will be printed out
+       | in each optimization step. Defaults to all atoms in general, active-atoms if ActiveRegion
+       | is True or QM-region for QM/MM theories.
    * - ``ActiveRegion``
      - Boolean
      - False
-     - Whether to use an Active Region during the optimization. This requires setting the number of active atoms (actatoms list) below.
+     - | Whether to use an Active Region during the optimization. This requires setting
+       |  the number of active atoms (actatoms list) below.
    * - ``actatoms``
      - list
      - None
@@ -92,11 +99,13 @@ The geomeTRICOptimizer function can also be called via the shorter aliases: **Op
    * - ``charge``
      - integer
      - None
-     - Optional specification of the charge of the system (if QM) if the information is not present in the fragment.
+     - | Optional specification of the charge of the system (if QM) |
+       | if the information is not present in the fragment.
    * - ``mult``
      - integer
      - None
-     - Optional specification of the spin multiplicity of the system (if QM) if the information is not present in the fragment.
+     - | Optional specification of the spin multiplicity of the system (if QM) 
+       | if the information is not present in the fragment.
 
 
 

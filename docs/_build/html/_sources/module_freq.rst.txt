@@ -37,11 +37,13 @@ Numerical frequencies
    * - ``runmode``
      - String
      - 'serial
-     - Whether to run the numerical frequency displacement calculations in serial (sequentially) or in parallel using Python multiprocessing.
+     - | Whether to run the numerical frequency displacement calculations in serial (sequentially) 
+       | or in parallel using Python multiprocessing.
    * - ``npoint``
      - Integer
      - 2
-     - Whether to do a 1-point or 2-point approximation for the Hessian. 1-point takes half as many displacements as 2-point and is less accurate.
+     - | Whether to do a 1-point or 2-point approximation for the Hessian. 1-point takes half as many
+       | displacements as 2-point and is less accurate.
    * - ``displacement``
      - Float
      - 0.005
@@ -49,7 +51,8 @@ Numerical frequencies
    * - ``hessatoms``
      - list
      - None
-     - Optional list of atom indices that will be displaced and define a partial Hessian instead of a full Hessian. If None, all atoms in Fragment will be displaced.
+     - | Optional list of atom indices that will be displaced and define a partial Hessian instead
+       | of a full Hessian. If None, all atoms in Fragment will be displaced.
    * - ``temp``
      - Float
      - 298.15
@@ -122,7 +125,7 @@ This gives the frequencies as eigenvalues and the normal mode eigenvectors.
 A normal mode composition factor analysis is automatically performed as well as thermochemistry based on the rigid-rotor-harmonic-oscillator (RRHO) approximation.
 
 
-Example script below demonstrates a combined geometry optimization (using geomeTRIC).
+Example script below demonstrates a combined geometry optimization (using the geomeTRIC optimizer, see :doc:`Geometry-optimization`).
 The QM code used here is ORCA but any QM, MM or QM/MM object can be used.
 
 .. code-block:: python

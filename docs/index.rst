@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Ash: Documentation
+ASH: Documentation
 ======================================
 
 These are the documentation pages of ASH, an open-source multiscale modelling program.
@@ -35,6 +35,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
 
    job-types
    singlepoint
+   Geometry-optimization
    module_freq
    module_dynamics
    neb
@@ -65,8 +66,6 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    PySCF-interface
    Psi4-interface
    crest-interface
-   geomeTRIC-interface
-   knarr-interface
    OpenMM-interface
 
 .. toctree::

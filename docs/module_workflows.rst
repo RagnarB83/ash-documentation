@@ -40,8 +40,8 @@ The ASH fragments are collected in a list and a stoichiometry is defined (same o
 
 Job-types that can take a Reaction as inputobject:
 
-- Singlepoint_reaction (See :doc:`singlepoint`)
-- thermochemprotocol_reaction (see below)
+- **Singlepoint_reaction** (See :doc:`singlepoint`)
+- **thermochemprotocol_reaction** (see below)
 
 
 #####################
@@ -70,7 +70,7 @@ ReactionEnergy
    * - ``stoichiometry``
      - ASH Theory
      - list of integers
-     - Integers that determine the stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.
+     - Integers for stoichiometry of the reaction. Order must match list_of_energies or list_of_fragments.
    * - ``list_of_fragments``
      - list of ASH Fragments
      - None
@@ -78,15 +78,16 @@ ReactionEnergy
    * - ``unit``
      - string
      - 'kcal/mol'
-     - String that indicates the final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'.
+     - String for final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'.
    * - ``reference``
      - float
      - None
-     - If set, this signifies the reference energy and ReactionEnergy will print both energy and error w.r.t. reference.
+     - If set, will print both energy and error w.r.t. reference.
    * - ``silent``
      - Boolean
      - False
      - Whether function prints to stdout (True) or not (False)
+
 
 
 The simple ReactionEnergy function is a convenient way to calculate the reaction energy for a reaction from a list of energies and the stoichiometry associated with the reaction.

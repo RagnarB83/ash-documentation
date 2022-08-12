@@ -43,8 +43,11 @@ Example:
 Geometry optimization
 ###########################
 
-Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC): :doc:`geomeTRIC-interface`
-geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
+Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC): 
+
+| See : :doc:`Geometry-optimization`
+
+The geomeTRIC Optimizer allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the "ActiveRegion" feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
 
 Example:
@@ -62,7 +65,7 @@ Example:
     Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
     #Optimizer and Opt are aliases for the geomeTRICOptimizer function name.
 
-See :doc:`geomeTRIC-interface` for all features.
+See :doc:`Geometry-optimization` for all features.
 
 Other optimizers:
 
@@ -102,7 +105,7 @@ Nudged Elastic Band Calculations
 Through an interface to the external code Knarr, nudged elastic band (NEB) calculations are possible.
 This enables one to calculate minimum energy paths and locate saddlepoints ("transition states") using any QM, MM or QM/MM Theory in ASH.
 
-See :doc:`knarr-interface` for documentation
+See :doc:`neb` for documentation
 
 Example:
 
@@ -134,7 +137,7 @@ Saddle-point optimization
 ###########################
 
 Currently, saddle-points searches can currently be performed in ASH using the climbing image NEB method.
-See :doc:`knarr-interface` for documentation.
+See :doc:`neb` for documentation.
 
 
 ###########################

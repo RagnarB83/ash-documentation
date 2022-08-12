@@ -90,7 +90,8 @@ There are two options:
             deletionlist=[18840]
 
             #Delete atoms from system
-            remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
+            remove_atoms_from_system_CHARMM(atomindices=deletionlist, fragment=fragfile,psffile=psffile,topfile=topfile, 
+                psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
         The script will delete the selected atoms (here 18840; note: ASH counts from zero) and create new fragmentfiles: 
         newfragment.xyz and newfragment.ygg
@@ -135,7 +136,8 @@ There are two options:
             #Name of resgroup to be added (this needs to be present in topfile!)
             resgroup='CO2'
             #Adding atoms
-            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
+            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, 
+                psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
         The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
         newfragment.xyz and newfragment.ygg

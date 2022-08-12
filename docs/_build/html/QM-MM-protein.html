@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -134,8 +135,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -265,7 +264,8 @@ This has the convenience of using the same MM program that ASH uses for QM/MM.</
 
 
 <span class="c1">#Defining residues with special user-wanted protonation states for residues in each indicated chain</span>
-<span class="c1">#Dictionary of dictionaries with the chainname (e.g. &#39;A&#39;,&#39;B&#39;) acting as keys for the outer dictionary and the resids being keys for the inner dictionary</span>
+<span class="c1">#Dictionary of dictionaries with the chainname (e.g. &#39;A&#39;,&#39;B&#39;) acting as keys for the outer dictionary</span>
+<span class="c1">#and the resids being keys for the inner dictionary</span>
 <span class="c1">#Example: residue_variants={&#39;A&#39;:{0:&#39;LYN&#39;, 17:&#39;CYX&#39;, 18:&#39;ASH&#39;, 19:&#39;HIE&#39;, 20:&#39;HID&#39;, 21:&#39;GLH&#39; }}</span>
 <span class="c1">#resid 1: neutral LYS, resid 17, deprotonated CYS, resid 18 protonated ASP,</span>
 <span class="c1">#resid 19 epsilon-protonated HIS, resid 20 delta-protonated HIS, 21 protonated GLU.</span>
@@ -450,7 +450,9 @@ run directly in the shell.</p>
 <div class="section" id="run-a-qm-mm-geometry-optimization">
 <h2><strong>4. Run a QM/MM geometry optimization</strong><a class="headerlink" href="#run-a-qm-mm-geometry-optimization" title="Permalink to this headline">¶</a></h2>
 <p>Assuming the QM/MM single-point energy test went well, then everything should be ready for running a QM/MM geometry
-optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms). The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).</p>
+optimization. A geometry optimization is the most common job to run for QM/MM modelling of proteins. Note that typically we only optimize a small part of the system in QM/MM (this active region is commonly ~1000 atoms).
+The list of active atoms is defined similarly to the qmatoms list (see above) but as the actatoms list is typically long it is usually more convenient to create this list via a script (e.g. actregiondefine.py).</p>
+<p>See <a class="reference internal" href="Geometry-optimization.html"><span class="doc">Geometry optimization</span></a> for more information on the geometry optimizer.</p>
 <p>actregiondefine.py:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 

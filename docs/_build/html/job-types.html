@@ -118,6 +118,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -144,8 +145,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -260,8 +259,11 @@ a QM/MM Theory object from <a class="reference internal" href="module_QM-MM.html
 </div>
 <div class="section" id="geometry-optimization">
 <h2>Geometry optimization<a class="headerlink" href="#geometry-optimization" title="Permalink to this headline">¶</a></h2>
-<p>Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>): <a class="reference internal" href="geomeTRIC-interface.html"><span class="doc">geomeTRIC interface</span></a>
-geomeTRIC allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
+<p>Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (<a class="reference external" href="https://github.com/leeping/geomeTRIC">https://github.com/leeping/geomeTRIC</a>):</p>
+<div class="line-block">
+<div class="line">See : <a class="reference internal" href="Geometry-optimization.html"><span class="doc">Geometry optimization</span></a></div>
+</div>
+<p>The geomeTRIC Optimizer allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. Furthermore, the “ActiveRegion” feature inside Ash allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
@@ -276,7 +278,7 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
 <span class="c1">#Optimizer and Opt are aliases for the geomeTRICOptimizer function name.</span>
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="geomeTRIC-interface.html"><span class="doc">geomeTRIC interface</span></a> for all features.</p>
+<p>See <a class="reference internal" href="Geometry-optimization.html"><span class="doc">Geometry optimization</span></a> for all features.</p>
 <p>Other optimizers:</p>
 <ul class="simple">
 <li><p>An internal optimizer is available (called “SimpleOpt”) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.</p></li>
@@ -307,7 +309,7 @@ See <a class="reference internal" href="module_freq.html"><span class="doc">Freq
 <h2>Nudged Elastic Band Calculations<a class="headerlink" href="#nudged-elastic-band-calculations" title="Permalink to this headline">¶</a></h2>
 <p>Through an interface to the external code Knarr, nudged elastic band (NEB) calculations are possible.
 This enables one to calculate minimum energy paths and locate saddlepoints (“transition states”) using any QM, MM or QM/MM Theory in ASH.</p>
-<p>See <a class="reference internal" href="knarr-interface.html"><span class="doc">KNARR interface</span></a> for documentation</p>
+<p>See <a class="reference internal" href="neb.html"><span class="doc">Nudged Elastic Band Method</span></a> for documentation</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ash</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -330,7 +332,7 @@ Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction co
 <div class="section" id="saddle-point-optimization">
 <h2>Saddle-point optimization<a class="headerlink" href="#saddle-point-optimization" title="Permalink to this headline">¶</a></h2>
 <p>Currently, saddle-points searches can currently be performed in ASH using the climbing image NEB method.
-See <a class="reference internal" href="knarr-interface.html"><span class="doc">KNARR interface</span></a> for documentation.</p>
+See <a class="reference internal" href="neb.html"><span class="doc">Nudged Elastic Band Method</span></a> for documentation.</p>
 </div>
 <div class="section" id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Permalink to this headline">¶</a></h2>

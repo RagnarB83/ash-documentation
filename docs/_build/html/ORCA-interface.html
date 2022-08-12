@@ -108,6 +108,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -141,8 +142,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -228,10 +227,13 @@
 <h1>ORCA interface<a class="headerlink" href="#orca-interface" title="Permalink to this headline">¶</a></h1>
 <p>ORCATheory class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ORCATheory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">extrabasisatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrabasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">TDDFT</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TDDFTroots</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">FollowRoot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extraline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">first_iteration_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orcadir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orcasimpleinput</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">printlevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">extrabasisatoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extrabasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">TDDFT</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">TDDFTroots</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">FollowRoot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">orcablocks</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extraline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">first_iteration_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">brokensym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">HSmult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomstoflip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numcores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nprocs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">moreadfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">moreadfile_always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autostart</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keep_each_run_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_population_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;orca&quot;</span><span class="p">,</span> <span class="n">check_for_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_for_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">propertyblock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keep_each_run_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_population_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;orca&quot;</span><span class="p">,</span> <span class="n">check_for_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_for_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">fragment_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -288,7 +290,11 @@
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TDDFT</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state gradient is calculated and used.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to do TDDFT or not. If part of a Gradient job or Optimization job then the excited state</div>
+<div class="line">gradient is calculated and used.</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TDDFTroots</span></code></p></td>
 <td><p>integer</p></td>
@@ -303,7 +309,11 @@
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">brokensym</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether to do a Flipspin ORCA calculation to find a BS solution. Requires HSmult and atomstoflip options.</p></td>
+<td><div class="line-block">
+<div class="line">Whether to do a Flipspin ORCA calculation to find a BS solution.</div>
+<div class="line">Requires HSmult and atomstoflip options.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HSmult</span></code></p></td>
 <td><p>integer</p></td>
@@ -323,7 +333,12 @@
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">moreadfile_always</span></code></p></td>
 <td><p>Boolean</p></td>
 <td><p>False</p></td>
-<td><p>Whether moreadfile option is constantly applied for all runs using this ORCATheory object or only for first run. Default: False meaning moreadfile is only used for first run using ORCATHeory object.</p></td>
+<td><div class="line-block">
+<div class="line">Whether moreadfile option is constantly applied for all runs using this ORCATheory</div>
+<div class="line">object or only for first run. Default: False meaning moreadfile is only used for</div>
+<div class="line">first run using ORCATHeory object.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">autostart</span></code></p></td>
 <td><p>Boolean</p></td>
@@ -378,7 +393,13 @@
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fragment_indices</span></code></p></td>
 <td><p>list of lists</p></td>
 <td><p>None</p></td>
-<td><p>Optional: list of lists of atom indices that specify whether atoms belong to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block in the ORCA inputfile. For QM/MM: atom indices must be in QM-region.</p></td>
+<td><div class="line-block">
+<div class="line">Optional: list of lists of atom indices that specify whether atoms belong</div>
+<div class="line">to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations).</div>
+<div class="line">Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block</div>
+<div class="line">in the ORCA inputfile. For QM/MM: atom indices must be in QM-region.</div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>

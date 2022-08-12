@@ -107,6 +107,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job-types.html">Job Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="singlepoint.html">Singlepoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Geometry-optimization.html">Geometry optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_freq.html">Frequency calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_dynamics.html">Molecular dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neb.html">Nudged Elastic Band Method</a></li>
@@ -133,8 +134,6 @@
 <li class="toctree-l1"><a class="reference internal" href="PySCF-interface.html">PySCF interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Psi4-interface.html">Psi4 interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crest-interface.html">CREST interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geomeTRIC-interface.html">geomeTRIC interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="knarr-interface.html">KNARR interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OpenMM-interface.html">OpenMM interface</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
@@ -293,7 +292,8 @@ PSFgen is the best option for creating a new PSF-file.</p>
 <span class="n">deletionlist</span><span class="o">=</span><span class="p">[</span><span class="mi">18840</span><span class="p">]</span>
 
 <span class="c1">#Delete atoms from system</span>
-<span class="n">remove_atoms_from_system_CHARMM</span><span class="p">(</span><span class="n">atomindices</span><span class="o">=</span><span class="n">deletionlist</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">fragfile</span><span class="p">,</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span><span class="n">topfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span> <span class="n">psfgendir</span><span class="o">=</span><span class="n">psfgendir</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatoms</span><span class="p">)</span>
+<span class="n">remove_atoms_from_system_CHARMM</span><span class="p">(</span><span class="n">atomindices</span><span class="o">=</span><span class="n">deletionlist</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="n">fragfile</span><span class="p">,</span><span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span><span class="n">topfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span>
+    <span class="n">psfgendir</span><span class="o">=</span><span class="n">psfgendir</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatoms</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script will delete the selected atoms (here 18840; note: ASH counts from zero) and create new fragmentfiles:
@@ -339,7 +339,8 @@ This can be performed with an ASH script like this:</p>
 <span class="c1">#Name of resgroup to be added (this needs to be present in topfile!)</span>
 <span class="n">resgroup</span><span class="o">=</span><span class="s1">&#39;CO2&#39;</span>
 <span class="c1">#Adding atoms</span>
-<span class="n">add_atoms_to_system_CHARMM</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragfile</span><span class="p">,</span> <span class="n">added_atoms_coordstring</span><span class="o">=</span><span class="n">addition_string</span><span class="p">,</span> <span class="n">resgroup</span><span class="o">=</span><span class="n">resgroup</span><span class="p">,</span> <span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">topfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span> <span class="n">psfgendir</span><span class="o">=</span><span class="n">psfgendir</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatoms</span><span class="p">)</span>
+<span class="n">add_atoms_to_system_CHARMM</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="n">fragfile</span><span class="p">,</span> <span class="n">added_atoms_coordstring</span><span class="o">=</span><span class="n">addition_string</span><span class="p">,</span> <span class="n">resgroup</span><span class="o">=</span><span class="n">resgroup</span><span class="p">,</span>
+    <span class="n">psffile</span><span class="o">=</span><span class="n">psffile</span><span class="p">,</span> <span class="n">topfile</span><span class="o">=</span><span class="n">topfile</span><span class="p">,</span> <span class="n">psfgendir</span><span class="o">=</span><span class="n">psfgendir</span><span class="p">,</span> <span class="n">qmatoms</span><span class="o">=</span><span class="n">qmatoms</span><span class="p">,</span> <span class="n">actatoms</span><span class="o">=</span><span class="n">actatoms</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles:

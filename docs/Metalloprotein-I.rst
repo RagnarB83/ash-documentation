@@ -583,7 +583,7 @@ Once we have performed an acceptable classical simulation (with the Fe-S bonds o
 we can move on to QM/MM calculations that allow a more realistic description of the metal site and allows us to remove artificial constraints associated 
 with the Fe-S bonds (we constrained them because we did not have bonded MM parameters available).
 
-Typical QM/MM calculations involve geometry optimizations of a system-subset : see step 4 below.
+Typical QM/MM calculations involve geometry optimizations (see :doc:`Geometry-optimization`) of a system-subset : see step 4 below.
 But here, due to the small cofactor involved and the availability of a decent cheap semi-empirical method (GFN-XTB) that can handle transition metals we can perform
 GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds and explore the dynamic nature of the metal site properly (the accuracy of such a simulations depends 
 of course on how well the semi-empirical method handles the system).
@@ -645,6 +645,7 @@ We will first choose a small active region that consists only of the QM-region (
 with the QM-region via electrostatic embedding (MM pointcharges polarizing the QM electron density), short-range Lennard-Jones interactions (MM atoms interacting with QM atoms via the Lennard-Jones parameters defined in the forcefield) as well 
 as via the bonded terms occurring at the QM and MM boundary. 
 
+See :doc:`Geometry-optimization` for information on the Optimizer function.
 
 *4-QMMM_Opt_smallact.py:*
 
@@ -675,13 +676,13 @@ as via the bonded terms occurring at the QM and MM boundary.
     # QM/MM geometry optimization
     #Defining active region as QM-region
     actatoms=qmatoms
-    geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200,
+    Optimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200,
         charge=-1, mult=6)
 
 
 This optimization should converge in about 13 optimization steps.
 geomeTRICOptimizer writes out 2 trajectory files that can be visualized: geometric_OPTtraj.xyz (active-region only) geometric_OPTtraj_Full.xyz (full system) using e.g VMD:
-
+See :doc:`Geometry-optimization`
 .. code-block:: text
 
     vmd geometric_OPTtraj.xyz  # visualize trajectory with active region 

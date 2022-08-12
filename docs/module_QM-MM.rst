@@ -35,15 +35,18 @@ QMMMTheory class
    * - ``qm_theory``
      - ASHTheory
      - None
-     - Required: The theory level for the QM-region. Must be a valid ASH Theory that supports electrostatic embedding.
+     - | Required: The theory level for the QM-region. Must be a valid ASH Theory
+       | that supports electrostatic embedding.
    * - ``qmatoms``
      - list
      - None
-     - Required: List of QM-atom indices that defined the QM-region. Atoms not in list are treated as MM atoms.
+     - | Required: List of QM-atom indices that defined the QM-region. Atoms not
+       | in list are treated as MM atoms.
    * - ``mm_theory``
      - ASHTheory
      - None
-     - Required: The theory level for the MM-region. Must be an object of class OpenMMTheory or NonbondedTheory.
+     - | Required: The theory level for the MM-region. Must be an object of class
+       | OpenMMTheory or NonbondedTheory.
    * - ``fragment``
      - ASH Fragment
      - None
@@ -51,23 +54,28 @@ QMMMTheory class
    * - ``qm_charge``
      - integer
      - None
-     - Optional: Specify the charge of the QM-region. This takes precedence over other charge specifications.
+     - | Optional: Specify the charge of the QM-region. This takes precedence
+       | over other charge specifications.
    * - ``qm_mult``
      - integer
      - None
-     - Optional: Specify the spin multiplicity of the QM-region. This takes precedence over other mult specifications.
+     - | Optional: Specify the spin multiplicity of the QM-region. This takes
+       | precedence over other mult specifications.
    * - ``charges``
      - list
      - None
-     - Optional: list of atom charges. If not defined then charges will be read from mm_theory.
+     - | Optional: list of atom charges. If not defined then charges will be read
+       | from mm_theory.
    * - ``printlevel``
      - integer
      - 2
-     - Optional: The printlevel setting. If printlevel >= 3 then more printing and gradient files are written to disk.
+     - | Optional: The printlevel setting. If printlevel >= 3 then more printing
+       | and gradient files are written to disk.
    * - ``numcores``
      - integer
      - 1
-     - Optional: Number of CPU cores to use for qm_theory. If defined, takes precedence over QMTheory setting.
+     - | Optional: Number of CPU cores to use for qm_theory. If defined, takes
+       | precedence over QMTheory setting.
    * - ``excludeboundaryatomlist``
      - list
      - None
@@ -95,11 +103,13 @@ QMMMTheory class
    * - ``actatoms``
      - list
      - None
-     - Optional: List of active atoms in QM/MM. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
+     - | Optional: List of active atoms in QM/MM. NOTE: Only compatible if
+       | mm_theory is of NonBondedTheory class.
    * - ``frozenatoms``
      - list
      - None
-     - Optional: List of frozen atoms in QM/MM, alternative to actatoms. NOTE: Only compatible if mm_theory is of NonBondedTheory class.
+     - | Optional: List of frozen atoms in QM/MM, alternative to actatoms. 
+       | NOTE: Only compatible if mm_theory is of NonBondedTheory class.
 
 
 Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMTheory object:
