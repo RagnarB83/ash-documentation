@@ -62,7 +62,7 @@ at various levels of theory.
 
 1. conformational sampling using crest and GFN-xTB (**low-level** theory).
 2. Geometry optimizations for each low-energy conformer at a **medium-level** of theory (typically DFT using e.g. ORCATheory)
-3. **High-level** single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. CC_CBS_Theory)
+3. **High-level** single-point calculation (e.g. DLPNO-CCSD(T)/CBS using e.g. ORCA_CC_CBS_Theory)
 
 .. code-block:: python
 
@@ -87,7 +87,7 @@ at various levels of theory.
     """
     ML_B3LYP = ORCATheory(orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
-	HL_CC = CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, 
+	HL_CC = ORCA_CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, 
                   pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 
     #Call confsampler_protocol

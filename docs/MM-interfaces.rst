@@ -2,15 +2,15 @@
 MM Interfaces
 ==========================
 
-Molecular mechanics in ASH is possible via either the internal NonBondedTheory or via an interface to the external OpenMM package: :doc:`OpenMM-interface`
+Molecular mechanics in ASH is possible via either the internal **NonBondedTheory** or via an interface to the external OpenMM package: :doc:`OpenMM-interface`
 
-The internal NonBondedTheory is only capable of calculating nonbonded interactions: Coulomb electrostatics and short-range Lennard-Jones interactions.
-It will use routines written in Julia and thus require activating the Python-Julia interface.
-Nonbonded Theory can be used in geometry optimizations provided that the MM atoms are always frozen.
+The internal **NonBondedTheory** is only capable of calculating nonbonded interactions: Coulomb electrostatics and short-range Lennard-Jones interactions.
+It will use routines written in Julia and thus requires activating the Python-Julia interface.
+**NonbondedTheory** can be used in geometry optimizations provided that the MM atoms are always frozen (should be specified by the **Optimizer**).
 It can be used as MM code in QM/MM (:doc:`module_QM-MM`) theory objects.
 
 The interface to the external OpenMM code (:doc:`OpenMM-interface`) allows for full-fledged molecular mechanics.
-OpenMM is a fast C++ code with a Python API that ASH is interfaced to. 
+OpenMM is a fast C++ library with a Python API that ASH is interfaced to. 
 OpenMM is capable of bonded and nonbonded interactions, can treat periodic and nonperiodic systems and can read in multiple types of forcefield files.
 It can also run both on the CPU and the GPU.
 It can be used as MM code in QM/MM (:doc:`module_QM-MM`) theory objects.
@@ -29,12 +29,12 @@ The NonBondedTheory class:
                      codeversion='julia', printlevel=2):
 
 
-Defining a NonBondedTheory object is easy and can be accomplished in a few different ways.
+Defining a **NonBondedTheory** object is easy and can be accomplished in a few different ways.
 A simple way is to define all information in the script itself. This requires defining the MM forcefield as a dictionary
 and then provides a list of atomtypes of the system as a minimum. In the forcefield we then define the Coulomb and Lennard-Jones parameters
 associated with the atomtypes.
 
-Simple way (forcefield_dict and atomtypes):
+*Simple way (forcefield_dict and atomtypes):*
 
 .. code-block:: python
 
@@ -55,7 +55,7 @@ Simple way (forcefield_dict and atomtypes):
     Singlepoint(fragment=HF_frag,theory=MMobject)
 
 
-Alternative is to define the forcefield in a forcefieldfile that is read-in.
+*An alternative is to define the forcefield in a forcefieldfile that is read-in.*
 
 .. code-block:: python
 
@@ -81,17 +81,24 @@ where forcefield.ff contains e.g.:
 
 The forcefield file will read and parse lines like:
 
-- LennardJones_i_sigma <atomtype> <sigma> <epsilon> # Specify atomtype and sigma-value (Å) and epsilon value (kcal/mol)
-- LennardJones_i_R0 <atomtype> <R0> <epsilon>  # Specify atomtype and R0-value (Å) and epsilon value (kcal/mol)
-- LennardJones_ij <atomtype1> <atomtype2>  <R0_ij> <epsilon pair parameter> #Specify pair-potential. Currently inactive option
-- charge <atomtype> <chargevalue> # Specify atomtype and charge-value
+
+.. code-block:: text
+
+    LennardJones_i_sigma <atomtype> <sigma> <epsilon> # Specify atomtype and sigma-value (Å) and epsilon value (kcal/mol)
+    LennardJones_i_R0 <atomtype> <R0> <epsilon>  # Specify atomtype and R0-value (Å) and epsilon value (kcal/mol)
+    LennardJones_ij <atomtype1> <atomtype2>  <R0_ij> <epsilon pair parameter> #Specify pair-potential. Currently inactive option
+    charge <atomtype> <chargevalue> # Specify atomtype and charge-value
+
 
 or other options:
 
-- combination_rule <combrule option>  #For LJ potential. Can be geometric, arithmetic, mixed_geoepsilon, mixed_geosigma
-- XX_atomtypes <list of atomtypes> #Atomtypes for residue XX. List is space-separated.
-- XX_charges <list of charges> #Charges for residue XX. List is space-separated.
-- XX_elements <list of elements> #Elements for residue XX. List is space-separated.
+.. code-block:: text
+
+    combination_rule <combrule option>  #For LJ potential. Can be geometric, arithmetic, mixed_geoepsilon, mixed_geosigma
+    XX_atomtypes <list of atomtypes> #Atomtypes for residue XX. List is space-separated.
+    XX_charges <list of charges> #Charges for residue XX. List is space-separated.
+    XX_elements <list of elements> #Elements for residue XX. List is space-separated.
+
 
 ###########################
 OpenMM interface

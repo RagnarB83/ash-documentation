@@ -11,7 +11,7 @@ To install/setup ASH you need to download the code from the `Github <https://git
 ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via conda or pip.
 
-Scientific Python distributions like Anacond/miniconda can be convenient: https://www.anaconda.com/distribution/
+Scientific Python distributions like Anaconda/miniconda can be convenient: https://www.anaconda.com/distribution/
 Anaconda comes with Numpy, SciPy, Matplotlib.
 
 Some functionality (primarily the molecular crystal QM/MM part) require a Julia installation (as the Python routines will be too slow).
@@ -19,7 +19,7 @@ Future versions may make the Julia interface a requirement.
 
 Strict dependencies:
 
-* `Python version 3.6 <https://www.python.org>`_ >=
+* `Python version 3.6 <https://www.python.org>`_ or higher
 * `Numpy <https://numpy.org>`_ library.
 
 
@@ -42,7 +42,6 @@ Useful libraries for specific functionality:
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces and in molecular crystal QM/MM.
 * `Plumed <https://www.plumed.org>`_ Plumed library
 * `Parmed <https://parmed.github.io/ParmEd/html/index.html>`_ May be used by OpenMM interface.
-* `Plumed <https://www.plumed.org>`_ MDanalysis
 * `MDAnalysis <https://www.mdanalysis.org>`_ MD trajectory analysis
 * `MDtraj <https://www.mdtraj.org>`_ MD trajectory analysis
 * `ASE <https://wiki.fysik.dtu.dk/ase/>`_ Atomic Simulation Environment

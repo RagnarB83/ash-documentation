@@ -33,10 +33,11 @@ MMTheory (see :doc:`MM-interfaces`) or even a QM/MMTheory (see :doc:`module_QM-M
         """
 
 *Example*
-In the example script below an ASH fragment is created from the XYZ-file "hf.xyz" that contains the Cartesian coordinates of hydrogen fluoride.
-The charge and multiplicity is also defined as part of the Fragment object.
-Next a theory-level object is defined, here an object is created from the ORCATheory class. 
-For a single-point calculation one then simply passes the Theory object and the Fragment object to the **Singlepoint** function.
+
+In the example script below an ASH **Fragment** is created from the XYZ-file "hf.xyz" that contains the Cartesian coordinates of hydrogen fluoride.
+The charge and multiplicity is also defined as part of the **Fragment** object.
+Next a theory-level object is defined, here an object is created from the **ORCATheory** class. 
+For a single-point calculation one then simply passes the **Theory** object and the **Fragment** object to the **Singlepoint** function.
 
 .. code-block:: python
 
@@ -53,16 +54,17 @@ For a single-point calculation one then simply passes the Theory object and the 
 
 
 Note that an alternative to defining the charge/mult as attributes of the Fragment is to instead pass the charge and multiplicity to the Singlepoint function.
+If this option is used, this will override any charge/mult information present in the fragment.
 
 .. code-block:: python
 
     #Simple Energy SP calc. Energy will be printed to output and also returned as an energy variable
     Singlepoint(theory=ORCAobject, fragment=HF_frag, charge=0, mult=1)
 
-If this option is used, this will override any charge/mult information present in the fragment.
+
 
 The energy calculated is printed to standard output by default.
-The **Singlepoint** function returns an energy as a floating point number and usually you want to store the energy as a new variable so that you can do something more with the data.
+The **Singlepoint** function returns an energy as a floating point number which you can use to store the energy as a new variable so that you can do something more with the data.
 
 .. code-block:: python
 
@@ -82,7 +84,7 @@ It is also possible to request a gradient calculation in which case both the ene
 
 
 By default, the files created by the Theory interface are not cleaned up. To have ORCA (in this example) clean up
-temporary files (e.g. so they don't interfere with a future job), one can use the cleanup function:
+temporary files (e.g. so they don't interfere with a future job), one can use the cleanup method of the **ORCATheory** object:
 
 .. code-block:: python
 
@@ -224,7 +226,7 @@ You might even want to perform calculation on multiple fragments with multiple t
     def Singlepoint_fragments_and_theories(theories=None, fragments=None, stoichiometry=None):
 
 
-Example:
+**Example:**
 
 .. code-block:: python
 
@@ -318,7 +320,7 @@ A final list of lists of total energies is returned (each list containing the to
 Singlepoint_reaction function
 #############################################
 
-Finally it is possible to use an ASH Reaction object together with  **Singlepoint_reaction** to run
+Finally it is possible to use an ASH **Reaction** object together with  **Singlepoint_reaction** to run
 calculations for each fragment defined within the reaction and get the reaction energy back.
 See :doc:`module_workflows` about ASH Reaction class.
 
@@ -327,7 +329,7 @@ See :doc:`module_workflows` about ASH Reaction class.
     def Singlepoint_reaction(theory=None, reaction=None, unit='kcal/mol'):
 
 
-Example:
+**Example:**
 
 .. code-block:: python
 

@@ -3,19 +3,20 @@
 About ASH
 ==================================================
 
-ASH is a Python-based computational chemistry and multiscale modelling program. Can do single-point calculations, geometry optimizations, surface scans,
+ASH is a Python-based computational chemistry and multiscale modelling program. 
+The program can do single-point calculations, geometry optimizations, surface scans, nudged elastic band optimizations,
 molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians as well as many complex workflows.
-Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. Reaction profiles and saddlepoint optimizations
-can be performed using the nudged elastic band method (NEB).
+Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. 
+Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
 
 The code is open-source and available on `Github <https://github.com/RagnarB83/ash>`_
 
-Strict requirements:
+**Strict requirements:**
 
 - Python3 installation (version 3.6 or higher)
 - Numpy Python library
 
-Strongly recommended (and mostly necessary):
+**Strongly recommended (and mostly necessary):**
 
 - geomeTRIC (optimizer). Python library, easily installed via pip. Required for geometry optimizations.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
@@ -23,7 +24,7 @@ Strongly recommended (and mostly necessary):
 - Matplotlib. Only for plotting options.
 
 
-Optional Python modules for specific functionality (can be installed via pip or conda):
+**Optional Python modules for specific functionality (can be installed via pip or conda):**
 
 - PySCF (C++/Python quantum chemistry code)
 - Psi4 (C++/Python quantum chemistry code)
@@ -32,7 +33,7 @@ Optional Python modules for specific functionality (can be installed via pip or 
 - Scipy package
 - mdtraj (MD trajectory analysis)
 
-Optional external QM codes (separate installations):
+**Optional external QM codes (separate installations):**
 
 - ORCA
 - Dalton
@@ -70,10 +71,11 @@ Features
 
 **Parallelization :**
 
-- Parallelization via Python multiprocessing: multiple jobs and numerical frequencies.
-- QM code parallelization also available.
+- Parallelization via Python multiprocessing.
+- QM code parallelization possible.
 - Support for simultaneous single-point jobs.
 - Support for simultaneous Numerical-Hessian displacement calculations.
+- Support for parallelization of NEB images.
 
 **Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
 
@@ -100,14 +102,15 @@ Features
 
 **QM/MM Geometry optimization:**
 
-- Possible with geomeTRIC optimizer currently, only. Support for HDLC coordinates.
+- Possible with geomeTRIC optimizer currently, only. Support for HDLC internal coordinates.
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
 
 - Partial Hessian possible
 - Full parallelization.
 - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
-- Also possible to request analytical Hessian from ORCA.
+- Not yet available: Parallel QM/MM numerical frequencies.
+- Possible to request analytical Hessian from ORCA.
 
 **Hessian analysis**
 
@@ -126,8 +129,6 @@ Features
 - via OpenMM library: MM-only, QM/MM and QM-only
 - via ASE library
 
-**Submodules:**
-
 **molcrys: Automatic Molecular crystal QM/MM**
 
 - Read-in CIF-file, extract cell information and coordinates of asymmetric unit.
@@ -139,7 +140,7 @@ Features
 - Automatic creation of nonbonded MM forcefield (charges and LJ potentials (**Todo**)).
 - Self-consistent QM/MM for charge definition of cluster.
 - QM/MM Geometry optimization of central fragment of cluster to capture solid-state geometrical effects.
-- **Todo:** QM/MM Numerical frequencies of central fragment of cluster.
+- QM/MM Numerical frequencies of central fragment of cluster.
 
 **solvshell: Multi-shell solvation protocol for redox potentials, spectroscopy etc.**
 

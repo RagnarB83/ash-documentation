@@ -1,11 +1,14 @@
 Geometry optimization
 ======================================
 
-Geometry optimizations in ASH are almost exclusive performed via an interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
+Geometry optimizations in ASH are almost exclusively performed via an interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
 
-The interface to the geomeTRIC optimization library allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively. 
-Furthermore, the "ActiveRegion" feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). Only the active region coordinates are in this case passed to geomeTRIC.
-ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
+The interface to the geomeTRIC optimization library allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively.
+Any ASH theory object can be used using in principle any available Hamiltonian (implemented analytical gradient strongly recommended though).
+Furthermore, the "ActiveRegion" feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). 
+Only the active region coordinates are in this case passed to geomeTRIC.
+ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations (via ActiveRegion feature), 
+relaxed and unrelaxed 1D/2D surface scans (see  :doc:`surfacescan`) and more.
 
 If you use geometry optimizations in ASH using the geomeTRIC library make sure to cite the article:
 
@@ -115,6 +118,7 @@ Examples
 
 *Geometry optimization of an H2O fragment at the xTB level, with default options.*
 
+
 .. code-block:: python
 
     from ash import *
@@ -123,6 +127,17 @@ Examples
     xtbcalc=xTBTheory(xtbmethod='GFN1')
 
     Optimizer(theory=xtbcalc, fragment=frag)
+
+*Geometry optimization of an H2O fragment at the BP86 DFT-level with ORCA, with default options.*
+
+.. code-block:: python
+
+    from ash import *
+
+    frag=Fragment(databasefile="h2o.xyz",charge=0, mult=1)
+    orcacalc=ORCATheory(orcasimpleinput='! BP86 def2-SVP def2/J tightscf')
+
+    Optimizer(theory=orcacalc, fragment=frag)
 
 
 *Geometry optimization of a QM/MM system with an active region:*
@@ -153,7 +168,7 @@ Examples
 Constraints
 ######################################################
 
-Constraints can be provided to the Optimizer in two different ways: either via providing a dictionary definition of the constrains (*constraints* keyword) or alternative by providing a valid constraint-parameter file (*constraintsinputfile* keyword) in geomeTRIC library syntax.
+Constraints can be provided to the Optimizer in two different ways: either via providing a dictionary definition of the constraints (*constraints* keyword) or alternatively by providing a valid constraint-parameter file (*constraintsinputfile* keyword) in geomeTRIC library syntax.
 The former way is recommended.
 Syntax to use for the constraints dictionary:
 
@@ -185,7 +200,8 @@ Syntax to use for the constraints dictionary:
     Optimizer(theory=xtbcalc, fragment=frag, constraints=constraints_dict)
 
 
-When the above syntax is used, the constraint is applied according to the initial geometry provided (the first O-H bond is constrained to 0.965 Å)). If one wants to constrain e.g. a bond distance to a specific value
+When the above syntax is used, the constraint is applied according to the initial geometry provided (the O-H bond (between atoms 0 and 1) is constrained to 0.965 Å)). 
+If one wants to constrain e.g. a bond distance to a specific value
 then this can be done by providing an extra value to the list while also providing the *constrainvalue=True* option.
 
 .. code-block:: python
@@ -216,7 +232,7 @@ then this can be done by providing an extra value to the list while also providi
 
 Finally an alternative way of specifying constraint is to provide a file with the constraints defined according to the syntax of the geomeTRIC library.
 See `geomeTRIC constraints file format <https://github.com/leeping/geomeTRIC/blob/master/examples/constraints.txt>`_ for more information.
-The drawback of this approach is that atom indices used 1-based indexing (unlike ASH in general), indices would have to be modified in case of an Active Region,
+The drawback of this approach is that atom indices will use 1-based indexing (unlike ASH in general), indices would have to be checked and modified in case of an Active Region,
 and finally either a global path to this file needs to be provided (so that the computing node can access it) or the file copied over to the scratch on the node.
 
 Format of the constraint file (*Warning: geomeTRIC counts from 1 (unlike ASH).*)
@@ -242,7 +258,9 @@ Convergence criteria
 The default convergence criteria of **geomeTRICOptimizer** are the same as used by the ORCA program by default. It is possible to change these default criteria by either specifying a string (*convergence_setting* keyword)
 or manually setting all the criteria by providing a dictionary (*conv_criteria* keyword)
 
-convergence_setting options (default: 'ORCA'). What type of convergence criteria to use. Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'.
+convergence_setting options (default: 'ORCA'). What type of convergence criteria to use. 
+
+Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'.
 
 
 

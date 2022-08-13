@@ -5,10 +5,11 @@ ASH Program Philosophy
 ASH is a program in its infancy and is constantly under revisement as the programming skills and ideas of the main developer evolve.
 It is inspired by multiple software projects. It is written in Python but is not necessarily very Pythonic.
 
-While object-oriented (OO) programming is a highly useful programming paradigm and is used partially in ASH, the OO-use is actually fairly limited and is deliberately mostly hidden when using the program.
-Object orientation is used within the program to define simple classes such as : Fragment, Theory classes etc.
+While object-oriented (OO) programming is a highly useful programming paradigm and is used partially in ASH, the OO-use in ASH is actually 
+fairly limited and is deliberately mostly hidden when using the program.
+Object orientation is used within the program to define simple classes such as : **Fragment**, **Theory** classes etc.
 that define the molecular-system or theory level) and for code organization.
-Meanwhile regular Python functions serve the purpose of jobs: i.e. we run jobs via ASH functions that take ASHTheory objects and ASH Fragment objects as input and return.
+Meanwhile regular Python functions serve the purpose of jobs: i.e. we run jobs via ASH functions that take **ASHTheory** objects and ASH **Fragment** objects as input and return.
 
 We believe that the minimal exposure of object orientation to the user, makes ASH a simpler and easier-to-use program, especially to those not used to much programming or even Python.
 

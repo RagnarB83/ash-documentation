@@ -8,16 +8,16 @@ This page shows the basics of using ASH via examples.
 Python basics
 #########################################
 
-An ASH inputfile is a Python script/program with ASH loaded as a library that gives access to specific ASH functionality (the Fragment, ORCATheory, Singlepoint, geomeTRICOptimizer etc. names are ASH object, only available once ASH has been imported).
+An ASH inputfile is a Python script/program with ASH loaded as a library that gives access to specific ASH functionality (the **Fragment**, **ORCATheory**, **Singlepoint**, **Optimizer** etc. names are ASH objects, only available once ASH has been imported into the Python environment).
 This means that ASH does not behave like a regular QM program with a specific inputfile syntax for a specific job.
 Instead, an ASH inputfile is its own program/script (in Python), written by the user that when executed (by the Python interpreter) will carry out all instructions in the file.
 This means that when a user's ASH script is executed, the Python interpreter will carry out all of the instructions defined in the script but nothing else.
 This gives a lot of flexiblity as it allows the user to create simple or complex, specific or general, single-job or multi-job calculations depending on the need or taste.
 
-The only drawback is that it requires the user to learn some Python programming basics in order to use the program.
+The only drawback is that it requires the user to learn some simple Python programming basics in order to use the program.
 There are many, many resources available for learning Python.
 
-Examples:
+**Learning Python resources:**
 
 - https://wiki.python.org/moin/BeginnersGuide/NonProgrammers
 - https://python-course.eu/python-tutorial/
@@ -34,7 +34,7 @@ The key thing is to create an ASH fragment object as this is how ASH reads molec
 
 *Defining an atom:*
 
-We can define an atom in ASH in a very simple way by using the atom keyword and providing an element symbol when creating an ASH Fragment.
+We can define an atom in ASH in a very simple way by using the atom keyword and providing an element symbol when creating an ASH **Fragment**.
 ASH will by default create Cartesian coordinates at position: 0.0 0.0 0.0 (assuming Å).
 
 .. code-block:: python
@@ -87,7 +87,7 @@ ASH will by default put the first atom at position 0.0 0.0 0.0 and the next at c
 
 *Defining a water molecule from a multi-line string of Cartesian coordinates (Å):*
 
-Here we define first a Python multi-line string (the 3 quotation marks are necessary) and then use the coordsstring keyword of Fragment to point to this string. 
+Here we define first a Python multi-line string (the 3 quotation marks are necessary) and then use the *coordsstring* keyword of **Fragment** to point to this string. 
 
 .. code-block:: python
 
@@ -101,7 +101,7 @@ Here we define first a Python multi-line string (the 3 quotation marks are neces
     """
     H2O=Fragment(coordsstring=coords)
 
-*Defining a water molecule from an Xmol xyz-file containing Cartesian coordinates (Å):*
+*Defining a water molecule from an XYZ-file (Xmol format) containing Cartesian coordinates (Å):*
 
 
 .. code-block:: python
@@ -132,7 +132,7 @@ where h2o.xyz must be present in working directory and should look like (a 2-lin
 
 where lysozyme.pdb must be present in working directory and be a regular PDB-file.
 
-.. note:: When ASH creates a Fragment from a PDB-file, it will only extract element and coordinate information from the file, not atom-type or topology information. OpenMMTheory is needed for reading topology from a PDB-file.
+.. note:: When ASH creates a **Fragment** from a PDB-file, it will only extract element and coordinate information from the file, not atom-type or topology information. OpenMMTheory (see :doc:`OpenMM-interface`) is needed for reading topology from a PDB-file.
 
 
 #########################################
@@ -142,7 +142,7 @@ Defining theories
 We can define theory levels using any theory level defined in ASH that has a valid interface to an external QM or MM program.
 See :doc:`QM-interfaces`, :doc:`MM-interfaces` and :doc:`module_QM-MM`
 
-The syntax can very different for different theory levels.
+The syntax can be very different for different theory levels.
 
 *Defining an ORCATheory level:*
 
@@ -152,7 +152,7 @@ The syntax can very different for different theory levels.
 
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=8)
 
-When a Theory object is created, ASH by default prints out information on the object and may also check whether it can find the external program.
+When a Theory object is created, ASH by default prints out information on the object and may also check whether it can find the external program and whether the parallelization will work.
 For the ORCATheory object created above, ASH would print out:
 
 .. code-block:: text
@@ -182,7 +182,7 @@ For the ORCATheory object created above, ASH would print out:
 
     ORCATheory object created!
 
-Note, however, that defining a Theory object will not result in a calculation to be carried out.
+Note, however, that defining a Theory object will not result in a calculation to be carried out. This would require calling a Job function.
 
 *Defining an xTBTheory level:*
 
@@ -208,8 +208,8 @@ A few different job examples on H2O
 
 *Single-point calculation at the DFT-level (BP86/def2-SVP) using ORCA where the charge/mult is defined as part of the fragment:*
 
-Here is a very simple script that defines an H\ :sub:`2`\O\  fragment (called H2O) from an available h2o.xyz file, defining charge and spin multiplicity as well, next
-creating the ORCATheory object (called ORCAcalc) and then calling the **Singlepoint** function that takes as input argument the ASH fragment (here H2O) and an ASH theory object (here ORCAcalc).
+Here is a very simple script that defines an H\ :sub:`2`\O\  **Fragment** (called H2O) from an available h2o.xyz file, defining charge and spin multiplicity as well, next
+creating the **ORCATheory** object (called ORCAcalc) and then calling the **Singlepoint** function that takes as input argument the ASH **Fragment** (here H2O) and an ASH **ORCAtheory** object (here ORCAcalc).
 
 .. code-block:: python
 
@@ -228,7 +228,7 @@ creating the ORCATheory object (called ORCAcalc) and then calling the **Singlepo
     print("Final energy:", energy)
 
 
-ASH will print information related to the creation of the H2O Fragment object and the creation of the ORCATheory object and will then run and print output related to the Singlepoint function:
+ASH will print information related to the creation of the H2O **Fragment** object and the creation of the **ORCATheory** object and will then run and print output related to the **Singlepoint** Job function:
 
 .. code-block:: text
 
@@ -279,7 +279,8 @@ ASH will print information related to the creation of the H2O Fragment object an
 
 *Single-point calculation where charge/mult is given as input to the jobtype:*
 
-If you don't define charge and multiplicity as part of the fragment (generally recommended) it is also possible to provide this information to the job-type function.
+Charge and multiplicity is usually defined as part of the fragment (generally recommended) but it it is also possible to provide this information to the job-type function.
+If you provide charge/mult to the job function then this will take precedence over any charge/mult information in the **Fragment** object.
 
 .. code-block:: python
 
@@ -301,7 +302,7 @@ If you don't define charge and multiplicity as part of the fragment (generally r
 *Geometry optimization at the DFT-level (BP86/def2-SVP) using ORCA:*
 
 Instead of a single-point energy calculation we can run a geometry optimization instead.
-To use the recommended geomeTRICOptimizer function, the geomeTRIC Python library needs to have been installed.
+To use the recommended **Optimizer** function, the geomeTRIC Python library needs to have been installed.
 
 .. code-block:: python
 
@@ -315,7 +316,7 @@ To use the recommended geomeTRICOptimizer function, the geomeTRIC Python library
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Geometry optimization on H2O with ORCAcalc theory
-    geomeTRICOptimizer(fragment=H2O, theory=ORCAcalc)
+    Optimizer(fragment=H2O, theory=ORCAcalc)
 
 *Numerical frequency calculation at the DFT-level (BP86/def2-SVP) using ORCA:*
 

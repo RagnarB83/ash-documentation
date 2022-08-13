@@ -89,8 +89,7 @@ Fragments in ASH are Python objects containing basic information about a molecul
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
 Fragments can be created in multiple ways but will behave the same after creation.
 
-Fragments are Python objects created from the ASH *Fragment* object class.
-See XXFragment-class-page-linkXX for an overview of all Fragment class attributes and functions.
+Fragments are Python objects created from the ASH *Fragment* object class (see above).
 
 Direct creation of fragment from coordinates
 ==============================================
@@ -259,7 +258,7 @@ Charge and Multiplicity
 =================================
 
 Charge and spin multiplicity should usually be associated with the fragment.
-One can also specify the charge and mult to the Job-function (e.g. Singlepoint).
+One can also specify the charge and mult to the Job-function (e.g. **Singlepoint**).
 When working with multiple fragment objects, however, it is highly convenient to associate a total charge and spin multiplicity with each fragment object.
 Usually done when fragment is created like this:
 
