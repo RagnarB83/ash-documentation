@@ -1,38 +1,135 @@
 Surface Scans
 ======================================
 
-Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** . The function uses the **geometric** optimization library.
+
+Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** .
+This function utilizes the **Optimizer** (from  :doc:`Geometry-optimization`) to change coordinates and carry out constrained optimizations.
+
+This allows one to conveniently scan the potential energy surface using a convenient reaction coordinate.
 Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction coordinates.
+
+While surface scans can also be used to approximate minimum energy paths between minima and locate approximate saddlepoints ("Transition states"),
+it is strongly advised to instead use the :doc:`neb` for this purpose. 
 
 .. code-block:: python
 
-    def calc_surface(fragment=None, theory=None, scantype='Unrelaxed', resultfile='surface_results.txt', keepoutputfiles=True, keepmofiles=False,
-                    runmode='serial', coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None, 
-                    ActiveRegion=False, actatoms=None, **kwargs):
-        """Calculate 1D/2D surface
-
-        Args:
-            fragment (ASH fragment, optional): ASH fragment object. Defaults to None.
-            theory (ASH theory, optional): ASH theory object. Defaults to None.
-            scantype (str, optional): Type of scan: 'Unrelaxed' or 'Relaxed'. Defaults to 'Unrelaxed'.
-            resultfile (str, optional): Name of resultfile. Defaults to 'surface_results.txt'.
-            runmode (str, optional): Runmode: 'serial' or 'parallel. Defaults to 'serial'.
-            coordsystem (str, optional): Coordinate system for geomeTRICOptimizer. Defaults to 'dlc'.
-            maxiter (int, optional): Max number of Opt iterations. Defaults to 50.
-            extraconstraints (dict, optional): Dictionary of additional constraints for geomeTRICOptimizer. Defaults to None.
-            convergence_setting (str, optional): Convergence setting for geomeTRICOptimizer. Defaults to None.
-            ActiveRegion (bool,optional): To use activeregion or not in optimization
-            actatoms (list,optional): List of active atoms
-
-        Returns:
-            [type]: [description]
-        """
+    def calc_surface(fragment=None, theory=None, charge=None, mult=None, scantype='Unrelaxed', resultfile='surface_results.txt', 
+                    keepoutputfiles=True, keepmofiles=False,runmode='serial', coordsystem='dlc', maxiter=50, extraconstraints=None, 
+                    convergence_setting=None, ActiveRegion=False, actatoms=None):
 
 
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``theory``
+     - ASH THeory
+     - None
+     - An ASH Theory.
+   * - ``fragment``
+     - ASH Fragment
+     - None
+     - An ASH fragment.
+   * - ``scantype``
+     - string
+     - 'Unrelaxed'
+     - What type of scan to perform. Options: 'Unrelaxed' and 'Relaxed'
+   * - ``RC1_indices/RC2_indices``
+     - list of integers
+     - None
+     - List of atom indices defining Reaction coordinate(RC) 1 or 2.
+   * - ``RC1_type/RC2_type``
+     - string
+     - None
+     - String indicating the type of reaction coordinate (either RC1 or RC2). Option: 'bond', 'angle', 'dihedral'
+   * - ``RC1_range/RC2_range``
+     - list of floats
+     - None
+     - | List of number indicating the range of values to scan for RC1 or RC2. 
+       | Example: [2.0,2.2,0.01] indicates scan value from 2.0 to 2.2 in 0.01 increments.
+   * - ``runmode``
+     - string
+     - 'serial'
+     - Whether to run calculations in serial or parallel. Options: 'serial', 'parallel'.
+   * - ``resultfile``
+     - string
+     - 'surface_results.txt'
+     - Change name of the results-file.
+   * - ``extraconstraints``
+     - Dict
+     - None
+     - Dictionary of additional constraints to apply during optimization. See :doc:`Geometry-optimization`.
+   * - ``coordsystem``
+     - string
+     - 'tric'
+     - | Which coordinate system to use during optimization. 
+       | Options: 'tric', 'hdlc', 'dlc', 'prim', 'cart'  
+       | Default: 'tric' (TRIC: translation+rotation internal coordinates), 
+       | for an active region 'hdlc' is used instead. See :doc:`Geometry-optimization`.
+   * - ``maxiter``
+     - integer
+     - 100
+     - Maximum number of optimization iterations before giving up (for scantype='Relaxed').
+   * - ``convergence_setting``
+     - string
+     - None.
+     - | Specifies the type of convergence criteria for Optimizer. 
+       | Options: 'ORCA', 'Chemshell', 'ORCA_TIGHT', 'GAU',
+       | 'GAU_TIGHT', 'GAU_VERYTIGHT', 'SuperLoose'. See Convergence section for details.
+   * - ``ActiveRegion``
+     - Boolean
+     - False
+     - | Whether to use an Active Region during the optimization. This requires setting
+       |  the number of active atoms (actatoms list) below.
+   * - ``actatoms``
+     - list
+     - None
+     - List of atom indices that are active during the optimization job. All other atoms are frozen. 
+   * - ``keepoutputfiles``
+     - Boolean
+     - False
+     - Whether to keep outputfile for each surfacepoint from QM code or not.     
+   * - ``keepmofiles``
+     - Boolean
+     - False
+     - Whether to keep MO-files for each surfacepoint from QM code or not. Only works for ORCATheory.
+   * - ``read_mofiles``
+     - Boolean
+     - False
+     - Whether to read MO-files (from mofilesdir) for each surfacepoint or not.                         
+   * - ``mofilesdir``
+     - string
+     - None
+     - Path to the directory containing MO-files. Use with read_mofiles=True option.
+   * - ``charge``
+     - integer
+     - None
+     - | Optional specification of the charge of the system (if QM)
+       | if the information is not present in the fragment.
+   * - ``mult``
+     - integer
+     - None
+     - | Optional specification of the spin multiplicity of the system (if QM) 
+       | if the information is not present in the fragment.
 
 
+######################################################
+Parallelization
+######################################################
 
-The calc_surface function takes a fragment object and theory object as input. The type of scan is specified ('Unrelaxed' or 'Relaxed') and
+- calc_surface is not yet fully parallelized.
+- Unrelaxed 1D and 2D scans can use runmode='parallel'.
+- Relaxed 2D scans are NOT yet parallelized
+
+######################################################
+How to use
+######################################################
+
+The **calc_surface** function takes a fragment object and theory object as input. The type of scan is specified ('Unrelaxed' or 'Relaxed') and
 then either 1 or 2 reaction coordinates are specified via keyword arguments: RC1_type, RC1_range and RC1_indices (and RC2 versions if using two reaction coordinates).
 
 - The RC1_type/RC2_type keyword can be: 'bond', 'angle' or 'dihedral'.
@@ -82,7 +179,14 @@ Other options to calc_surface:
 
 Note: See :doc:`Geometry-optimization` for geomeTRICOptimizer-related features.
 
-**Working with a previous scan from collection of XYZ files**
+
+
+###########################################################
+Working with a previous scan from collection of XYZ files
+###########################################################
+
+If a surface scan has already been performed (by **calc_surface** or something else), it's possible to use the created XYZ-files and 
+calculate single-point energies or optimizations for each surfacepoint with any level of theory.
 
 .. code-block:: python
 
@@ -116,8 +220,7 @@ Note: See :doc:`Geometry-optimization` for geomeTRICOptimizer-related features.
 
 
 
-If a surface scan has already been performed, it's possible to use the created XYZ-files and calculate single-point energies or optimizations for each surfacepoint with
-any level of theory.
+
 
 We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from **calc_surface** already (present in surface_xyzfiles results directory).

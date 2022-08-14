@@ -27,7 +27,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    coordinate-input
    parallelization
    QM-interfaces
-   MM-interfaces
+
 
 .. toctree::
    :maxdepth: 2
@@ -38,18 +38,27 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    Geometry-optimization
    module_freq
    module_dynamics
+   Biased-sampling
    neb
    surfacescan
 
 .. toctree::
    :maxdepth: 2
-   :caption: Modules
+   :caption: MM and Hybrid theories
 
-   module_QM-MM
+   MM-interfaces
+   OpenMM-interface
    module_Hybrid_Theory
-   module_benchmarking
+   module_QM-MM
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Workflows
+
    module_workflows
    module_highlevel_workflows
+   specific_workflows
+   module_benchmarking
    module_molcrys
    module_PES
    module_plotting
@@ -66,7 +75,6 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    PySCF-interface
    Psi4-interface
    crest-interface
-   OpenMM-interface
 
 .. toctree::
    :maxdepth: 2

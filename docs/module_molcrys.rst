@@ -1,4 +1,3 @@
-=================================================
 MOLCRYS: Automatic QM/MM for Molecular Crystals
 =================================================
 The molecular crystal QM/MM method in **ASH** is based on the work described

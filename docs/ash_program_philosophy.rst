@@ -1,6 +1,5 @@
-==========================
 ASH Program Philosophy
-==========================
+======================================
 
 ASH is a program in its infancy and is constantly under revisement as the programming skills and ideas of the main developer evolve.
 It is inspired by multiple software projects. It is written in Python but is not necessarily very Pythonic.

@@ -1,11 +1,10 @@
-==========================
 Coordinates and fragments
 ==========================
 
 
-
+######################################################
 The Fragment class
-***********************************
+######################################################
 
 .. code-block:: python
 
@@ -82,8 +81,10 @@ The Fragment class
         # Reading fragment from file. File created from Fragment.print_system
         def read_fragment_from_file(self, fragfile):
 
+
+######################################################
 Creating/modifying fragment objects
-***********************************
+######################################################
 
 Fragments in ASH are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
@@ -91,8 +92,9 @@ Fragments can be created in multiple ways but will behave the same after creatio
 
 Fragments are Python objects created from the ASH *Fragment* object class (see above).
 
+######################################################
 Direct creation of fragment from coordinates
-==============================================
+######################################################
 
 *From string*
 
@@ -153,8 +155,9 @@ elements and coordinates, not atom-types or residue information.
     pdbfrag = Fragment(pdbfile="mol.pdb")
 
 
+######################################################
 Adding coordinates to object
-=====================================
+######################################################
 
 
 *Add coordinates from string*
@@ -202,9 +205,9 @@ will follow.
 **Note:** This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates
 will follow.
 
-
+######################################################
 Replace coordinates of object
-==============================
+######################################################
 If you want to replace coords and elems of a fragment object with new information this can be done conveniently through lists.
 
 .. code-block:: python
@@ -216,9 +219,9 @@ If you want to replace coords and elems of a fragment object with new informatio
 **TODO:** Add option here of replacing coords from XYZ file and string as well.
 
 
-
+######################################################
 Calculate connectivity of fragment object
-===========================================
+######################################################
 
 Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. 
 Correct connectivity is crucial for some ASH functionality (the Molcrys functionality in particular).
@@ -253,9 +256,9 @@ The connectivity table is available as:
 The connectivity table is calculated or recalculated automatically needed. For large systems it can be expensive to calculate and thus not calculated by default.
 For large systems, ASH will call a Julia routine for the calculation.
 
-
+######################################################
 Charge and Multiplicity
-=================================
+######################################################
 
 Charge and spin multiplicity should usually be associated with the fragment.
 One can also specify the charge and mult to the Job-function (e.g. **Singlepoint**).
@@ -289,8 +292,9 @@ This will only work if the 2nd-line of the XYZ file contains the charge and mult
     N 0.0 0.0 0.0
     O 0.0 0.0 1.0
 
+######################################################
 Label
-=================================
+######################################################
 
 If working with multiple fragment objects it can be useful to distinguish between them via a label-string.
 The label can be added when fragment is first created:
@@ -307,9 +311,9 @@ or afterwards (by default, the label attribute is set to None).
     benzene_frag.label='Benzene'
 
 
-
+######################################################
 Inspect defined fragment objects
-=================================
+######################################################
 
 To inspect a defined fragment one can print out a Python dictionary of all defined attributes of the object.
 

@@ -1,6 +1,6 @@
-==========================
+
 Basic usage
-==========================
+======================================
 
 This page shows how to use ASH once you have correctly set up ASH as a Python library.
 See :doc:`setup` for information on installing ASH.

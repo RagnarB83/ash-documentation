@@ -102,7 +102,7 @@ The geomeTRICOptimizer function can also be called via the shorter aliases:
    * - ``charge``
      - integer
      - None
-     - | Optional specification of the charge of the system (if QM) |
+     - | Optional specification of the charge of the system (if QM)
        | if the information is not present in the fragment.
    * - ``mult``
      - integer

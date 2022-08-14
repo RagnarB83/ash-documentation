@@ -6,6 +6,7 @@ Nudged elastic band (NEB) calculations with/without a climbing image (CI-NEB) ar
 This NEB code uses energy-weighted springs (instead of a single spring constant for all images), together with a global L-BFGS optimizer that results in a greatly improved NEB algorithm for molecular systems.
 
 The Knarr implementation predates the ORCA implementation but is overall very similar to the one described there:
+
 V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462
 

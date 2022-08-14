@@ -1,4 +1,3 @@
-==========================
 Job Types
 ==========================
 
@@ -12,7 +11,6 @@ The primary job-types available in ASH:
 - Nudged elastic band optimization (or saddlepoint search)
 - Molecular dynamics
 - Surface scan
-- Benchmarking run
 
 Note that jobs in ASH are almost always simple Python functions.
 

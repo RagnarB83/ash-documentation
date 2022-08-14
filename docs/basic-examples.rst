@@ -1,6 +1,5 @@
-==========================
 Basic examples
-==========================
+======================================
 
 This page shows the basics of using ASH via examples.
 
