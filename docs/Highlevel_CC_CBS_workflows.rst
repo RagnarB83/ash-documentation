@@ -7,15 +7,15 @@ Things become even more complicated when heavy elements or transition metals are
 
 To then perform coupled cluster calculations on larger molecules requires the use of local-correlation approximations such as the DLPNO approximation in ORCA, requiring further know-how.
 
-The CC_CBS_Theory class in ASH allows one to carry out all these types of calculations in an easy semi-automatic way via the interface to ORCA.
+The ORCA_CC_CBS_Theory class in ASH allows one to carry out all these types of calculations in an easy semi-automatic way via the interface to ORCA.
 
-See :doc:`module_highlevel_workflows` for all the options available in CBS_CC_Theory.
+See :doc:`module_highlevel_workflows` for all the options available in ORCA_CC_CBS_Theory.
 
-This tutorial shows some examples on how to effectively use CC_CBS_Theory to carry out these calculations for both organic and inorganic systems.
+This tutorial shows some examples on how to effectively use ORCA_CC_CBS_Theory to carry out these calculations for both organic and inorganic systems.
 
 You can find the inputfiles for all of these examples in ASH_SOURCE_DIR/examples/workflows/highlevel-thermochemistry 
 
-.. note:: CC_CBS_Theory for now only supports CCSD(T)/CBS calculations via the ORCA interface in ASH. Future work will allow use of CFour, Psi4 and/or MRCC for specific functionality (post-CCSD(T) corrections etc).
+.. note:: ORCA_CC_CBS_Theory for now only supports CCSD(T)/CBS calculations via the ORCA interface in ASH. Future work will allow use of CFour, Psi4 and/or MRCC for specific functionality (post-CCSD(T) corrections etc).
 
 ##############################################################################
 Example: CCSD(T)/CBS for the N2 total energy and Bond Dissociation Energy
@@ -37,12 +37,12 @@ The plot shows how the total electronic energy of N2 gets lower with increasing 
 refers the basis-set size: e.g. 2 is a double-zeta basis set (cc-pVDZ or def2-SVP). Note the difference between cc-pVDZ and def2-SVP, in this case the cc-pVDZ is clearly a better basis set (basis set error of ~92 vs. 155 kcal/mol).
 At the triple-zeta and quadruple-zeta level there is little difference between the def2 basis sets and the cc basis sets (for this system) giving estimated basis set errors of ~30 (TZ) and ~11 kcal/mol (QZ).
 However, there is still a considerable basis set error present in all calculations and it is only at the cc-pV6Z level that a hint of convergence is seen. This demonstrates well the problem of converging the total energy, especially the correlation energy part in correlated wavefunction calculations.
-These single-basis CCSD(T) calculations can either be performed using ORCATheory or alternatively via CC_CBS_Theory like this:
+These single-basis CCSD(T) calculations can either be performed using ORCATheory or alternatively via ORCA_CC_CBS_Theory like this:
 
 .. code-block:: python
     
     N2=Fragment(xyzfile='n2.xyz')
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2], basisfamily="cc") # This is a CCSD(T)/cc-pVDZ calculation
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2], basisfamily="cc") # This is a CCSD(T)/cc-pVDZ calculation
     Singlepoint(theory=cc, fragment=N2)
 
 The convergence of the explicitly correlated CCSD(T)-F12 calculations using the cc-pVDZ-F12, cc-pVTZ-F12 and cc-PVQZ-F12 basis sets shows a considerable improvement, seemingly converging much faster to the CBS limit.
@@ -52,7 +52,7 @@ The F12 calculations were performed like this:
 .. code-block:: python
     
     N2=Fragment(xyzfile='n2.xyz')
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2], basisfamily="cc-f12", F12=True) # This is a CCSD(T)-F12/cc-pVDZ-F12 calculation
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2], basisfamily="cc-f12", F12=True) # This is a CCSD(T)-F12/cc-pVDZ-F12 calculation
     Singlepoint(theory=cc, fragment=N2)
 
 Finally, shown as single points on the plots are the results of basis set extrapolations: e.g. CBS-cc-23 refers to a CCSD(T)/CBS extrapolation using cc-pVDZ and cc-pVTZ basis sets (separate extrapolation of HF and correlation energies).
@@ -62,7 +62,7 @@ The extrapolations were performed like this:
 .. code-block:: python
     
     N2=Fragment(xyzfile='n2.xyz')
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc") # This is CBS-cc-23
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc") # This is CBS-cc-23
     Singlepoint(theory=cc, fragment=N2)
 
 where basisfamily are either "cc" or "def2" and cardinals were [2,3] (CBS-cc-23, CBS-def2-23), [3,4] (CBS-cc-34, CBS-def2-34), [4,5] (CBS-cc-45) or [5,6] (CBS-cc-56)
@@ -95,7 +95,7 @@ The BDE calculations can be carried out in ASH like this:
     N2=Fragment(xyzfile='n2.xyz', charge=0, mult=1)
     N=Fragment(atom=['N'],charge=0, mult=4)
     specieslist=[N2,N]
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc") # This is CBS-cc-23
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc") # This is CBS-cc-23
     energies = Singlepoint_fragments(theory=cc, fragments=specieslist, stoichiometry=[-1,2])
 
 The results for the BDE show overall similar trends but reveal how much easier it is to converge relative reaction energies to the basis set limit than total energies. 
@@ -127,7 +127,7 @@ the *Reaction-general-function.py* script shows how to utilize the function **Re
 
 **Accounting for higher-order effects**
 
-It is also possible to account for these contributions in ASH. If you add CVSR=True to CC_CBS_Theory and choose a core-valence basis set (here W1-mtsmall, only available for elements H-Ar),
+It is also possible to account for these contributions in ASH. If you add CVSR=True to ORCA_CC_CBS_Theory and choose a core-valence basis set (here W1-mtsmall, only available for elements H-Ar),
 ASH carries out a separate extra CCSD(T) calculation step that calculates the difference between having all electrons correlated and having only the valence electrons correlated (i.e. frozen-core approximation).
 The DKH approximation is also active in the all-electron CCSD(T) calculation and the difference thus gives a combined CoreValence+ScalarRelativistic correction.
 
@@ -140,7 +140,7 @@ The code below shows how to add these corrections in a convenient way:
 
 .. code-block:: python
     
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [5,6], basisfamily="cc", FCI=True,
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [5,6], basisfamily="cc", FCI=True,
                         CVSR=True, CVbasis="W1-mtsmall" ) # This is CBS-cc-34 with core-valence + scalar relativistic (CVSR) and FCI correction
 
 See Reaction-CoreValence.py inside ASH_SOURCE_DIR/examples/workflows/highlevel-thermochemistry/N2-BDE
@@ -167,7 +167,7 @@ one can derive the enthalpy of formation.
 The atomization energy, however, tends to be the most difficult quantity to calculate accurately as it requires the calculation to accurately capture all associated electron correlation effects, possible relativistic and vibratational effects
 associated with turning a molecule into its constitutent atoms.
 
-Atomization energies and formation enthalpies can be straightforwardly calculated in ASH, via the tools of : **CC_CBS_Theory**, **thermochemprotol_reaction** function and the **FormationEnthalpy** function.
+Atomization energies and formation enthalpies can be straightforwardly calculated in ASH, via the tools of : **ORCA_CC_CBS_Theory**, **thermochemprotol_reaction** function and the **FormationEnthalpy** function.
 
 Shown below is a script for calculating the atomization energy of methane.
 As before, we must create the necessary fragments: methane, C and H (making sure to specify the correct spin multiplicites).
@@ -195,7 +195,7 @@ The formation enthalpy can also be directly derived by passing the TAE to the fu
 
     #Define Theories
     DFTopt=ORCATheory(orcasimpleinput="!r2scan-3c", numcores=numcores)
-    HL=CC_CBS_Theory(elements=["C","H"], DLPNO=False, basisfamily="cc", cardinals=[3,4], CVSR=True, 
+    HL=ORCA_CC_CBS_Theory(elements=["C","H"], DLPNO=False, basisfamily="cc", cardinals=[3,4], CVSR=True, 
         numcores=numcores, Openshellreference="QRO", atomicSOcorrection=True)
 
     #RUn thermochemistry protocol: Opt+Freq using DFTOpt, final energy using HL theory
@@ -297,7 +297,7 @@ For 3d transition metal complexes (with the complicated 3d shell of the metal), 
 
     complex=Fragment(xyzfile='fe-complex.xyz')
     #Note: here providing list of elements more conveniently from the defined fragment
-    cc = CC_CBS_Theory(elements=complex.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", DLPNO=True, 
+    cc = ORCA_CC_CBS_Theory(elements=complex.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", DLPNO=True, 
                   relativity='DKH', pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
     Singlepoint(theory=cc, fragment=complex)
 
@@ -321,7 +321,7 @@ Here we choose the ruthenium-phosphine complex: XXX.
 .. code-block:: python
 
     complex=Fragment(xyzfile='ru-phosphine-complex.xyz')
-    cc = CC_CBS_Theory(elements=["Ru", "P", "H", "O", "N" ], cardinals = [2,3], basisfamily="def2", DLPNO=True, T0=False,
+    cc = ORCA_CC_CBS_Theory(elements=["Ru", "P", "H", "O", "N" ], cardinals = [2,3], basisfamily="def2", DLPNO=True, T0=False,
                   pnosetting='NormalPNO', numcores=1)
     Singlepoint(theory=cc, fragment=complex)
 
@@ -336,7 +336,7 @@ By setting pnosetting="NormalPNO" we get the default PNO settings that are reaso
 
     complex=Fragment(xyzfile='ru-phosphine-complex.xyz')
     #Note: here providing list of elements more conveniently from the defined fragment
-    cc = CC_CBS_Theory(elements=complex.elems, cardinals = [3,4], basisfamily="cc", DLPNO=True, 
+    cc = ORCA_CC_CBS_Theory(elements=complex.elems, cardinals = [3,4], basisfamily="cc", DLPNO=True, 
                   pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
     Singlepoint(theory=cc, fragment=complex)
 

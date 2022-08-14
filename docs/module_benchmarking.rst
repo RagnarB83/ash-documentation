@@ -116,7 +116,7 @@ See :doc:`module_highlevel_workflows`
     from ash import *
 
     #Running the benchmark with a workflow
-    DLPNO_CC_calc = CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
+    DLPNO_CC_calc = ORCA_CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
                 pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
     run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc)
 

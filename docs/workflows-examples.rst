@@ -33,7 +33,7 @@ See: :doc:`module_workflows` for details.
     
     #Defining theories object for optimization+frequency and High-level CCSD(T)/CBS
     ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", orcablocks="", numcores=numcores)
-    HL = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
+    HL = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
 
 
     energy, components, thermochem = thermochemprotocol_single(fragment=molecule, numcores=numcores, Opt_theory=ORCAcalc, SP_theory=HL)
@@ -63,7 +63,7 @@ But you could of course also write this kind of simple workflow manually, allowi
     thermochem = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job on optimized geometry
-    cc = CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
+    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
     HLenergy = Singlepoint(theory=HL, fragment=molecule)
 
     print("Final HL energy: ", HLenergy, "Eh")
@@ -158,7 +158,7 @@ and calculate the reaction energy directly at a high-level of theory together wi
 
     #Define theories
     OptFreqtheory = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
-    HL=CC_CBS_Theory(elements=["N","H"], basisfamily="cc", cardinals=[3,4], numcores=numcores)
+    HL=ORCA_CC_CBS_Theory(elements=["N","H"], basisfamily="cc", cardinals=[3,4], numcores=numcores)
     #Thermochemistry protocol
     thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry, Opt_theory=OptFreqtheory, SP_theory=HL, 
                 numcores=numcores, memory=5000, analyticHessian=True, temp=298.15, pressure=1.0)
@@ -594,7 +594,7 @@ Such an example can be written in ASH like this in a rather verbose manner:
     print("DFT_energies: ", DFT_energies)
 
     #4.Run high-level DLPNO-CCSD(T). Ash should now have optimized conformers
-    HL_CC = CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
+    HL_CC = ORCA_CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
     HL_energies=[]
     for index,conformer in enumerate(list_conformer_frags):
         print("")
@@ -656,7 +656,7 @@ The manually defined workflow above is a bit verbose and can of course also be m
     """
     ML_B3LYP = ORCATheory(orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
-    HL_CC = CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
+    HL_CC = ORCA_CC_CBS_Theory(elements=molecule.elems, cardinals = [2,3], basisfamily="cc", DLPNO=True, numcores=numcores)
     #Call confsampler_protocol
     confsampler_protocol(fragment=molecule, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,
                             HLtheory=HL_CC, numcores=numcores)

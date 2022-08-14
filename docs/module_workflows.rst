@@ -177,7 +177,7 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 	#Opt+Freq theory
 	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
 	#HL theory
-	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
+	DLPNO_CC_calc = ORCA_CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
 					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 	#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
 	thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
@@ -194,7 +194,7 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 	N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
 	#Theories
 	B3LYP_opt=ORCATheory(orcasimpleinput="! B3LYP D3BJ def2-TZVP def2/J tightscf", numcores=numcores)
-	DLPNO_CC_calc = CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
+	DLPNO_CC_calc = ORCA_CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
 					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=1)
 	#Job
 	thermochemprotocol_single(fragment=N2, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
