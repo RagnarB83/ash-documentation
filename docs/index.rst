@@ -95,7 +95,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
 .. role:: underline
     :class: underline
 
-.. warning:: This is Ash version 0.1. Use at your own risk!
+.. warning:: This is ASH version 0.9. Use at your own risk!
 
 
 Indices and tables

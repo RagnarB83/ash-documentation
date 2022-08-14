@@ -87,7 +87,7 @@ ReactionEnergy
    * - ``unit``
      - string
      - 'kcal/mol'
-     - String for final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1'.
+     - String for final unit to convert reaction energy to. Options: 'kcal/mol', 'eV', 'kJ/mol', 'cm-1', 'Eh', 'mEh', 'meV'.
    * - ``reference``
      - float
      - None
@@ -149,7 +149,7 @@ and an ASH Reaction object.
 .. code-block:: python
 
 	def thermochemprotocol_reaction(Opt_theory=None, SP_theory=None, reaction=None, fraglist=None, stoichiometry=None, numcores=1, memory=5000,
-						analyticHessian=True, temp=298.15, pressure=1.0):
+						analyticHessian=True, temp=298.15, pressure=1.0, unit='kcal/mol'):
 
 while **thermochemprotocol_single** is used for a single fragment (**thermochemprotocol_reaction** calls **thermochemprotocol_single**).
 
@@ -190,7 +190,7 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 	#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
 	thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
-						numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc)
+						numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc, unit='kcal/mol')
 
 
 **thermochemprotocol_single example:**
