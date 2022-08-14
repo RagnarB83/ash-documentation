@@ -1,4 +1,4 @@
-Nudged Elastic Band Method
+Nudged Elastic Band
 ======================================
 
 
