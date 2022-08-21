@@ -5,14 +5,17 @@ Geometry optimizations in ASH are almost exclusively performed via an interface 
 
 The interface to the geomeTRIC optimization library allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively.
 Any ASH theory object can be used using in principle any available Hamiltonian (implemented analytical gradient strongly recommended though).
-Furthermore, the "ActiveRegion" feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are frozen). 
+Furthermore, the "ActiveRegion" feature allows definition of an active region that allows efficient QM/MM optimizations of large systems (where most atoms are typically frozen). 
 Only the active region coordinates are in this case passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations (via ActiveRegion feature), 
-relaxed and unrelaxed 1D/2D surface scans (see  :doc:`surfacescan`) and more.
+relaxed and unrelaxed 1D/2D surface scans (see  :doc:`surfacescan`), saddlepoint optimizations and more.
 
 If you use geometry optimizations in ASH using the geomeTRIC library make sure to cite the article:
 
 *Geometry optimization made simple with translation and rotation coordinates*  by    Lee-Ping Wang, Chenchen Song, *J. Chem. Phys.* **2016**, *144*, 214108. 
+
+.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version can be installed like this: "conda install -c veloxchem geometric".
+  This will change with the 1.0 release of geomeTRIC.
 
 ######################################################
 geomeTRICOptimizer
@@ -25,7 +28,7 @@ The geomeTRICOptimizer function can also be called via the shorter aliases:
 
     def geomeTRICOptimizer(theory=None, fragment=None, coordsystem='tric', frozenatoms=None, constraints=None, constraintsinputfile=None, 
                         constrainvalue=False, maxiter=50, ActiveRegion=False, actatoms=None, convergence_setting=None, conv_criteria=None,
-                        print_atoms_list=None, charge=None, mult=None):
+                        TSOpt=False, hessian=None, print_atoms_list=None, charge=None, mult=None):
 
 
 .. list-table::
@@ -53,6 +56,17 @@ The geomeTRICOptimizer function can also be called via the shorter aliases:
      - integer
      - 100
      - Maximum number of optimization iterations before giving up.
+   * - ``TSOpt``
+     - Boolean
+     - False
+     - Whether to do saddlepoint/TS optimization or not. 
+   * - ``hessian``
+     - string
+     - None
+     - | Hessian option for geomeTRIC. Options: 'never', 'first', 'last', 'first+last', 'each', or 'file:<path>''
+       | Keywords refer to when the exact Hessian is calculated or the path to an external Hessian-file.
+       | Default: No Hessian ('never') for TSOpt=False; 
+       | for TSOpt=True the Hessian is calculated in the first step ('first').
    * - ``frozenatoms``
      - list
      - None

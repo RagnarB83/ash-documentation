@@ -130,10 +130,49 @@ See :doc:`surfacescan`
 Saddle-point optimization
 ###########################
 
-Saddle-points searches can currently be performed in ASH using the climbing image NEB method.
+Saddle-points searches can be be performed in ASH via a double-ended strategy (requiring reactant and product starting points) and a single-ended strategy (requiring only a single geometry).
+The double-ended strategy involves use of the climbing image NEB method which also results in a minimum energy path between reactant and product.
 See :doc:`neb` for documentation.
 
-An eigenvector-following algorithm will hopefully be available soon.
+An eigenvector-following algorithm is also available via the geomeTRIC library (OptTS=True option). This option is only feasible when a good guess for the 
+saddlepoint geometry is available, e.g. from a surface scan, previous NEB/NEB-CI job etc. It furthermore requires a good initial approximation to the Hessian (default: exact Hessian in first step).
+See :doc:`Geometry-optimization` for all features.
+
+**Example:**
+
+.. code-block:: python
+
+    from ash import *
+
+    HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1) #Fragment object creation
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
+
+    #OptTS=True enables saddlepoint optimization in geomeTRIC. Note: Exact Hessian is calculated in the first step by default.
+    Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric', OptTS=True)
+
+
+.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version be installed like this: "conda install -c veloxchem geometric".
+  This will change with the 1.0 release of geomeTRIC.
+
+A combination of the double-ended NEB strategy and a single-ended eigenvector-following method is also available in ASH in the form of the NEB-TS method.
+Such a strategy can be highly efficient for finding a saddlepoint as discussed in the article:
+
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+DOI: 10.1021/acs.jctc.1c00462
+
+**Example:**
+
+.. code-block:: python
+
+    from ash import *
+
+    Reactant=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    Product=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
+
+    #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
+    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0)
+
 
 ###########################
 Molecular Dynamics

@@ -10,8 +10,10 @@ The Knarr implementation predates the ORCA implementation but is overall very si
 V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462
 
-Note that NEB-TS is not yet available. Furthermode, while QM/MM NEB calculations are possible, running NEB in parallel with a QM/MM Hamiltonian is currently not possible.
+A NEB-TS implementation is also available. 
 
+
+.. note:: While QM/MM NEB calculations are possible, running NEB in parallel with a QM/MM Hamiltonian is currently not possible. Only Theory-parallelization can be used.
 
 
 .. code-block:: python
@@ -366,6 +368,7 @@ This usually results in a more efficient NEB job as it constrains the possibilit
 A free_end = True option where the endpoints are also minimized during the NEB is also possible but as there are more degrees of freedom, it can be trickier to converge.
 This may be a good option when the endpoints have deliberately not been minimized in an effort to explore multiple potential reaction pathways.
 
+
 ################################################################################
 NEB on systems with an active region (e.g. QM/MM)
 ################################################################################
@@ -445,3 +448,105 @@ This job requires 16 available CPU cores.
 
     #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
     NumFreq(theory=xtbcalc, fragment=SP)
+
+
+
+################################################################################
+NEB-TS : combining CI-NEB with TS-optimization
+################################################################################
+
+As discussed in the article:
+
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+DOI: 10.1021/acs.jctc.1c00462
+
+a CI-NEB calculation is well suited to be combined with an eigenvector-following method for improved efficiency of a saddlepoint search.
+The idea is to only partially converge a minimum energy path and saddlepoint via the CI-NEB method (that requires multiple images and a more complicated minimization)
+but then use the approximate saddlepoint geometry to start an eigenvector-following optimization which can both make the overall saddlepoint search more efficient (as only a single image is calculated in the latter part) 
+but can also ensure that a proper 1st-order saddlepoint is located via the use of exact/approximate Hessian information.
+
+In a NEB-TS job in ASH, the Knarr library is used to perform a CI-NEB calculation while the geomeTRIC library is used to perform the eigenvector-following optimization. 
+
+.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. The dev version be installed like this: "conda install -c veloxchem geometric".
+  This will change with the 1.0 release of geomeTRIC.
+
+
+The NEBTS function is very similar to the NEB function:
+
+.. code-block:: python
+
+  def NEBTS(reactant=None, product=None, theory=None, images=8, CI=True, OptTS=True, free_end=False, maxiter=100,
+          conv_type="ALL", tol_scale=10, tol_max_fci=0.10, tol_rms_fci=0.05, tol_max_f=1.03, tol_rms_f=0.51,
+          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, charge=None, mult=None, printlevel=0, ActiveRegion=False, actatoms=None,
+          interpolation="IDPP", idpp_maxiter=300, restart_file=None, TS_guess_file=None, mofilesdir=None, 
+          OptTS_maxiter=100, OptTS_print_atoms_list=None, OptTS_convergence_setting=None, OptTS_conv_criteria=None, OptTS_coordsystem='tric',
+          hessian_for_TS=None, modelhessian='unit', tsmode_tangent_threshold=0.1):
+
+with additional keywords: *OptTS_maxiter*, *OptTS_print_atoms_list*, *OptTS_convergence_setting*, *OptTS_conv_criteria* and *OptTS_coordsystem*  being keywords that belong to the Optimizer.
+See :doc:`Geometry-optimization` for explanations.
+
+An important option is the *hessian_for_TS* keyword which controls what type of Hessian should be used during the OptTS job.
+
+Options to *hessian_for_TS* are:
+
+.. list-table::
+   :widths: 15 60
+   :header-rows: 1
+
+   * - hessian_for_TS value
+     - Description
+   * - ``first``
+     - Optimizer calculates exact Hessian in the first step of the OptTS procedure.
+   * - ``each``
+     - Optimizer calculates exact Hessian in each step of the OptTS procedure (expensive).
+   * - ``xtb``
+     - Calculate an exact Hessian but at the cheap GFN1-xTB level of theory.
+   * - ``model``
+     - | Calculate a model Hessian (default: *modelhessian*='unit') to be used as approximation to the exact Hessian. Requires ORCA.
+       | *modelhessian* options: 'unit', 'Almloef', 'Lindh', 'Schegel'  
+   * - ``partial``
+     - | Calculate a partial exact Hessian using only the atoms that contribute the most to approximate TS-mode (from CI-NEB job).
+       | Use *tsmode_tangent_threshold* to control the size of the partial Hessian.
+       | Rest is approximated by a model Hessian or unit atrix. *modelhessian* options: 'unit','Almloef', 'Lindh', 'Schegel'  
+
+hessian_for_TS='xtb' is the currently recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
+as an initial Hessian in the eigenvector-following minimization. Unless the system is very large, this option is the most cost-effective. 
+This requires an active xTB interface (xTB needs to installed on the computer).
+If this option fails: 'first' will calculate an exact Hessian in the first step. A safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
+
+
+**Example:**
+
+.. code-block:: python
+
+    from ash import *
+
+    Reactant=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    Product=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
+
+    #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
+    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0, hessian_for_TS='xtb')
+
+
+Parallelization of a **NEBTS** job can be controlled by the *numcores* keyword and for the CI-NEB part it will behave like in the **NEB** function.
+However, once the CI-NEB part is complete, and the NEBTS job switches to performing the eigenvector-following minimization, ASH will automatically
+change the number of cores available to the Theory object to use the maximum number of CPU cores provided to either NEBTS or the Theory object. 
+This maximizes use of CPU cores during the job.
+
+**Parallelization example:**
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=16 #Total number of CPU cores to be used by ASH. OptTS will later use all of these.
+    numimages=8 #Number of images in NEB job and the number of cores available to the NEB parallelization.
+    cores_theory=numcores/numimages #Number of cores used to parallelize the Theory level during NEB.
+
+    Reactant=Fragment(xyzfile="react.xyz", charge=0, mult=1)
+    Product=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf", numcores=cores_theory) #ORCATheory object creation
+
+    #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
+    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, numcores=numimages, images=numimages, printlevel=0, hessian_for_TS='xtb')
