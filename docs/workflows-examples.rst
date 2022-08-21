@@ -13,7 +13,7 @@ This page goes through several examples of workflows showing both the use of pre
 Example 1 : Optimization + Frequency + HighLevel-singlepoint
 ##############################################################################
 
-Running a geometry optimzation, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
+Running a geometry optimization, frequency calculation (on optimized geometry) using e.g. a DFT protocol and then a single-point energy calculation
 using a high-level theory (such as CCSD(T)) is a standard workflow in computational chemistry research, but is often performed manually as the QM-code is not always capable of performing all of the steps in a single job.
 In ASH you can use the **thermochemprotocol_single** to automate such a workflow. 
 
