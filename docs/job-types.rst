@@ -154,11 +154,17 @@ See :doc:`Geometry-optimization` for all features.
 .. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version be installed like this: "conda install -c veloxchem geometric".
   This will change with the 1.0 release of geomeTRIC.
 
+-----------------------------------
+**NEB-TS**
+-----------------------------------
+
 A combination of the double-ended NEB strategy and a single-ended eigenvector-following method is also available in ASH in the form of the NEB-TS method.
-Such a strategy can be highly efficient for finding a saddlepoint as discussed in the article:
+This is probably one of the most efficient and accurate method for finding a saddlepoint as discussed in the article:
 
 V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462
+
+See :doc:`neb` for documentation on the NEB-TS function.
 
 **Example:**
 
