@@ -138,10 +138,10 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
        | smaller basis sets than singles-doubles. Requires setting cardinals
        | to 3 values, e.g. [2,3,4]
    * - ``pnoextrapolation``
-     - list of 2 integers and 1 string
+     - list
      - [1e-6,1e-7,1.5,'TightPNO']
-     - | Parameters for PNO-extrapolation (X,Y,Z): X and Y being 
-       | TCutPNO thresholds while Z signifies the setting for the other thresholds. 
+     - | Parameters for PNO-extrapolation (X,Y,Z): X and Y being
+       | TCutPNO thresholds while Z signifies the PNOsetting for the other thresholds. 
    * - ``FullLMP2Guess``
      - Boolean
      - None
