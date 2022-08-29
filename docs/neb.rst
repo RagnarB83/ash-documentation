@@ -213,7 +213,9 @@ The file can come from a previously unconverged NEB calculation or perhaps a con
     #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
     SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, restart_file="knarr_MEP.xyz")
 
-** A calculation with user-defined guess for the saddlepoint.**
+
+**A calculation with user-defined guess for the saddlepoint.**
+
 
 Here, using the *TS_guess_file* option. This will influence the initial interpolation path generation by interpolating between reactant and guess_TS structure and guess_TS structure and product.
 
@@ -502,14 +504,14 @@ Options to *hessian_for_TS* are:
    * - ``xtb``
      - Calculate an exact Hessian but at the cheap GFN1-xTB level of theory.
    * - ``model``
-     - | Calculate a model Hessian (default: *modelhessian*='unit') to be used as approximation to the exact Hessian. Requires ORCA.
+     - | Calculate a model Hessian (default: *modelhessian* ='unit') to be used as approximation to the exact Hessian. Requires ORCA.
        | *modelhessian* options: 'unit', 'Almloef', 'Lindh', 'Schegel'  
    * - ``partial``
      - | Calculate a partial exact Hessian using only the atoms that contribute the most to approximate TS-mode (from CI-NEB job).
        | Use *tsmode_tangent_threshold* to control the size of the partial Hessian.
        | Rest is approximated by a model Hessian or unit atrix. *modelhessian* options: 'unit','Almloef', 'Lindh', 'Schegel'  
 
-hessian_for_TS='xtb' is the currently recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
+*hessian_for_TS* ='xtb' is the currently recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
 as an initial Hessian in the eigenvector-following minimization. Unless the system is very large, this option is the most cost-effective. 
 This requires an active xTB interface (xTB needs to installed on the computer).
 If this option fails: 'first' will calculate an exact Hessian in the first step. A safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
