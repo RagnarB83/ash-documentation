@@ -674,7 +674,7 @@ Here defining a simple Fe(III) ion:
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="FEX" charge="3.0" sigma="1.3" epsilon="0.0"/>
+    <Atom type="FEX" charge="3.0" sigma="1.0" epsilon="0.0"/>
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
     <Atom type="FEX" sigma="0.3" epsilon="0.00000"/>

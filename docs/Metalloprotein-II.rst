@@ -174,8 +174,8 @@ where specialresidue.xml contains:
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="FEX" charge="0.0" sigma="0.194215920554594" epsilon="1.046"/>
-    <Atom type="SXM" charge="0.0" sigma="1.3" epsilon="0.0"/>
+    <Atom type="FEX" charge="0.0" sigma="1.0" epsilon="0.0"/>
+    <Atom type="SXM" charge="0.0" sigma="1.0" epsilon="0.0"/>
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
     <Atom type="FEX" sigma="0.194215920554594" epsilon="1.046"/>

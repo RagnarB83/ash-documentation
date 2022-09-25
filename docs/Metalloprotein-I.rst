@@ -173,7 +173,7 @@ Let's create an OpenMM forcefield XML file that looks like:
     </Residue>
     </Residues>
     <NonbondedForce coulomb14scale="1.0" lj14scale="1.0">
-    <Atom type="FEX" charge="3.0" sigma="0.194215920554594" epsilon="1.046"/>
+    <Atom type="FEX" charge="3.0" sigma="1.0" epsilon="0.0"/>
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
     <Atom type="FEX" sigma="0.194215920554594" epsilon="1.046"/>
@@ -189,6 +189,7 @@ in practice it is usually better to put some simple Lennard-Jones parameters on 
 Here we use available parameters for the Zn(II) ion from the CHARMM forcefield which should be a fine approximation.
 
 Note that in this case we need to define both NonbondedForce and LennardJonesForce in order to be consistent with the CHARMM36 forcefield as defined within OpenMM.
+In the NonbondedForce block sigma/epsilon are set to dummy parameters 1.0 and 0.0 while the actual parameters are defined in the LennardJonesForce block instead.
 The form of the XML file will be different if using another forcefield than CHARMM.
 
 
