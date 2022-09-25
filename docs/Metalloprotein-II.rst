@@ -179,7 +179,7 @@ where specialresidue.xml contains:
     </NonbondedForce>
     <LennardJonesForce lj14scale="1.0">
     <Atom type="FEX" sigma="0.194215920554594" epsilon="1.046"/>
-    <Atom type="SXM" sigma="0.3" epsilon="0.00000"/>
+    <Atom type="SXM" sigma="0.35190499366543404" epsilon="1.58992"/>
     </LennardJonesForce>
     </ForceField>
 
