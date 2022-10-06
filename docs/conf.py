@@ -218,6 +218,10 @@ pygments_style = "RB_theme"
 todo_include_todos = True
 
 
+#RB: To deal with double -- use
+#https://stackoverflow.com/questions/15258831/how-to-handle-two-dashes-in-rest
+smartquotes = False
+
 #
 #html_js_files =
 
