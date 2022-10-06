@@ -85,11 +85,11 @@ This is the recommended way. Required if you intend to do MM or QM/MM using the 
 3. Load environment: **conda activate ASH**
 4. Change directory to ASH location 
 5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).
-6. Make sure the chosen Python-Julia interface works. PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.
+6. Optional: Make sure the chosen Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.
 7. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
 8. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
 9. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
-10. Test ASH by launching: **python3**  and then do: from ash import *
+10. Test ASH by launching: **python3**  and then do: import ash     . If the ash is imported without errors by the Python interpreter then things should be good. See also section D below.
 
 .. note:: if PyJulia interface was specifically installed (not recommended) you must use **python-jl** for ASH to correctly call Julia routines.
 
@@ -326,8 +326,6 @@ D. Test ASH
 
 Test if things work in general:
 python3 /path/to/ash/ash/test_ash.py   #This runs a basic test job using the regular Python interpreter
-python-jl /path/to/ash/ash/test_ash.py   #Only required when PyJulia is used
-
 
 
 Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):
@@ -364,6 +362,37 @@ first-ash-job.py:
 #########################################
 E. Installation problems
 #########################################
+
+**ASH library not found by Python interpreter**
+
+Error message:
+
+.. code-block:: text
+
+    ModuleNotFoundError: No module named 'ash'
+
+This means that you have not correctly told your Python environment where ASH exists.
+If your installation path is e.g. /home/ragnar/ASH-program/ash  (where the ash directory contains bunch of files including ash_header.py) 
+then :
+
+.. code-block:: text
+    
+    #DO THIS:
+    export PYTHONPATH=/home/ragnar/ASH-program:$PYTHONPATH
+    #DO NOT DO THIS:
+    export PYTHONPATH=/home/ragnar/ASH-program/ash:$PYTHONPATH
+
+
+
+**Module numpy not found**
+
+Error message:
+
+.. code-block:: text
+
+    ModuleNotFoundError: No module named 'numpy'
+
+Your Python environment requires the numpy library to be installed. Install either via conda or pip.
 
 **python-jl (PyJulia) problem**
 
