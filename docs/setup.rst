@@ -81,7 +81,7 @@ B1. Semi-Automatic Miniconda setup (easiest)
 This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/miniconda).
 
 1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_.  Install it in a location where your user has access (e.g. your home-directory)
-2. Create new environment (not required but recommended): **conda create --name ASH**
+2. Create new environment (not required but recommended): **conda create \--name ASH**
 3. Load environment: **conda activate ASH**
 4. Change directory to ASH location 
 5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).

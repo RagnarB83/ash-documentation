@@ -48,7 +48,7 @@ Psi4 interface
      - Name of potential file for in Psi4 CPPE polarizable embedding
    * - ``filename``
      - string
-     - 'psi4_'
+     - 'psi4'
      - Name of Psi4 inputfile for psithon runmode.
    * - ``label``
      - string
