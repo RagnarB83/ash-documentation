@@ -42,9 +42,10 @@ The ASH fragments are collected in a list and a stoichiometry is defined (same o
 	# Example: N2 + 3H2 -> 2NH3  reaction should be:  [-1,-3,2]
 	stoichiometry=[-1, -3, 2] #Use same order as specieslist
 	HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
-
-	#Running a job-type that supports a Reaction object as input
-	Singlepoint_reaction(reaction=HB_reaction)
+	#Theory object
+	dft = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J tightscf")
+	#Running a Singlepoint_reaction job that supports a Reaction object as input
+	Singlepoint_reaction(reaction=HB_reaction, theory=dft)
 
 Job-types that can take a Reaction as inputobject:
 
