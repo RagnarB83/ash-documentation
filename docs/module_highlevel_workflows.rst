@@ -447,3 +447,72 @@ Additionally energy vs. basis-cardinal plots are created for both the total ener
    :width: 700
 
 
+
+
+##############################
+Reaction_FCI_Analysis
+##############################
+
+With modern approximations to Full-CI (selected CI, DMRG, Quantum Monte Carlo etc.) it is possible to obtain a near-Full-CI total energy or relative energy that can be used to estimate
+the accuracy of truncated wavefunction methods (e.g. MP2, CCSD, CCSD(T) etc.).
+Such an analysis is only possible for relatively small molecules and only for small basis sets, however.
+ORCA features the ICE-CI algorithm (a selected CI approach) that can be used for this purpose.
+
+In order to facilitate this kind of analysis ASH features the function **Reaction_FCI_Analysis** that 
+will automatically run multiple ICE-CI calculations with ORCA (at user-selected thresholds) to estimate the Full-CI limit 
+for a given basis set and will then run simpler wavefunction methods 
+with the same basis set for comparison using ORCA. This allows one to see how close e.g. CCSD(T) is to Full-CI for a given energy or relative energy.
+
+.. code-block:: python
+
+  def Reaction_FCI_Analysis(reaction=None, basis=None, basisfile=None, basis_per_element=None,
+                  Do_ICE_CI=True, 
+                  MBE_FCI=False, pymbedir=None, mbe_thres_inc=1e-5, mbe_orbs_choice='ccsd', mbe_ref_orblist=[],
+                  Do_TGen_fixed_series=True, fixed_tvar=1e-11, Do_Tau3_series=True, Do_Tau7_series=True, Do_EP_series=True,
+                  tgen_thresholds=None, ice_nmin=1.999, ice_nmax=0,
+                  separate_MP2_nat_initial_orbitals=True,
+                  DoHF=True,DoMP2=True, DoCC=True, DoCC_CCSD=True, DoCC_CCSDT=True, DoCC_MRCC=False, DoCC_CFour=False,
+                  DoCC_DFTorbs=True, KS_functionals=['BP86','BHLYP'], Do_OOCC=True,
+                  maxcorememory=10000, numcores=1, ice_ci_maxiter=30, ice_etol=1e-6,
+                  upper_sel_threshold=1.999, lower_sel_threshold=0,
+                  plot=True, y_axis_label='None', yshift=0.3, ylimits=None, padding=0.4):
+
+
+Example (Vertical ionizaition energy of H2O): 
+
+.. code-block:: python
+
+  from ash import *
+  
+  #Function to calculate a small molecule reaction energy at the near-FullCI limit at a fixed basis set
+  #with comparison to simpler methods
+  #QM code: ORCA
+  #Near-FCI method: ICE-CI
+  #Basis set: cc-pVDZ
+  #Molecule: H2O
+  #Property: VIP
+  
+  numcores = 1
+  ####################################################################################
+  #Defining reaction: Vertical IP of H2O
+  h2o_n = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+  h2o_o = Fragment(databasefile="h2o.xyz", charge=1, mult=2)
+  reaction = Reaction(fragments=[h2o_n, h2o_o], stoichiometry=[-1,1], label='H2O_IP', unit='eV')
+  
+  #What Tgen thresholds to calculate in ICE-CI?
+  tgen_thresholds=[5e-3,1e-3,5e-4,1e-4,5e-5,1e-5,5e-6]
+  
+  Reaction_FCI_Analysis(reaction=reaction, basis="cc-pVDZ",
+                  Do_Tau3_series=True, Do_Tau7_series=True, Do_TGen_fixed_series=False, fixed_tvar=1e-11, Do_EP_series=True,
+                  tgen_thresholds=tgen_thresholds, DoHF=True, DoMP2=True, DoCC=True, maxcorememory=10000, numcores=numcores,
+                  plot=True, y_axis_label='IP', yshift=0.3)
+
+
+Output:
+
+.. image:: figures/FCI-H2O-IP.tiff
+   :align: center
+   :width: 700
+
+
+.. warning:: The plots require the Matplotlib library to be installed. 
