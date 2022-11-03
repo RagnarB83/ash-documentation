@@ -187,7 +187,7 @@ Using **subash**:
 
 **subash**:
 This script is written for the SLURM queuing system.
-To use, one needs to change the name of the queue, default walltime, name of local scratch location on each node.
+To use, one needs to change the name of the queue, default walltime, name of local scratch location on each node in the first lines of the script below.
 Also one needs provide the path to an environment-file that configures the ASH environment (PYTHONPATH, PATH, LD_LIBRARY_PATH etc.).
 If you set up ASH using the Conda instructions `Conda <https://ash.readthedocs.io/en/latest/setup.html#b1-semi-automatic-miniconda-setup-easiest>`_
 you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
@@ -196,26 +196,32 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 
     #!/bin/bash
     #subash: Submission script for ASH
-    #Usage: subash ash_inputfile.py
+    #Usage: subash ash_script.py
 
-    #####################
+    #######################################
     #CLUSTER SETTINGS (to be modified by user)
-    #SLURM_version: Requires modifications for PBS/Torque or others.
 
-    #Path to bash file containing PATH, LD_LIBRARY_PATH and PYTHONPATH definitions
-    #Should define the environment for ASH and external QM programs
-    ENVIRONMENTFILE=/path/to/dir/set_environment_ash.sh
-
-    #Default name of cluster queue to submit to. Can be overridden by -q or --queue option
+    #Default name of cluster queue to submit to. Can be verridden by -q or --queue option
     queue=default1
 
     #Default walltime. Overridden by -w or --walltime
     walltime=8760
 
-    # Path to local scratch on each node (Script will create temporary user and job-directory here)
+    # Path to local scratch on nodes (Script will create temporary user and job-directory here)
     SCRATCHLOCATION=/nobackup
 
-    #####################
+    #Path to bash file containing PATH and LD_LIBRARY_PATH definitions
+    #Should define environment for ASH and external QM programs
+    ENVIRONMENTFILE=/home/rb269145/ASH/NEW/ash/set_environment_ash.sh
+
+    #Default ASH branch to use
+    ashbranch="new"
+
+    #######################################
+    # End of user modifications (hopefully)
+    #######################################
+
+
     #Colors
     green=`tput setaf 2`
     yellow=`tput setaf 3`
@@ -224,10 +230,10 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 
     print_usage () {
     echo "${green}subash${normal}"
-    echo "${yellow}Usage: subash input.py                Dir should contain .py Python script.${normal}"
-    echo "${yellow}Or: subash input.py -p 8              Submit with 8 cores.${normal}"
-    echo "${yellow}Or: subash input.py -q default1       Submit to queue named default1.${normal}"
-    echo "${yellow}Or: subash input.py -w 2000           Submit with walltime of 2000 hours.${normal}"
+    echo "${yellow}Usage: subash input.py      Dir should contain .py Python script.${normal}"
+    echo "${yellow}Or: subash input.py -p 8      Submit with 8 cores.${normal}"
+    echo "${yellow}Or: subash input.py -master      Submit using ASH masterbranch.${normal}"
+    echo "${yellow}Or: subash input.py -new      Submit using ASH newbranch.${normal}"
     exit
     }
 
@@ -235,7 +241,7 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     argument_first=$1
     file=$argument_first
     argumentnum=$#
-    echo "Arguments provided : $arguments"
+    #echo "Arguments provided : $arguments"
 
     #If positional argument not .py then exit
     if [[ $argument_first != *".py"* ]]; then
@@ -249,6 +255,10 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     do
     key="$1"
     case $key in
+        -branch|--branch)
+        ashbranch="$2"
+        shift # past argument
+        ;;
         -p|--procs|--cores|--numcores) #Number of cores
         numcores="$2"
         shift # past argument
@@ -302,7 +312,7 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     #SBATCH --error=%x.o%j
 
     export job=\$SLURM_JOB_NAME
-    export job=$(echo \${job%%.*})
+    export job=\${job%%.*}
 
     #Outputname
     outputname="\$job.out"
@@ -332,13 +342,43 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 
     #Create scratch
     scratchlocation=$SCRATCHLOCATION
+    echo "scratchlocation: \$scratchlocation"
+    #Checking if scratch drive exists
+    if [ ! -d \$scratchlocation ]
+    then
+    echo "Problem with scratch directory location: \$scratchlocation"
+    echo "Is scratchlocation in subash script set correctly ?"
+    echo "Exiting"
+    exit
+    fi
+
+    #Creating user-directory on scratch if not available
     if [ ! -d \$scratchlocation/\$USER ]
     then
     mkdir -p \$scratchlocation/\$USER
     fi
-    echo $PWD
-    echo "scratchlocation: \$scratchlocation"
+    #Creating temporary dir on scratch
     tdir=\$(mktemp -d \$scratchlocation/\$USER/ashjob__\$SLURM_JOB_ID-XXXX)
+    echo "Creating temporary tdir : \$tdir"
+
+    #Checking if directory exists
+    if [ -z \$tdir ]
+    then
+    echo "tdir variable empty: \$tdir"
+    echo "Problem creating temporary dir: \$scratchlocation/\$USER/ashjob__\$SLURM_JOB_ID-XXXX"
+    echo "Is scratch-disk (\$scratchlocation) writeable on node: \$SLURM_JOB_NODELIST  ?"
+    echo "Exiting"
+    exit
+    fi
+
+    #Checking if tdir exists
+    if [ ! -d \$tdir ]
+    then
+    echo "Problem creating temporary dir: \$scratchlocation/\$USER/ashjob__\$SLURM_JOB_ID-XXXX"
+    echo "Is scratch-disk (\$scratchlocation) writeable on node: \$SLURM_JOB_NODELIST  ?"
+    echo "Exiting"
+    exit
+    fi
     chmod +xr \$tdir
     echo "tdir: \$tdir"
 
@@ -407,7 +447,7 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     cp -r \$tdir \$outputdir
 
     # Removing scratch folder
-    #rm -rf \$tdir
+    rm -rf \$tdir
 
     EOT
     ######################
@@ -415,4 +455,3 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     sbatch -J $file ash.job
     echo "${cyan}ASH job: $file submitted using $numcores cores.${normal}"
     echo "Queue: $queue and walltime: $walltime"
-
