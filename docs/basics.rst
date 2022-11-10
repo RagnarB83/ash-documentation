@@ -131,8 +131,6 @@ ASH will attempt to read this file on startup.
     print_full_timings = True
     nonbondedMM_code = julia
     connectivity_code = julia
-    print_exit_footer = True
-    print_full_timings = True
 
 .. warning:: The file ~/ash_user_settings.ini should not contain ' or "" symbols when defining strings.
 
