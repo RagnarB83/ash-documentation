@@ -2,19 +2,19 @@ QUICK interface
 ======================================
 
 `QUICK <https://quick-docs.readthedocs.io/en/latest/about.html>`_  is an open-source HF/DFT code that runs on the GPU. 
-Only closed-shell (RHF/RKS) are supported at the moment and basis functions only up to d.
+Basis functions only up to d angular momentum are supported.
 
 ASH features a simple interface to it that allows QUICK energy+gradient calculations on the GPU.
-Can be used in a QM/MM setting allowing both the QM and MM steps to run on the GPU via QUICK and OpenMM. 
+QUICK be used in a QM/MM setting allowing both the QM and MM steps to run on the GPU via QUICK and OpenMM. 
 Interface is a bit limited at the moment.
 
 **QUICKTheory class:**
 
 .. code-block:: python
     
-    class QUICKTheory:
-        def __init__(self, quickdir=None, filename='quick', printlevel=2,
-                    quickinput=None, numcores=1):
+  class QUICKTheory:
+      def __init__(self, quickdir=None, filename='quick', printlevel=2,
+                  quickinput=None, numcores=1, quickbinary="quick.cuda"):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -44,6 +44,11 @@ Interface is a bit limited at the moment.
      - string
      - 'pyscf'
      - Filename used for QUICK input/output files.
+   * - ``quickbinary``
+     - string
+     - 'quick.cuda'
+     - Name of the QUICK binary to use. Options: 'quick.cuda' (GPU-CUDA) or 'quick' (CPU)
+
 
 
 QUICK needs to be compiled and installed separately.
@@ -60,6 +65,3 @@ QUICK needs to be compiled and installed separately.
   quick = QUICKTheory(quickinput="B3LYP BASIS=6-31G* cutoff=1.0e-8")
 
   Singlepoint(theory=quick, fragment=n2_singlet)
-
-
-
