@@ -125,14 +125,12 @@ ASH will attempt to read this file on startup.
     print_input = True
     print_logo = True
     load_julia = True
-    julia_library = pythoncall #pyjulia is another option
+    julia_library = pythoncall
     debugflag = False
     print_exit_footer = True
     print_full_timings = True
     nonbondedMM_code = julia
     connectivity_code = julia
-    print_exit_footer = True
-    print_full_timings = True
 
 .. warning:: The file ~/ash_user_settings.ini should not contain ' or "" symbols when defining strings.
 

@@ -1,6 +1,9 @@
 Psi4 interface
 ======================================
 
+`Psi4 <https://psicode.org>`_  is a full-featured open-source quantum chemistry program written in both Python and C++.
+ASH has an interface both to the Psithon inputfile-based interface of Psi4 but also to the Psi4 Python library.
+
 **Psi4Theory class:**
 
 .. code-block:: python
@@ -72,7 +75,7 @@ Psi4 interface
      - XXXX
 
 The Psi4 interface comes in two versions, a library-based interface and an inputfile-based interface.
-The library interface means that Ash will load Psi4 Python libraries that have to be part of the same Python installation.
+The library interface means that ASH will load Psi4 Python libraries that have to be part of the same Python installation.
 In the inputfile-based interface (Psithon), ASH will create a Psi4 inputfile in Psithon syntax and will then call
 a separate Psi4 executable (can be a separate Python installation) via the psi4dir variable (or will find psi4 in shell PATH).
 

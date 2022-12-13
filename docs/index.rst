@@ -75,6 +75,8 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    PySCF-interface
    Psi4-interface
    crest-interface
+   QUICK-interface
+   TeraChem-interface
 
 .. toctree::
    :maxdepth: 2

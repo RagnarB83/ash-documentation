@@ -374,9 +374,12 @@ For additional examples on using ORCA_CC_CBS_Theory on real-world systems and sh
 Reaction_Highlevel_Analysis
 ##############################
 
-In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations, the **Reaction_Highlevel_Analysis** function can be used.
-It will read in a list of ASH fragments and reaction stoichiometry and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
+In order to facilitate the analysis of basis-set and/or PNO convergence in CCSD(T) calculations for very simple systems, 
+the **Reaction_Highlevel_Analysis** function can be used.
+It will read in an ASH reaction object (containing  list of ASH fragments and reaction stoichiometry) 
+and calculate the reaction energy with multiple levels of theory and plot the results using Matplotlib.
 This allows one to easily see how well converged the results are.
+
 
 CCSD(T) calculations are performed both with def2 (up to QZ level) and cc basis sets (up to 6Z level), explicitly correlated CCSD(T)-F12 calculations (up to QZ-F12) 
 and complete basis set extrapolations are performed.
@@ -389,20 +392,16 @@ To be added: PNO-extrapolation options
 
 .. code-block:: python
 
-    def Reaction_Highlevel_Analysis(fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', 
+    def Reaction_Highlevel_Analysis(reaction=None, fraglist=None, stoichiometry=None, numcores=1, memory=7000, reactionlabel='Reactionlabel', 
                                     nergy_unit='kcal/mol', extrapolation=True, highest_cardinal=6, plot=True 
                                     def2_family=True, cc_family=True, aug_cc_family=False, F12_family=True, DLPNO=False):
         """Function to perform high-level CCSD(T) calculations for a reaction with associated plots.
         Performs CCSD(T) with cc and def2 basis sets, CCSD(T)-F12 and CCSD(T)/CBS extrapolations
 
         Args:
-            fragment ([type], optional): [description]. Defaults to None.
-            fraglist ([type], optional): [description]. Defaults to None.
-            stoichiometry ([type], optional): [description]. Defaults to None.
+            reaction ([Reaction object], optional): [ASH Reaction boject]. Defaults to None.
             numcores (int, optional): [description]. Defaults to 1.
             memory (int, optional): [description]. Defaults to 7000.
-            reactionlabel (str, optional): [description]. Defaults to 'Reactionlabel'.
-            energy_unit (str): Energy unit for ReactionEnergy. Options: 'kcal/mol', 'kJ/mol', 'eV', 'cm-1'. Default: 'kcal/mol'
             def2_family (bool, optional): [description]. Defaults to True.
             cc_family (bool, optional): [description]. Defaults to True.
             F12_family (bool, optional): [description]. Defaults to True.
@@ -419,15 +418,13 @@ Example (Bond Dissociation Energy of N2):
     #Define molecular fragments from XYZ-files or other
     N2=Fragment(xyzfile='n2.xyz', charge=0, mult=1, label='N2')
     N=Fragment(atom='N', charge=0, mult=4, label='N')
-
-    #Create a list of fragments and define the stoichiometry
-    specieslist=[N2, N]
-    stoichiometry=[-1,2]
-    reactionlabel='N2_BDE'
+    #Define reaction
+    N2_BDE_reaction = Reaction(fragments=[N2, N], stoichiometry=[-1,2], label='N2_BDE', unit='eV')
 
     # Call Reaction_Highlevel_Analysis
-    Reaction_Highlevel_Analysis(fraglist=specieslist, stoichiometry=stoichiometry, numcores=1, memory=7000, reactionlabel=reactionlabel,
-                                    def2_family=True, cc_family=True, F12_family=True, extrapolation=True, highest_cardinal=5 )
+    Reaction_Highlevel_Analysis(reaction=N2_BDE_reaction, numcores=1, memory=7000, 
+                                    def2_family=True, cc_family=True, F12_family=True, 
+                                    extrapolation=True, highest_cardinal=5 )
 
 The outputfile will contain the CCSD(T) total energies and reaction energies for each species and basis set level.
 Additionally energy vs. basis-cardinal plots are created for both the total energy for each species and the reaction energy.
