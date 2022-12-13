@@ -461,7 +461,8 @@ ORCA features the ICE-CI algorithm (a selected CI approach) that can be used for
 In order to facilitate this kind of analysis ASH features the function **Reaction_FCI_Analysis** that 
 will automatically run multiple ICE-CI calculations with ORCA (at user-selected thresholds) to estimate the Full-CI limit 
 for a given basis set and will then run simpler wavefunction methods 
-with the same basis set for comparison using ORCA. This allows one to see how close e.g. CCSD(T) is to Full-CI for a given energy or relative energy.
+with the same basis set for comparison using ORCA. 
+This allows one to see how close e.g. CCSD(T) is to Full-CI for a given energy or relative energy at a specific basis set.
 
 .. code-block:: python
 

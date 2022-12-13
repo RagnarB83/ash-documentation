@@ -296,6 +296,20 @@ Example: mos_dict= {"occ_alpha":[-1.0,-2.0,-3.0], "occ_beta":[-1.0,-2.0,-3.0], "
   def MOplot_vertical(mos_dict, pointsize=4000, linewidth=2, label="Label", yrange=[-30,3], imageformat='png')
 
 
+Example plotting MO diagrams for multiple ORCA outputfiles:
+
+.. code-block:: python
+
+  from ash import *
+  from ash.interfaces.interface_ORCA import MolecularOrbitalGrab
+  import glob
+
+  for file in glob.glob("*.out"):
+      label=file.split(".")[0]
+      orbdict = MolecularOrbitalGrab(file)
+      MOplot_vertical(orbdict, pointsize=4000, linewidth=2, label=label, yrange=[-30,3], imageformat='png')
+
+
 ##############################################################################
  Reaction_profile
 ##############################################################################
