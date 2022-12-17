@@ -5,7 +5,7 @@ QUICK interface
 Basis functions only up to d angular momentum are supported.
 
 ASH features a simple interface to it that allows QUICK energy+gradient calculations on the GPU.
-QUICK be used in a QM/MM setting allowing both the QM and MM steps to run on the GPU via QUICK and OpenMM. 
+The QUICK interface be used in a QM/MM setting allowing both the QM and MM steps to run on the GPU (QUICK for QM and OpenMM for MM). 
 Interface is a bit limited at the moment.
 
 **QUICKTheory class:**
