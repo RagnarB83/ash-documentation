@@ -64,9 +64,9 @@ But you could of course also write this kind of simple workflow manually, allowi
 
     #Single-point HL job on optimized geometry
     cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
-    HLenergy = Singlepoint(theory=HL, fragment=molecule)
+    HLresult = Singlepoint(theory=HL, fragment=molecule)
 
-    print("Final HL energy: ", HLenergy, "Eh")
+    print("Final HL energy: ", HLresult.energy, "Eh")
     print("ZPVE: ", thermochem['ZPVE'], "Eh")
 
 
@@ -99,9 +99,9 @@ that calculates the single-point energy for each fragment.
     FinalEnergies=[] #Defining empty list to collect energies
     #Python for-loop that loops over each molecule in list specieslist
     for molecule in specieslist:
-        energy = Singlepoint(theory=ORCAcalc, fragment=molecule)
+        result = Singlepoint(theory=ORCAcalc, fragment=molecule)
         #Adding energy to list. Note: Energy is also stored as part of fragment.
-        FinalEnergies.append(energy)
+        FinalEnergies.append(result.energy)
         ORCAcalc.cleanup()
 
     print("Final list of energies:", FinalEnergies)
@@ -215,11 +215,11 @@ Such a job could be written directly like this:
         input="! def2-SVP tightscf slowconv " + functional
         ORCAcalc = ORCATheory(orcadir=orcadir, orcasimpleinput=input, numcores=numcores)
         # Run single-point job
-        energy = Singlepoint(theory=ORCAcalc, fragment=h2)
+        result = Singlepoint(theory=ORCAcalc, fragment=h2)
         #Keep ORCA outputfile for each functional
         os.rename('orca-input.out', functional+'_orcajob.out')
         #Adding energy to dictionary
-        energies_dict[functional] = energy
+        energies_dict[functional] = result.energy
         #Cleaning up after each job (not always necessary)
         ORCAcalc.cleanup()
         print("=================================")
@@ -345,8 +345,8 @@ Next, loop over those XYZ-files, define a fragment from each XYZ-file and then r
         print("XYZ-file:", file)
         mol=Fragment(xyzfile=file, charge=0, mult=1) #Note: Here we have to assume that charge=0 and mult=1 for every molecule
         ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
-        energy = Singlepoint(theory=ORCAcalc, fragment=mol)
-        print("Energy of file {} : {} Eh".format(file, energy))
+        result = Singlepoint(theory=ORCAcalc, fragment=mol)
+        print("Energy of file {} : {} Eh".format(file, result.energy))
         ORCAcalc.cleanup()
         energies.append(energy)
         print("")
@@ -493,8 +493,8 @@ Using a collection of XYZ-files:
         print("XYZ-file:", basefile)
         mol=Fragment(xyzfile=file)
         ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=numcores)
-        energy = Singlepoint(theory=ORCAcalc, fragment=mol, charge=-1, mult=1)
-        print("Energy of file {} : {} Eh".format(basefile, energy))
+        result = Singlepoint(theory=ORCAcalc, fragment=mol, charge=-1, mult=1)
+        print("Energy of file {} : {} Eh".format(basefile, result.energy))
         locfile=basefile.split('.')[0]+'_calc.loc'
         os.rename('orca-input.loc', locfile)
         #Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17
@@ -528,8 +528,8 @@ Using a multi-XYZ file containing multiple sets of geometries (could be a NEB pa
     for index,frag in enumerate(fraglist):
         print("Frag :", index)
         ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks=blockinput, numcores=numcores)
-        energy = Singlepoint(theory=ORCAcalc, fragment=frag, charge=-1, mult=1)
-        print("Energy of frag {} : {} Eh".format(index, energy))
+        result = Singlepoint(theory=ORCAcalc, fragment=frag, charge=-1, mult=1)
+        print("Energy of frag {} : {} Eh".format(index, result.energy))
         locfile='frag{}_calc.loc'.format(index)
         os.rename('orca-input.loc', locfile)
         #Call ORCA_plot and create Cube file for specific MO in locfile: here alpha-MOs 13 and 17
@@ -599,8 +599,8 @@ Such an example can be written in ASH like this in a rather verbose manner:
     for index,conformer in enumerate(list_conformer_frags):
         print("")
         print("Performing High-level calculation for DFT-optimized Conformer ", index)
-        HLenergy = Singlepoint(theory=HL_CC, fragment=conformer, charge=charge, mult=mult)
-        HL_energies.append(HLenergy)
+        HLresult = Singlepoint(theory=HL_CC, fragment=conformer, charge=charge, mult=mult)
+        HL_energies.append(HLresult.energy)
 
 
     print("")

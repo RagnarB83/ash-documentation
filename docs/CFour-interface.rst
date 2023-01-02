@@ -76,4 +76,4 @@ CFour interface
     cfourcalc = CFourTheory(cfourdir='/path/to/cfour', cfouroptions=cfouroptions)
 
     #Simple Energy SP calc
-    energy = Singlepoint(theory=cfourcalc, fragment=HF_frag)
+    result = Singlepoint(theory=cfourcalc, fragment=HF_frag)

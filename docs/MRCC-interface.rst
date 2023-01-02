@@ -61,4 +61,4 @@ MRCC interface
     """
     MRCCcalc = MRCCTheory(mrccdir="/path/to/mrccdir", mrccinput=mrccinput, numcores=1)
     
-    energy=Singlepoint(theory=MRCCcalc,fragment=frag)
+    result=Singlepoint(theory=MRCCcalc,fragment=frag)

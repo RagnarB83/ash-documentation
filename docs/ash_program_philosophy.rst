@@ -30,7 +30,7 @@ the user should then primarily use ASH via running simple Python functions that 
 
 .. code-block:: python
 
-  energy = Singlepoint(fragment=H2O, theory=orcacalc)
+  result = Singlepoint(fragment=H2O, theory=orcacalc)
  
 Methods inside classes should typically **never** be called by the user and instead there should be a function available for carrying out such functionality. 
 This creates a simpler scripting environment for users who are not used to object orientation. If a class is needed for improved flexibility for a new type of job, a wrapper function should be provided for the user.

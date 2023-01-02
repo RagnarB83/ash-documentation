@@ -222,9 +222,9 @@ creating the **ORCATheory** object (called ORCAcalc) and then calling the **Sing
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Single-point energy job on H2O with ORCAcalc theory
-    energy = Singlepoint(fragment=H2O, theory=ORCAcalc)
+    result = Singlepoint(fragment=H2O, theory=ORCAcalc)
 
-    print("Final energy:", energy)
+    print("Final energy:", result.energy)
 
 
 ASH will print information related to the creation of the H2O **Fragment** object and the creation of the **ORCATheory** object and will then run and print output related to the **Singlepoint** Job function:
@@ -294,7 +294,7 @@ If you provide charge/mult to the job function then this will take precedence ov
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Single-point energy job on H2O with ORCAcalc theory with charge/mult provided
-    energy = Singlepoint(fragment=H2O, theory=ORCAcalc, charge=0, mult=1)
+    result = Singlepoint(fragment=H2O, theory=ORCAcalc, charge=0, mult=1)
 
 
 

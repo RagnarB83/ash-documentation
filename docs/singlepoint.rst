@@ -70,8 +70,8 @@ The **Singlepoint** function returns an energy as a floating point number which 
 
     #Simple Energy+Gradient SP calc
     # The function will return the energy that can be stored as a variable
-    Energy = Singlepoint(theory=ORCAobject, fragment=HF_frag)
-    print("Energy is", Energy)
+    result = Singlepoint(theory=ORCAobject, fragment=HF_frag)
+    print("Energy is", result.energy)
 
 It is also possible to request a gradient calculation in which case both the energy and gradient is returned:
 
@@ -125,8 +125,8 @@ You could of course easily write a for-loop for this purpose in ASH, making sure
 
     #Iterating over fragments
     for fragment in fragment_list:
-        energy = Singlepoint(theory=xtbcalc, fragment=fragment)
-        energies.append(energy) #add energy to list
+        result = Singlepoint(theory=xtbcalc, fragment=fragment)
+        energies.append(result.energy) #add energy to list
 
     print("List of energies:", energies)
 
@@ -347,7 +347,8 @@ See :doc:`module_workflows` about ASH Reaction class.
     xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
 
     #Running singlepoint calculation on reaction
-    reaction_energy = Singlepoint_reaction(theory=xtbcalc, reaction=HB_reaction, unit='kcal/mol')
+    reaction_result = Singlepoint_reaction(theory=xtbcalc, reaction=HB_reaction, unit='kcal/mol')
+    reaction_energy = reaction_result.reaction_energy
 
 This gives the output:
 

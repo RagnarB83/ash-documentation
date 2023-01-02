@@ -167,15 +167,8 @@ An elemental normal mode composition factor analysis is automatically performed 
     print("freqresult:", freqresult)
 
 
-The resulting object from a NumFreq calculation is a dictionary (here called freqresult)
-It contains the calculated frequencies and results from the Thermochemical analysis.
-Individual items from the dictionary can be accessed by specifying the dictionary key:
-
-.. code-block:: python
-
-  print("Frequencies : ", freqresult['frequencies'])
-  print("ZPVE : ", freqresult['ZPVE'])
-
+The resulting object from a NumFreq calculation is an ASH_Results dataclass object.
+It contains the calculated frequencies, eigenvectors, normalmodes, list-of frequencies and a dictionary of thermochemical properties.
 
 
 *Numerical frequencies in parallel mode (QM-code parallelization turned off):*
@@ -222,8 +215,8 @@ Example:
     ORCAcalc = ORCATheory(orcasimpleinput='BP86 def2-SVP def2/J', orcablocks="", numcores=1)
     freqresult = AnFreq(theory=ORCAcalc, fragment=HF_frag)
 
-    print("Thermochem properties dict:", freqresult)
-    print("Vibrational frequencies (cm**-1) : ", freqresult['frequencies'])
+    print("Thermochem properties dict:", freqresult.thermochemistry)
+    print("Vibrational frequencies (cm**-1) : ", freqresult.frequencies)
 
 
 
@@ -235,14 +228,15 @@ Thermochemistry corrections are automatically calculated when either a **Numfreq
 
 .. code-block:: python
 
-    thermochem_an = AnFreq(theory=ORCAcalc, fragment=HF_frag)
-    thermochem_num = NumFreq(theory=ORCAcalc, fragment=HF_frag)
+    result_anfreq = AnFreq(theory=ORCAcalc, fragment=HF_frag)
+    result_numfreq = NumFreq(theory=ORCAcalc, fragment=HF_frag)
 
-    print("Thermochem property dict:", thermochem_an)
-    print("ZPVE (Eh) : ", thermochem_an['ZPVE'])
-    print("Gibbs energy corrections (Eh) : ", thermochem_an['Gcorr'])
+    print("Thermochem property dict:", result_numfreq.thermochemistry)
+    print("ZPVE (Eh) : ", result_numfreq.thermochemistry['ZPVE'])
+    print("Gibbs energy corrections (Eh) : ", result_numfreq.thermochemistry['Gcorr'])
   
-The return object from **AnFreq** or **NumFreq** is a dictionary that contains the following information as dictionary keys.
+The return object from **AnFreq** or **NumFreq** contains a thermochemistry dictionary that contains the following 
+information as dictionary keys.
 Note that the entropy terms (TS) are un energy units (Eh) as they have been multiplied by temperature T.
 
 +------------------+-----------------------------------------------------+

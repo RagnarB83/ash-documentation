@@ -12,9 +12,9 @@ The primary job-types available in ASH:
 * Molecular dynamics
 * Surface scan
 
-Note that jobs in ASH are almost always simple Python functions.
+These job-types are simple Python functions that are called with typically an ASH Theory and ASH Fragment as input.
 
-Additionally ASH features various workflows that perform some combination of multiple jobtypes.  
+Additionally ASH features various workflows that perform some combination of jobtypes above.
 The job-types can be used with any theory object available (with some exceptions), e.g. one of the QMTheories in :doc:`QM-interfaces` or using
 a QM/MM Theory object from :doc:`module_QM-MM`
 
@@ -26,8 +26,8 @@ Almost all the main job types in ASH now return the same object.
 This differs from previous versions where either an energy, geometry, fragment or dictionary might have been returned.
 
 The return object is a `dataclass <https://realpython.com/python-data-classes/>`_  object of class ASH_Results. 
-This object has various relevant attributes (energy, geometry, Hessian etc) defined
-with are by default set to None, while different job types will set the relevant attributes depending on what was calculated.
+This object has various relevant attributes (energy, geometry, Hessian etc.) defined
+with are by default set to None, while the job functions will set the relevant attributes depending on what was calculated.
 
 
 .. list-table::
@@ -122,7 +122,38 @@ with are by default set to None, while different job types will set the relevant
      - float
      - None
      - The barrier height in kcal/mol (reactant->SP). Set by NEBTS.
-    
+
+
+If you are unsure what the Results object contains you can simply print it out and inspect
+
+.. code-block:: python
+
+  from ash import *
+
+  #Geometry optimization of HF using ORCA
+  HF_frag=Fragment(databasefile="hf.xyz", charge=0, mult=1)
+  ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf")
+  result = Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
+
+  print(result) #Print whole object
+  print(result.print_defined()) #Print only defined attributes (i.e. not None)
+
+.. code-block:: text
+
+  ASH_Results(label='Optimizer', energy=-100.354499689476, gradient=None, reaction_energy=None, energy_contributions=None, 
+    energies=None, reaction_energies=None, gradients=None, energies_dict=None, gradients_dict=None, 
+    geometry=array([[ 2.41430696e-10,  2.39715804e-09, -7.96015314e-03],[-2.41430696e-10, -2.39715804e-09,  9.24960153e-01]]),
+    initial_geometry=None, charge=None, mult=None, hessian=None, frequencies=None, normal_modes=None, 
+    vib_eigenvectors=None, thermochemistry=None, surfacepoints=None, reactant_geometry=None, product_geometry=None, 
+    saddlepoint_geometry=None, saddlepoint_fragment=None, MEP_energies_dict=None, barrier_energy=None)
+
+  Printing defined attributes of ASH_Results dataclass
+  label: Optimizer
+  energy: -100.354499689474
+  geometry: [[ 6.66989696e-10  3.31567055e-09 -7.96014574e-03]
+  [-6.66989696e-10 -3.31567055e-09  9.24960145e-01]]
+  
+
 
 ###########################
 Single-point calculation
@@ -142,7 +173,7 @@ on multiple fragments or with multiple theories.
     HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1) #Fragment object creation
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
-    energy = Singlepoint(fragment=HF_frag, theory=ORCAcalc)
+    result = Singlepoint(fragment=HF_frag, theory=ORCAcalc)
 
 ###########################
 Geometry optimization
@@ -285,7 +316,7 @@ See :doc:`neb` for documentation on the NEB-TS function.
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
     #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
-    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0)
+    result = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0)
 
 
 ###########################

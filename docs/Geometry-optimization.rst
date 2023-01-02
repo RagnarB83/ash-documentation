@@ -381,4 +381,4 @@ Example on how to use:
     #Create optimizer object
     optimizer = GeomeTRICOptimizerClass(theory=theory, fragment=fragment, charge=0, mult=1))
     #Run the optimizer object
-    finalenergy = optimizer.run()
+    result = optimizer.run()

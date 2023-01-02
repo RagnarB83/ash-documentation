@@ -86,4 +86,4 @@ Dalton interface
     Daltonobject = DaltonTheory(daltondir="/path/to/daltondir",dalton_input=input_string)
     
     #Running single-point job
-    energy=Singlepoint(theory=Daltonobject,fragment=frag)
+    result=Singlepoint(theory=Daltonobject,fragment=frag)
