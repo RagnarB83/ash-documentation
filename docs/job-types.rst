@@ -5,12 +5,12 @@ Jobs in ASH are performed by calling functions that take some input (usually an 
 
 The primary job-types available in ASH:
 
-- Single-point energy/property job
-- Geometry optimization
-- Numerical frequencies
-- Nudged elastic band optimization (or saddlepoint search)
-- Molecular dynamics
-- Surface scan
+* Single-point energy/property job
+* Geometry optimization
+* Numerical frequencies
+* Nudged elastic band optimization (or saddlepoint search)
+* Molecular dynamics
+* Surface scan
 
 Note that jobs in ASH are almost always simple Python functions.
 
@@ -18,12 +18,120 @@ Additionally ASH features various workflows that perform some combination of mul
 The job-types can be used with any theory object available (with some exceptions), e.g. one of the QMTheories in :doc:`QM-interfaces` or using
 a QM/MM Theory object from :doc:`module_QM-MM`
 
+################################
+Output object of ASH Job-types
+################################
+
+Almost all the main job types in ASH now return the same object. 
+This differs from previous versions where either an energy, geometry, fragment or dictionary might have been returned.
+
+The return object is a `dataclass <https://realpython.com/python-data-classes/>`_  object of class ASH_Results. 
+This object has various relevant attributes (energy, geometry, Hessian etc) defined
+with are by default set to None, while different job types will set the relevant attributes depending on what was calculated.
+
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``label``
+     - string
+     - None
+     - A label that usually indicates what job-function created the object.
+   * - ``energy``
+     - float
+     - None
+     - The final energy. Set by Singlepoint, Optimizer, NEBTS.
+   * - ``gradient``
+     - Numpy array
+     - None
+     - A calculated gradient. Set by Singlepoint with Grad=True.
+   * - ``reaction_energy``
+     - float
+     - None
+     - A reaction energy in a chosen unit. Set by Singlepoint_reaction.
+   * - ``energy_contributions``
+     - dict
+     - None
+     - A dictionary of various energy contributions. Set by Singlepoint_reaction if a multistep theory like ORCA_CC_CBS_Theory was used.
+   * - ``energies``
+     - list of floats
+     - None
+     - A list of energies calculated. Set by Singlepoint_fragments, Singlepoint_theories, Singlepoint_fragments_and_theories and Singlepoint_reaction.
+   * - ``reaction_energies``
+     - list of floats
+     - None
+     - A list of reaction energies calculated. Set by Singlepoint_reaction.
+   * - ``gradients``
+     - List of numpy arrays.
+     - None
+     - A list of gradients calculated. Set by Singlepoint_parallel.
+   * - ``energies_dict``
+     - dict
+     - None
+     - Dictionary containing multiple energies for multiple single-point energy calculations. Set by Singlepoint_parallel.
+   * - ``gradients_dict``
+     - dict
+     - None
+     - Dictionary containing multiple gradients for multiple single-point energy calculations. Set by Singlepoint_parallel.
+   * - ``geometry``
+     - Numpy array
+     - None
+     - The final geometry from job. Set by Optimizer.
+   * - ``initial_geometry``
+     - Numpy array
+     - None
+     - The initial geometry from job. Set by Optimizer.
+   * - ``hessian``
+     - Numpy array
+     - None
+     - Hessian matrix. Set by NumFreq.
+   * - ``frequencies``
+     - List
+     - None
+     - List of vibrational frequencies in cm**-1. Set by NumFreq and AnFreq.
+   * - ``vib_eigenvectors``
+     - Numpy array
+     - None
+     - Eigenvectors from a mass-weighed Hessian diagonalization. Set by NumFreq.
+   * - ``normal_modes``
+     - Numpy array
+     - None
+     - Normal modes (unweighted eigenvectors). Set by NumFreq.
+   * - ``thermochemistry``
+     - dict
+     - None
+     - A dictionary containing various thermochemistry components ('ZPVE','Gcorr' etc.). Set by NumFreq and AnFreq.
+   * - ``surfacepoints``
+     - dict
+     - None
+     - Dictionary of energies of surfacepoints. Set by calc_surface and calc_surface_fromXYZ.
+   * - ``saddlepoint_fragment``
+     - ASH Fragment
+     - None
+     - An ASH fragment for the saddlepoint found. Set by NEB and NEBTS.
+   * - ``MEP_energies_dict``
+     - dict
+     - None
+     - Dictionary of total energies for each image. Set by NEB and NEBTS.
+   * - ``barrier_energy``
+     - float
+     - None
+     - The barrier height in kcal/mol (reactant->SP). Set by NEBTS.
+    
 
 ###########################
 Single-point calculation
 ###########################
 
 The most basic jobtype. See :doc:`singlepoint`
+In addition to the basic **Singlepoint** jobtype, there are also specialized functions: **Singlepoint_fragments**, **Singlepoint_theories**, 
+**Singlepoint_fragments_and_theories**, **Singlepoint_reaction** and **Singlepoint_parallel** that are used to run single-point calculations
+on multiple fragments or with multiple theories.
 
 **Example:**
 
