@@ -100,51 +100,50 @@ There are two options:
         Remember that when you delete atoms from a system atom indices will have changed. 
         This means that you either have to update the qmatoms and actatoms list manually or do as in example above where the qmatoms and actatoms lists are provided to the remove_atoms_from_system_CHARMM function. These lists will then be updated.
 
-.. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to remove_atoms_from_system_CHARMM  that will preserve the 1-based indexing.
+    .. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to remove_atoms_from_system_CHARMM  that will preserve the 1-based indexing.
 
 
+    **Add atoms to system (CHARMM)**
+            
+    Both the coordinates and the PSF-file needs to be updated. 
+    This can be performed with an ASH script like this:
 
-        **Add atoms to system (CHARMM)**
-                
-        Both the coordinates and the PSF-file needs to be updated. 
-        This can be performed with an ASH script like this:
+    .. code-block:: python
 
-        .. code-block:: python
+        from ash import *
 
-            from ash import *
+        #Path to dir containing PSFgen executable
+        psfgendir="/home/bjornsson/QM-MM-Chemshell-scripts"
 
-            #Path to dir containing PSFgen executable
-            psfgendir="/home/bjornsson/QM-MM-Chemshell-scripts"
+        #CHARMM Forcefield files
+        topfile="top_all36_prot.rtf"
+        psffile="newxplor.psf"
 
-            #CHARMM Forcefield files
-            topfile="top_all36_prot.rtf"
-            psffile="newxplor.psf"
+        #Reading coordinates into a fragment
+        fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
 
-            #Reading coordinates into a fragment
-            fragfile=Fragment(fragfile="Fragment-currentgeo.ygg")
+        # Define qmatoms and actatoms lists
+        qmatoms = read_intlist_from_file("qmatoms")
+        actatoms = read_intlist_from_file("actatoms")
 
-            # Define qmatoms and actatoms lists
-            qmatoms = read_intlist_from_file("qmatoms")
-            actatoms = read_intlist_from_file("actatoms")
+        #Defining the added coordinates as a string
+        addition_string="""
+        C        1.558526678      0.000000000     -0.800136464
+        O        2.110366050     -0.126832008      0.222773815
+        O        1.006687306      0.126832008     -1.823046743
+        """
+        #Name of resgroup to be added (this needs to be present in topfile!)
+        resgroup='CO2'
+        #Adding atoms
+        add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, 
+            psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
 
-            #Defining the added coordinates as a string
-            addition_string="""
-            C        1.558526678      0.000000000     -0.800136464
-            O        2.110366050     -0.126832008      0.222773815
-            O        1.006687306      0.126832008     -1.823046743
-            """
-            #Name of resgroup to be added (this needs to be present in topfile!)
-            resgroup='CO2'
-            #Adding atoms
-            add_atoms_to_system_CHARMM(fragment=fragfile, added_atoms_coordstring=addition_string, resgroup=resgroup, 
-                psffile=psffile, topfile=topfile, psfgendir=psfgendir, qmatoms=qmatoms, actatoms=actatoms)
+    The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
+    newfragment.xyz and newfragment.ygg
+    and add the chosen resgroup to a PSF file named: newsystem_XPLOR.psf  . 
+    Also created is a PDB-file: new-system.pdb
 
-        The script will add the selected atom coordinates to the fragment (at the end) and create new fragmentfiles: 
-        newfragment.xyz and newfragment.ygg
-        and add the chosen resgroup to a PSF file named: newsystem_XPLOR.psf  . 
-        Also created is a PDB-file: new-system.pdb
-
-        Remember to add the new atom indices to QM-region and Active-Region definitions or provide the lists to the add_atoms_to_system_CHARMM function as above.
+    Remember to add the new atom indices to QM-region and Active-Region definitions or provide the lists to the add_atoms_to_system_CHARMM function as above.
 
 .. note:: If you are using 1-based atom indexing to manage your qmatoms and actatoms files, there is an option: offset_atom_indices=1, to add_atoms_to_system_CHARMM  that will preserve the 1-based indexing.
 
