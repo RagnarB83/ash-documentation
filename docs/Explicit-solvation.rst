@@ -26,20 +26,20 @@ Example 1. Solvation, MM minimization and classical MM dynamics for 100 ps.
         solvent_boxdims=[70,70,70], nonbonded_pars="CM5_UFF", numcores=numcores)
 
     #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(platform='OpenCL', numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, periodic=True,
+    soluteatoms=[i for i in range(0,mol.numatoms)]
+    openmmobject =OpenMMTheory(platform='OpenCL', numcores=numcores, forcefield=forcefield, topoforce=True, topology=topology, periodic=True, frozen_atoms=soluteatoms, 
         autoconstraints='HBonds', rigidwater=True)
 
 
     #MM minimization for 100 steps
-    soluteatoms=[i for i in range(0,mol.numatoms)]
-    OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1, frozen_atoms=soluteatoms, enforcePeriodicBox=True)
+    OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1, enforcePeriodicBox=True)
 
     #Classical MD simulation for 100 ps
     OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=100, traj_frequency=10, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD', frozen_atoms=soluteatoms, enforcePeriodicBox=True)
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD', enforcePeriodicBox=True)
 
     #MDAnalysis transforming of trajectory
-    lastframe_elems, lastframe_coords = MDAnalysis_transform("final_MDfrag_laststep.pdb","output_traj.dcd", solute_indices=soluteatoms, 
+    lastframe_elems, lastframe_coords = MDAnalysis_transform("final_MDfrag_laststep.pdb","trajectory.dcd", solute_indices=soluteatoms, 
         trajoutputformat='PDB')
 
     #new ASH fragment after the classical prep
