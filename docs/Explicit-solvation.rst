@@ -39,7 +39,7 @@ Example 1. Solvation, MM minimization and classical MM dynamics for 100 ps.
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD', enforcePeriodicBox=True)
 
     #MDAnalysis transforming of trajectory
-    lastframe_elems, lastframe_coords = MDAnalysis_transform("final_MDfrag_laststep.pdb","output_traj.dcd", solute_indices=soluteatoms, 
+    lastframe_elems, lastframe_coords = MDAnalysis_transform("final_MDfrag_laststep.pdb","trajectory.dcd", solute_indices=soluteatoms, 
         trajoutputformat='PDB')
 
     #new ASH fragment after the classical prep
