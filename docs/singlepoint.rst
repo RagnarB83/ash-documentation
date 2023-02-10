@@ -326,7 +326,7 @@ See :doc:`module_workflows` about ASH Reaction class.
 
 .. code-block:: python
 
-    def Singlepoint_reaction(theory=None, reaction=None, unit='kcal/mol'):
+    def Singlepoint_reaction(theory=None, reaction=None):
 
 
 **Example:**
@@ -341,13 +341,13 @@ See :doc:`module_workflows` about ASH Reaction class.
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
-    HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
+    HB_reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry,  unit='kcal/mol')
 
     #Defining theory
     xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
 
     #Running singlepoint calculation on reaction
-    reaction_result = Singlepoint_reaction(theory=xtbcalc, reaction=HB_reaction, unit='kcal/mol')
+    reaction_result = Singlepoint_reaction(theory=xtbcalc, reaction=HB_reaction)
     reaction_energy = reaction_result.reaction_energy
 
 This gives the output:
