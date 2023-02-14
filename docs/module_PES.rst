@@ -38,8 +38,8 @@ The PES.PhotoElectronSpectrum function takes the following keyword arguments:
 
 - theory: An ASH Theory object (only ORCATheory supported at the moment)
 - fragment: An ASH fragment object
-- InitialState_charge : integer
-- InitialState_mult : integer
+- Initialstate_charge : integer
+- Initialstate_mult : integer
 - Ionizedstate_charge: integer
 - Ionizedstate_mult: integer or list of integers, e.g. [5,7]
 - path_wfoverlap: string
@@ -90,7 +90,7 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
     from ash import *
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, InitialState_charge=0, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
@@ -101,7 +101,7 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
     from ash import *
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, InitialState_charge=0, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                               CAS=True, CAS_Initial=(17,11), CAS_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
@@ -113,7 +113,7 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
     from ash import *
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, InitialState_charge=0, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                               MRCI=True, MRCI_Initial=(17,11), MRCI_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
@@ -125,7 +125,7 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
     from ash import *
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, InitialState_charge=0, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6], EOM=True)
 
 ######################################################
@@ -192,7 +192,7 @@ Example: TDDFT on H\ :sub:`2`\ O
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=1)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=h2o, InitialState_charge=0, Initialstate_mult=1,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=h2o, Initialstate_charge=0, Initialstate_mult=1,
                               Ionizedstate_charge=1, Ionizedstate_mult=2, numionstates=50,
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
@@ -237,7 +237,7 @@ Here we show how results with multiple functionals can be obtained at the same t
         ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
         #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-        IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
+        IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                               Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=30, numcores=numcores,
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
@@ -351,7 +351,7 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=30, EOM=True, numcores=numcores,
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
@@ -392,7 +392,7 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=[11,6], numcores=numcores,
                             CAS=True, CAS_Initial=(17,11), CAS_Final = (16,11),
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
@@ -430,7 +430,7 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
     #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, InitialState_charge=-1, Initialstate_mult=6,
+    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=[11,6], numcores=numcores,
                             MRCI=True, MRCI_Initial=(17,11), MRCI_Final = (16,11),
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
