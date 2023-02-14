@@ -27,6 +27,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    coordinate-input
    parallelization
    QM-interfaces
+   scientific_articles
 
 
 .. toctree::
