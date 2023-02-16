@@ -439,6 +439,10 @@ To show how we can run classical simulations of our rubredoxin setup consider th
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=fragment, theory=omm, maxiter=100, tolerance=1)
 
+    #Gentle warmup MD (3 MD simulations: 10/50/200 steps with timesteps 0.5/1/1 fs at 1 K/10K/300K)
+    Gentle_warm_up_MD(fragment=fragment, theory=omm, time_steps=[0.0005,0.001,0.001],
+                    steps=[10,50,200], temperatures=[1,10,300])
+
     #Classical NVT MD simulation for 5 ps at 300 K
     OpenMM_MD(fragment=fragment, theory=omm, timestep=0.001, simulation_time=5, traj_frequency=10, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
@@ -449,8 +453,6 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 
 .. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will upon completion, update the coordinates of that ASH fragment
     with the coordinates of the last step.
-    In the script above, the MD function will use the last geometry from the OpenMM_Opt function.
-
 
 This script defines an ASH fragment from the final PDB-file created by OpenMM_Modeller. It then defines an OpenMM_Theory object using the 
 full system XML file (and PDB topology). In addition to basic automatic X-H bondconstraints and rigid-water constraints we also have to
@@ -460,8 +462,9 @@ Alternatively, we could also have added harmonic bond restraints instead of rigi
 
 We next provide the ASH fragment and the OpenMMTheory as input to the OpenMM_Opt minimizer and run a minimization of 100 steps.
 For a large MM system it is typically not needed to minimize the whole system until convergence (and can in fact be very hard to accomplish).
-Here we simply minimize for 100 steps in order to remove the larges starting forces from the system (due to the addition of H-atoms, solvent, ions etc.) before we
-go on to perform an MM simulation.
+Here we simply minimize for 100 steps in order to remove the largest starting forces from the system (due to the addition of H-atoms, solvent, ions etc.) before we
+go on to perform an MM simulation. There are cases where OpenMM_Opt fails to reduce these forces (and can even crash) sufficiently.
+We can also use Gentle_warm_up_MD (see :doc:`OpenMM-interface`) to gently warm up the system starting from a very low temperature.
 
 Next we perform an MM MD simulation using OpenMM_MD. Here we do a very short MD simulation for 5 picoseconds using a timestep 
 of 0.001 ps (1 fs) at 300 K. We use a Langevin integrator that also acts as thermostat and we will thus sample the NVT ensemble.
@@ -548,6 +551,11 @@ Once the simulation is found to be converged, the last snapshot together with th
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=fragment, theory=omm, maxiter=100, tolerance=1)
+
+    #Gentle warmup MD (3 MD simulations: 10/50/200 steps with timesteps 0.5/1/4 fs at 1 K/10K/300K)
+    Gentle_warm_up_MD(fragment=fragment, theory=omm, time_steps=[0.0005,0.001,0.004],
+                    steps=[10,50,200], temperatures=[1,10,300])
+
 
     #NPT simulation until density and volume converges
     OpenMM_box_relaxation(fragment=fragment, theory=omm, datafilename="nptsim.csv", numsteps_per_NPT=10000,
