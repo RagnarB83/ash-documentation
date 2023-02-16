@@ -542,6 +542,7 @@ Simple minimization via OpenMM
 ######################################
 
 A classical system setup typically requires a minimization to get rid of large initial forces related to non-ideal atom positions.
+These large initial forces are usually responsible for the system blowing up in the beginning (error messages of e.g. 'Particle number is NaN' etc.).
 The simple minimizer in the OpenMM library works well for this purpose although achieving convergence can be difficult.
 Typically a few 100-1000 steps of minimization is sufficient to get rid of the major forces.
 
@@ -598,6 +599,42 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
 
     OpenMM_Opt(fragment=frag, theory=openmmobject, maxiter=1000, tolerance=1)
 
+
+######################################
+Gentle WarmupMD
+######################################
+
+.. code-block:: python
+
+  def Gentle_warm_up_MD(theory=None, fragment=None, time_steps=[0.0005,0.001,0.004], 
+                      steps=[10,50,10000], temperatures=[1,10,300])
+
+The minimization algorithm in **OpenMM_Opt** described above can occasionally fail to reduce the main problematic forces
+present in a newly setup system. It can even crash during the minimization without revealing what the problem.
+The reason for crashes is usually due to these large forces resulting in high atom velocities which causes the system to blow up (error messages of e.g. 'Particle number is NaN' etc.).
+Furthermore, the minimization algorithm can currently not report any progress on the minimization (`see Github issue <https://github.com/openmm/openmm/issues/1155>`_)
+
+An alternative (or addition) to a minimization is to instead start MD simulations using a very low temperature and small timesteps and then gradually increase the temperature and timestep.
+Such a protocol can work where a minimization fails or at the very least it can provide information about what part of the system has these large forces.
+
+ASH provides a convenient function, Gentle_warm_up_MD, that can be called to do such a gentle warmup MD in a few steps.
+
+To use it, you simple call the function with the OpenMMTheory object and Fragment object as input.
+
+.. code-block:: python
+
+  Gentle_warm_up_MD(theory=openmmobject, fragment=frag, time_steps=[0.0005,0.001,0.004], 
+                    steps=[10,50,10000], temperatures=[1,10,300])
+
+By default, the function will perform a warmup protocol consisting of:
+
+- 10-step MD simulation with a 0.5 fs timestep (0.0005 ps) at temperature 1 K
+- 50-step MD simulation with a 1.0 fs timestep (0.001 ps) at temperature 10 K
+- 10000-step MD simulation with a 4.0 fs timestep (0.004 ps) at temperature 300 K
+
+This protocol may be sufficient to warm up your system without it blowing up but the protocol can also be modified in any way you like.
+By adding values to the lists above you add extra simulations, change the steps, change the temperatures, timesteps etc.
+A DCD trajectory is written for each MD simulation and each snapshot is written to disk (traj_frequency=1) which can be visualized in VMD.
 
 
 ######################################
