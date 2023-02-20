@@ -603,21 +603,27 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
 ######################################
 Gentle WarmupMD
 ######################################
+A function to gently warm up a newly setup system to a target temperature. 
+Can also be used to help diagnose why an MD simulation crashes (reports initial high atomic forces as well as root-mean-square fluctuations).
 
 .. code-block:: python
 
-  def Gentle_warm_up_MD(theory=None, fragment=None, time_steps=[0.0005,0.001,0.004], 
-                      steps=[10,50,10000], temperatures=[1,10,300])
+  def Gentle_warm_up_MD(theory=None, fragment=None, time_steps=[0.0005,0.001,0.004], steps=[10,50,10000], 
+      temperatures=[1,10,300], check_gradient_first=True, gradient_threshold=100, use_mdtraj=True)
 
 The minimization algorithm in **OpenMM_Opt** described above can occasionally fail to reduce the main problematic forces
-present in a newly setup system. It can even crash during the minimization without revealing what the problem.
-The reason for crashes is usually due to these large forces resulting in high atom velocities which causes the system to blow up (error messages of e.g. 'Particle number is NaN' etc.).
-Furthermore, the minimization algorithm can currently not report any progress on the minimization (`see Github issue <https://github.com/openmm/openmm/issues/1155>`_)
+present in a newly setup system. It can even occasionally crash during the minimization without revealing the cause.
+Starting MD simulations directly can also lead to crashes without helpful error messages.
+The reason for these crashes is usually due to these large forces resulting in high atom velocities (or similar problems in the minimization) 
+which causes the system to blow up (error messages such as 'Particle number is NaN' etc.).
+Furthermore, the OpenMM minimization algorithm currently does not report any progress on the minimization (`see Github issue <https://github.com/openmm/openmm/issues/1155>`_)
 
 An alternative (or addition) to a minimization is to instead start MD simulations using a very low temperature and small timesteps and then gradually increase the temperature and timestep.
 Such a protocol can work where a minimization fails or at the very least it can provide information about what part of the system has these large forces.
 
 ASH provides a convenient function, Gentle_warm_up_MD, that can be called to do such a gentle warmup MD in a few steps.
+In addition, the function reports the largest atom forces present in the initial geometry and will report atoms with the largest root-mean-square fluctuations
+after each MD simulation it performs (requires mdtraj to be installed).
 
 To use it, you simple call the function with the OpenMMTheory object and Fragment object as input.
 
@@ -636,6 +642,8 @@ This protocol may be sufficient to warm up your system without it blowing up but
 By adding values to the lists above you add extra simulations, change the steps, change the temperatures, timesteps etc.
 A DCD trajectory is written for each MD simulation and each snapshot is written to disk (traj_frequency=1) which can be visualized in VMD.
 
+Gentle_warm_up_MD will by default use `mdtraj<https://www.mdtraj.org>`_ to image trajectories
+for better visualization as well as calculate root-mean-square fluctuations.  mdtraj can be installed like this: pip install mdtraj
 
 ######################################
 System setup via OpenMM: Modeller
