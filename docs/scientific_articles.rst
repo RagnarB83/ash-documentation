@@ -17,6 +17,14 @@ This article used the QM/MM module of ASH together with the ORCA interface (:doc
 for the QM part and the OpenMM interface (:doc:`OpenMM-interface`) for the MM part. 
 The OpenMMTheory interface used CHARMM-style forcefield files.
 
+**QM/MM modelling of dinitrogen binding to redox states of nitrogenase**
+
+`2023 Inorg. Chem. article <https://doi.org/10.1021/acs.inorgchem.2c03967>`_
+
+This work, exploring dinitrogen binding to multiple redox states of the complex iron-molybdenum cofactor of nitrogenase 
+used the QM/MM module of ASH together with the ORCA interface (:doc:`ORCA-interface`)
+for the QM part and the OpenMM interface (:doc:`OpenMM-interface`) for the MM part (CHARMM36 forcefield with CHARMM files).
+Broken-symmetry solutions in the QM-part were controlled by the ORCA interface (brokensym, HSmult, atomstoflip keywords, see :doc:`ORCA-interface`). 
 
 
 ###################################

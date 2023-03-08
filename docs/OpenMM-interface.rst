@@ -642,7 +642,7 @@ This protocol may be sufficient to warm up your system without it blowing up but
 By adding values to the lists above you add extra simulations, change the steps, change the temperatures, timesteps etc.
 A DCD trajectory is written for each MD simulation and each snapshot is written to disk (traj_frequency=1) which can be visualized in VMD.
 
-Gentle_warm_up_MD will by default use `mdtraj<https://www.mdtraj.org>`_ to image trajectories
+Gentle_warm_up_MD will by default use `mdtraj <https://www.mdtraj.org>`_ to image trajectories
 for better visualization as well as calculate root-mean-square fluctuations.  mdtraj can be installed like this: pip install mdtraj
 
 ######################################
