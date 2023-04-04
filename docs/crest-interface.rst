@@ -66,8 +66,9 @@ at various levels of theory.
 
 .. code-block:: python
 
-    def confsampler_protocol(fragment=None, crestdir=None, xtbmethod='GFN2-xTB', MLtheory=None,
-                             HLtheory=None, orcadir=None, numcores=1, charge=None, mult=None):
+    def confsampler_protocol(fragment=None, crestdir=None, xtbmethod='GFN2-xTB', MLtheory=None, 
+                            HLtheory=None, numcores=1, charge=None, mult=None, crestoptions=None,
+                            optimizer_maxiter=200):
 
 
 .. code-block:: python
