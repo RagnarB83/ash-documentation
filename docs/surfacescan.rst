@@ -121,9 +121,9 @@ it is strongly advised to instead use the :doc:`neb` for this purpose.
 Parallelization
 ######################################################
 
-- calc_surface is not yet fully parallelized.
-- Unrelaxed 1D and 2D scans can use runmode='parallel'.
-- Relaxed 2D scans are NOT yet parallelized
+- calc_surface is fully parallelized for both unrelaxed/relaxed and 1D/2D scans.
+- Use runmode='parallel' and provide as many numcores as you have available.
+- Make sure to turn off theory parallelization (almost never desired) by setting theory.numcores=1
 
 ######################################################
 How to use
@@ -251,6 +251,15 @@ Other options:
 - mofilesdir=path   (Directory path containing MO-files (GBW files if ORCA) )
 - ActiveRegion= True/False
 - actatoms=list  (list of active atoms if doing relaxed scan)
+
+
+######################################################
+Parallelization
+######################################################
+
+- calc_surface_fromXYZ is fully parallelized.
+- Use runmode='parallel' and provide as many numcores as you have available.
+- Make sure to turn off theory parallelization (almost never desired) by setting theory.numcores=1
 
 **Plotting**
 
