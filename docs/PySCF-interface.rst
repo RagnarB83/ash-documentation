@@ -1,19 +1,53 @@
 PySCF interface
 ======================================
 
-PySCF is a very powerful open-source quantum chemistry code. ASH currently features a limited interface that will be extended
-in the future.
+`PySCF <https://pyscf.org>`_ is a very powerful open-source quantum chemistry code with the entire outer interface written in Python and everything else in C, 
+including the very powerful libcint integral library.
+
+ASH features a pretty good interface to PYSCF that allows one to conveniently use the various powerful DFT and WFT based features in the program 
+that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, MD and metadynamics features of ASH.
+Due to the nature of PySCF as a Python library (with an essentially unlimited number of options) it is difficult to extensively support 
+every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful options. 
+If the use of special features inside PySCF are required it may be best to use PySCF directly (outside ASH).
+
+**List of features:**
+
+- One can define DFT, TDDFT, coupled cluster, CASSCF calculations fairly easily with support for various options.
+- Control over special options such as BS-DFT, stability analysis, fractional occupationnoncollinear DFT (GHF/GKS), x2C relativistic Hamiltonians
+- Coupled cluster with multiple orbital references. Frozen natural orbital option (FNO).
+- CASSCF starting orbital options: natural orbitals via MP2, CCSD and CCSD(T). Automatic CAS via DMET_CAS and AVAS.
+- Read and write checkpointfiles, Molden files and Cubefiles
+- PySCFTheory interface compatible with BlockTheory and DiceTheory interfaces for DMRG and stochastic heat-bath CI calculations.
+- Support for `LOSC PySCF plugin <https://github.com/Yang-Laboratory/losc>`_ and MCPDFT
+- Dispersion corrections (D3, D4, TS and MBD) via  `vdw-wrapper <https://github.com/ajz34/vdw>`_
+
+**Main limitations:**
+
+- QM/MM pointcharge support not quite ready
+- post-SCF gradients not yet available in the interface
+
 
 **PySCFTheory class:**
 
 .. code-block:: python
     
   class PySCFTheory:
-      def __init__(self, printsetting=False, printlevel=2, numcores=1, 
-                  scf_type=None, basis=None, functional=None, gridlevel=5, 
-                  pe=False, potfile='', filename='pyscf', memory=3100, conv_tol=1e-8, verbose_setting=4, 
-                  CC=False, CCmethod=None, CC_direct=False, frozen_core_setting='Auto', 
-                  frozen_virtuals=None, FNO=False, FNO_thresh=None):
+      def __init__(self, printsetting=False, printlevel=2, numcores=1, label=None,
+                    scf_type=None, basis=None, ecp=None, functional=None, gridlevel=5, symmetry=False, guess='minao',
+                    soscf=False, damping=None, diis_method='DIIS', diis_start_cycle=0, level_shift=None,
+                    fractional_occupation=False, scf_maxiter=50, direct_scf=True, GHF_complex=False, collinear_option='mcol',
+                    BS=False, HSmult=None,spinflipatom=None, atomstoflip=None,
+                    TDDFT=False, tddft_numstates=10,
+                    dispersion=None, densityfit=False, auxbasis=None, sgx=False, magmom=None,
+                    pe=False, potfile='', filename='pyscf', memory=3100, conv_tol=1e-8, verbose_setting=4, 
+                    CC=False, CCmethod=None, CC_direct=False, frozen_core_setting='Auto', cc_maxcycle=200,
+                    CAS=False, CASSCF=False, active_space=None, stability_analysis=False, casscf_maxcycle=200,
+                    frozen_virtuals=None, FNO=False, FNO_thresh=None, x2c=False,
+                    moreadfile=None, write_chkfile_name='pyscf.chk', noautostart=False,
+                    AVAS=False, DMET_CAS=False, CAS_AO_labels=None, 
+                    cas_nmin=None, cas_nmax=None, losc=False, loscfunctional=None, LOSC_method='postSCF',
+                    loscpath=None, LOSC_window=None,
+                    mcpdft=False, mcpdft_functional=None):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -27,6 +61,10 @@ in the future.
      - string
      - None
      - Printsetting. if True: printing to standard output otherwise disk.
+   * - ``label``
+     - string
+     - None
+     - Optional label.
    * - ``printlevel``
      - integer
      - 2
@@ -42,15 +80,179 @@ in the future.
    * - ``basis``
      - string
      - None
-     - Name of basis set (must be valid PySCF basis-name).
+     - Name of basis set, can be a string (e.g. 'def2-SVP', must be valid PySCF basis-name) or a dict with element-specific keys and value-strings (basis-set name).
+   * - ``ecp``
+     - string
+     - None
+     - Name of ECP, can be a string ('e.g. 'def2-SVP', must be valid PySCF ECP-name) or a dict with element-specific keys and value-strings (ECP name).
    * - ``functional``
      - string
      - None
      - Name of DFT functional (must be valid PySCF functional-name).
+   * - ``symmetry``
+     - Boolean
+     - False
+     - Use of point-group symmetry or not.
+   * - ``guess``
+     - string
+     - 'minao'
+     - SCF guess options: 'minao', 'atom', 'huckel', 'vsap','1e'
    * - ``gridlevel``
      - string
      - ''
      - Name of DFT functional (must be valid PySCF functional-name).
+   * - ``soscf``
+     - Boolean
+     - False
+     - Second-order SCF algorithm active or not.
+   * - ``damping``
+     - float
+     - None
+     - Value of damping during SCF.
+   * - ``diis_method``
+     - string
+     - 'DIIS'
+     - DIIS method option: 'DIIS', 'ADIIS', 'EDIIS'
+   * - ``diis_start_cycle``
+     - integer
+     - 0
+     - In which SCF iteration to start the DIIS.
+   * - ``level_shift``
+     - float
+     - None
+     - Value of level-shift (Eh) during SCF.
+   * - ``fractional_occupation``
+     - Boolean
+     - False
+     - Whether fractional occupation is active or not.
+   * - ``fractional_occupation``
+     - Boolean
+     - False
+     - Whether fractional occupation is active or not.
+   * - ``scf_maxiter``
+     - integer
+     - 50
+     - Max number of SCF iterations.
+   * - ``direct_scf``
+     - Boolean
+     - True
+     - Whether direct SCF algorithm (recalculation of integrals in each iteration) is active or not. False is faster for small systems.
+   * - ``densityfit``
+     - Boolean
+     - False
+     - Whether to use density-fitting (RI) for Coulomb integrals. Use with auxbasis keyword.
+   * - ``auxbasis``
+     - string
+     - None
+     - Name of auxiliary basis set to use in density-fitting approximation. Example: 'def2-universal-jfit'.
+   * - ``sgx``
+     - Boolean
+     - False
+     - Whether to use semi-numerical exchange approximation for HF-exchange integrals. Note: gradient is not available
+   * - ``stability_analysis``
+     - Boolean
+     - False
+     - Whether SCF stability_analysis (calculation of orbital Hessian) is active or not.
+   * - ``dispersion``
+     - string
+     - None
+     - Dispersion correction to use. Options: 'D3', 'D4', 'TS', 'MBD'. Requires pyvdw package.
+   * - ``moreadfile``
+     - string
+     - None
+     - Name of PySCF checkpoint-file to read in as orbital guess.
+   * - ``write_chkfile_name``
+     - string
+     - None
+     - Name of the checkpointfile to write after SCF converges.
+   * - ``noautostart``
+     - Boolean
+     - False
+     - If True, then orbitals are not read in from a checkpoint-file.
+   * - ``magmom``
+     - list
+     - None
+     - If scf_type is 'GHF' or 'GKS', choose magnetic moment: list of the initial collinear spins of each atom.
+   * - ``GHF_complex``
+     - Boolean
+     - False
+     - If scf_type is 'GHF' or 'GKS', whether complex orbitals are used or not.
+   * - ``collinear_option``
+     - string
+     - 'mcol'
+     - If scf_type is 'GHF' or 'GKS', collinear option: col, ncol, mcol           
+   * - ``GHF_complex``
+     - Boolean
+     - False
+     - If scf_type is 'GHF' or 'GKS', whether complex orbitals are used or not.
+   * - ``BS``
+     - Boolean
+     - False
+     - Whether to find broken-symmetry solution by spin-flipping. Requires HSmult, spinflipatom and atomstoflip.
+   * - ``HSmult``
+     - integer
+     - None
+     - BS option: High-spin multiplicity to flip spin from.
+   * - ``spinflipatom``
+     - string
+     - None
+     - What atom to flip. String example: '0 Fe' (first Fe atom in system)
+   * - ``atomstoflip``
+     - list of integers
+     - None
+     - What atom index to flip. NOTE: CURRENTLY INACTIVE
+   * - ``TDDFT``
+     - Boolean
+     - False
+     - Whether to TDDFT on top of SCF solution or not.
+   * - ``tddft_numstates``
+     - integer
+     - 10
+     - Number of TDDFT states calculated.
+   * - ``x2c``
+     - Boolean
+     - False
+     - Whether to use the X2C scalar relativistic Hamiltonian or not.
+   * - ``CAS``
+     - Boolean
+     - False
+     - Whether to use a complete active space (CAS) or not. See also CASSCF and active_space keywords below.
+   * - ``CASSCF``
+     - Boolean
+     - False
+     - For CAS: Whether CASSCF orbital optimization is active. If False, then CAS-CI.
+   * - ``active_space``
+     - list of integers
+     - None
+     - Active space definition (electrons in orbitals), e.g. active_space=[3,2] (3 electrons in 2 orbitals).
+   * - ``casscf_maxcycle``
+     - integer
+     - 200
+     - Maximum number of CASSCF iterations.
+   * - ``mcpdft``
+     - Boolean
+     - False
+     - Whether multiconfigurational pair density functional theory (MCPDFT) method is active or not. Requires CAS keywords.
+   * - ``mcpdft_functional``
+     - string
+     - None
+     - Name of MCPDFT functional.
+   * - ``AVAS``
+     - Boolean
+     - False
+     - Whether to use the AVAS method to find CAS active space. Requires CAS_AO_labels keyword.
+   * - ``DMET_CAS``
+     - Boolean
+     - False
+     - Whether to use the DMET_CAS method to find CAS active space. Requires CAS_AO_labels keyword.
+   * - ``CAS_AO_labels``
+     - list of strings
+     - None
+     - List of atom-orbital label strings to use in AVAS/DMET_CAS selection.  Example: ['Fe 3d', 'Fe 4d', 'C 2pz']
+   * - ``cas_nmin/cas_nmax``
+     - float
+     - None
+     - If selecting active space from MP2 natural orbitals cas_nmin/cas_nmax tresholds determine active space.
    * - ``pe``
      - Boolean
      - False
@@ -87,6 +289,10 @@ in the future.
      - Boolean
      - False
      - Whether to use integral-direct CC or not.
+   * - ``cc_maxcycle``
+     - integer
+     - 20
+     - Maximum number of CC iterations.
    * - ``frozen_core_setting``
      - string
      - 'Auto'
@@ -103,12 +309,44 @@ in the future.
      - float
      - None
      - Optional threshold to choose virtual natural orbitals to be skipped, based on natural occupation (from MP2 occupations).
+   * - ``losc``
+     - Boolean
+     - False
+     - Whether to do localized orbital scaling correction or not.
+   * - ``loscfunctional``
+     - string
+     - None
+     - The functional used (affect parameters chosen)
+   * - ``LOSC_method``
+     - string
+     - None
+     - LOSC correction post-SCF or full SCF. Options: 'postSCF' or 'SCF'
+   * - ``LOSC_window``
+     - list of floats.
+     - None
+     - LOSC energy window, e.g. [-30,-10].
+   * - ``loscpath``
+     - string
+     - None
+     - Path to losc package.
 
 
-The PySCF interface is library-based and requires a PySCF installation via Pip (pip install pyscf).
-The interface is currently not very flexible and only supports SCF and coupled cluster calculations at the moment.
-The interface will be extended in the future.
 
+################################################################################
+PySCF installation
+################################################################################
+
+The PySCF interface is library-based and requires a PySCF installation inside the Python environment, typically via Pip (pip install pyscf).
+
+################################################################################
+Parallelization
+################################################################################
+
+The PySCF parallelization is OpenMP thread-based. The numcores keyword is used to specify the number of threads available to PySCF.
+
+################################################################################
+Examples
+################################################################################
 
 **DFT-SCF example:**
 
@@ -123,7 +361,6 @@ The interface will be extended in the future.
     numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
 
   Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
-
 
 
 **Unrestricted CCSD(T) example:**
@@ -141,10 +378,3 @@ The interface will be extended in the future.
 
   Singlepoint(theory=PySCFcalc, fragment=o2_triplet)
 
-
-
-
-**Parallelization**
-
-The PySCF parallelization is OpenMP thread-based. The numcores keyword is used to specify the number of threads available
-to PySCF.

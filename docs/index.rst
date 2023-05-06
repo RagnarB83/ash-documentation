@@ -77,6 +77,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    Psi4-interface
    crest-interface
    QUICK-interface
+   NWChem-interface
    TeraChem-interface
 
 .. toctree::

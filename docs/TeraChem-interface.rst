@@ -1,19 +1,20 @@
 TeraChem interface
 ======================================
 
-`TeraChem <https://quick-docs.readthedocs.io/en/latest/about.html>`_  is a quantum chemistry code written exclusively for the Nvidia GPU.
+`TeraChem <http://www.petachem.com/products.html>`_  is a quantum chemistry code written exclusively for the Nvidia GPU.
 The program is commercial, however, the demo version can be used for up to 15 minutes per session.
 
 ASH features a simple interface to it that allows TeraChem energy+gradient calculations on the GPU.
 Can be used in a QM/MM setting allowing both the QM and MM steps to run on the GPU via TeraChem and OpenMM. 
 Interface is a bit limited at the moment.
 
-**QUICKTheory class:**
+**TeraChemTheory class:**
 
 .. code-block:: python
     
-    def __init__(self, terachemdir=None, filename='terachem', printlevel=2,
-                teracheminput=None, numcores=1):
+  class TeraChemTheory:
+      def __init__(self, terachemdir=None, filename='terachem', printlevel=2,
+                  teracheminput=None, numcores=1):
 
 .. list-table::
    :widths: 15 15 15 60
