@@ -165,8 +165,6 @@ NOTE: It is possible to have each chosen reaction coordinate apply to multiple s
 In the 2D scan example above, the RC1_indices keyword (a 'bond' reaction coordinate) will apply to both atoms [0,1] as well as [0,2].
 This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.
 
-NOTE: Currently the runmode is serial which means that one surface point is run after the other and only the theory level can be parallelized.
-A future parallel runmode will become available where X surfacepoints can be run simultaneously using X available cores.
 
 Other options to calc_surface:
 
