@@ -125,7 +125,7 @@ There is also an option that allows both Python multiprocessing parallelization 
 	results = Job_parallel(theories=[orcacalc], fragments=fragments, numcores=poolcores, allow_theory_parallelization=True)
 
 
-**Getting the results **
+**Getting the results**
 
 **Job_parallel**  like most other job-functions in ASH returns an ASH Results object (see :doc:`job-types` ).
 
@@ -146,7 +146,7 @@ The object also contains a dictionary (worker_dirnames) with the name of directo
 
 
 
-**Running geometry optimizations in parallel **
+**Running geometry optimizations in parallel**
 
 Geometry optimizations (using geomeTRIC library) can also be run in parallel.
 By setting Opt=True the function will run a geometry optimization instead of a Single-point calculation.
@@ -182,3 +182,24 @@ The optimized geometries are available as XYZ-files inside each worker dictory o
 		frag = Fragment(xyzfile=f"{dirname}/Fragment-optimized.xyz", label=label)
 		opt_fragments.append(frag)
 	print("opt_fragments:", opt_fragments)
+
+
+######################################
+Simple_parallel
+######################################
+
+In principle any ASH function could run in parallel via the Python multiprocessing approach but many types of job-functions requires 
+dealing with the files created and this is why the **Job_parallel** is available.
+
+For simple Python functions it is possible to attempt multiprocessing parallelization via **Simple_parallel** instead.
+
+TODO: THIS IS UNFINISHED
+
+.. code-block:: python
+
+	def Simple_parallel(jobfunction=None, parameter_dict=None, separate_dirs=False, numcores=None,printlevel=2, copytheory=False,
+                         version='multiprocessing')
+
+The **Simple_parallel** function will blindly launch multiple function calls (based on numcores) in parallel with no special handling for files created.
+The jobfunction should point to the function to be launched in parallel while parameter_dict is a dictionary of the keyword arguments
+to be passed onto the function. The separate_dirs option will create a separate directory for each process.
