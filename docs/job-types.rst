@@ -323,9 +323,9 @@ See :doc:`neb` for documentation on the NEB-TS function.
 Molecular Dynamics
 ###########################
 
-It is possible to perform molecular dynamics in ASH using the interface to OpenMM or ASE.
+It is possible to perform molecular dynamics in ASH using the interface to OpenMM that can be used for MM, QM and QM/MM simulations.
  
-See :doc:`module_dynamics`
+See :doc:`module_dynamics` and also  :doc:`Biased-sampling`
 
 
 

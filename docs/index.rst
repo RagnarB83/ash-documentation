@@ -87,6 +87,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    Explicit-solvation
    Metalloprotein-I
    Metalloprotein-II
+   mtd_tutorial
    QM-MM-protein
    workflows-examples
    Highlevel_CC_CBS_workflows

@@ -317,6 +317,13 @@ For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the 
 relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
 The output is an imagefile (PNG by default).
 
+.. code-block:: python
+
+  def reactionprofile_plot(surfacedictionary, finalunit='',label='Label', x_axislabel='Coord', y_axislabel='Energy', dpi=200, mode='pyplot',
+                          imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue',
+                          filename='Plot'):
+
+
 - By default, the *RelativeEnergy* =True keyword option is on but can be turned off. This assumes energies are initially in Eh (Hartree) and they will be converted into the desired unit.
 - The desired relative-energy unit is chosen via the *finalunit* keyword (valid options are: 'kcal/mol', 'kJ/mol', 'eV', 'cm-1').
 - The x-axis label or y-axis label of the plot can be changed via: *x_axislabel* ='String' or *y_axislabel* ='String'.

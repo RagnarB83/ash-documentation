@@ -4,8 +4,8 @@ CREST interface
 ASH features a simple interface to the powerful conformational sampling program `crest <https://xtb-docs.readthedocs.io/en/latest/crest.html>`_ by the Grimme group.
 
 
-By providing an ASH fragment object to interface_crest.call_crest, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
-The output from Crest is written to standard output. If successful, Crest will create a file crest_conformers.xyz
+By providing an ASH fragment object to the **call_crest** function, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
+The output from crest is written to standard output. If successful, Crest will create a file crest_conformers.xyz
 that can be directly read into ASH for further processing or further calculations.
 This allows one to write a multi-step workflow of which the crest-procedure is one of many steps.
 
@@ -40,12 +40,9 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
     #0. Starting structure and charge and mult
     molecule = Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
 
-    #1. Calling crest
-    call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, 
+    #1. Calling crest and getting list of conformer fragments and energies
+    list_conformer_frags, xtb_energies = call_crest(fragment=molecule, xtbmethod='GFN2-xTB', crestdir=crestdir, 
         numcores=numcores)
-
-    #2. Grab low-lying conformers from crest_conformers.xyz as list of ASH fragments.
-    list_conformer_frags, xtb_energies = get_crest_conformers()
 
     print("list_conformer_frags:", list_conformer_frags)
     print("")
