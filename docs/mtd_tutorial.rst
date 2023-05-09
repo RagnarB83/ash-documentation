@@ -1,7 +1,7 @@
 Metadynamics in ASH: Tutorial
 ======================================
 
-Examples on how to perform metadynamics in ASH in general.
+Examples on how to perform metadynamics in ASH in general. See :doc:`Biased-sampling` for the general documentation.
 In the examples below we use GFN1-xTB as a convenient QM level of theory due to it's low computational cost and qualitatively correct results.
 ASH, however, allows one to perform metadynamics using any level of theory that is capable of providing an energy and gradient.
 Both 1 and 2 collective variables (CVs) are supported.
@@ -71,7 +71,7 @@ A metadynamics simulation at the same level of theory is straightforward to set 
                 frequency=1, savefrequency=1,
                 biasdir=biasdir)
 
-Here we simply call the **OpenMM_metadynamics** function on the same fragment and the same theory level, 
+Here we simply call the **OpenMM_metadynamics** function ( See :doc:`Biased-sampling`) on the same fragment and the same theory level, 
 and we run an MD simulation for the desired length (1 ps in the script above) and temperature (300 K here).
 We choose the CV to be the dihedral angle as previously defined (defined by carbon atoms 0-4) with a bias width of 0.5 radians (a common choice).
 Additionally the Gaussian height is here chosen to be 1 kJ/mol and the biasfactor is 6 (higher values are also common).
@@ -100,3 +100,31 @@ The effect of the biaswidth is shown in the figure below (keeping simulation len
 A width of biaswidth=1.0 radians clearly is too large while biaswidth=0.20 is too small.
 It is more difficult to tell apart the other values (due to sampling noise) but a width of 0.25-0.50 radians seems appropriate here. 
 As discussed in the metadynamics literature, a common way to determine the biaswidth is to run a regular MD simulation and choose a biaswidth based on the fluctuation of the CV.
+
+To reduce the sampling error, we could continue to increase the simulation time beyond 100 ps.
+However, an even better approach is to utilize multi-walker metadynamics. By simply running multiple metadynamics simulations (each simulation being a walker) with a shared
+biasdirectory, the different walkers will more quickly sample the free-energy surface. Multiple walkers is more efficient as we can e.g. use 10 CPU cores to run 10
+metadynamics simulations for a tenfold improvement in sampling. This is more efficient than using the CPU cores to speed-up the speed of the Hamiltonian in each timestep 
+(i.e. speeding up xTB by its own parallelization). Multiple-walker metadynamics only requires one to launch multiple ASH metadynamics jobs where the biasdirectory variable points to a shared, globally available biasdirectory.
+As shown in the figure below we get a much improved sampling error by running 10 walkers instead of 1 walker (each simulation being 10 ps).
+
+.. image:: figures/MTD_1-vs-10-walkers.png
+   :align: center
+   :width: 400
+
+The slight breaking of symmetry of the 2 barriers (at approx 3 kcal/mol) and the minima at 1-1.2 kcal/mol still suggest a sampling error to remain.
+To further reduce the sampling error we could utilize even more walkers or run each simulation for longer, the choice will depend on the computional resources available.
+Note that by keeping the biasdirectory the same we can run simulation as different times, i.e. come back to previou
+
+TODO: Better ways of estimating the sampling error
+
+
+TODO: Plot showing a fixed number of walkers with increased simulation time: 1,10,100, 1000 ps. Hopefully reaching convergence
+
+
+######################################################
+**2. 2-CV metadynamics on 3F-GABA**
+######################################################
+
+2 collective variables are often required to better describe the overall free-energy surface.
+The conformational energy surface of the 3F-GABA molecule is here a good example.  
