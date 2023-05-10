@@ -71,6 +71,9 @@ A metadynamics simulation at the same level of theory is straightforward to set 
                 frequency=1, savefrequency=1,
                 biasdir=biasdir)
 
+   #Plot the final (this function can be called outside this script)
+   metadynamics_plot_data(biasdir=biasdir, dpi=200, imageformat='png')
+
 Here we simply call the **OpenMM_metadynamics** function ( See :doc:`Biased-sampling`) on the same fragment and the same theory level, 
 and we run an MD simulation for the desired length (1 ps in the script above) and temperature (300 K here).
 We choose the CV to be the dihedral angle as previously defined (defined by carbon atoms 0-4) with a bias width of 0.5 radians (a common choice).
@@ -79,7 +82,7 @@ The frequency and savefrequency values (here both 1) should be adjusted for long
 The biasdirectory variable needs to point to a directory that exist and can either be local 
 (make sure the jobscript or Python script creates it in this case) or can point to the full path of a globally available directory.
 
-Running the script above for 1 ps, 10 ps and 100 ps gives us the following plot:
+Running the script above for 1 ps, 10 ps and 100 ps and plotting (using the **metadynamics_plot_data** function) gives us the following plot:
 
 .. image:: figures/MTD_1-10-100-ps.png
    :align: center
@@ -114,17 +117,71 @@ As shown in the figure below we get a much improved sampling error by running 10
 
 The slight breaking of symmetry of the 2 barriers (at approx 3 kcal/mol) and the minima at 1-1.2 kcal/mol still suggest a sampling error to remain.
 To further reduce the sampling error we could utilize even more walkers or run each simulation for longer, the choice will depend on the computional resources available.
-Note that by keeping the biasdirectory the same we can run simulation as different times, i.e. come back to previou
+Note that by keeping the biasdirectory the same we can run simulation as different times, i.e. come back to previous simulations and continue.
 
-TODO: Better ways of estimating the sampling error
+The figure below shows even longer simulations (up to 2000 ps) with up to 20 walkers and it appears that decent convergence is reached between 500-2000 ps for 20 walkers.
+
+.. image:: figures/MTD_multiwalker-multitime.png
+   :align: center
+   :width: 400
+
+Finally we can compare the original 0 K potential energy surface to the 300 K free energy surface:
+
+.. image:: figures/Butane_free_vs_pot_energy.png
+   :align: center
+   :width: 400
+
+Some differences between the potential energy and the free energy surface can indeed be seen with respect to barrier height. 
+Such differences need to be carefully interpreted, however, in view of sampling errors and of course with respect to how the simulations are carried out with respect to thermostats, ensemble effects etc.
+
+TODO: Show better way of estimating the sampling error
 
 
-TODO: Plot showing a fixed number of walkers with increased simulation time: 1,10,100, 1000 ps. Hopefully reaching convergence
-
-
-######################################################
-**2. 2-CV metadynamics on 3F-GABA**
-######################################################
+#####################################################################
+**2. 2-CV metadynamics on 3F-GABA in continuum solvent and QM/MM**
+#####################################################################
 
 2 collective variables are often required to better describe the overall free-energy surface.
-The conformational energy surface of the 3F-GABA molecule is here a good example.  
+The conformational energy surface of the zwitterion 3F-GABA molecule in aqueous solution is here a good example.
+Previous studies have indicated that zwitterions like this require careful consideration of solvent effects to give a qualitative correct description, with QM/MM being required
+for quantitative results. 
+
+Here we first study the zwitterion at the GFN1-xTB level of theory in solution using the built-in xTB polarizable continuum model (ALPB).
+
+.. code-block:: python
+
+   from ash import *
+
+   biasdir="/path/to/biasdirectory"
+
+   #Fragment and theory
+   frag = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
+   theory = xTBTheory(runmode='library', solvent="H2O")
+
+   OpenMM_metadynamics(fragment=frag, theory=theory, timestep=0.001,
+               simulation_time=500,
+               traj_frequency=100, temperature=300, integrator='LangevinMiddleIntegrator',
+               CV1_type="torsion", CV1_atoms=[1,3,4,5],
+               CV2_type="torsion", CV2_atoms=[3,4,5,6],
+               biasfactor=6, height=1,
+               CV1_biaswidth=0.5, CV2_biaswidth=0.5,
+               frequency=10, savefrequency=10,
+               biasdir=biasdir)
+
+
+
+Running a 500 ps metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in this free-energy surface:
+
+.. image:: figures/3fgaba-MTD_CV1_CV2_.png
+   :align: center
+   :width: 400
+
+
+TODO: QM/MM
+
+
+############################################################
+**2. 1-CV metadynamics on lysozyme using MM and QM/MM**
+############################################################
+
+
