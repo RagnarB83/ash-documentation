@@ -92,18 +92,6 @@ Running the script above for 1 ps, 10 ps and 100 ps and plotting (using the **me
 As shown, a 1 ps simulation gives a qualitatively wrong energy surface, while 10 ps is qualitatively OK but strongly breaks symmetry.
 The 100 ps simulation is qualitatively correct but breaks symmetry a little bit and obviously these simulations are still far from being converged.
 
-The overall quality of the simulation and the resulting free-energy surface will depend on the simulation time (as shown) but also on the biaswidth, biasfactor and Gaussian height.
-
-The effect of the biaswidth is shown in the figure below (keeping simulation length at 10 ps)
-
-.. image:: figures/MTD_biaswidth_tests.png
-   :align: center
-   :width: 400
-
-A width of biaswidth=1.0 radians clearly is too large while biaswidth=0.20 is too small.
-It is more difficult to tell apart the other values (due to sampling noise) but a width of 0.25-0.50 radians seems appropriate here. 
-As discussed in the metadynamics literature, a common way to determine the biaswidth is to run a regular MD simulation and choose a biaswidth based on the fluctuation of the CV.
-
 To reduce the sampling error, we could continue to increase the simulation time beyond 100 ps.
 However, an even better approach is to utilize multi-walker metadynamics. By simply running multiple metadynamics simulations (each simulation being a walker) with a shared
 biasdirectory, the different walkers will more quickly sample the free-energy surface. Multiple walkers is more efficient as we can e.g. use 10 CPU cores to run 10
@@ -119,7 +107,7 @@ The slight breaking of symmetry of the 2 barriers (at approx 3 kcal/mol) and the
 To further reduce the sampling error we could utilize even more walkers or run each simulation for longer, the choice will depend on the computional resources available.
 Note that by keeping the biasdirectory the same we can run simulation as different times, i.e. come back to previous simulations and continue.
 
-The figure below shows even longer simulations (up to 2000 ps) with up to 20 walkers and it appears that decent convergence is reached between 500-2000 ps for 20 walkers.
+The figure below shows even longer simulations (up to 5000 ps) with up to 20 walkers and it appears that decent convergence is reached at ~1000 ps for 20 walkers.
 
 .. image:: figures/MTD_multiwalker-multitime.png
    :align: center
@@ -134,7 +122,17 @@ Finally we can compare the original 0 K potential energy surface to the 300 K fr
 Some differences between the potential energy and the free energy surface can indeed be seen with respect to barrier height. 
 Such differences need to be carefully interpreted, however, in view of sampling errors and of course with respect to how the simulations are carried out with respect to thermostats, ensemble effects etc.
 
-TODO: Show better way of estimating the sampling error
+
+The simulation will also depend on the biaswidth, biasfactor and Gaussian height. A Gaussian height of 1 kJ/mol is pretty standard.
+The effect of the biaswidth is shown in the figure below (simulation length of 1000 ps)
+
+.. image:: figures/MTD_multiwalker-1000ps-biaswidths.png
+   :align: center
+   :width: 400
+
+A width of biaswidth=1.0 radians clearly is too large and biaswidth=0.6 and biaswidth=0.75 radians show some minor deviations compared to the smaller values.
+As discussed in the metadynamics literature, another common way to determine the biaswidth is to run a regular unbiased MD simulation for one minimum and choose a biaswidth based on the fluctuation of the CV (e.g. a third of the fluctation).
+
 
 
 #####################################################################
