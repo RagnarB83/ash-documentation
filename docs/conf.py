@@ -61,8 +61,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Ash'
-copyright = '2020, Ragnar Bjornsson'
+project = 'ASH'
+copyright = '2023, Ragnar Bjornsson'
 author = 'Ragnar Bjornsson'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -335,7 +335,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Ash.tex', 'Ash Documentation',
+    (master_doc, 'Ash.tex', 'ASH Documentation',
      'Ragnar Bjornsson', 'manual'),
 ]
 
@@ -356,8 +356,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Ash', 'Ash Documentation',
-     author, 'Ash', 'One line description of project.',
+    (master_doc, 'ASH', 'ASH Documentation',
+     author, 'ASH', 'One line description of project.',
      'Miscellaneous'),
 ]
 

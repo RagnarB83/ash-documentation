@@ -68,7 +68,7 @@ A metadynamics simulation at the same level of theory is straightforward to set 
                 temperature=300,
                 CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
                 biasfactor=6, height=1,
-                frequency=1, savefrequency=1,
+                frequency=100, savefrequency=100,
                 biasdir=biasdir)
 
    #Plot the final (this function can be called outside this script)
@@ -78,7 +78,7 @@ Here we simply call the **OpenMM_metadynamics** function ( See :doc:`Biased-samp
 and we run an MD simulation for the desired length (1 ps in the script above) and temperature (300 K here).
 We choose the CV to be the dihedral angle as previously defined (defined by carbon atoms 0-4) with a bias width of 0.5 radians (a common choice).
 Additionally the Gaussian height is here chosen to be 1 kJ/mol and the biasfactor is 6 (higher values are also common).
-The frequency and savefrequency values (here both 1) should be adjusted for longer simulations. 
+The frequency and savefrequency values (here both 100) should be adjusted as needed. 
 The biasdirectory variable needs to point to a directory that exist and can either be local 
 (make sure the jobscript or Python script creates it in this case) or can point to the full path of a globally available directory.
 
@@ -141,10 +141,14 @@ As discussed in the metadynamics literature, another common way to determine the
 
 2 collective variables are often required to better describe the overall free-energy surface.
 The conformational energy surface of the zwitterion 3F-GABA molecule in aqueous solution is here a good example.
-Previous studies have indicated that zwitterions like this require careful consideration of solvent effects to give a qualitative correct description, with QM/MM being required
-for quantitative results. 
+Previous studies have indicated that zwitterions like 3F-GABA require careful consideration of solvent effects to give a qualitative correct description, with QM/MM being required
+for quantitative results. See for example this `QM/MM study <https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/chem.201101674>`_
+
+*Metadynamics in continuum solvent*
 
 Here we first study the zwitterion at the GFN1-xTB level of theory in solution using the built-in xTB polarizable continuum model (ALPB).
+Like before, we define our fragment and theory and then call the **OpenMM_metadynamics** function, this time specifying 2 dihedral angles (C1,C3,C4,C5 and C3,C4,C5,N6) as collective variables
+that together map out the whole conformational energy surface of the molecule.
 
 .. code-block:: python
 
@@ -154,7 +158,7 @@ Here we first study the zwitterion at the GFN1-xTB level of theory in solution u
 
    #Fragment and theory
    frag = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
-   theory = xTBTheory(runmode='library', solvent="H2O")
+   theory = xTBTheory(xtbmethod='GFN1', runmode='library', solvent="H2O")
 
    OpenMM_metadynamics(fragment=frag, theory=theory, timestep=0.001,
                simulation_time=500,
@@ -167,19 +171,23 @@ Here we first study the zwitterion at the GFN1-xTB level of theory in solution u
                biasdir=biasdir)
 
 
-
-Running a 500 ps metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in this free-energy surface:
+Running a 500 ps metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface:
 
 .. image:: figures/3fgaba-MTD_CV1_CV2_.png
    :align: center
    :width: 400
 
+The result reveals that, is in the original study, there is a strong tendency to prefer the hydrogen-bonded conformers (**A** and **B** in the original study) 
+with dihedral angles of -80°,+80° **A**) and +80°,-80° (**B**) and not conformers like **F** (+180°,-180°) which NMR experiments indicate is likely dominant in solution.
+This is most likely due to the continuum solvation description of the environment.
 
-TODO: QM/MM
+*Metadynamics in QM/MM explicit solvent*
 
+To be done...
 
 ############################################################
-**2. 1-CV metadynamics on lysozyme using MM and QM/MM**
+**2. Metadynamics on a protein using MM and QM/MM**
 ############################################################
 
+To be done...
 
