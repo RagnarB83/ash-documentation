@@ -258,11 +258,11 @@ to use the **MTD_analyze** function to analyze the results and plot the data.
    * - ``CV1_type``
      - string
      - None
-     - Type of CV1.
+     - Type of CV1. Options: 'bond' (or 'distance'), 'angle', 'dihedral' (or 'torsion') or 'rmsd'.
    * - ``CV2_type``
      - string
      - None
-     - Type of CV1.
+     - Type of CV2. Options: 'bond' (or 'distance'), 'angle', 'dihedral' (or 'torsion') or 'rmsd'.
    * - ``temperature``
      - float
      - None
