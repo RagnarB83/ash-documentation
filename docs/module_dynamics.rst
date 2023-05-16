@@ -67,7 +67,8 @@ This is beneficial if a considerable amount of time of the QM/MM energy+gradient
 
 **QM example:**
 
-It is even possible to use the dynamics routines of the OpenMM library to drive an MD simulation at the QM-level. This is possible by setting up a dummy MM system and reading in the QM-theory forces (via ASH) as a custom external force to the OpenMM theory.
+It is even possible to use the dynamics routines of the OpenMM library to drive an MD simulation at the QM-level. 
+This is possible by setting up a dummy MM system and reading in the QM-theory forces (via ASH) as a custom external force to the OpenMM theory.
 
 
 .. code-block:: python
@@ -87,6 +88,74 @@ It is even possible to use the dynamics routines of the OpenMM library to drive 
 		integrator='LangevinIntegrator', coupling_frequency=1)
 
 
+######################################################
+mdtraj interface
+######################################################
+
+Postprocessing of MD trajectories is often necessary.
+As this can be a computationally intensive task, ASH contains an interface to
+the `MDtraj <https://www.mdtraj.org>`_ library that is capable of various trajectory analysis.  Requires installation of mdtraj: pip install mdtraj.
+
+*Analyze internal coordinates of trajectory*
+
+Often one wants to inspect how a distance, angle or torsion varies during an MD trajectory.
+This can be conveniently done using the function **MDtraj_coord_analyze**
+
+.. code-block:: python
+
+  def MDtraj_coord_analyze(trajectory, pdbtopology=None, periodic=True, indices=None):
+
+You need to simply provide the trajectory, pdbtopology and give the atom indices as a list.
+If you provide 2 atom indices the function will grab a distance, if 3 then an angle, if 4 then a dihedral angle.
+
+Example:
+
+.. code-block:: python
+
+  #Get distance between atoms 50 and 67
+  MDtraj_coord_analyze("trajectory.dcd", pdbtopology="trajectory.pdb", indices=[50,67])
+  #Get angle between atoms 4,7 and 10
+  MDtraj_coord_analyze("trajectory.dcd", pdbtopology="trajectory.pdb", indices=[4,7,10])
+    #Get dihedral angle between atoms 10,11,12,13
+  MDtraj_coord_analyze("trajectory.dcd", pdbtopology="trajectory.pdb", indices=[10,11,12,13])
+
+*Slice trajectory*
+
+To obtain specific frames from a trajectory you use the **MDtraj_slice** function.
+This will create a sliced trajectory file (format can be 'PDB' or 'DCD') containing only those frames.
+
+.. code-block:: python
+
+  #This will grab all frames between steps 50 and 100
+  MDtraj_slice(trajectory, pdbtopology, format='PDB', frames=[50,100])
+
+*Re-imaging trajectory*
+
+Periodic MD trajectories from OpenMM sometimes contain the molecule split between periodic images rather than showing a whole molecule in each periodic box.
+This is just a visualization artifact but to obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory as shown below.
+
+Example:
+
+.. code-block:: python
+
+  from ash import *
+  #Provide trajectory file, PDB topology file and final format of trajectory
+  MDtraj_imagetraj("output_traj.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+  
+  #If periodic box info is missing from trajectory file (can happen with CHARMM files):
+  MDtraj_imagetraj("output_traj.dcd", "final_MDfrag_laststep.pdb", format='DCD', 
+    unitcell_lengths=[100.0,100.0,100.0], unitcell_angles=[90.0,90.0,90.0])
+
+
+*Calculating root-mean-square fluctations (RMSF) in trajectory*
+
+Calculates the RMSF and prints out the atoms that move the most during the trajectory.
+See `mdtraj RMSF page <https://mdtraj.org/1.9.4/api/generated/mdtraj.rmsf.html>`_  for more info.
+
+.. code-block:: python
+  
+  indices = MDtraj_RMSF(trajectory, pdbtopology, print_largest_values=True, threshold=0.005, largest_values=10)
+  #Returns atom indices with the largest RMSF values
 
 ######################################################
 Dynamics via ASE

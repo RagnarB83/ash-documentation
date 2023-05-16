@@ -147,7 +147,7 @@ The script will write the following files that can be used on their own:
 - CVn_coord_values.txt # File(s) containing the CV1/CV2 values on the original grid created during the simulation setup (controlled by CV1_range keyword)
 - MTD_free_energy.txt # File containing a numpy array of the free-energy per gridpoint in kcal/mol.
 - MTD_free_energy_rel.txt # File containing a numpy array of the relative free-energy per gridpoint in kcal/mol.
-- MTD_CV1.png/MTD_CV1_CV2_.png # Image containing the final plot (requires Matplotlib)
+- MTD_CV1.png/MTD_CV1_CV2.png # Image containing the final plot (requires Matplotlib)
 
 
 ######################################################
