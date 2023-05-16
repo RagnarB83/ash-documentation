@@ -220,7 +220,7 @@ General recommendations:
 
 - Always cut a C-C bond that is as nonpolar as possible.
 - Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
-- Amino acid sidechains are straighforward but make sure to not through CHARMM charge groups
+- Amino acid sidechains are straighforward but make sure to not cut through CHARMM charge groups.
 - Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.
   
   
