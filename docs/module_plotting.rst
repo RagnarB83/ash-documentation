@@ -249,6 +249,11 @@ a broadened spectrum and a stick spectrum. The xvalues list is traditionally a P
 list is typically a list of intensities. Typically these quantities come from a current or previous ASH job.
 Gaussian broadening is used.
 
+.. code-block:: python
+
+  def plot_Spectrum(xvalues=None, yvalues=None, plotname='Spectrum', range=None, unit='eV', broadening=0.1, points=10000, 
+    imageformat='png', dpi=200, matplotlib=True, CSV=True, color='blue', plot_sticks=True):
+
 The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png),
 the latter requires Matplotlib.
 
@@ -263,7 +268,8 @@ Options:
 - **dpi** : integer (resolution of image, default:200)
 - **matplotlib** : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
 - **CSV** : Boolean(True/False) (whether to comma-separate values or not in dat and stk files, default: True)
-
+- **plot_sticks** : Boolean(True/False) (whether to plot sticks in plot or not default: True)
+- 
 .. code-block:: python
 
     import module_plotting
@@ -280,6 +286,18 @@ Options:
    :align: center
    :width: 600
 
+
+The .dat and .stk  files are CSV files that can be easily read into a numpy array like this:
+
+.. code-block:: python
+
+  import numpy as np
+
+  with open('Spectrum.dat') as csvfile:
+      dataseries = np.genfromtxt(csvfile, delimiter=',')
+  print("dataseries", dataseries)
+
+and can then be plotted separately. 
 
 ##############################################################################
  MOplot_vertical: Plot vertical MO diagram

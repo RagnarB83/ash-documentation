@@ -183,11 +183,88 @@ This is most likely due to the continuum solvation description of the environmen
 
 *Metadynamics in QM/MM explicit solvent*
 
-To be done...
+We need to go beyond continuum solvation and so we explore explicit solvation. Explicit solvation typically requires many more water molecules than can be handled quantum
+mechanically so we will do QM/MM.
+
+1. Setting up the QM/MM system.
+To conveniently create an explicitly solvated system we can use the **solvate_small_molecule** function (documented at :doc:`OpenMM-interface`).
+
+.. code-block:: python
+
+   from ash import *
+   numcores=1
+   #Defining solute and theory
+   frag = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
+   theory = xTBTheory(runmode='library', solvent="H2O")
+   #Call solvate_small_molecule with frag as input, choosing TIP3P water molecule 
+   #and box dimensions of 70x70x70 Angstrom
+   solvate_small_molecule(fragment=frag, watermodel='tip3p', solvent_boxdims=[70.0,70.0,70.0],
+                              nonbonded_pars="CM5_UFF", orcatheory=None, numcores=numcores)
+
+This simple function creates a 70x70x70 Angstrom cubic box full of TIP3P water molecule with the solute in the middle of the box.
+The nonbonded_pars="CM5_UFF" option automatically creates nonbonded MM parameters for the solute molecule: atom charges for the solute and defines Lennard-Jones parameters (here UFF).
+For QM/MM only the Lennard-Jones parameters are strictly needed while for MM simulations (with solute frozen), the atom charges are needed.
+**solvate_small_molecule** automatically calls ORCA to do a single-point DFT calculation at the r2SCAN/def2-SVP level of theory with Hirshfeld population analysis from which CM5 atom charges
+are derived. Alternatively an ORCATheory object with another level of theory can be read into orcatheory.
+
+The function creates the following files:
+newfragment.xyz # An XYZ-file containing the full 33799 atom system.
+system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
+solute.xml # An OpenMM XML forcefield file defining the solute nonbonded parameters
+
+2. Defining the QM/MM metadynamics simulation
+
+Now we can define our QM/MM metadynamics simulation. 
+We need to read in the full fragment and define which atoms should be in the QM-region.
+We also need to reate an OpenMMTheory object and define the forcefield by pointing to a TIP3P XML forcefield file (found in the ASH database dir), the solute XML file
+and point to the PDB-file for topology, additionally we want the water model to be fully rigid so we specify rigidwater=True. Finally we need to define a QM/MM theory object that combines a QM-theory object and an MM-theory object.
+The metadynamics function call is otherwise the same, we just need to point to the QM/MM object instead of the QM-object. As the solute coordinates are in the beginning
+of the solvated-system file, the atom indices defining the CVs will be the same. 
+
+
+.. code-block:: python
+
+   from ash import *
+
+   numcores=1
+   biasdir="/home/rb269145/CALCDIR/ASH-metadynamics/3fgaba/tutorial/QM-MM/test1/biasdirectory"
+
+   #System
+   xyzfile="newfragment.xyz"
+   pdbfile="system_aftersolvent.pdb"
+   frag = Fragment(xyzfile=xyzfile, charge=0, mult=1)
+   qmatoms = list(range(0,16)) # A list of atom indices that are in the QM-region. Here the solute atoms.
+
+   #Define QM, MM and QM/MM Theory
+   qm_theory = xTBTheory(runmode='inputfile') #QM-level of theory
+   mm_theory = OpenMMTheory(xmlfiles=["/home/rb269145/PROGRAMS/ASH/NEW/ash/databases/forcefields/tip3p_water_ions.xml", "solute.xml"], 
+      pdbfile=pdbfile, rigidwater=True, platform='CPU') #The MM-level of theory
+   qm_mm_theory = QMMMTheory(qm_theory=qm_theory, mm_theory = mm_theory, qmatoms=qmatoms, fragment=frag) # The QM/MM object
+
+   #Call metadynamics. Everything is the same, we just specify the theory as the QM/MM object instead
+   OpenMM_metadynamics(fragment=frag, theory=qm_mm_theory, timestep=0.001,
+               simulation_time=5, printlevel=0,
+               traj_frequency=100, temperature=300, integrator='LangevinMiddleIntegrator',
+               CV1_type="torsion", CV1_atoms=[1,3,4,5],
+               CV2_type="torsion", CV2_atoms=[3,4,5,6],
+               biasfactor=6, height=1,
+               CV1_biaswidth=0.5, CV2_biaswidth=0.5,
+               frequency=10, savefrequency=10,
+               biasdir=biasdir)
+
+
+Running a X ps QM/MM metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface
+at the QM/MM level:
+
 
 ############################################################
 **2. Metadynamics on a protein using MM and QM/MM**
 ############################################################
 
-To be done...
+We can also perform metadynamics simulations of a whole protein at either the MM level or the QM/MM level.
+For a protein we need first a fully set-up MM system: all hydrogens present, fully solvated and neutralized and with a proper forcefield defined for both protein and solvent.
+Here we use a previously set-up solvated lysozyme system.
+
+
+
 
