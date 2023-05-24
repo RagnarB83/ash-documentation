@@ -597,6 +597,8 @@ But here, due to the small cofactor involved and the availability of a decent ch
 GFN-xTB/CHARMM36 QM/MM MD simulations for a few picoseconds and explore the dynamic nature of the metal site properly (the accuracy of such a simulations depends 
 of course on how well the semi-empirical method handles the system).
 
+Use of xTB requires xtb to be downloaded and the xtb binary needs to be available in your PATH environment variable. See 
+`xtb-documentation <https://xtb-docs.readthedocs.io>`_
 
 .. note:: This feature is in an experimental stage as OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
     the periodic boundary conditions and will calculate a non-periodic box instead. It's unclear how reliable this approximation is in the long run.
@@ -621,7 +623,7 @@ of course on how well the semi-empirical method handles the system).
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
                 numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
-    #QM theory: GFN1-xTB
+    #QM theory: GFN1-xTB. Note that the xtb program needs to be installed
     xtb = xTBTheory(xtbmethod="GFN1", numcores=numcores)
     #QM/MM theory
     qmmm = QMMMTheory(qm_theory=xtb, mm_theory=omm, fragment=fragment,

@@ -269,7 +269,7 @@ Options:
 - **matplotlib** : Boolean(True/False) (whether to create image-file using Matplotlib or not, default: True)
 - **CSV** : Boolean(True/False) (whether to comma-separate values or not in dat and stk files, default: True)
 - **plot_sticks** : Boolean(True/False) (whether to plot sticks in plot or not default: True)
-- 
+  
 .. code-block:: python
 
     import module_plotting
