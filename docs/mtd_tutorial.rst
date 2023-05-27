@@ -171,22 +171,24 @@ that together map out the whole conformational energy surface of the molecule.
                biasdir=biasdir)
 
 
-Running a 500 ps metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface:
+Running a metadynamics simulations using 10 walkers (and plotting using **metadynamics_plot_data**) for 50 and 500 ps, respectively, results in the following free-energy surfaces:
 
-.. image:: figures/3fgaba-MTD_CV1_CV2_.png
-   :align: center
-   :width: 400
+.. image:: figures/3fgaba-MTD_CV1_CV2_50ps-10w.png
+    :width: 30 %
+.. image:: figures/3fgaba-MTD_CV1_CV2_500ps-10w.png
+    :width: 30 %
 
-The result reveals that, is in the original study, there is a strong tendency to prefer the hydrogen-bonded conformers (**A** and **B** in the original study) 
+The 500 ps result reveals that, as in the original study, there is a strong tendency to prefer the hydrogen-bonded conformers (**A** and **B** in the original study) 
 with dihedral angles of -80°,+80° **A**) and +80°,-80° (**B**) and not conformers like **F** (+180°,-180°) which NMR experiments indicate is likely dominant in solution.
 This is most likely due to the continuum solvation description of the environment.
 
 *Metadynamics in QM/MM explicit solvent*
 
-We need to go beyond continuum solvation and so we explore explicit solvation. Explicit solvation typically requires many more water molecules than can be handled quantum
-mechanically so we will do QM/MM.
+We need to go beyond continuum solvation and so we turn to explicit solvation. Explicit solvation requires many more water molecules than can be handled quantum
+mechanically so we do QM/MM.
 
 1. Setting up the QM/MM system.
+   
 To conveniently create an explicitly solvated system we can use the **solvate_small_molecule** function (documented at :doc:`OpenMM-interface`).
 
 .. code-block:: python
@@ -212,11 +214,11 @@ newfragment.xyz # An XYZ-file containing the full 33799 atom system.
 system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
 solute.xml # An OpenMM XML forcefield file defining the solute nonbonded parameters
 
-2. Defining the QM/MM metadynamics simulation
+1. Defining the QM/MM metadynamics simulation
 
 Now we can define our QM/MM metadynamics simulation. 
 We need to read in the full fragment and define which atoms should be in the QM-region.
-We also need to reate an OpenMMTheory object and define the forcefield by pointing to a TIP3P XML forcefield file (found in the ASH database dir), the solute XML file
+We also need to create an OpenMMTheory object and define the forcefield by pointing to a TIP3P XML forcefield file (found in the ASH database dir), the solute XML file
 and point to the PDB-file for topology, additionally we want the water model to be fully rigid so we specify rigidwater=True. Finally we need to define a QM/MM theory object that combines a QM-theory object and an MM-theory object.
 The metadynamics function call is otherwise the same, we just need to point to the QM/MM object instead of the QM-object. As the solute coordinates are in the beginning
 of the solvated-system file, the atom indices defining the CVs will be the same. 
@@ -243,7 +245,7 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
 
    #Call metadynamics. Everything is the same, we just specify the theory as the QM/MM object instead
    OpenMM_metadynamics(fragment=frag, theory=qm_mm_theory, timestep=0.001,
-               simulation_time=5, printlevel=0,
+               simulation_time=5, printlevel=0, enforcePeriodicBox=False,
                traj_frequency=100, temperature=300, integrator='LangevinMiddleIntegrator',
                CV1_type="torsion", CV1_atoms=[1,3,4,5],
                CV2_type="torsion", CV2_atoms=[3,4,5,6],
@@ -253,8 +255,14 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
                biasdir=biasdir)
 
 
-Running a X ps QM/MM metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface
+Running a 50 ps QM/MM metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface
 at the QM/MM level:
+
+.. image:: figures/MTD_3FGABA-QM_MM_50ps.png
+   :align: center
+   :width: 400
+
+
 
 
 ############################################################
