@@ -413,3 +413,22 @@ If the SCF type is unrestricted (UKS/UHF) then a UKS/UHF calculation will be car
   frag = Fragment(coordsstring=cstring, charge=0, mult=1)
   pyscf = PySCFTheory(scf_type='RKS', basis='6-31G', functional='b3lyp', mom=True, mom_virtindex=1, mom_spinmanifold=0)
   Singlepoint(theory=pyscf, fragment=frag)
+
+The output will look like this:
+
+.. code-block:: text
+
+  ----------------------------------------
+  DELTA-SCF RESULTS
+  ----------------------------------------
+
+  Ground-state SCF energy -76.34781084088975 Eh
+  Excited-state SCF energy -76.06068587471486 Eh
+
+  delta-SCF transition energy 7.812957454584829 eV
+
+  Alpha electron occupation pattern of ground state : [1. 1. 1. 1. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
+  Beta electron occupation pattern of ground state : [1. 1. 1. 1. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+  Alpha electron occupation pattern of excited state : [1. 1. 1. 1. 0. 1. 0. 0. 0. 0. 0. 0. 0.]
+  Beta electron occupation pattern of excited state : [1. 1. 1. 1. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
