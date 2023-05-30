@@ -8,18 +8,20 @@ ASH features a pretty good interface to PYSCF that allows one to conveniently us
 that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, MD and metadynamics features of ASH.
 Due to the nature of PySCF as a Python library (with an essentially unlimited number of options) it is difficult to extensively support 
 every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful options. 
-If the use of special features inside PySCF are required it may be best to use PySCF directly (outside ASH).
+If the use of special features inside PySCF are required it may be best to use PySCF directly (outside ASH) or contact us about adding the feature in the ASH interface.
 
 **List of features:**
 
 - One can define DFT, TDDFT, coupled cluster, CASSCF calculations fairly easily with support for various options.
-- Control over special options such as BS-DFT, stability analysis, fractional occupationnoncollinear DFT (GHF/GKS), x2C relativistic Hamiltonians
+- Control over special options such as BS-DFT, stability analysis, fractional occupationnoncollinear DFT (GHF/GKS), x2C relativistic Hamiltonians.
+- Maximum overlap delta-SCF (OO-DFT) calculations for finding excited SCF states.
 - Coupled cluster with multiple orbital references. Frozen natural orbital option (FNO).
 - CASSCF starting orbital options: natural orbitals via MP2, CCSD and CCSD(T). Automatic CAS via DMET_CAS and AVAS.
 - Read and write checkpointfiles, Molden files and Cubefiles
 - PySCFTheory interface compatible with BlockTheory and DiceTheory interfaces for DMRG and stochastic heat-bath CI calculations.
 - Support for `LOSC PySCF plugin <https://github.com/Yang-Laboratory/losc>`_ and MCPDFT
 - Dispersion corrections (D3, D4, TS and MBD) via  `vdw-wrapper <https://github.com/ajz34/vdw>`_
+
 
 **Main limitations:**
 
@@ -37,7 +39,7 @@ If the use of special features inside PySCF are required it may be best to use P
                     soscf=False, damping=None, diis_method='DIIS', diis_start_cycle=0, level_shift=None,
                     fractional_occupation=False, scf_maxiter=50, direct_scf=True, GHF_complex=False, collinear_option='mcol',
                     BS=False, HSmult=None,spinflipatom=None, atomstoflip=None,
-                    TDDFT=False, tddft_numstates=10,
+                    TDDFT=False, tddft_numstates=10, mom=False, mom_virtindex=1, mom_spinmanifold=0,
                     dispersion=None, densityfit=False, auxbasis=None, sgx=False, magmom=None,
                     pe=False, potfile='', filename='pyscf', memory=3100, conv_tol=1e-8, verbose_setting=4, 
                     CC=False, CCmethod=None, CC_direct=False, frozen_core_setting='Auto', cc_maxcycle=200,
@@ -329,7 +331,18 @@ If the use of special features inside PySCF are required it may be best to use P
      - string
      - None
      - Path to losc package.
-
+   * - ``mom``
+     - Boolean
+     - False
+     - Whether to enable the maximum overlap method for delta-SCF calculations.
+   * - ``mom_virtindex``
+     - integer
+     - 1
+     - Which relative virtual orbital index to move electron from HOMO into. Default is 1 (LUMO); choose 2 for LUMO+1 etc.
+   * - ``mom_spinmanifold``
+     - integer
+     - 0
+     - What spin manifold to do MOM-deltaSCF calculations in. Default is 0 (i.e. alpha)
 
 
 ################################################################################
@@ -378,3 +391,25 @@ Examples
 
   Singlepoint(theory=PySCFcalc, fragment=o2_triplet)
 
+**delta-SCF calculation using Maximum Overlap Method:**
+
+PySCF includes the maximum overlap method that can be used to perform orbital-optimized SCF calculations of excited states (sometimes called delta-SCF approach).
+You simply specify the SCF-type, functional and basis set as usual and then specify mom=True and optionally mom_virtindex and mom_spinmanifold keywords.
+
+PySCF will first calculated the ground-state SCF with a regular Aufbau electron configuration and will then modify the guess to move an electron
+from the HOMO to the specified virtual orbital index (default is mom_virtindex=1 which corresponds to the LUMO) of spin-manifold 0 (alpha).
+If the SCF-type is restricted (RKS/RHF/ROHF/ROKS) then a ROHF/ROKS calculation will be carried out for the excited SCF calculations.
+If the SCF type is unrestricted (UKS/UHF) then a UKS/UHF calculation will be carried out.
+
+.. code-block:: python
+
+  from ash import *
+
+  cstring="""
+  O 0.0 0.0  0.0
+  H 0.0 -0.757 0.587
+  H 0.0 0.757 0.587
+  """
+  frag = Fragment(coordsstring=cstring, charge=0, mult=1)
+  pyscf = PySCFTheory(scf_type='RKS', basis='6-31G', functional='b3lyp', mom=True, mom_virtindex=1, mom_spinmanifold=0)
+  Singlepoint(theory=pyscf, fragment=frag)
