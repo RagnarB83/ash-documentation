@@ -175,10 +175,13 @@ Running a metadynamics simulations using 10 walkers (and plotting using **metady
 
 .. image:: figures/3fgaba-MTD_CV1_CV2_50ps-10w.png
     :width: 30 %
+.. image:: figures/3fgaba-MTD_CV1_CV2_250ps-10w.png
+    :width: 30 %
 .. image:: figures/3fgaba-MTD_CV1_CV2_500ps-10w.png
     :width: 30 %
 
-The 500 ps result reveals that, as in the original study, there is a strong tendency to prefer the hydrogen-bonded conformers (**A** and **B** in the original study) 
+Based on the 250 ps and 500 ps comparisons, the free energy surface suggests decent convergence.
+As in the original study, there is a strong tendency to prefer the hydrogen-bonded conformers (**A** and **B** in the original study) 
 with dihedral angles of -80°,+80° **A**) and +80°,-80° (**B**) and not conformers like **F** (+180°,-180°) which NMR experiments indicate is likely dominant in solution.
 This is most likely due to the continuum solvation description of the environment.
 
@@ -186,6 +189,12 @@ This is most likely due to the continuum solvation description of the environmen
 
 We need to go beyond continuum solvation and so we turn to explicit solvation. Explicit solvation requires many more water molecules than can be handled quantum
 mechanically so we do QM/MM.
+
+.. image:: figures/3FGABA-solvated.png
+   :align: center
+   :width: 400
+
+
 
 1. Setting up the QM/MM system.
    
@@ -210,9 +219,10 @@ For QM/MM only the Lennard-Jones parameters are strictly needed while for MM sim
 are derived. Alternatively an ORCATheory object with another level of theory can be read into orcatheory.
 
 The function creates the following files:
-newfragment.xyz # An XYZ-file containing the full 33799 atom system.
-system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
-solute.xml # An OpenMM XML forcefield file defining the solute nonbonded parameters
+
+- newfragment.xyz # An XYZ-file containing the full 33799 atom system.
+- system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
+- solute.xml # An OpenMM XML forcefield file defining the solute nonbonded parameters
 
 2. Defining the QM/MM metadynamics simulation
 
@@ -240,7 +250,7 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
    #Define QM, MM and QM/MM Theory
    qm_theory = xTBTheory(runmode='inputfile') #QM-level of theory
    mm_theory = OpenMMTheory(xmlfiles=[f"{ashpath}/databases/forcefields/tip3p_water_ions.xml", "solute.xml"], 
-      pdbfile=pdbfile, rigidwater=True, platform='CPU') #The MM-level of theory
+      pdbfile=pdbfile, rigidwater=True, periodic=True, platform='CPU') #The MM-level of theory
    qm_mm_theory = QMMMTheory(qm_theory=qm_theory, mm_theory = mm_theory, qmatoms=qmatoms, fragment=frag) # The QM/MM object
 
    #Call metadynamics. Everything is the same, we just specify the theory as the QM/MM object instead
@@ -255,15 +265,22 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
                biasdir=biasdir)
 
 
-Running a 50 ps QM/MM metadynamics simulation using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surface
+Running 50 ps, 250 ps and 500 QM/MM metadynamics simulations using 10 walkers (and plotting using **metadynamics_plot_data**) results in the following free-energy surfaces
 at the QM/MM level:
 
 .. image:: figures/MTD_3FGABA-QM_MM_50ps.png
    :align: center
    :width: 400
 
+**NOTE: NOT YET FINISHED**
 
+The results reveal a considerably different free energy surface than previously found, demonstrating that the explicit solvation environment has a strong effect on the conformational
+properties of this zwitterion. The results reveal that conformer **A** (-80°,+80° ) and **F** (+180°,-180°) now have similar energies in sharp contrast
+to the previous continuum solvation result ( **A** much more stable than **F** ). 
 
+*Going from a semi-empirical QM/MM surface to a DFT/MM energy surface*
+
+**NOTE: NOT YET FINISHED**
 
 ############################################################
 **2. Metadynamics on a protein using MM and QM/MM**
