@@ -42,7 +42,7 @@ Interface is a bit limited at the moment.
      - Number of CPU cores used (only for CPU-version of QUICK).
    * - ``filename``
      - string
-     - 'pyscf'
+     - 'quick'
      - Filename used for QUICK input/output files.
    * - ``quickbinary``
      - string

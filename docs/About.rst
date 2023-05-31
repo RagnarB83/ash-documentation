@@ -76,9 +76,9 @@ Features
 - Support for simultaneous Numerical-Hessian displacement calculations.
 - Support for parallelization of NEB images.
 
-**Single-point electrostic embedding QM/MM with ORCA, xTB and Psi4.**
+**Single-point electrostic embedding QM/MM **
 
-- **To do**: PySCF
+- Full QM/MM support (including pointcharge-gradient) for  ORCA, xTB, PySCF, NWChem, TeraChem and QUICK.
 
 **Polarizable embedding via Psi4, PySCF and CPPE library**
 

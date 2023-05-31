@@ -30,7 +30,7 @@ Currently, only the molecular code (not the plane-wave NWPW code) is supported.
      - Directory where NWChem binaries are.
    * - ``filename``
      - string
-     - 'pyscf'
+     - 'nwchem'
      - Filename used for NWChem input/output files.
    * - ``nwcheminput``
      - Multiline-string

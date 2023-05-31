@@ -5,10 +5,11 @@ PySCF interface
 including the very powerful libcint integral library.
 
 ASH features a pretty good interface to PYSCF that allows one to conveniently use the various powerful DFT and WFT based features in the program 
-that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, MD and metadynamics features of ASH.
+that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, QM/MM,  MD and metadynamics features of ASH.
 Due to the nature of PySCF as a Python library (with an essentially unlimited number of options) it is difficult to extensively support 
-every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful options. 
-If the use of special features inside PySCF are required it may be best to use PySCF directly (outside ASH) or contact us about adding the feature in the ASH interface.
+every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful features.
+This makes it very easy to use PySCF within ASH for the most basic features but the drawback being that every single PySCF method can not be supported.
+If the use of special features inside PySCF are required, you may have to use PySCF directly (outside ASH) or contact us about adding the feature in the ASH interface.
 
 **List of features:**
 
@@ -21,12 +22,11 @@ If the use of special features inside PySCF are required it may be best to use P
 - PySCFTheory interface compatible with BlockTheory and DiceTheory interfaces for DMRG and stochastic heat-bath CI calculations.
 - Support for `LOSC PySCF plugin <https://github.com/Yang-Laboratory/losc>`_ and MCPDFT
 - Dispersion corrections (D3, D4, TS and MBD) via  `vdw-wrapper <https://github.com/ajz34/vdw>`_
+- Electrostatically embedded QM/MM including pointcharge gradient is enabled
 
+**Limitations:**
 
-**Main limitations:**
-
-- QM/MM pointcharge support not quite ready
-- post-SCF gradients not yet available in the interface
+- post-SCF gradient not yet available in the interface
 
 
 **PySCFTheory class:**

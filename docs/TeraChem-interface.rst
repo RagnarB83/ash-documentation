@@ -38,7 +38,7 @@ Interface is a bit limited at the moment.
      - Printlevel
    * - ``filename``
      - string
-     - 'pyscf'
+     - 'terachem'
      - Filename used for TeraChem input/output files.
 
 
