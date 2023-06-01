@@ -171,7 +171,7 @@ that together map out the whole conformational energy surface of the molecule.
                biasdir=biasdir)
 
 
-Running a metadynamics simulations using 10 walkers (and plotting using **metadynamics_plot_data**) for 50 and 500 ps, respectively, results in the following free-energy surfaces:
+Running a metadynamics simulations using 10 walkers (and plotting using **metadynamics_plot_data**) for 50, 250 and 500 ps, respectively, results in the following free-energy surfaces:
 
 .. image:: figures/3fgaba-MTD_CV1_CV2_50ps-10w.png
     :width: 30 %
