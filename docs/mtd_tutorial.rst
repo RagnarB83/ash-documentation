@@ -291,5 +291,5 @@ For a protein we need first a fully set-up MM system: all hydrogens present, ful
 Here we use a previously set-up solvated lysozyme system.
 
 
-
+NOTE: NOT YET FINISHED
 
