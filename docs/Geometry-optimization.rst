@@ -14,8 +14,6 @@ If you use geometry optimizations in ASH using the geomeTRIC library make sure t
 
 *Geometry optimization made simple with translation and rotation coordinates*  by    Lee-Ping Wang, Chenchen Song, *J. Chem. Phys.* **2016**, *144*, 214108. 
 
-.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version can be installed like this: "conda install -c veloxchem geometric".
-  This will change with the 1.0 release of geomeTRIC.
 
 ######################################################
 geomeTRICOptimizer

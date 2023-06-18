@@ -13,6 +13,9 @@ The QM-interface Classes are called:
 - DaltonTheory (:doc:`Dalton-interface`)
 - CFourTheory (:doc:`CFour-interface`)
 - MRCCTheory (:doc:`MRCC-interface`)
+- QUICKTheory (:doc:`QUICK-interface`)
+- NWChemTheory (:doc:`NWChem-interface`)
+- TeraChemTheory (:doc:`TeraChem-interface`)
 
 
 When defining a QMtheory object you are creating an instance of one of the QMTheory classes.

@@ -319,7 +319,8 @@ To use the recommended **Optimizer** function, the geomeTRIC Python library need
 
 *Numerical frequency calculation at the DFT-level (BP86/def2-SVP) using ORCA:*
 
-Or we can run a numerical frequency job instead.
+Or we can run an optimization followed by a numerical frequency job. 
+Note that the H2O fragment object will contain optimized coordinates after the optimization so the frequency calculation will be performed on optimized coordinates.
 
 .. code-block:: python
 
@@ -331,6 +332,9 @@ Or we can run a numerical frequency job instead.
     #Defining ORCA-related variables
     orcasimpleinput="! BP86 def2-SVP def2/J tightscf"
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
+
+    #Geometry optimization on H2O with ORCAcalc theory
+    Optimizer(fragment=H2O, theory=ORCAcalc)
 
     #Numerical frequencies
     NumFreq(fragment=H2O, theory=ORCAcalc)
