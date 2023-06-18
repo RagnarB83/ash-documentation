@@ -40,7 +40,7 @@
 #Disabled "sphinxcontrib.asciinema". does not work with readthedocs
 #Disabled: 'rinoh.frontend.sphinx',
 extensions = [
-    "sphinx_rtd_theme",
+    "sphinx_rtd_theme", "sphinx_togglebutton"
 ]
 
 
