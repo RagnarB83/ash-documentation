@@ -180,6 +180,7 @@ in th article.
         cpcoI=Fragment(xyzfile="CpCo_I_gas.xyz", charge=1, mult=1)
         # Defining species, stoichiometry and reaction specieslist=[cpco0,cpcoI]
         stoichiometry=[-1, 1]
+        specieslist=[cpco0,cpcoI]
         reaction = Reaction(fragments=specieslist, stoichiometry=stoichiometry)
         #Defining a ORCA_CC_CBS_Theory object
         cc = ORCA_CC_CBS_Theory(elements=cpco0.elems, cardinals=[3,4], basisfamily="cc-dk", DFTreference="BP86", 
