@@ -64,7 +64,7 @@ In our tests we have successfully compiled the CUDA version for a workstation wi
   QUICK_HOME=/path/to/quick-install-dir
   mkdir ${QUICK_HOME}/builddir
   cd ${QUICK_HOME}/builddir
-  cmake .. -DCOMPILER=GNU -DMPI=TRUE -DCUDA=TRUE -DQUICK_USER_ARCH=volta \
+  cmake .. -DCOMPILER=GNU -DMPI=TRUE -DCUDA=TRUE -DQUICK_USER_ARCH="volta turing" \
     -DCMAKE_INSTALL_PREFIX=${QUICK_INSTALL}
   make
   make install

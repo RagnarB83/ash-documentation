@@ -184,7 +184,7 @@ in th article.
         #Defining a ORCA_CC_CBS_Theory object
         cc = ORCA_CC_CBS_Theory(elements=cpco0.elems, cardinals=[3,4], basisfamily="cc-dk", DFTreference="BP86", 
             DLPNO=True, CVSR=False, T1correction=True, T1corrbasis_size='Small', T1corrpnosetting='NormalPNOreduced', 
-            numcores=actualcores, pnosetting=" extrapolation", pnoextrapolation=[1e-6,3.33e-7,2.38,'NormalPNO'], 
+            numcores=actualcores, pnosetting="extrapolation", pnoextrapolation=[1e-6,3.33e-7,2.38,'NormalPNO'], 
             memory=20000, scfsetting="Verytightscf", relativity='DKH', SCFextrapolation=False)
         #Running reaction
         Singlepoint_reaction(theory=cc, reaction=reaction, unit='eV')
