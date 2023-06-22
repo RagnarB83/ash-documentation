@@ -273,3 +273,11 @@ A dictionary using data from a previous job (stored e.g. in surface_results.txt)
 .. code-block:: python
 
     surfacedictionary = read_surfacedict_from_file("surface_results.txt", dimension=1)
+
+
+
+.. image:: figures/SurfaceTPSSh.png
+   :align: center
+   :width: 600
+
+Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.
