@@ -56,6 +56,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    :maxdepth: 2
    :caption: Workflows
 
+   ensemble_averaging
    module_workflows
    module_highlevel_workflows
    specific_workflows
