@@ -57,6 +57,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    :caption: Workflows
 
    ensemble_averaging
+   elstructure_analysis
    module_workflows
    module_highlevel_workflows
    specific_workflows

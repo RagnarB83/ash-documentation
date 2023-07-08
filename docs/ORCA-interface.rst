@@ -222,76 +222,218 @@ correct OpenMPI version to be available.
 Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires
 setting (in the shell or jobscript):
 
-export PATH=/path/to/openmpi/bin:$PATH and export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH
+.. code-block:: text
 
-or alternatively loading the appropriate module. Set these variables in the job-script (see :doc:`basics`) that you are using.
+  export PATH=/path/to/openmpi/bin:$PATH
+  export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH
 
+or alternatively loading the appropriate module (if the computer is using modules). 
+Set these variables in the job-script (see :doc:`basics`) that you are using.
+
+
+################################################################################
+ORCA_External_Optimizer
+################################################################################
+
+It is possible to use ORCA as an external optimizer for ASH. 
+This means that the ORCA geometry optimizer will be used with an ASH Theory level as input.
+This functionality has not been tested much.
+
+.. code-block:: python
+
+  def ORCA_External_Optimizer(fragment=None, theory=None, orcadir=None, charge=None, mult=None):
+
+
+################################################################################
+Wrapper around ORCA helper programs.
+################################################################################
+
+ASH features wrappers around useful ORCA programs such as orca_plot, orca_mapspc and orca_2mkl.
+
+**run_orca_plot**
+
+.. code-block:: python
+
+  # Simple Wrapper around orca_plot for creating Cube-files of MOs or densitities.
+  def run_orca_plot(filename, option, orcadir=None, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None):
+
+**run_orca_mapspc**
+  
+  .. code-block:: python
+    
+    # Simple Wrapper around orca_mapspc to create a broadened spectrum from a ORCA outputfile (creates .dat and .stk files)
+    def run_orca_mapspc(filename, option, start=0.0, end=100, unit='eV', broadening=1.0, points=5000, orcadir=None):
+
+**make_molden_file_ORCA**
+
+  .. code-block:: python
+
+    #Make a Molden file from ORCA GBW file (uses orca_2mkl)
+    def make_molden_file_ORCA(GBWfile, orcadir=None):
+
+################################################################################
+ORCA fragment guess
+################################################################################
+
+It is possible to use the function **orca_frag_guess** to divide an ASH fragment into two fragments, run an ORCA calculation on each fragment
+using an ORCATheory level and then combine the orbitals from the two fragments into a single GBW file (uses orca_mergefrag). 
+This could be utilized to make a more accurate guess of the whole system.
+
+  .. code-block:: python
+
+    #Make an ORCA fragment guess. Returns name of GBW-file created ("orca_frag_guess.gbw")
+    def orca_frag_guess(fragment=None, theory=None, A_indices=None, B_indices=None, A_charge=None, B_charge=None, A_mult=None, B_mult=None):
 
 
 ################################################################################
 Useful ORCA functions
 ################################################################################
 
-In addition to the ORCATheory class, there are a number of built-in functions inside that can help grab specific information from an ORCA outputfile etc.
-To use these functions, the module has to be loaded first: import interfaces.interface_ORCA.py
-
-**run__orca_plot**
+In addition to the ORCATheory class, there are a number of built-in functions in ASH that are useful for ORCA functionlaity.
+For example functions to grab specific information from an ORCA outputfile etc.
+To use most these functions, the module has to be loaded first: 
 
 .. code-block:: python
 
-  def run_orca_plot(filename, option, orcadir=None, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None):
+  from ash.interfaces.interface_ORCA.py import *
 
 
+Functions for grabbing information from ORCA outputfiles:
+
+.. code-block:: python
+
+  #Simple function that grabs elements and coordinates from ORCA outputfile
+  def grab_coordinates_from_ORCA_output(filename):
+
+  #Grab Final single point energy. Ignoring possible encoding errors in file
+  def ORCAfinalenergygrab(file, errors='ignore'):
+
+  #Grab multiple Final single point energies in output. e.g. new_job calculation
+  def finalenergiesgrab(file):
+
+  #Grab SCF energy (non-dispersion corrected)
+  def scfenergygrab(file):
+
+  #Grab HF and correlation energies from ORCA output
+  def grab_HF_and_corr_energies(file, DLPNO=False, F12=False):
+
+  #Grab energies from unrelaxed scan in ORCA (paras block type)
+  def grabtrajenergies(filename):
+
+  #Grab ORCA timings. Return dictionary
+  def ORCAtimingsgrab(file):
+
+  #Grab gradient from ORCA engrad file
+  def ORCAgradientgrab(engradfile):
+
+  #Grab pointcharge gradient from ORCA pcgrad file
+  def ORCApcgradientgrab(pcgradfile):
+
+  #Grab XES state energies and intensities from ORCA output
+  def xesgrab(file):
+
+  #Grab TDDFT state energies from ORCA output
+  def tddftgrab(file):
+
+  #Grab TDDFT state intensities from ORCA output
+  def tddftintens_grab(file):
+
+  #Grab TDDFT orbital pairs from ORCA output
+  def tddft_orbitalpairs_grab(file):
+
+  #Grab molecular orbital energies from ORCA outputfile
+  def MolecularOrbitalGrab(file):
+
+  #Grab QRO energies from ORCA outputfile
+  def QRO_occ_energies_grab(filename):
+
+  #Grab <S**2> expectation values from outputfile
+  def grab_spin_expect_values_ORCA(file):
+
+  #Grab MP2 natural occupations from ORCA outputfile
+  def MP2_natocc_grab(filename):
+
+  #Grab SCF FOD occupations from ORCA outputfile
+  def SCF_FODocc_grab(filename):
+
+  #Grab CASSCF natural occupations from ORCA outputfile
+  def CASSCF_natocc_grab(filename):
+
+  #Find localized orbitals in ORCA outputfile for a given element. Returns orbital indices (to be fed into run_orca_plot)
+  def orblocfind(outputfile, atomindex_strings=None, popthreshold=0.1):
+
+  #Grab spin populations from ORCA outputfile
+  def grabspinpop_ORCA(chargemodel,outputfile):
+
+  #Grab atomic charges from ORCA outputfile
+  def grabatomcharges_ORCA(chargemodel,outputfile):
+
+  #Grab IPs from an EOM-IP calculation and also largest singles amplitudes.
+  def grabEOMIPs(file):
+
+  #Grab electric field gradients from ORCA outputfile
+  def grab_EFG_from_ORCA_output(filename):
+
+  #Grab ICE-WF info from CASSCF job
+  def ICE_WF_size(filename):
+
+  #Grab ICE-WF CFG info from CI job
+  def ICE_WF_CFG_CI_size(filename):
+
+  #Reading stability analysis from output. Returns true if stab-analysis good, otherwise falsee
+  def check_stability_in_output(file):
+
+Functions related to ORCA Hessian files:
+
+.. code-block:: python
+
+  #write ORCA-style Hessian file
+  def write_ORCA_Hessfile(hessian, coords, elems, masses, hessatoms,outputname):
+
+  #Function to grab Hessian from ORCA-Hessian file. Returns 2d Numpy array
+  def Hessgrab(hessfile):
+
+  #Grab coordinates from ORCA-Hessian file. Returns elements and coordinates.
+  def grabcoordsfromhessfile(hessfile):
+
+  #Function to grab masses and elements from an ORCA Hessian file
+  def masselemgrab(hessfile):
+
+  #Read ORCA Hessian-file and return Hessian, elems, coords and masses
+  def read_ORCA_Hessian(hessfile):
+
+  #Grab frequencies from ORCA-Hessian file
+  def ORCAfrequenciesgrab(hessfile):
 
 
+Functions for creating ORCA inputfiles:
 
-To be documented:
+.. code-block:: python
 
-grab_EFG_from_ORCA_output(filename)
+  #Create PC-embedded ORCA inputfile from elems,coords, input, charge, mult,pointcharges
+  def create_orca_input_pc(name,elems,coords,orcasimpleinput,orcablockinput,charge,mult, Grad=False, extraline='',
+                          HSmult=None, atomstoflip=None, Hessian=False, extrabasisatoms=None, extrabasis=None,
+                          moreadfile=None, propertyblock=None, fragment_indices=None):
 
-ICE_WF_size(filename)
+  #Create simple ORCA inputfile from elems,coords, input, charge, mult,pointcharges
+  def create_orca_input_plain(name,elems,coords,orcasimpleinput,orcablockinput,charge,mult, Grad=False, Hessian=False, extraline='',
+                              HSmult=None, atomstoflip=None, extrabasis=None, extrabasisatoms=None, moreadfile=None, propertyblock=None,
+                              ghostatoms=None, dummyatoms=None,fragment_indices=None):
 
-QRO_occ_energies_grab(filename)
+  # Create ORCA pointcharge file based on provided list of elems and coords (MM region elems and coords) and list of point charges of MM atoms
+  def create_orca_pcfile(name,coords,listofcharges):
 
-CASSCF_natocc_grab(filename)
+  # Chargemodel select. Creates ORCA-inputline with appropriate keywords
+  def chargemodel_select(chargemodel):
 
-SCF_FODocc_grab(filename)
 
-MP2_natocc_grab(filename)
+Functions for other ORCA functionality:
 
-check_stability_in_output(file)
+.. code-block:: python
 
-grabEOMIPs(file)
+  #Print gradient in ORCA format to disk
+  def print_gradient_in_ORCAformat(energy,gradient,basename):
 
-grabatomcharges_ORCA(chargemodel,outputfile)
-
-chargemodel_select(chargemodel)
-
-read_ORCA_Hessian(hessfile)
-
-ORCAfrequenciesgrab(hessfile)
-
-write_ORCA_Hessfile(hessian, coords, elems, masses, hessatoms,outputname)
-
-grab_spin_expect_values_ORCA(file)
-
-MolecularOrbitalGrab(file)
-
-grabtrajenergies(filename)
-
-tddftgrab(file)
-
-xesgrab(file)
-
-grab_HF_and_corr_energies(file, DLPNO=False, F12=False)
-
-scfenergygrab(file)
-
-finalenergiesgrab(file)
-
-checkORCAfinished(file)
-
-grab_coordinates_from_ORCA_output(outfile)
 
 ################################################################################
 Useful ORCA workflows
