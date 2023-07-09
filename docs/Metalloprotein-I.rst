@@ -634,8 +634,7 @@ Use of xTB requires xtb to be downloaded and the xtb binary needs to be availabl
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, charge=-1, mult=6)
 
 
-TODO: inspect QM/MM trajectory
-
+The QM/MM MD trajectory can be visualized using e.g VMD. 
 
 Finally, note that we are of course not limited to semi-empirical methods for QM/MM MD.
 The xTBTheory we used as QM theory can be replaced by any QM-theory implemented in ASH, including ORCATheory, allowing for a regular DFT method as QM-method instead.

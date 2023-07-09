@@ -10,7 +10,7 @@ Setup
 To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository.
 
 ASH is 99% Python with 1 % Julia.
-A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via conda or pip.
+A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via package managers such as conda or pip.
 
 Scientific Python distributions like Anaconda/miniconda can be convenient: https://www.anaconda.com/distribution/
 Anaconda comes with Numpy, SciPy, Matplotlib.
@@ -82,9 +82,9 @@ B1. Semi-Automatic Miniconda setup (easiest)
 This is the recommended way. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/miniconda).
 
 1. Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_.  Install it in a location where your user has access (e.g. your home-directory)
-2. Create new environment (not required but recommended): **conda create --name ASH**
+2. Create new environment (recommended): **conda create --name ASH**
 3. Load environment: **conda activate ASH**
-4. Change directory to ASH location 
+4. Change directory to ASH location (that you downloaded from Github).
 5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).
 6. Optional: Make sure the chosen Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.
 7. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
@@ -158,8 +158,8 @@ If you don't already have a suitable Python3 distribution, go to Step 2b.
 
 Linux: Install Python3 via a Linux package manager (e.g. Centos: yum -y install python3, Ubuntu: apt install python3).
 Installing via a package manager is prefereable than compiling from source (see python.org for compile options).
-Mac OS X: TODO
-Windows: TODO
+Mac OS X: Use the system Python3 (if available) or install Python3 via Homebrew (https://brew.sh/).
+Windows: See https://www.python.org/downloads/windows/ for options.
 
 Install numpy via pip:
 
@@ -303,12 +303,6 @@ Optional Python packages to install via pip (depends on whether you will use the
     pip3 install pyscf       #PySCF QM program
     pip3 install pyframe     #polarizable embedding helper tool
 
-Optional installation of the `Psi4 <http://www.psicode.org/>`_ QM code (if you intend to use it), best done via Conda:
-
-.. code-block:: shell
-
-    conda install psi4 psi4-rt -c psi4
-
 
 **Step 2.** Optional: Install OpenMM
 
@@ -318,8 +312,6 @@ It can be installed using conda.
 .. code-block:: shell
 
     conda install -c conda-forge openmm
-
-
 
 #########################################
 D. Test ASH

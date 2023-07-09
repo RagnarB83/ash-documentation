@@ -108,13 +108,13 @@ Features
 - Partial Hessian possible
 - Full parallelization.
 - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
-- Not yet available: Parallel QM/MM numerical frequencies.
+- Parallel QM/MM numerical frequencies available (not well tested).
 - Possible to request analytical Hessian from ORCA.
 
 **Hessian analysis**
 
 - Diagonalization of Hessian (from ASH or ORCA). Print frequencies and normal modes.
-- **Todo:** projection of translation/rotational modes
+- Projection of translation/rotational modes
 - Normal mode composition analysis in terms of individual atoms, elements and atom groups.
 - Print vibrational densities of states files (with linebroadening)
 - Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity
@@ -136,7 +136,7 @@ Features
 - Create spherical cluster from unitcell (with only whole molecules).
 - Near-automatic fragment indentification.
 - Intelligent reordering of fragments (supports inconsistently ordered CIF-files)
-- Automatic creation of nonbonded MM forcefield (charges and LJ potentials (**Todo**)).
+- Automatic creation of nonbonded MM forcefield (charges and LJ potentials).
 - Self-consistent QM/MM for charge definition of cluster.
 - QM/MM Geometry optimization of central fragment of cluster to capture solid-state geometrical effects.
 - QM/MM Numerical frequencies of central fragment of cluster.

@@ -79,7 +79,7 @@ at various levels of theory.
     frag=Fragment(xyzfile="ethanol.xyz", charge=0, mult=1)
 
     #Defining MLTheory: DFT optimization
-    MLsimpleinput="! B3LYP D3BJ def2-TZVP TightSCF Grid5 Finalgrid6"
+    MLsimpleinput="! B3LYP D3BJ def2-TZVP TightSCF "
     MLblockinput="""
     %scf maxiter 200 end
     """

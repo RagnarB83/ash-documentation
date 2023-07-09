@@ -181,7 +181,7 @@ Example: TDDFT on H\ :sub:`2`\ O
     """
     h2o=Fragment(coordsstring=h2ostring)
 
-    input="! B3LYP def2-SVP Grid5 Finalgrid6 tightscf"
+    input="! B3LYP def2-SVP tightscf"
     blocks="""
     %scf
     maxiter 200
@@ -223,7 +223,7 @@ Here we show how results with multiple functionals can be obtained at the same t
     functionals=['BP86', 'BLYP', 'TPSS', 'TPSSh', 'B3LYP', 'PBE0', 'BHLYP', 'CAM-B3LYP', 'wB97M-D3BJ', 'HF']
     for functional in functionals:
         joblabel="FeS2min-"+functional
-        input="! def2-TZVP RIJCOSX def2/J GridX5 Grid5 Finalgrid6 tightscf slowconv " + functional
+        input="! def2-TZVP RIJCOSX def2/J tightscf slowconv " + functional
         blocks="""
         %scf
         maxiter 1500

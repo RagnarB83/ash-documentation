@@ -574,7 +574,7 @@ Such an example can be written in ASH like this in a rather verbose manner:
 
     #3. Run DFT geometry optimizations for each crest-conformer
     #ML Theory level. TODO: Run in ASH parallel instead of ORCA parallel?
-    MLorcasimpleinput="! BP86 D3 def2-TZVP def2/J Grid5 Finalgrid6 tightscf"
+    MLorcasimpleinput="! BP86 D3 def2-TZVP def2/J tightscf"
     MLorcablocks="%scf maxiter 200 end"
     MLORCATheory = ORCATheory(orcasimpleinput=MLorcasimpleinput, orcablocks=MLorcablocks, numcores=numcores)
 
