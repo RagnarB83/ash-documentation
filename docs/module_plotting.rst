@@ -244,15 +244,16 @@ You can also create a figure with multiple subplots. Currently, num_subplots=1, 
 ##############################################################################
  plot_Spectrum: Plotting broadened spectrum
 ##############################################################################
-The plot_Spectrum function takes a list of x-axis values (xvalues keyword), y-axis values (yvalues keyword) and plots
-a broadened spectrum and a stick spectrum. The xvalues list is traditionally a Python list of energies (e.g. transition energies, Ionization-energies) and yvalues
+The plot_Spectrum function takes a list of x-axis values (xvalues keyword), y-axis values (yvalues keyword),
+broadens each transition (stick) to create a broadened spectrum (written to a .dat file). 
+The xvalues list is traditionally a Python list of energies (e.g. transition energies, Ionization-energies) and yvalues
 list is typically a list of intensities. Typically these quantities come from a current or previous ASH job.
-Gaussian broadening is used.
+A Gaussian lineshape is used by default, Lorentz and Voight lineshapes are also possible.
 
 .. code-block:: python
 
   def plot_Spectrum(xvalues=None, yvalues=None, plotname='Spectrum', range=None, unit='eV', broadening=0.1, points=10000, 
-    imageformat='png', dpi=200, matplotlib=True, CSV=True, color='blue', plot_sticks=True):
+      imageformat='png', dpi=200, matplotlib=True, CSV=True, color='blue', plot_sticks=True, lineshape='Gaussian', voigt_broadening=None):
 
 The output is a broadened data-file (e.g. Spectrum.dat), a stick-spectrum file (e.g. Spectrum.stk) and an image file (e.g Spectrum.png),
 the latter requires Matplotlib.
@@ -262,7 +263,9 @@ Options:
 - **plotname** : String (name, used to name the output files)
 - **range** : List (x-axis range to plot; first value is start, second value is end)
 - **unit** : String (unit of x-axis used to label axis, default: eV)
+- **lineshape** : The lineshape function to use (Gaussian, Lorentz, Voigt). Default: Gaussian
 - **broadening** : number (the broadening factor in same unit as data, default: 0.1)
+- **voight_broadening** : list (list of 2 values to control sigma and gamma of Gaussian and Lorentz part of Voigt).
 - **points** : integer (number of points in broadened spectrum, default:10000)
 - **imageformat** : string-option (Matplotlib image format, e.g. png, svg; default: png)
 - **dpi** : integer (resolution of image, default:200)
