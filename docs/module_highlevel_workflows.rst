@@ -459,7 +459,7 @@ In order to facilitate this kind of analysis ASH features the function **Reactio
 will automatically run multiple ICE-CI calculations with ORCA (at user-selected thresholds) to estimate the Full-CI limit 
 for a given basis set and will then run simpler wavefunction methods 
 with the same basis set for comparison using ORCA. 
-This allows one to see how close e.g. CCSD(T) is to Full-CI for a given energy or relative energy at a specific basis set.
+This allows one to see how close e.g. CCSD(T) or CASPT2 is to Full-CI for a given energy or relative energy at a specific basis set.
 
 .. code-block:: python
 
@@ -469,14 +469,15 @@ This allows one to see how close e.g. CCSD(T) is to Full-CI for a given energy o
                   Do_TGen_fixed_series=True, fixed_tvar=1e-11, Do_Tau3_series=True, Do_Tau7_series=True, Do_EP_series=True,
                   tgen_thresholds=None, ice_nmin=1.999, ice_nmax=0,
                   separate_MP2_nat_initial_orbitals=True,
-                  DoHF=True,DoMP2=True, DoCC=True, DoCC_CCSD=True, DoCC_CCSDT=True, DoCC_MRCC=False, DoCC_CFour=False,
-                  DoCC_DFTorbs=True, KS_functionals=['BP86','BHLYP'], Do_OOCC=True,
+                  DoHF=True,DoMP2=True, DoCC=True, DoCC_CCSD=True, DoCC_CCSDT=True, DoCC_MRCC=False, DoCC_CFour=False, DoCAS=False,
+                  active_space_for_each=None,
+                  DoCC_DFTorbs=True, KS_functionals=['BP86','BHLYP'], Do_OOCC=True, Do_OOMP2=True,
                   maxcorememory=10000, numcores=1, ice_ci_maxiter=30, ice_etol=1e-6,
                   upper_sel_threshold=1.999, lower_sel_threshold=0,
                   plot=True, y_axis_label='None', yshift=0.3, ylimits=None, padding=0.4):
 
 
-Example (Vertical ionizaition energy of H2O): 
+Example (Vertical ionization energy of H2O): 
 
 .. code-block:: python
 
