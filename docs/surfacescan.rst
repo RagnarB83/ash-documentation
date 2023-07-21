@@ -272,8 +272,13 @@ A dictionary using data from a previous job (stored e.g. in surface_results.txt)
 
 .. code-block:: python
 
-    surfacedictionary = read_surfacedict_from_file("surface_results.txt", dimension=1)
+    surfacedictionary = read_surfacedict_from_file("surface_results.txt")
 
+    #For 1D scan:
+    #reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='Plotname', x_axislabel='Angle', y_axislabel='Energy',
+    #imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
+    #For 2D scan:
+    contourplot(surfacedictionary, finalunit='kcal/mol',label="Plotname", interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
 
 
 .. image:: figures/SurfaceTPSSh.png

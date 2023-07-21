@@ -275,13 +275,12 @@ Options:
   
 .. code-block:: python
 
-    import module_plotting
 
     #Dummy example
     transition_energies=[1.0, 2.0, 3.0]
     transition_intensities=[0.05, 0.11, 0.57]
 
-    module_plotting.plot_Spectrum(xvalues=transition_energies, yvalues=transition_intensities, plotname='PES_spectrum_TPSSh', range=[7,20], unit='eV',
+    plot_Spectrum(xvalues=transition_energies, yvalues=transition_intensities, plotname='PES_spectrum_TPSSh', range=[7,20], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
 
@@ -334,7 +333,7 @@ Example plotting MO diagrams for multiple ORCA outputfiles:
 ##############################################################################
  Reaction_profile
 ##############################################################################
-For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **module_plotting.reactionprofile_plot** function which will visualize the
+For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **reactionprofile_plot** function which will visualize the
 relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
 The output is an imagefile (PNG by default).
 
@@ -355,12 +354,11 @@ The output is an imagefile (PNG by default).
 .. code-block:: python
 
     import ash
-    import module_plotting
     #Simple with default options
-    module_plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy')
+    reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy')
     #Specifying options
 
-    module_plotting.reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy',
+    reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='TPSS', x_axislabel='Angle', y_axislabel='Energy',
         imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
 
 .. image:: figures/PlotTPSS.png
@@ -373,7 +371,7 @@ The output is an imagefile (PNG by default).
  Contour_plot
 ##############################################################################
 
-For a 2D scan (see :doc:`job-types`), the dictionary can be given to the **module_plotting.contourplot** function which will visualize the energy surface as a contourplot.
+For a 2D scan (see :doc:`job-types`), the dictionary can be given to the **contourplot** function which will visualize the energy surface as a contourplot.
 The output is an imagefile (PNG by default).
 
 - The unit of the surface can be chosen via finalunit keyword (kcal/mol, kJ/mol, eV etc.).
@@ -391,8 +389,7 @@ The output is an imagefile (PNG by default).
 
 .. code-block:: python
 
-    import module_plotting
-    plotting.contourplot(surfacedictionary, finalunit='kcal/mol',label=method, interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
+    contourplot(surfacedictionary, finalunit='kcal/mol',label=method, interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
 
 
 .. image:: figures/SurfaceTPSSh.png
