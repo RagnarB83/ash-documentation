@@ -6,15 +6,14 @@ as well as local correlation methods (LNO-CCSD(T)). Compiled binaries are availa
 ASH can be used to drive MRCC calculations in a convenient way by using the MRCCTheory class.
 The interface is flexible as you provide a multi-line string containing a MRCC-inputfile.
 
-.. note:: **Limitation:** Currently gradients are not supported in the interface.
 
 **MRCCTheory class:**
 
 .. code-block:: python
 
-    class MRCCTheory:
-        def __init__(self, mrccdir=None, filename='mrcc', printlevel=2,
-                    mrccinput=None, numcores=1):
+  class MRCCTheory:
+      def __init__(self, mrccdir=None, filename='mrcc', printlevel=2,
+                  mrccinput=None, numcores=1, parallelization='OMP-and-MKL'):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -40,33 +39,51 @@ The interface is flexible as you provide a multi-line string containing a MRCC-i
      - integer
      - 1
      - Number of CPU cores MRCC will use
+   * - ``parallelization``
+     - string
+     - 'OMP-and-MKL'
+     - Type of parallelization used. Options: 'OMP', 'OMP-and-MKL' or 'MPI'
    * - ``filename``
      - string
      - 'mrcc'
      - Name of MRCC inputfile
 
-**Using the interface**
+
+
+################################
+Finding the MRCC program
+################################
 
 To use the interface you need to have MRCC-binaries already installed. 
 You can then either provide the path to the MRCC binaries using the mrccdir keyword or alternatively ASH will try to find the binaries (searches for the dmrcc binary) automatically in PATH.
-You also need to provide the mrccinput keyword which should be a multi-line string containing the MRCC syntax. Other keywords are optional.
+
+
+################################
+Using the interface
+################################
+
+You need to provide the mrccinput keyword which should be a multi-line string containing the MRCC syntax. Other keywords are optional.
 
 .. note:: Do **NOT** provide geometry, charge or spin information in the mrccinput string. This information is handled automatically by ASH.
 
-**Parallelization:**
+
+################################
+Parallelization
+################################
 
 Parallelization of MRCC can be based on OpenMP, BLAS MKL libraries or MPI. 
 The MPI parallelization is currently not supported by ASH.
-The OpenMP and MKL parallelization can partially be controlled by setting the numcores keyword, although it is possible that shell environment variables:
-export OMP_NUM_THREADS=X and export MKL_NUM_THREADS=X need to be also set.
+The OpenMP and MKL parallelization is controlled by setting the numcores keyword.
 
 .. note:: **Expert note:** ASH sets ccsdthreads and ptthreads options to numcores. 
 
 
-**Example:**
+################################
+Examples
+################################
 
 
-
+*CCSDT(Q) singlepoint calculation:*
 .. code-block:: python
 
     from ash import *
@@ -83,7 +100,7 @@ export OMP_NUM_THREADS=X and export MKL_NUM_THREADS=X need to be also set.
     ccmaxit=150
     core=frozen
     """
-    MRCCcalc = MRCCTheory(mrccdir="/path/to/mrccdir", mrccinput=mrccinput, numcores=2)
+    MRCCcalc = MRCCTheory(mrccinput=mrccinput, numcores=2)
     
     result=Singlepoint(theory=MRCCcalc,fragment=frag)
 

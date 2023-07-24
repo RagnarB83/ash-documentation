@@ -51,6 +51,10 @@ The ASH interface also allows one to conveniently use CFour to perform geometry 
      - integer
      - 1
      - Number of CPU cores CFour will use
+   * - ``parallelization``
+     - string
+     - 'MKL'
+     - Type of parallelization used by CFour. Options: 'MKL', 'MPI'
    * - ``filename``
      - string
      - 'cfourjob'
@@ -92,6 +96,18 @@ See this page for installation instructions: https://cfour.uni-mainz.de/cfour/in
 *Example parallel installation using GCC and Intel MKL BLAS and OpenMPI:*
 
 TODO
+
+################################
+Finding the CFour program
+################################
+
+ASH can find the CFour program in a few different ways.
+
+- ASH will first check if the cfourdir argument has been set which should be a string that points to the directory
+- If the cfourdir argument has not been provided ASH will next see if cfourdir has been provided in the ASH settings (~/ash_user_settings.ini file): See :doc:`basics`
+- Otherise, ASH will next search the operating systems's PATH environment variable for an executable "xcfour" and if found, will set the cfourdir accordingly and use that CFour version.  This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.
+
+
 
 ######################################################
 Parallelization
