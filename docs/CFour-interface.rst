@@ -11,11 +11,14 @@ The CFour capabilities for energy calculations can be found here:
 https://cfour.uni-mainz.de/cfour/index.php?n=Main.Single-pointEnergyCalculations
 Methods for which analytic gradients are available (allowing geometry optimizations and first-order properties) are shown here:
 https://cfour.uni-mainz.de/cfour/index.php?n=Main.GeometryOptimizations
+Methods for which analytic second derivates are available:
+https://cfour.uni-mainz.de/cfour/index.php?n=Main.HarmonicVibrationalFrequencies
 
 
 ASH offers a convenient interface to CFour. CFour keywords should be provided as a Python dictionary
-which allows for convenient manipulation of the CFour inputfile, without having to write one manually.
-The ASH interface also allows one to conveniently use CFour to perform geometry optimizations without having to write a Z-matrix.
+which allows for easy manipulation of the CFour inputfile, without having to write one manually.
+The ASH interface also allows one to conveniently use CFour to perform geometry optimizations without having to write a Z-matrix (as required by CFour normally).
+ASH can also call on CFour to calculate analytic second derivates (i.e. the Hessian) using the **AnFreq** function.
 
 
 **CFourTheory class:**
@@ -161,7 +164,6 @@ Examples
     result = Singlepoint(theory=cfourcalc, fragment=frag)
 
 
-
 **Geometry optimization at CCSD(T) and CCSDT levels of theory:**
 
 CCSD(T)/cc-pVTZ:
@@ -220,3 +222,36 @@ CCSDT/cc-PVTZ:
 
     #Geometry optimization
     result = Optimizer(theory=cfourcalc, fragment=frag)
+
+
+**Harmonic vibrational frequencies at the CCSD(T) level of theory:**
+
+CCSD(T)/cc-pVTZ:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Define fragment
+    frag=Fragment(databasefile="hf.xyz", charge=0, mult=1)
+
+    cfouroptions = {
+    'CALC':'CCSD(T)',
+    'BASIS':'PVTZ',
+    'REF':'RHF',
+    'FROZEN_CORE':'ON',
+    'MEM_UNIT':'MB',
+    'MEMORY':3100,
+    'CC_PROG':'VCC',
+    'SCF_CONV':10,
+    'LINEQ_CONV':10,
+    'CC_MAXCYC':300,
+    'SYMMETRY':'OFF',
+    'HFSTABILITY':'OFF'
+    }
+    cfourcalc = CFourTheory(cfouroptions=cfouroptions)
+
+    #Geometry optimization
+    result = Optimizer(theory=cfourcalc, fragment=frag)
+    #Analytical Hessian calculation
+    result = AnFreq(theory=cfourcalc, fragment=frag)

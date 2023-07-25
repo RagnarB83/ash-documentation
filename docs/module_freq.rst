@@ -198,7 +198,7 @@ Analytical frequencies
 #########################################
 
 Some QM programs have analytical frequencies implemented and the ASH interface may support requesting the calculation of the analytical Hessian and reading Hessian back.
-Currently analytical frequencies are supported in the QM codes: **ORCATheory**
+Currently analytical frequencies are only supported in the QM codes: **ORCATheory** and **CFourTheory
 
 An analytical Hessian calculation is requested by the AnFreq function that takes fragment and theory as necessary arguments:
 

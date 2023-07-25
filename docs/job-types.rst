@@ -8,6 +8,7 @@ The primary job-types available in ASH:
 * Single-point energy/property job
 * Geometry optimization
 * Numerical frequencies
+* Analytic frequencies
 * Nudged elastic band optimization (or saddlepoint search)
 * Molecular dynamics
 * Surface scan
