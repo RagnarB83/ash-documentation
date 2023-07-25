@@ -84,6 +84,7 @@ Examples
 
 
 *CCSDT(Q) singlepoint calculation:*
+
 .. code-block:: python
 
     from ash import *
