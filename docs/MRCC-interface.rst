@@ -143,6 +143,10 @@ realspace using Multiwfn. The function will create a Cube-file that can be visua
   #Run MRCC
   result=Singlepoint(theory=MRCCcalc,fragment=frag)
 
-  #Files produced by MRCC: MOLDEN and CCDENSITIES
+  #Files produced by MRCC job above: MOLDEN and CCDENSITIES
+
+  #Now calling multiwfn_run function that will correctly process the MRCC files and create a Cube-file
   multiwfn_run("MOLDEN", option='mrcc-density', mrccoutputfile=MRCCcalc.filename+".out",
       mrccdensityfile="CCDENSITIES", grid=3, numcores=numcores)
+
+  #The Cube-file (called mrccnew_mwfn.cube) can next be visualized in VMD or Chemcraft

@@ -255,3 +255,56 @@ CCSD(T)/cc-pVTZ:
     result = Optimizer(theory=cfourcalc, fragment=frag)
     #Analytical Hessian calculation
     result = AnFreq(theory=cfourcalc, fragment=frag)
+
+
+**CFour CCSD(T) density calculation and visualization:**
+
+As the CFour program can calculate densities at all levels of theory for which analytic gradients are available
+one can calculate and visualize densities associated with the CCSD, CCSD(T), CCSDT wavefunctions.
+If one includes 'PROP':'FIRST_ORDER' in the cfouroptions dictionary input to CFourTheory, 
+then the density will be calculated at the requested level of theory. 
+This density can be used to define various electric properties at the CC level of theory (dipole, EFG etc.), population analysis
+but the density can also be useful on its own.
+Here we utilize the MOLDEN_NAT file that CFour creates, which contains the natural orbitals of the CC wavefunction
+that define the correlated WF density.
+
+You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface`  details) that creates the density in
+realspace using Multiwfn. 
+The function will create a Cube-file that can be visualized in VMD, Chemcraft or other programs.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+
+  #Define fragment
+  frag=Fragment(databasefile="hf.xyz", charge=0, mult=1)
+
+  #Define CFour options
+  cfouroptions = {
+  'CALC':'CCSD',
+  'BASIS':'PVDZ',
+  'REF':'RHF',
+  'FROZEN_CORE':'ON',
+  'MEM_UNIT':'MB',
+  'MEMORY':3100,
+  'PROP':'FIRST_ORDER',
+  'CC_PROG':'ECC',
+  'SCF_CONV':10,
+  'LINEQ_CONV':10,
+  'CC_MAXCYC':300,
+  'SYMMETRY':'OFF',
+  'HFSTABILITY':'OFF'
+  }
+  #Define CFourTheory object
+  cfourcalc = CFourTheory(cfouroptions=cfouroptions,numcores=numcores)
+
+  #Run CFour calculation
+  result=Singlepoint(theory=cfourcalc,fragment=frag)
+
+  #Files produced by CFOUR: MOLDEN (SCF WF) and MOLDEN_NAT (Natural Orbitals of the correlated WF)
+  multiwfn_run("MOLDEN_NAT", option='density', grid=3, numcores=numcores)
+
+  #The Cube-file created, MOLDEN_NAT_mwfn.cube, can next be visualized in e.g. VMD or Chemcraft
+
