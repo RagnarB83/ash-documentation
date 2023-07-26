@@ -5,6 +5,8 @@ MRCC is a very powerful wavefunction-theory QM code, with special support for hi
 as well as local correlation methods (LNO-CCSD(T)). Compiled binaries are available that makes the program easy to set up.
 ASH can be used to drive MRCC calculations in a convenient way by using the MRCCTheory class.
 The interface is flexible as you provide a multi-line string containing a MRCC-inputfile.
+Energies and gradients are supported in the ASH interface. Note that while MRCC has analytic gradients for coupled cluster methods this only applies to pure CC methods (CCSD,CCSDT, CCSDTQ),
+not approximate methods like CCSD(T).
 
 
 **MRCCTheory class:**
