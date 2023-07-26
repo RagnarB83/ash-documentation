@@ -108,3 +108,41 @@ Examples
     result=Singlepoint(theory=MRCCcalc,fragment=frag)
 
 .. note:: If you are running MRCC on multiple fragments that might be either closed-shell or open-shell it might be convenient to leave out scftype=RHF/scftype=UHF and let MRCC choose this. MRCC may otherwise complain.
+
+
+*MRCC CCSDT density calculation and visualization:*
+
+MRCC allows you to not only calculate the CCSDT energy but also the CCSDT density.
+You can request this by adding dens=1 to the MRCC inputstring which will result in a file "CCDENSITIES" that will
+contain the CCSDT density.
+
+You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface`  details) that creates the density
+realspace using Multiwfn. The function will create a Cube-file that can be visualized in VMD, Chemcraft or other programs.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+
+  #Add coordinates to fragment
+  frag=Fragment(databasefile="hf.xyz", charge=0, mult=1)
+
+  #Defining MRCCTheory object
+  mrccinput="""
+  basis=def2-SVP
+  calc=CCSDT
+  mem=9000MB
+  scftype=UHF
+  ccmaxit=150
+  core=frozen
+  dens=1
+  """
+  MRCCcalc = MRCCTheory(mrccinput=mrccinput, numcores=numcores)
+
+  #Run MRCC
+  result=Singlepoint(theory=MRCCcalc,fragment=frag)
+
+  #Files produced by MRCC: MOLDEN and CCDENSITIES
+  multiwfn_run("MOLDEN", option='mrcc-density', mrccoutputfile=MRCCcalc.filename+".out",
+      mrccdensityfile="CCDENSITIES", grid=3, numcores=numcores)

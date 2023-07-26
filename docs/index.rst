@@ -81,6 +81,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    QUICK-interface
    NWChem-interface
    TeraChem-interface
+   Multiwfn_interface
 
 .. toctree::
    :maxdepth: 2
