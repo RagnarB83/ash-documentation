@@ -18,7 +18,7 @@ Functions to read Gaussian Cube file,
 
 .. code-block:: python
 
-    #Read Cube file
+    #Read Cube file into dictionary
     def read_cube (cubefile):
 
     #Subtract one Cube-file from another
@@ -30,7 +30,7 @@ Functions to read Gaussian Cube file,
     #Product of 2 Cube-files
     def write_cube_product(cubedict1,cubedict2, name="Default"):
 
-    # CRead cubefile. Grabs coords. Calculates density if MO
+    # Read cubefile. Grabs coords. Calculates density if MO
     def create_density_from_orb (cubefile, denswrite=True, LargePrint=True):
 
 How to use the functions:
@@ -50,6 +50,41 @@ How to use the functions:
 
     # Create density from MO from a Cube-file.
     create_density_from_orb("hf.mo2a.cube") #Creates file hf.mo2a-dens.cube
+
+**Create Cubefiles from orbital files**
+
+It is also possible to directly create Cubefiles from wavefunction files.
+If an ORCA GBW file (containing the SCF wavefunction), ORCA natural orbital file or a Molden file (e.g. created by CFOUR or MRCC) 
+is provided then create_cubefile_from_orbfile can directly create a Cubefile from the associated WF.
+The function recognized the file type from the file extension and creates the Cubefile accordingly with the help of the orca_2mkl program (requires ORCA to be installed),
+and Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn_interface` for details).
+
+.. code-block:: python
+
+	def create_cubefile_from_orbfile(orbfile, grid=3, delete_temp_molden_file=True, printlevel=2):
+
+
+**Create difference density from 2 Cubefiles**
+
+A more convenient option than using the **write_cube_diff** function above.
+The **diffdens_of_cubefiles** function reads 2 Cube-files directly and creates a difference density Cubefile.
+
+.. code-block:: python
+
+	def diffdens_of_cubefiles(ref_cubefile, cubefile):
+
+**Create multiple difference densities from all orbital-files in directory**
+
+Sometimes one would like to conveniently create difference densities from all orbital/WF files in a directory.
+The **diffdens_tool** function can be used for this purpose.
+It reads all files in a directory with a given extension (e.g. .gbw, .molden, .nat) and creates difference densities
+w.r.t. to a reference file (e.g. HF.gbw).
+
+This function use Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn_interface` for details).
+
+.. code-block:: python
+
+	def diffdens_tool(reference_orbfile="HF.gbw", dir='.', grid=3, printlevel=2):
 
 
 **Example: Vertical ionization of Cobaltocene**

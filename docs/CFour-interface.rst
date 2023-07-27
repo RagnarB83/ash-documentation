@@ -268,7 +268,7 @@ but the density can also be useful on its own.
 Here we utilize the MOLDEN_NAT file that CFour creates, which contains the natural orbitals of the CC wavefunction
 that define the correlated WF density.
 
-You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface`  details) that creates the density in
+You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) that creates the density in
 realspace using Multiwfn. 
 The function will create a Cube-file that can be visualized in VMD, Chemcraft or other programs.
 
