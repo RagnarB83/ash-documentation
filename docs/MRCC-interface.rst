@@ -114,10 +114,13 @@ Examples
 
 MRCC allows you to not only calculate the CCSDT energy but also the CCSDT density.
 You can request this by adding dens=1 to the MRCC inputstring which will result in a file "CCDENSITIES" that will
-contain the CCSDT density.
+contain the CCSDT density. MRCC also produces a MOLDEN file, hower, this file contains the SCF orbitals.
 
-You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface`  details) that creates the density
-realspace using Multiwfn. The function will create a Cube-file that can be visualized in VMD, Chemcraft or other programs.
+To get the CCSDT density we can use functionality built-into Multiwfn (See :doc:`Multiwfn_interface` for details) to create correlated natural orbitals.
+You can use the ASH function **convert_MRCC_Molden_file** that interfaces to Multiwfn to create the correct Molden-file.
+
+Once you have the correct Moldenfile you can either use the  **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) 
+to directly create the Cubefile. Or use other functions describe din :doc:`elstructure_analysis` to create the Cubefile.
 
 .. code-block:: python
 
@@ -145,8 +148,6 @@ realspace using Multiwfn. The function will create a Cube-file that can be visua
 
   #Files produced by MRCC job above: MOLDEN and CCDENSITIES
 
-  #Now calling multiwfn_run function that will correctly process the MRCC files and create a Cube-file
-  multiwfn_run("MOLDEN", option='mrcc-density', mrccoutputfile=MRCCcalc.filename+".out",
-      mrccdensityfile="CCDENSITIES", grid=3, numcores=numcores)
+  #Now calling convert_MRCC_Molden_file to create a Molden-file with correlated natural orbitals
+  convert_MRCC_Molden_file(mrccoutputfile=f"{MRCCcalc.filename}.out", moldenfile="MOLDEN", mrccdensityfile="CCDENSITIES")
 
-  #The Cube-file (called mrccnew_mwfn.cube) can next be visualized in VMD or Chemcraft

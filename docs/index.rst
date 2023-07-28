@@ -76,12 +76,14 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    CFour-interface
    Dalton-interface
    PySCF-interface
+   Dice_interface
    Psi4-interface
    crest-interface
    QUICK-interface
    NWChem-interface
    TeraChem-interface
    Multiwfn_interface
+
 
 .. toctree::
    :maxdepth: 2
