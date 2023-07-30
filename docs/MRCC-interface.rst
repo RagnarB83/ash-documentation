@@ -8,6 +8,10 @@ The interface is flexible as you provide a multi-line string containing a MRCC-i
 Energies and gradients are supported in the ASH interface. Note that while MRCC has analytic gradients for coupled cluster methods this only applies to pure CC methods (CCSD,CCSDT, CCSDTQ),
 not approximate methods like CCSD(T).
 
+QM/MM pointcharge-embedding (energies and gradients) is also supported in the MRCC interface so MRCCTheory can be used to create a QMMMTheory object.
+However, note that pointcharge gradients are only available for HF, DFT and MP2 methods.
+
+
 
 **MRCCTheory class:**
 

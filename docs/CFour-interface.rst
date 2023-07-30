@@ -2,7 +2,8 @@ CFour interface
 ======================================
 
 CFour is a powerful wavefunction theory program, in particular known for its availability of first and second order
-derivatives of various coupled cluster methods including CCSD(T). This allows for geometry optimizations and other properties with high level WF methods.
+derivatives of various coupled cluster methods including CCSD(T). 
+This is one of very few programs that allow for geometry optimizations and other properties with high level WF methods.
 Higher order coupled cluster methods are also available such as CCSDT, CCSDT(Q).
 
 https://cfour.uni-mainz.de/cfour/
@@ -18,8 +19,10 @@ https://cfour.uni-mainz.de/cfour/index.php?n=Main.HarmonicVibrationalFrequencies
 ASH offers a convenient interface to CFour. CFour keywords should be provided as a Python dictionary
 which allows for easy manipulation of the CFour inputfile, without having to write one manually.
 The ASH interface also allows one to conveniently use CFour to perform geometry optimizations without having to write a Z-matrix (as required by CFour normally).
-ASH can also call on CFour to calculate analytic second derivates (i.e. the Hessian) using the **AnFreq** function.
+ASH can furthermore call on CFour to calculate analytic second derivates (i.e. the Hessian) using the **AnFreq** function.
 
+The ASH-CFour interface even allows for QM/MM pointcharge embedding meaning that CFourTheory can be used to create a QMMMTheory object (see :doc:`module_QM-MM`).
+QM/MM energies and gradients are available, which even allows for CCSD(T)/MM geometry optimizations. 
 
 **CFourTheory class:**
 
