@@ -113,6 +113,17 @@ ASH can find the CFour program in a few different ways.
 - If the cfourdir argument has not been provided ASH will next see if cfourdir has been provided in the ASH settings (~/ash_user_settings.ini file): See :doc:`basics`
 - Otherise, ASH will next search the operating systems's PATH environment variable for an executable "xcfour" and if found, will set the cfourdir accordingly and use that CFour version.  This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.
 
+################################
+CC modules
+################################
+
+CFOUR can use different coupled cluster modules which have different strengths.
+The CC module is specified by the CC_PROG keyword in the cfouroptions dictionary.
+Consult the CFour manual about which CC program to use.
+Generally:
+CC_PROG='VCC' : Default in CFour,except for CCSDT(Q) and CCSDTQ.
+CC_PROG='ECC' : Generally better performance than VCC for CCSD(T) and closed-shell CCSDT. Not recommended for ROHF gradients.
+CC_PROG='NCC' : New program. Recommended for CCSDT(Q) and CCSDTQ. Only closed-shell.
 
 
 ######################################################
