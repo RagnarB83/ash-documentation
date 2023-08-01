@@ -156,6 +156,7 @@ Recommendations and how to use
 - When a partially converged NEB path reveals that there probably is an intermediate inbetween, it is best to cancel the calculation and split the job into 2 jobs, i.e. start a new job from reactant to intermediate and another from intermediate to product. A CI-NEB job would only converge to the higher energy saddlepoint in such a case.
 - It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess.
 - If you already know approximately what the saddlepoint geometry should look like you can provide such a geometry using the TS_guess_file option. The geometry will be used during the interpolation to provide a more accurate guess path. This could also be a previously obtained saddlepoint at another level of theory.
+- In rare cases the IDPP interpolation goes wrong, you can hen switch to interpolation="linear" instead, perhaps in combination with a TS_guess_file.
 - If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job. NEB returns an ASH Fragment of the saddlepoint geometry as well as an XYZ-file.
 - Any ASH Theory level can in principle be used (although only ORCA and xTB have been tested). In practice you want to use a QM method and code with an analytical gradient available.
 
