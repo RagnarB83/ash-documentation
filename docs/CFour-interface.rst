@@ -287,7 +287,9 @@ then the density will be calculated at the requested level of theory.
 This density can be used to define various electric properties at the CC level of theory (dipole, EFG etc.), population analysis
 but the density can also be useful on its own.
 Here we utilize the MOLDEN_NAT file that CFour creates, which contains the natural orbitals of the CC wavefunction
-that define the correlated WF density.
+that define the correlated WF density. Unfortunately this CFour-created Molden-file is not compatible with Multiwfn that is convenient
+to plot the density so here use an ASH function, **convert_CFour_Molden_file** to convert the CFour Molden file to a Multiwfn-compatible file.
+**convert_CFour_Molden_file** utilizes the **molden2aim** program to convert the Moldenfile. Molden2aim ships with ASH but requires a quick compilation (see instructions when running).
 
 You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) that creates the density in
 realspace using Multiwfn. 
@@ -324,8 +326,10 @@ The function will create a Cube-file that can be visualized in VMD, Chemcraft or
   #Run CFour calculation
   result=Singlepoint(theory=cfourcalc,fragment=frag)
 
-  #Files produced by CFOUR: MOLDEN (SCF WF) and MOLDEN_NAT (Natural Orbitals of the correlated WF)
-  multiwfn_run("MOLDEN_NAT", option='density', grid=3, numcores=numcores)
+  #Convert CFour Molden file,MOLDEN_NAT, to Multiwfn-compatible file
+  convert_CFour_Molden_file("MOLDEN_NAT")
+  #convert_CFour_Molden_file will create MOLDEN_NAT_new.molden file
+  multiwfn_run("MOLDEN_NAT_new.molden", option='density', grid=3, numcores=numcores)
 
-  #The Cube-file created, MOLDEN_NAT_mwfn.cube, can next be visualized in e.g. VMD or Chemcraft
+  #The Cube-file created, MOLDEN_NAT_new_mwfn.cube, can next be visualized in e.g. VMD or Chemcraft
 
