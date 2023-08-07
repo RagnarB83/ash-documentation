@@ -515,3 +515,247 @@ Output:
 
 
 .. warning:: The plots require the Matplotlib library to be installed. 
+
+
+##############################
+ICE-CI workflows
+##############################
+
+ICE-CI contains a few built-in options to facilitate ICE-CI or CASCI/CASSCF ICE-based workflows.
+The function **make_ICE_theory** allows one to conveniently define ICE-CI ORCA theories for a given basis set and molecule.
+
+.. code-block:: python
+
+  #Create ICE-CI theory
+  def make_ICE_theory(basis,tgen, tvar, numcores, nel=None, norb=None, nmin_nmax=False, ice_nmin=None,ice_nmax=None, 
+      autoice=False, basis_per_element=None, maxcorememory=10000, maxiter=20, etol=1e-6, moreadfile=None,label=""):
+
+  #Workflow to do active-space selection with MP2 or CCSD natural orbitals and then an ICE-CI based on user thresholds
+  def Auto_ICE_CAS(fragment=None, basis="cc-pVDZ", nmin=1.98, nmax=0.02, 
+                  initial_orbitals="MP2", moreadfile=None,
+                  numcores=1, charge=None, mult=None, CASCI=True, tgen=1e-4, memory=10000):
+
+
+**Auto-ICE Example:**
+
+Simple way of using the Auto-ICE option in ORCA. Not necessarily much better than the ORCA way but allows workflows.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+  frag = Fragment(xyzfile="al2h2_mp2geo.xyz", charge=0, mult=1)
+  basis="cc-pVDZ"
+  nmin_thresh=1.98
+  nmax_thresh=0.01
+
+  #ICE-theory:  based on thresholds
+  ice = make_ICE_theory("cc-pVDZ", 1e-4, 1e-11,numcores, nmin_nmax=True, ice_nmin=1.98, ice_nmax=0.02, autoice=True, 
+      maxcorememory=10000, label=f"ICE")
+
+  result_ICE = ash.Singlepoint(fragment=frag, theory=ice)
+
+**Manual Auto-ICE Example:**
+
+Note: Allows manual selection of the natural orbitals calculated and read-in. 
+Manually selects the active space based on MP2 occupations and determines the active space which is fed into ICE-CI calculation.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+  frag = Fragment(xyzfile="al2h2_mp2geo.xyz", charge=0, mult=1)
+  basis="cc-pVDZ"
+  nmin_thresh=1.98
+  nmax_thresh=0.01
+
+  #Make MP2 natural orbitals
+  mp2blocks=f"""
+  %maxcore 11000
+  %mp2
+  natorbs true
+  density unrelaxed
+  end
+  """
+  natmp2 = ORCATheory(orcasimpleinput=f"! MP2 {basis} autoaux tightscf", orcablocks=mp2blocks, numcores=numcores, label='MP2', save_output_with_label=True)
+  Singlepoint(theory=natmp2, fragment=frag)
+  mofile=f"{natmp2.filename}.mp2nat"
+
+  #Determine CAS space based on thresholds
+  mp2nat_occupations=ash.interfaces.interface_ORCA.MP2_natocc_grab(natmp2.filename+'.out')
+  print("MP2natoccupations:", mp2nat_occupations)
+  nel,norb=ash.functions.functions_elstructure.select_space_from_occupations(mp2nat_occupations, selection_thresholds=[nmin_thresh,nmax_thresh])
+  print(f"Selecting CAS({nel},{norb}) based on thresholds: upper_sel_threshold={nmin_thresh} and lower_sel_threshold={nmax_thresh}")
+
+  #ICE-theory: Fixed active space
+  ice = make_ICE_theory("cc-pVDZ", 1e-4, 1e-11,numcores, nel=nel, norb=norb, maxcorememory=10000, moreadfile=mofile, label=f"ICE")
+
+  result_ICE = ash.Singlepoint(fragment=frag, theory=ice)
+
+
+**Manual CAS-ICE Example:**
+
+Manual selection of the natural orbitals calculated and read-in. 
+Manually selects the active space based on MP2 occupations and determines the active space which is fed into a CASCI/CASSCF calculation using the 
+ICE-CI algorithm instead of the regular Full-CI.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+
+  #Input
+  frag = Fragment(xyzfile="al2h2_mp2geo.xyz", charge=0, mult=1)
+  basis="cc-pVDZ"
+  nmin_thresh=1.98
+  nmax_thresh=0.01
+  tgen=1e-4
+  memory=10000
+
+  #Make MP2 natural orbitals
+  mp2blocks=f"""
+  %maxcore {memory}
+  %mp2
+  natorbs true
+  density unrelaxed
+  end
+  """
+  natmp2 = ORCATheory(orcasimpleinput=f"! MP2 {basis} autoaux tightscf", orcablocks=mp2blocks, numcores=numcores, label='MP2', save_output_with_label=True)
+  Singlepoint(theory=natmp2, fragment=frag)
+  mofile=f"{natmp2.filename}.mp2nat"
+
+  #Determine CAS space based on thresholds
+  mp2nat_occupations=ash.interfaces.interface_ORCA.MP2_natocc_grab(natmp2.filename+'.out')
+  print("MP2natoccupations:", mp2nat_occupations)
+  nel,norb=ash.functions.functions_elstructure.select_space_from_occupations(mp2nat_occupations, selection_thresholds=[nmin_thresh,nmax_thresh])
+  print(f"Selecting CAS({nel},{norb}) based on thresholds: upper_sel_threshold={nmin_thresh} and lower_sel_threshold={nmax_thresh}")
+
+  #ICE-theory: Fixed active space
+  casblocks=f"""
+  %maxcore {memory}
+  %casscf
+  nel {nel}
+  norb {norb}
+  cistep ice
+  ci
+    tgen {tgen}
+  end
+  end
+  """
+  ice_cas_CI = ORCATheory(orcasimpleinput=f"! CASSCF noiter {basis} tightscf", orcablocks=casblocks, moreadfile=mofile, label=f"ICE")
+
+  result_ICE = ash.Singlepoint(fragment=frag, theory=ice_cas_CI)
+
+
+**Automatice CAS-ICE Example:**
+
+This is an automatic procedure for the above example but uses CCSD instead of MP2 natural orbitals.
+
+.. code-block:: python
+
+  from ash import *
+  from ash.modules.module_highlevel_workflows import Auto_ICE_CAS
+
+  numcores=1
+  #Fragment
+  frag = Fragment(xyzfile="al2h2_mp2geo.xyz", charge=0, mult=1)
+  #Settings
+  basis="cc-pVTZ"
+  nmin=1.98
+  nmax=0.02
+  initial_orbitals="CCSD"
+  #Call function
+  Auto_ICE_CAS(fragment=frag, basis=basis, nmin=nmin, nmax=nmax, numcores=numcores, CASCI=True, tgen=1e-4, memory=10000,
+    initial_orbitals=initial_orbitals)
+
+
+
+###################################
+Automatic active-space selection
+###################################
+
+Similar to above but with more options.
+
+.. code-block:: python
+
+	def auto_active_space(fragment=None, orcadir=None, basis="def2-SVP", scalar_rel=None, charge=None, mult=None, 
+    initial_orbitals='MP2', functional='TPSS', smeartemp=5000, tgen=1e-1, selection_thresholds=[1.999,0.001],
+    numcores=1):
+
+Workflow to guess a good active space for CASSCF calculation based on a 2-step procedure:
+1. Calculate MP2-natural orbitals (alternative Fractional occupation DFT orbitals)
+2. ICE-CI on top of MP2-natural orbitals using a large active-space but with small tgen threshold
+
+
+Example on ozone:
+
+.. code-block:: python
+
+	from ash import *
+
+	fragstring="""
+	O       -2.219508975      0.000000000     -0.605320629
+	O       -1.305999766     -0.913250049     -0.557466332
+	O       -2.829559171      0.140210894     -1.736132689
+	"""
+
+	fragment=Fragment(coordsstring=fragstrin, charge=0, mult=1)
+
+	activespace_dictionary = auto_active_space(fragment=fragment, basis="def2-TZVP", charge=0, mult=1,
+	    initial_orbitals='MP2', tgen=1.0)
+	#Returns dictionary with various active_spaces based on thresholds
+
+Output:
+
+.. code-block:: text
+
+	ICE-CI step done
+	Note: New natural orbitals from ICE-CI density matrix formed!
+
+	Wavefunction size:
+	Tgen: 1.0
+	Tvar: 1e-07
+	Orbital space of CAS(18,37) used for ICE-CI step
+	Num generator CFGs: 4370
+	Num CFGS after S+D: 4370
+
+	Table of natural occupation numbers
+
+	Orbital   MP2natorbs ICE-nat-occ
+	----------------------------------------
+	0            2.0000    2.0000
+	1            2.0000    2.0000
+	2            2.0000    2.0000
+	3            1.9859    1.9898
+	4            1.9809    1.9869
+	5            1.9747    1.9836
+	6            1.9637    1.9791
+	7            1.9607    1.9787
+	8            1.9360    1.9665
+	9            1.9223    1.9631
+	10           1.9197    1.9603
+	11           1.8522    1.9371
+	12           0.1868    0.0779
+	13           0.0680    0.0349
+	14           0.0612    0.0318
+	15           0.0241    0.0122
+	16           0.0171    0.0093
+	17           0.0146    0.0081
+	18           0.0117    0.0076
+	19           0.0106    0.0067
+	20           0.0105    0.0064
+	...
+
+	Recommended active spaces based on ICE-CI natural occupations:
+	Minimal (1.95,0.05): CAS(2,2)
+	Medium1 (1.98,0.02): CAS(12,9)
+	Medium2 (1.985,0.015): CAS(14,10)
+	Medium3 (1.99,0.01): CAS(18,13)
+	Medium4 (1.992,0.008): CAS(18,15)
+	Large (1.995,0.005): CAS(18,19)
+	Orbital file to use for future calculations: orca.gbw
+	Note: orbitals are new natural orbitals formed from the ICE-CI density matrix
+

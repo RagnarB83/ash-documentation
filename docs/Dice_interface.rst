@@ -36,7 +36,7 @@ Installing Dice
 
 You need to download the Dice source code from https://github.com/sanshar/Dice
 and compile it according to the Github instructions.
-You then need to install pyscf (see :docs:`PySCF-interface`) and install the SHCI plugin:
+You then need to install pyscf (see :doc:`PySCF-interface`) and install the SHCI plugin:
 https://github.com/pyscf/shciscf
 After some additional settings modification you should be ready to go.
 
