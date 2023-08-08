@@ -1,10 +1,11 @@
 QM Interfaces
 ==========================
 
-Quantum chemistry codes that you can currently use with ASH are: ORCA, xTB, PySCF, Psi4, Dalton, CFour, MRCC.
+Quantum chemistry codes that you can currently use with ASH are: ORCA, xTB, PySCF, Psi4, Dalton, CFour, MRCC, NWChem, TeraChem, QUICK.
+Additionally codes like Dice and Block2 have interfaces in ASH, which requires PySCF installed as well.
 
 To use the interfaces you define a QMtheory object of the appropriate Class.
-The QM-interface Classes are called: 
+The QM-interface Classes are: 
 
 - ORCATheory (:doc:`ORCA-interface`)
 - xTBTheory (:doc:`xTB-interface`)
@@ -91,51 +92,4 @@ However, it is recommended to instead use the job-function **Singlepoint** for r
 
 The cleanup method removes temporary files created by the QM-program (or ASH) that may interfer with the next calculation.
 
-
-###########################
-ORCATheory
-###########################
-
-See :doc:`ORCA-interface`
-
-###########################
-xTBTheory
-###########################
-
-See :doc:`xTB-interface`
-
-
-###########################
-Psi4Theory
-###########################
-
-See :doc:`Psi4-interface`
-
-
-###########################
-PySCFTheory
-###########################
-
-See :doc:`PySCF-interface`
-
-
-###########################
-DaltonTheory
-###########################
-
-See :doc:`Dalton-interface`
-
-
-###########################
-CFourTheory
-###########################
-
-See :doc:`CFour-interface`
-
-
-###########################
-MRCCTheory
-###########################
-
-See :doc:`MRCC-interface`
 
