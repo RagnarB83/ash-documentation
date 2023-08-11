@@ -19,7 +19,10 @@ Functions to read Gaussian Cube file,
 .. code-block:: python
 
     #Read Cube file into dictionary
-    def read_cube (cubefile):
+    def read_cube(cubefile):
+
+    #Write Cube dictionary into file
+    def write_cube(cubedict, name="Default"):
 
     #Subtract one Cube-file from another
     def write_cube_diff(cubedict1,cubedict2, name="Default"):
