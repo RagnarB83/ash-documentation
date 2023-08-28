@@ -448,7 +448,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
     #Re-image trajectory so that protein is in middle
-    MDtraj_imagetraj("trajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+    MDtraj_imagetraj("trajectory.dcd", "trajectory.pdb", format='DCD')
 
 
 .. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will upon completion, update the coordinates of that ASH fragment
@@ -473,7 +473,7 @@ The trajectory can be visualized using VMD:
 
 .. code-block:: shell
 
-    vmd final_MDfrag_laststep.pdb trajectory.dcd
+    vmd trajectory.pdb trajectory.dcd
 
 
 
@@ -500,7 +500,7 @@ However, it is also possible to reimage the trajectory so that the protein appea
 
 .. code-block:: python
 
-    MDtraj_imagetraj("trajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+    MDtraj_imagetraj("trajectory.dcd", "trajectory.pdb", format='DCD')
 
 The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 
@@ -568,7 +568,7 @@ Once the simulation is found to be converged, the last snapshot together with th
 
 
     #Re-image trajectory so that protein is in middle
-    MDtraj_imagetraj("NVTtrajectory.dcd", "final_MDfrag_laststep.pdb", format='DCD')
+    MDtraj_imagetraj("NVTtrajectory.dcd", "NVTtrajectory.pdb", format='DCD')
 
 To test whether the system is stable during the long final NVT simulation we can do some analysis of the trajectory.
 
