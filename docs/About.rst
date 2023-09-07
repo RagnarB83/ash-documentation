@@ -2,6 +2,11 @@
 About ASH
 ==================================================
 
+.. image:: figures/ASH-QBIC-poster-small.png
+   :align: right
+   :width: 200
+   :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
+   
 ASH is a Python-based computational chemistry and multiscale modelling program. 
 The program can do single-point calculations, geometry optimizations, surface scans, nudged elastic band optimizations,
 molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians as well as many complex workflows.
@@ -9,6 +14,8 @@ Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PyS
 Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
 
 The code is open-source and available on `Github <https://github.com/RagnarB83/ash>`_
+
+
 
 **Strict requirements:**
 

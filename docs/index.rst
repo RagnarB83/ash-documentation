@@ -9,6 +9,10 @@ ASH: Documentation
 These are the documentation pages of ASH, an open-source multiscale modelling program.
 The code is available on `Github <https://github.com/RagnarB83/ash>`_
 
+.. image:: figures/ASH-QBIC-poster-small.png
+   :align: right
+   :width: 200
+   :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
 .. raw:: html
 
     <div align=center>
