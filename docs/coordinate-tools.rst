@@ -48,6 +48,104 @@ This should update the coordinates of fragfile.ygg.
 
 
 ######################################################
+**Define an active region**
+######################################################
+
+In QM/MM calculations in particular it is usually convenient or even necessary to divide a system into region that may e.g. be QM or MM, frozen or active etc.
+In ASH this is done by defining a list of atomindices of the whole system (counting starts from zero), typically stored in a file 
+which can be read into a Python list in a script like this:
+
+.. code-block:: python
+
+    #Creates Python list actatoms from file active_atoms
+    #File active_atoms should contain a list of atom indices (counting from zero) in a single line
+    actatoms = read_intlist_from_file("active_atoms")
+
+Contents of active_atoms file:
+
+.. code-block:: text
+
+    716 717 718 719 720 721 722 723 724 725 726
+
+
+**define_activeregion function:**
+
+While defining a list of atoms can often be done manually, when selecting a large region (e.g. an active region of ~1000 atoms) it is usually more convenient
+to automate this task by using the **actregiondefine** function which can select atoms based on distance and residue information of the MM system.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
+    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    fragment=Fragment(pdbfile=lastpdbfile)
+
+    #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
+    omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile=lastpdbfile, periodic=True,
+                platform='CPU',  autoconstraints=None, rigidwater=False)
+
+
+    #Defining active region as within X Å from originatom 755 (Fe)
+    actregiondefine(mmtheory=omm, fragment=fragment, radius=12, originatom=755)
+
+The script will create the following output:
+
+.. code-block:: text
+
+                      ###########################
+                      #                         #
+                    #     ActregionDefine     #
+                      #                         #
+                      ###########################
+
+
+    Radius: 12
+    Origin atom: 755 (Fe)
+    Will find all atoms within 12 Å from atom: 755 (Fe)
+    Will select all whole residues within region and export list
+    Wrote list to file: active_atoms
+    Active region size: 908
+    Active-region indices written to file: active_atoms
+    The active_atoms list  can be read-into Python script like this:	 actatoms = read_intlist_from_file("active_atoms")
+    Wrote Active region XYZfile: ActiveRegion.xyz  (inspect with visualization program)
+
+
+This active_atoms file just contains a list of atom indices indicating which atoms should be active (all others are frozen).
+The file can be manually modified if required. The ActiveRegion.xyz file can be visualized to make sure that the active-region looks reasonable.
+
+
+**VDM alternative**
+
+An alternative to the actregiondefine function is to do the visualization in VMD which allows you to both 
+visually create a suitable active-region and get a list of atom indices (VMD also counts from zero) that can be copy-pasted into ASH.
+
+In the VMD-GUI you can creating a new representation in "Graphical representations" 
+and test out different atom-selections using VMD-code such as:
+
+.. code-block:: tcl
+    
+    same residue as within 11 of index 33138
+
+Once you are happy with the selection you can get a list of atom indices by copy pasting a variant of the following code
+into the VMD shell:
+
+.. code-block:: tcl
+    
+    #VMD code to define active-region based on whole residues positioned X Å from a certain atom
+    #Here all whole residues within 11 Å of atom 33138 are selected
+    set mol [molinfo top] 
+    set sel [atomselect $mol {same residue as within 11 of index 33138}]
+    set num_sel [$sel num] 
+    puts "Number of atoms in selection: $num_sel"
+    puts $sel
+    $sel list
+
+The VMD shell will then output a list of atom indices that you can copy-paste into a file and read into ASH.
+
+
+
+######################################################
 **Adding/removing atoms of an MM system**
 ######################################################
 
