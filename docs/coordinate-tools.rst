@@ -114,6 +114,9 @@ The script will create the following output:
 This active_atoms file just contains a list of atom indices indicating which atoms should be active (all others are frozen).
 The file can be manually modified if required. The ActiveRegion.xyz file can be visualized to make sure that the active-region looks reasonable.
 
+.. warning:: There are cases where an MM system might be set up in such a way that a residue definition can apply to multiple molecules/fragments in space.
+    In such cases the actregiondefine function will not work as expected. See VMD option below.
+
 
 **VDM alternative**
 
@@ -131,7 +134,7 @@ Once you are happy with the selection you can get a list of atom indices by copy
 into the VMD shell:
 
 .. code-block:: tcl
-    
+
     #VMD code to define active-region based on whole residues positioned X Å from a certain atom
     #Here all whole residues within 11 Å of atom 33138 are selected
     set mol [molinfo top] 
