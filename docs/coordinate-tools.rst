@@ -71,7 +71,26 @@ Contents of active_atoms file:
 **define_activeregion function:**
 
 While defining a list of atoms can often be done manually, when selecting a large region (e.g. an active region of ~1000 atoms) it is usually more convenient
-to automate this task by using the **actregiondefine** function which can select atoms based on distance and residue information of the MM system.
+to automate this task by using the **actregiondefine** function which can select atoms based on distance and residue information of the MM system. 
+actregiondefine can either use residue information present in an OpenMMTheory object (created from CHARMM/Amber/XML forcefield-files)
+or from a PDB-file.
+
+
+*#Using the residue information from the PDB-file*
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
+    pdbfile="final_MDfrag_laststep_imaged.pdb"
+    fragment=Fragment(pdbfile=pdbfile)
+
+    #Defining active region as within X Å from originatom 755 (Fe)
+    actregiondefine(pdbfile=pdbfile, fragment=fragment, radius=12, originatom=755)
+
+
+*#Using the residue information the OpenMMTheory object (there are cases where this fails)*
 
 .. code-block:: python
 
@@ -112,11 +131,10 @@ The script will create the following output:
 
 
 This active_atoms file just contains a list of atom indices indicating which atoms should be active (all others are frozen).
-The file can be manually modified if required. The ActiveRegion.xyz file can be visualized to make sure that the active-region looks reasonable.
+The file can be manually modified if required. The ActiveRegion.xyz file should be visualized to make sure that the active-region looks reasonable.
 
 .. warning:: There are cases where an MM system might be set up in such a way that a residue definition can apply to multiple molecules/fragments in space.
-    In such cases the actregiondefine function will not work as expected. See VMD option below.
-
+    The actregiondefine function may not handle all such cases.
 
 **VDM alternative**
 

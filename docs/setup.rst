@@ -28,6 +28,8 @@ Strongly recommended (necessary for some ASH functionality):
 
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip). Required for geometry optimizations.
 * `OpenMM <http://openmm.org>`_ version 7.6 or later. Required for most MM and MD functionality in ASH.
+
+For Molecular crystal QM/MM functionality:
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ or `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
@@ -70,7 +72,7 @@ If you are impatient and want to get ASH going immediately without all features 
 3. Set: export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing the source-code directory (called "ash"))
 4. Test ASH by launching: **python3**  and then do: from ash import *        (this will fail if PYTHONPATH is set incorrectly)
 
-.. note:: ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc)
+.. note:: ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc). You then have to install them via conda or pip.
 
 .. warning:: If your installation path is e.g. /home/ragnar/ASH-program/ash  (where the ash directory contains bunch of files including ash_header.py) then you should set PYTHONPATH like this: export PYTHONPATH=/home/ragnar/ASH-program:$PYTHONPATH   but NOT:  export PYTHONPATH=/home/ragnar/ASH-program/ash:$PYTHONPATH
 
@@ -85,14 +87,16 @@ This is the recommended way. Required if you intend to do MM or QM/MM using the 
 2. Create new environment (recommended): **conda create --name ASH**
 3. Load environment: **conda activate ASH**
 4. Change directory to ASH location (that you downloaded from Github).
-5. Install all desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred).
-6. Optional: Make sure the chosen Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended, PyJulia is another option. See Section B3: Step 5a and 5b below for details.
-7. Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
-8. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
-9. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
-10. Test ASH by launching: **python3**  and then do: import ash     . If the ash is imported without errors by the Python interpreter then things should be good. See also section D below.
+5. Install some of the desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred). 
+6. Run: **bash conda_setup_ash.sh** # This creates new files: set_environment_ash.sh and python3_ash
+7. Run: **source set_environment_ash.sh**  (this sets necessary PATHs and should probably be put in each user's .bash_profile, job-submission script etc.)
+8. Test ASH by launching: **python3**  and then do: import ash     . If the ash is imported without errors by the Python interpreter then things should be good. See also section D below.
 
-.. note:: if PyJulia interface was specifically installed (not recommended) you must use **python-jl** for ASH to correctly call Julia routines.
+
+If molecular crystal QM/MM feature is needed:
+
+- Optional: Make sure the chosen Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See Section B3: Step 5a and 5b below for details.
+- Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
 
 *****************************************************
 B2. Semi-Automatic non-Conda setup
@@ -102,7 +106,7 @@ This option is not recommended if you intend to use ASH and OpenMM for MM, MD an
 This is because OpenMM is only easily installable via conda. See section B1 above.
 
 This uses the nonconda_install_ash.sh script inside the ASH directory.
-The script downloads and installs Python packages (numpy, geometric,pyjulia) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.
+The script downloads and installs Python packages (numpy, geometric) as well as Julia and packages and creates a convenient script for setting up the ASH environment. It requires a working Python3 installation.
 
 **Step 1.** Make sure the desired python3 is in your environment ('which python3' in the shell) or set path_to_python3_dir in the ./nonconda_install_ash.sh script to the Python3 installation you want to use. Script has a few possible settings in the beginning.
 Note: You need to be able to install packages to this installation via pip 
@@ -265,16 +269,6 @@ Once juliacall is installed, check that it is working correctly by:
 
 If no errors then things should be good to go for ASH.
 
-**PyJulia option:**
-
-.. code-block:: shell
-
-    pip3 install julia
-
-
-
-* The Pyjulia executable, *python-jl* (available after pip3 install julia) must generally be used if Julia routines are called by ASH. It is needed for the PyJulia interface to work properly.
-
 * Make sure the correct Python3 environment is active. Otherwise ASH will not work.
 
 * The regular Python3 executable, *python3*  can also be used to run ASH scripts and is recommended if you don't require ASH to launch Julia routines (molcrystal-QM/MM primarily). There may be warnings about the Python-Julia-interface not working. These warnings can be ignored . For large systems or when using QM/MM-Molcrys, this is not a good option, however, as very slow Python routines will be used for time-consuming steps.
@@ -386,25 +380,3 @@ Error message:
     ModuleNotFoundError: No module named 'numpy'
 
 Your Python environment requires the numpy library to be installed. Install either via conda or pip.
-
-**python-jl (PyJulia) problem**
-
-If you get an error message when launching python-jl (only when PyJulia has been installed) that looks like the following:
-
-.. code-block:: text
-
-    File "/home/bjornsson/ash/python3_ash", line 9, in <module>
-    sys.exit(main())
-    File "/home/bjornsson/.local/lib/python3.8/site-packages/julia/python_jl.py", line 114, in main
-    execprog([julia, "-e", script_jl, "--"] + unused_args)
-    ...
-    FileNotFoundError: [Errno 2] No such file or directory
-
-This means that the Python-Julia interface is not completely working.
-Check the following:
-
-1. Is Julia accessible from the shell?, i.e. does typing *julia* in the shell, launch the Julia interpreter ? If not then the PATH to Julia bin dir needs to set: export PATH=/path/to/julia/bin:$PATH
-2. Something went wrong in the installation of Julia or PyJulia. Go through these steps again.
-3. Make sure you are using the same Python environment you used when you installed things.
-4. Set up PyCall for each Julia user environment (this updates ~/.julia dir)
-

@@ -1,7 +1,8 @@
 Scientific articles using ASH
 ================================
 
-ASH is a relatively new code but has been used for a few different research projects that led to publications. Below you can find various examples, including example ASH scripts that were used in the publications.
+ASH is a relatively new code but has been used for a few different research projects that led to publications. 
+Below you can find various examples, including example ASH scripts that were used in the publications.
 
 If you have used ASH in your research and you would like to mention it here, contact me!
 
@@ -149,6 +150,11 @@ This work, exploring dinitrogen binding to multiple redox states of the complex 
 used the QM/MM module of ASH together with the ORCA interface (:doc:`ORCA-interface`)
 for the QM part and the OpenMM interface (:doc:`OpenMM-interface`) for the MM part (CHARMM36 forcefield with CHARMM files).
 Broken-symmetry solutions in the QM-part were controlled by the ORCA interface (brokensym, HSmult, atomstoflip keywords, see :doc:`ORCA-interface`). 
+
+**QM/MM modelling of Cu proteins**
+
+Uncovering primary and secondary coordination sphere effects in S-nitrosylating azurin:
+`2023 JACS article <https://pubs.acs.org/doi/10.1021/jacs.3c07399>`_
 
 
 ###################################

@@ -141,15 +141,16 @@ This file can be used to restart an incomplete/failed scan. If ASH finds this fi
 Default name : 'surface_results.txt'
 
 
-**calc_surface** returns a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
+**calc_surface** returns an ASH Results object that contains a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
 (RC1value,RC2value) : energy
 
 **1D scan:**
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
     runmode='serial', RC1_range=[180,110,-10], RC1_type='angle', RC1_indices=[1,0,2], keepoutputfiles=True)
+    surfacedictionary = results.surfacepoints
 
 **2D scan:**
 
@@ -157,9 +158,10 @@ If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.
 
 .. code-block:: python
 
-    surfacedictionary = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
         RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[[0,1],[0,2]], RC2_range=[180,110,-10], 
         RC2_type='angle', RC2_indices=[1,0,2], keepoutputfiles=True)
+    surfacedictionary = results.surfacepoints
 
 NOTE: It is possible to have each chosen reaction coordinate apply to multiple sets of atom indices by specifying a list of lists.
 In the 2D scan example above, the RC1_indices keyword (a 'bond' reaction coordinate) will apply to both atoms [0,1] as well as [0,2].
@@ -232,13 +234,15 @@ The results is a dictionary like before.
 
     #Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile="surface-results.txt")
     #Unrelaxed single-point job
-    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Unrelaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
-
+    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Unrelaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
+    surfacedictionary = results.surfacepoints
+    
     #Relaxed optimization job. A geometry optimization with constraints will be done for each point
     #The RC1_type and RC1_indices (and RC2_type and RC2_indices for a 2D scan) also need to be provided
-    surfacedictionary = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt',
+    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt',
                         coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None,
                         RC1_type='bond', RC1_indices=[[0,1],[0,2]], RC2_type='angle', RC2_indices=[1,0,2])
+    surfacedictionary = results.surfacepoints
 
 
 Other options:
@@ -259,10 +263,12 @@ Parallelization
 - Use runmode='parallel' and provide as many numcores as you have available.
 - Make sure to turn off theory parallelization (almost never desired) by setting theory.numcores=1
 
-**Plotting**
+######################################################
+Plotting
+######################################################
 
-The final result of the scan is stored in a dictionary (named 'surfacedictionary' in the examples above) and can be easily
-plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
+The final result of the scan can be found as dictionary in the ASH Results object (returned by calc_surface and calc_surface_fromXYZ )
+and can be easily plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
 See :doc:`module_plotting`) page.
 
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan

@@ -97,6 +97,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    Metalloprotein-I
    Metalloprotein-II
    mtd_tutorial
+   protein_ligand_binding
    QM-MM-protein
    workflows-examples
    Highlevel_CC_CBS_workflows
