@@ -151,7 +151,8 @@ density and volume of the system has converged.
     
     #Run NPT simulation until density and volume converges
     OpenMM_box_equilibration(fragment=fragment, theory=omm, datafilename="nptsim.csv", numsteps_per_NPT=10000,
-                      temperature=300, timestep=0.001, traj_frequency=100, trajfilename='equilbox_NPT', trajectory_file_option='DCD', coupling_frequency=1)
+                      temperature=300, timestep=0.001, traj_frequency=100, trajfilename='equilbox_NPT', 
+                      trajectory_file_option='DCD', coupling_frequency=1)
 
 It is of course also possible to split this script up into 2 scripts. Just make sure to redfine the fragment object so that it reads a PDB-file that contains updated coordinates.
 
@@ -188,8 +189,9 @@ Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integr
                 autoconstraints='HBonds', rigidwater=True)
 
     #Run a NVT MD simulation (NPT can also be performed if you add a barostat)
-    OpenMM_MD(fragment=fragment, theory=omm, timestep=0.001, simulation_time=1000, traj_frequency=10, temperature=30, platform='OpenCL',
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVT-MD',trajectory_file_option='DCD')
+    OpenMM_MD(fragment=fragment, theory=omm, timestep=0.001, simulation_time=1000, traj_frequency=10, 
+    temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+    trajfilename='NVT-MD',trajectory_file_option='DCD')
 
     #Re-image trajectory so that protein is in middle
     MDtraj_imagetraj("NVT-MD.dcd", "NVT-MD.pdb", format='DCD')
