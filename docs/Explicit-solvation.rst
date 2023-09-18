@@ -1,15 +1,42 @@
 Explicit solvation (small molecule)
 ======================================
 
-ASH allows you to easily create explicit solvation models for small molecules that can then be combined with QM/MM to perform QM/MM molecular dynamics, QM/MM metadynamics as well as extracting of snapshots for single-point energy/property calculations.
+ASH allows you to easily create explicit solvation models for small molecules that can then be either
+used either for classical MD simulations or QM/MM MD simulations.
 
 Current limitations:
 
 - Only water solvent possible for now
 
 ################################################################################################
-Example 1. Solvation, MM minimization and classical MM dynamics for 100 ps.
+Example 1. Modelling of an organic molecule in explicit water with a ligand forcefield
 ################################################################################################
+
+ASH allows one to easily parameterize a full forcefield for an organic molecule using either GAFF or OpenFF
+models via **small_molecule_parameterizor**
+
+.. code-block:: python
+        
+    from ash import *
+
+    #Parameterize small molecule using OpenFF
+    small_molecule_parameterizor(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF")
+
+The function will created a file, called openff_ligand.xml.
+
+
+#########################################################################################################
+Example 2. Modelling of an inorganic molecule in explicit water using a simple non-bonded forcefield
+#########################################################################################################
+
+For inorganic molecules (e.g. metal complexes) it is trickier to parameterize a full forcefield and would
+have to be performed to some extent manually. However, it is possible to use a simple non-bonded forcefield,
+i.e. without bonded parameters. 
+This then requires classical simulations to be performed with internal degrees of freedom frozen 
+(bonds, angles, dihedrals) while QM/MM MD simulations can be performed as normal.
+
+
+
 
 .. code-block:: python
 
@@ -46,9 +73,3 @@ Example 1. Solvation, MM minimization and classical MM dynamics for 100 ps.
     system_after_classical_prep=Fragment(elems=lastframe_elems, coords=lastframe_coords)
     system_after_classical_prep.write_xyzfile(xyzfilename="Finalframe_system.xyz")
 
-
-################################################################################################
-Example 2. Solvation, MM minimization, MM MD and QM/MM MD
-################################################################################################
-
-Not ready yet

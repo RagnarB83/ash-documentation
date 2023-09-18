@@ -1,12 +1,12 @@
 Modelling protein-ligand binding in ASH: Tutorial
 ====================================================
 
-This is a tutorial on how to set up a model for studying organic ligand binding to a protein using ASH.
+This is a tutorial on how to set up a model for studying organic ligand binding to a protein using ASH, 
+starting with  a classical approach and ending with a QM/MM approach.
 All the steps about how to set up the system, parameterize the ligand, solvate the system and run MD simulations
-are performed within the ASH environment with the help of libraries such as OpenMM, OpenBabel, OpenFF, ParmEd, MDTraj, etc.
+are performed within the ASH environment with the help of libraries such as OpenMM, OpenFF, OpenBabel, ParmEd, MDTraj, etc.
 Later we will also show how to run metadynamics simulations to study the free-energy surface of the ligand binding.
 
-Test system:
 
 ######################################################
 **1. Preparing initial files**
@@ -18,18 +18,18 @@ To get started we need a PDB file of the protein. This can be an initial crystal
 
 **Ligand PDB-file**
 
-We also need a PDB file of the ligand. This PDB-file can be created from an XYZ-file that should have a decent-looking geometry (ideally DFT-optimized)
-or from some other file format such as a MDL Mol-file, SDF file.
+We also need a PDB file of the ligand. This PDB-file can be created from an XYZ-file that should have an acceptable initial geometry (ideally DFT-optimized)
+or from some other file format such as a MDL Mol-file or MDL SDF file.
 This PDB-file needs to contain all the hydrogen atoms and needs to have The file will be referered to as ligand.pdb here.
 
 .. code-block:: python
 
     from ash import *
 
-    #Example: Create PDB-file from an XYZ-file. Creates file: ligand.pdb
+    #Example: Create PDB-file from an XYZ-file. Creates file: ligand.pdb (requires OpenBabel).
     pdbfile = ligand_pdbfile = xyz_to_pdb_with_connectivity("ligand.xyz")
 
-    #Example: Create PDB-file with correct connectivity. Creates file: ligand__withcon.pdb
+    #Example: Create PDB-file with correct connectivity. Creates file: ligand__withcon.pdb (requires OpenBabel).
     pdbfile = writepdb_with_connectivity("ligand.pdb")
 
     #Other options:
@@ -64,7 +64,7 @@ However, the forcefield for the ligand is the main issue as it is unlikely prese
 We also need to consider the compatibility between the forcefield for the ligand and the forcefield for the protein.
 
 Here we choose to use the Amber14 forcefield for the protein and the GAFF (Generalized Amber force field) forcefield for the ligand as this can be conveniently set up using ASH.
-Another option is to use one of the OpenFF forcefields for the ligands (also compatible with Amber14)
+Another option is to use one of the OpenFF forcefields for the ligands (also compatible with Amber14).
 
 ASH features a convenient function : **small_molecule_parameterizor** that can automatically generate the forcefield for the ligand
 by determining the topology of the input ligand and matching it to general parameters available for either GAFF or OpenFF.
@@ -73,8 +73,8 @@ which needs to be installed when prompted.
 
 The **small_molecule_parameterizor** function requires in principle only the input PDB-file for the ligand.
 The PDB-file will be automatically converted into a SMILES string that is then used to generate the topology and suitable parameters
-are found in the GAFF (or OpenFF) forcefield. If reason does not work it is also possible to provide other inputfiles to
-small_molecule_parameterizor such as : xyzfile, molfile, sdffile. One can also provide a SMILES string (smiles_string keyword).
+are found in the GAFF (or OpenFF) forcefield. If for some reason this does not work it is also possible to provide other inputfiles to
+**small_molecule_parameterizor** such as : xyzfile, molfile, sdffile. One can also provide a SMILES string (smiles_string keyword).
 
 
 .. code-block:: python
@@ -84,12 +84,12 @@ small_molecule_parameterizor such as : xyzfile, molfile, sdffile. One can also p
      small_molecule_parameterizor(pdbfile="ligand.pdb", forcefield_option='GAFF', output_xmlfile="ligand.xml")
 
 
-.. warning:: Make sure that the PDB-file, MOL-file or SDF-file atom ordering and connectivity matches the information present in the PDB-file that will be used to 
-    to setup the system later. Otherwise the ligand will not be recognized.
+.. warning:: Make sure that the PDB-file, MOL-file or SDF-file atom ordering and connectivity matches the information present in the PDB-file (the merged PDB-file) 
+    that will be used to to setup the system later. Otherwise the ligand will not be recognized.
 
 The function returns an OpenMM forcefield object (that assumes Amber14 for protein and solvent and GAFF for the ligand)
-and also writes out an XML-file with the forcefield parameters for the ligand (ligand.xml). 
-It is usually best to use the ligand.xml file.
+but also writes out an XML-file with the forcefield parameters for the ligand (ligand.xml). 
+It is usually best to use the ligand.xml file directly.
 
 
 ######################################################
@@ -101,7 +101,7 @@ We can now proceed to use the **OpenMM_Modeller** function to set up the system.
 we specify an Amber14 forcefield for the protein, TIP3P forcefield for water (compatible with Amber14) and the ligand forcefield (GAFF or OpenFF) for the ligand via the 
 ligand.xml file previously created.
 
-See :doc:`OpenMM-interface` for detail on using OpenMM_Modeller.
+See :doc:`OpenMM-interface` for more information on using **OpenMM_Modeller**.
 
 .. code-block:: python
 
@@ -112,13 +112,15 @@ See :doc:`OpenMM-interface` for detail on using OpenMM_Modeller.
     OpenMM_Modeller(pdbfile=merged_pdbfile, forcefield="Amber14",
         extraxmlfile="ligand.xml", residue_variants={}, watermodel="tip3p", pH=7.0, solvent_padding=10.0, ionicstrength=0.1)
 
-OpenMM_Modeller will apply the Amber14 protein forcefield to the protein and the GAFF/OpenFF forcefield to the ligand.
+**OpenMM_Modeller** will apply the Amber14 protein forcefield to the protein and the GAFF/OpenFF forcefield to the ligand.
 Note that one must make sure that the merged PDB-file of the protein and ligand contains the correct connectivity information for the ligand (CONECT lines).
 Additionally one must make sure that any residues in the protein are correctly treated (with respect to protonation states, disulfide bridges, metal ions etc.).
 
-If the OpenMM_Modeller function is successful a final PDB-file, "finalsystem.pdb" will be created that contains the solvated protein-ligand system with
-protein and ligand oriented according to the coordinates of "merged.pdb". The coordinates in the input "merged.pdb" file 
-can contain the system in either bound or unbound form.
+If the **OpenMM_Modeller** function is successful, a final PDB-file, "finalsystem.pdb" will be created that contains the solvated protein-ligand system with
+protein and ligand oriented according to the initial coordinates of "merged.pdb". The coordinates in the input "merged.pdb" file 
+can contain the system in either bound or unbound form and can be modified before running **OpenMM_Modeller**. 
+Note that due to the present of solvent it is trickier to change the ligand position of the solvated system after the **OpenMM_Modeller** step
+(would require running a biased MD simulation).
 
 ######################################################
 **4. Run initial preparatory MD simulations**
@@ -128,7 +130,7 @@ Before we can start running production MD simulations to explore protein-ligand 
 first run some initial preparatory MD simulations to equilibrate the system and remove any clashes between the protein and ligand and make sure the solvent is properly equilibrated.
 
 The following script can be used to conveniently warm up the system (**Gentle_warm_up_MD** function) using a series of MD simulations 
-with increasing temperature and time step before switching to OpenMM_box_equilibration which performs an NPT simulation until the 
+with increasing temperature and time step before switching to **OpenMM_box_equilibration** which performs an NPT simulation until the 
 density and volume of the system has converged.
 
 
@@ -170,10 +172,11 @@ that can be used to conveniently visualize the convergence of the density and vo
 **5. Run long time-scale NVT simulation**
 ######################################################
 
-One the system has been properly equilibrated we can start running longer time-scale simulations to explore protein-ligand binding scenarios.
+Once the system has been properly equilibrated we can start running longer time-scale simulations to explore protein-ligand binding scenarios.
 Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integrator.
 
 .. note:: OpenMM MD simulations in general run much faster using a GPU than on the CPU. Use platform='CUDA' or platform='OpenCL' to run on the GPU.
+    Using a modern graphics card, 1000 ns simulations should be achievable on a desktop in 1-3 days.
 
 .. code-block:: python
 
@@ -190,8 +193,8 @@ Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integr
 
     #Run a NVT MD simulation (NPT can also be performed if you add a barostat)
     OpenMM_MD(fragment=fragment, theory=omm, timestep=0.001, simulation_time=1000, traj_frequency=10, 
-    temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
-    trajfilename='NVT-MD',trajectory_file_option='DCD')
+        temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+        trajfilename='NVT-MD',trajectory_file_option='DCD')
 
     #Re-image trajectory so that protein is in middle
     MDtraj_imagetraj("NVT-MD.dcd", "NVT-MD.pdb", format='DCD')
@@ -202,7 +205,7 @@ It is then best to use the "imaged" versions (requires **mdtraj**) of the trajec
 protein is in the middle of the box.
 
 The usefulness of the unbiased MD trajectory depends on whether any kind of binding of the ligand to a protein pocket can be observed.
-
+It is likely that a few hundred ns of unbiased MD simulations are required to even see any spontaneous binding event.
 
 
 #########################################################
@@ -211,13 +214,16 @@ The usefulness of the unbiased MD trajectory depends on whether any kind of bind
 
 In order to a realistically explore protein-ligand binding scenarios we need to use enhanced sampling methods.
 Metadynamics is a general free-energy simulation method that is in principle well suited to study protein-ligand binding
-as we could sample the free-energy surface of the bound vs. unbound conformation.
+as we could sample the free-energy surface of the bound vs. unbound conformation. Metadynamics use a history-dependent biasing potential
+that is built-up using Gaussians during the simulation, preventing the simulation from visiting previous parts of the free-energy surface.
+Metadynamics require the definition of one or more collective variables (CVs) that act as "reaction coordinates" for the biasing potential.
 
-The trouble is that when a metadynamics simulation encounters the "unbound" part of the free energy surface
-(when the ligand is far away from the protein binding site) the simulation can not realistically converge as the ligand
-will encounter a practically infinite amount of conformations outside the protein binding site.
+A metadynamics simulation for a binding reaction such as here, however, creates a problem as the ligand encounters 
+the "unbound" part of the free energy surface (when the ligand is far away from the protein binding site).
+The simulation can not realistically converge as the ligand will encounter a practically infinite amount of conformations 
+outside the protein binding site.
 
-To combat this problem we turn to funnel metadynamics (https://www.pnas.org/doi/10.1073/pnas.1303186110) 
+To combat this problem we will use funnel metadynamics (https://www.pnas.org/doi/10.1073/pnas.1303186110) 
 which adds a restraing potential with a funnel shape that prevents the ligand from escaping too far away from the protein binding site.
 
 **THIS IS NOT YET COMPLETE**
