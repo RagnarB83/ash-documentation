@@ -7,13 +7,18 @@ About ASH
    :width: 200
    :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
    
-ASH is a Python-based computational chemistry and multiscale modelling program. 
-The program can do single-point calculations, geometry optimizations, surface scans, nudged elastic band optimizations,
-molecular dynamics and numerical frequencies using a MM, QM or QM/MM Hamiltonians as well as many complex workflows.
-Interfaces available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. 
+ASH is a Python-based computational chemistry and multiscale modelling program
+designed for ultimate flexibility. This works by separating the Hamiltonians (of the QM or MM programs) from the 
+typical jobtypes of computational chemistry (optimization, frequencies, MD, scans etc.).
+
+The program allows for convenient ways of doing single-point calculations, geometry optimizations, surface scans, 
+nudged elastic band optimizations, molecular dynamics and numerical frequencies using any MM or QM method in a program for which there is an interface.
+MM and QM objects are easily combined into QM/MM objects.
+ASH is a great solution for automating workflows and performing multi-scale and multi-theory calculations.
+Interfaces are available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. 
 Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
 
-The code is open-source and available on `Github <https://github.com/RagnarB83/ash>`_
+The code is free and open-source and available on `Github <https://github.com/RagnarB83/ash>`_
 
 
 
@@ -26,16 +31,16 @@ The code is open-source and available on `Github <https://github.com/RagnarB83/a
 
 - geomeTRIC (optimizer). Python library, easily installed via pip. Required for geometry optimizations.
 - OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
-- Julia installation. Only required for faster Julia versions of routines in molcrys-QM/MM code.
 - Matplotlib. Only for plotting options.
 
+**Required for specific functionality**
+
+- Julia installation. Only required right now for faster Julia versions of routines in the molecular crystal QM/MM code.
 
 **Optional Python modules for specific functionality (can be installed via pip or conda):**
 
 - PySCF (C++/Python quantum chemistry code)
 - Psi4 (C++/Python quantum chemistry code)
-- PyBerny (optimizer)
-- PyFrame (helper tool for Polarizable Embedding functionality)
 - Scipy package
 - mdtraj (MD trajectory analysis)
 
@@ -46,6 +51,12 @@ The code is open-source and available on `Github <https://github.com/RagnarB83/a
 - CFour
 - MRCC
 - xTB
+- Dice
+- Block2
+- NWChem
+- TeraChem
+- QUICK
+
 
 #####################
 Features
@@ -63,6 +74,7 @@ Features
 - GROMACS .gro file
 - Python lists
 - ASH fragment file format (.ygg)
+- Mol and SDF files (requires OpenBabel)
 
 
 **Interfaces to various QM codes:**
@@ -74,14 +86,19 @@ Features
 - CFour
 - MRCC
 - Dalton
+- Dice
+- NWChem
+- TeraChem
+- QUICK
 
 **Parallelization :**
 
 - Parallelization via Python multiprocessing.
-- QM code parallelization possible.
-- Support for simultaneous single-point jobs.
-- Support for simultaneous Numerical-Hessian displacement calculations.
-- Support for parallelization of NEB images.
+- Simulatenous QM code parallelization also possible.
+- Support for running many simultaneous single-point jobs.
+- Efficient parallelization of Numerical-Hessian displacement calculations.
+- Efficient parallelization of NEB image calculations.
+- Efficient parallelization of 1D and 2D surface scans.
 
 **Single-point electrostic embedding QM/MM**
 
@@ -89,34 +106,39 @@ Features
 
 **Polarizable embedding via Psi4, PySCF and CPPE library**
 
+- TODO
 
 **Nonbonded Molecular Mechanics (MM) via pointcharges and Lennard-Jones potentials**
 
 - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
 - Both energy and gradient available.
 - Slow Python version and fast Julia version available.
-- Limitation: No bonded MM yet.
+- Limitation: No bonded MM .
 
 **Full Molecular Mechanics (MM) via OpenMM interface**
 
-- See :doc:`OpenMM-interface`
+- Interface to OpenMM library (C++) via Python API (in-memory). Fast GPU-accelerated MM. CPU also available.
+- Periodic or nonperiodic simulations
+- Easy use of multiple built-in forcefields: CHARMM, AMBER, GAFF, OpenFF etc.
+- Can also read CHARMM-files, Amberfiles, GROMACS-files or OpenMM XML-files.
+- Workflows to setup a new biomolecular system from scratch (OpenMM_Modeller)
+- Workflows to setup a new small molecule system from scratch
+- Convenient small molecule forcefield parameterization (GAFF or OpenFF)
 
 **Geometry optimization with internal coordinates**
 
 - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
-
-
-**QM/MM Geometry optimization:**
-
-- Possible with geomeTRIC optimizer currently, only. Support for HDLC internal coordinates.
+- QM/MM optimizations. Support for HDLC internal coordinates.
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
 
 - Partial Hessian possible
 - Full parallelization.
 - Support for any QM, MM or QM/MM Hamiltonian for which there is an ASH interface.
+- IR intensities
+- Raman intensities (if QM-code can do polarizabilities)
 - Parallel QM/MM numerical frequencies available (not well tested).
-- Possible to request analytical Hessian from ORCA.
+- Possible to request analytical Hessian from ORCA and CFour
 
 **Hessian analysis**
 
@@ -133,7 +155,14 @@ Features
 **Molecular dynamics**
 
 - via OpenMM library: MM-only, QM/MM and QM-only
-- via ASE library
+- Any method with gradient in an ASH interface can be used.
+- NVE, NVT and NPT ensembles
+- Flexible integrator options: allowing for stable 4 fs classical MD simulations
+- Bond constraints, frozen atoms, mass modifications
+- Metadynamics (via either OpenMM built-in MTD or interface to PLUMED)
+- Trajectory analysis via mdtraj library
+- MD workflows: Gentle_warm_up_MD, OpenMM_box_equilibration (continuous NPT until convergence)
+
 
 **molcrys: Automatic Molecular crystal QM/MM**
 
