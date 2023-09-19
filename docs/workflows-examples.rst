@@ -3,7 +3,7 @@ Workflow examples in ASH
 
 As an ASH-script is pure Python and the user has access to various ASH functionality for reading in coordinates, create fragments,
 call QM and MM codes, calculate energy, minimize geometry, run dynamics etc. this allows one to easily create advanced workflows in a single script.
-ASH already contains a lot of pre-made workflow to automize things but the user can easily write their own ASH-Python scripts to automize
+ASH already contains a lot of pre-made workflows to automize things but the user can easily write their own ASH-Python scripts to automize
 more complex workflows, not yet available directly in ASH.
 
 This page goes through several examples of workflows showing both the use of pre-coded workflows and how you can write your own.
@@ -133,6 +133,27 @@ See :doc:`singlepoint` and :doc:`module_workflows` for more information.
 .. code-block:: text
 
       Reaction_energy: -37.157156917851935 kcal/permol
+
+Even better syntax is to create an ASH **Reaction** object and give as input to **Singlepoint_reaction**
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=1
+    #Haber-Bosch reaction: N2 + 3H2 => 2NH3
+    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", diatomic_bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
+    reaction = Reaction(fragments=[N2, H2, NH3], stoichiometry=[-1, -3, 2], unit='kcal/mol')
+
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
+    energies = Singlepoint_fragments(theory=ORCAcalc, fragments=specieslist) #Calculating list of energies
+
+    #Calculate reaction energy using Singlepoint_reaction
+    result = Singlepoint_reaction(reaction=HB_reaction, theory=dft)
+
+
 
 #######################################################################################################
 Example 2b : Direct calculation of Reaction Energy with an Automatic Thermochemistry Protocol
@@ -288,9 +309,9 @@ with a final table being printed:
     ORCATheory      BHLYP                 0       1        -1.1646744530
     ORCATheory      CAM-B3LYP             0       1        -1.1653189937
 
-############################################################################################
+#################################################################################################
 Example 3b : Running multiple single-point energies with different functionals (in parallel)
-############################################################################################
+#################################################################################################
 
 The examples in 3a ran each job sequentially, one after the other, according to the list of functional strings defined.
 While ORCA parallelization was utilized, it may be more economical to run the jobs simultaneously instead, especially if there are lot of jobs to go through.

@@ -105,7 +105,7 @@ As shown in the figure below we get a much improved sampling error by running 10
 
 The slight breaking of symmetry of the 2 barriers (at approx 3 kcal/mol) and the minima at 1-1.2 kcal/mol still suggest a sampling error to remain.
 To further reduce the sampling error we could utilize even more walkers or run each simulation for longer, the choice will depend on the computional resources available.
-Note that by keeping the biasdirectory the same we can run simulation as different times, i.e. come back to previous simulations and continue.
+Note that by keeping the biasdirectory the same we can run simulation at different times, i.e. come back to previous simulations and continue.
 
 The figure below shows even longer simulations (up to 5000 ps) with up to 20 walkers and it appears that decent convergence is reached at ~1000 ps for 20 walkers.
 
