@@ -20,6 +20,12 @@ Reaction profiles and saddlepoint optimizations can be performed using the nudge
 
 The code is free and open-source and available on `Github <https://github.com/RagnarB83/ash>`_
 
+The program is  developed in the research group of 
+`Dr. Ragnar Bjornsson <https://sites.google.com/site/ragnarbjornsson/home>`_ in the `CoMX group <https://www.cbm-lab.fr/en/COMX>`_ , of the 
+`Laboratory for Chemistry and Biology of Metals <https://www.cbm-lab.fr/en>`_,
+at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
+
+
 
 
 **Strict requirements:**
