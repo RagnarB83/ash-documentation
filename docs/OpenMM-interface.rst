@@ -513,11 +513,11 @@ PBC box relaxation via NPT
 
 This function allows one to conveniently run multiple NPT simulations (constant pressure and temperature) in order to converge the periodic box dimensions
 of the system.
-
+Note: OpenMM_box_relaxation is an alias for penMM_box_equilibration
 
 .. code-block:: python
 
-    def OpenMM_box_relaxation(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=10000,
+    def OpenMM_box_equilibration(fragment=None, theory=None, datafilename="nptsim.csv", numsteps_per_NPT=10000,
                               volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
                               traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1):
         """NPT simulations until volume and density stops changing
@@ -769,87 +769,50 @@ Valid alternative residue names for alternative protonation states of titratable
 
 
 
-######################################
-Small molecule solvation
-######################################
+#######################################################
+Create forcefield for ligand / small molecule
+#######################################################
 
-**WORK IN PROGRESS**
+Often one wants to perform a classical or QM/MM simulation of a small molecule in solution (either as part of a biomolecular system or on its own)
+but one lacks forcefield parameters to do so. One has typically 2 options for how to proceed in this case:
 
-ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is intended to be used for molecules 
-for where forcefield parameters are typically not available: e.g. metal complexes. Instead of regular forcefield parameters, nonbonded parameters (charges and Lennard-Jones parameters) 
-are defined for the solute (used for classical and QM/MM simulations) which can be used to perfrom classical MM dynamics or QM/MM dynamics.
+- Create only a nonbonded forcefield (charges and Lennard-Jones parameters) for the small molecule.
+- Create a full forcefield for the small molecule (bonded and nonbonded parameters).
 
-See also :doc:`Explicit-solvation` workflow page.
+The first option (nonbonded only) is sufficient if one primarily intends to perform QM/MM simulations where the molecule will always be in the QM-region.
+This may also be the only easy option if the molecule is inorganic (e.g. a metal complex) where forcefield parameterization is less straightforward. 
+The nonbonded forcefield can also be used in classical simulation if one makes sure the ligand is rigid (all bonds constrained, possibly angles and dihedrals as well).
+See next section below: **write_nonbonded_FF_for_ligand**
 
-
-.. code-block:: python
-
-    def solvate_small_molecule(fragment=None, charge=None, mult=None, watermodel=None, solvent_boxdims=[70.0,70.0,70.0], 
-                               nonbonded_pars="CM5_UFF", orcatheory=None, numcores=1):
-
-The solvate_small_molecule function reads in an ASH fragment, as well as charge and multiplicity, name of watermodel (e.g. "TIP3P"), size of solvent box, option for 
-how the nonbonded parameters should be prepared, an optional ORCATheory object and optional numcores.
-
-Options:
-
-- watermodel (string). Can be: 'TIP3P' only for now
-- solvent_boxdims (list of floats). Cubic box dimensions in Angstrom.
-- nonbonded_pars (string). Options: 'CM5_UFF', 'DDEC3', 'DDEC6' or 'xtb_UFF'
-- orcatheory (ORCATheory object). Optional ORCAtheory object defining the theory for deriving charges/LJ parameters
-- numcores (integer). Number of cores used in ORCA/xTB calculations
-
-nonbonded_pars options:
-
-- 'CM5_UFF' derives CM5 charges (scaled Hirshfeld charges) from an ORCA calculation of the molecule and uses UFF Lennard-Jones parameters
-- 'DDEC3' and 'DDEC6' derive both charges and LJ parameters from an ORCA calculation. Uses the Chargemol program.
-- 'xtb_UFF' performs an xTB calculation to derive charges and uses UFF for LJ.
-
-
-
-Example:
-
-.. code-block:: python
-
-    from ash import *
-
-    numcores=4
-    #Molecule definition
-    mol=Fragment(xyzfile="3fgaba.xyz")
-    mol.charge=0;mol.mult=1
-
-    #Solvate molecule (70x70x70 Å TIP3P box)
-    forcefield, topology, ashfragment = solvate_small_molecule(fragment=mol, charge=mol.charge, 
-        mult=mol.mult, watermodel='tip3p', solvent_boxdims=[70,70,70], nonbonded_pars="CM5_UFF", 
-        numcores=numcores)
-
-
-The output of the solvate_small_molecule function are files: "system_aftersolvent.pdb", "newfragment.ygg", "newfragment.xyz" that can be used to inspect the coordinates of the system.
-
-Additionally the function returns an OpenMM forcefield object, an OpenMM topology and an ASH fragment. These can be used in a next step to create an OpenMMTheory object:
-
-.. code-block:: python
-
-    from ash import *
-
-    #Creating new OpenMM object from forcefield, topology and and fragment
-    openmmobject =OpenMMTheory(numcores=numcores, Modeller=True, forcefield=forcefield, topology=topology, 
-                    periodic=True, autoconstraints='HBonds', rigidwater=True)
-
-
-The OpenMMTheory object can then be used on its own or can be combined with a QM theory to define a QM/MM theory object etc.
-See :doc:`Explicit-solvation` workflow for more information on how to use solvate_small_molecule in a multi-step workflow.
+The second option (full forcefield) is generally better and is required if one wants to perform classical simulations where the molecule is flexible.
+ASH features a function (**small_molecule_parameterizor**) that allows one to expedite this process with the help of the `openmm-forcefields <https://github.com/openmm/openmmforcefields>`_, 
+that provides a convenient way of getting forcefield parameters from the `GAFF <https://ambermd.org/antechamber/gaff.html>`_ and `OpenFF <https://openforcefield.org>`_ projects. 
+The limitation is that this option is primarily available for organic or drug-like molecules.
+Additionally these small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
 
 
 ##############################################
-Create nonbonded forcefield file for ligand
+write_nonbonded_FF_for_ligand
 ##############################################
 
+.. code-block:: python
 
-ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly
-create an XML forcefield file for any residue based on xTB-derived or DFT-derived atomic charges (CM5 charges) together with element-specific
-Lennard-Jones parameters.
+  def write_nonbonded_FF_for_ligand(fragment=None, charge=None, mult=None, coulomb14scale=1.0, lj14scale=1.0, 
+    ff_type="CHARMM", charge_model="CM5", theory=None, LJ_model="UFF", resname="LIG", numcores=1):
 
-DFT-example:
+
+ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly create an OpenMM-style XML forcefield file for any ligand/molecule
+with only nonbonded parameters specified which can be sufficient for QM/MM simulations or classical simulations where the ligand/molecule is rigid (all bonds constrained).
+
+One can choose to derive the atom charges from either an xTB-calculation (using the xTB interface) or a DFT-calculation (ORCA interface).
+The charge_model options are: CM5 charges or DDEC3/DDEC6 charges (requires DDEC3/DDEC6).
+The Lennard-Jones parameters can either come from UFF (very crude: element-specific LJ parameters) or via DDEC3/DDEC6 population analysis.
+
+
+.. warning:: It is up to you the user to make sure that the nonbonded parameters from this procedure are sensible and compatible with other molecules present in your system (described by another forcefield).
+  You may have to change the parameters manually 
+
+*Example:*
 
 .. code-block:: text
 
@@ -861,24 +824,15 @@ DFT-example:
     orcatheory=ORCATheory(orcasimpleinput="!r2scan ZORA ZORA-def2-TZVP tightscf CPCM", numcores=8)
 
     write_nonbonded_FF_for_ligand(fragment=frag, resname="MCMtest", charge=0, mult=1,
-        coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA", theory=orcatheory, LJ_model="UFF", charmm=True)
+        coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA", theory=orcatheory, LJ_model="UFF", ff_type="CHARMM")
 
-xTB-example:
-
-.. code-block:: text
-
-  from ash import *
-
-  frag=Fragment(xyzfile="ligand.xyz")
-  #Script to get nonbonded model parameters for a ligand
-  write_nonbonded_FF_for_ligand(fragment=frag, charge=-3, mult=1, resname="MCMtest",
-      coulomb14scale=1.0, lj14scale=1.0, charge_model="xTB", LJ_model="UFF", charmm=True)
 
 **Options:**
 
-- coulomb14scale and lj14scale parameters can be changed, depending on what other forcefield this ligand-forcefield will be combined with.
-- charmm=True keyword writes the forcefield file so that it is compatible with the CHARMM36 forcefield (i.e. containing both a NonbondedForce and LennardJonesForce block)
-
+- charge_model: Options are 'CM5', 'xTB', 'DDEC3', 'DDEC6'
+- LJ_model: Options are 'UFF', 'DDEC3', 'DDEC6'
+- The ff_type keyword (options: 'CHARMM', 'AMBER', 'None'), writes the forcefield file so that it is compatible with the CHARMM, Amber biomolecular forcefields. Choose 'None' if not needed.
+- coulomb14scale and lj14scale parameters can be changed, depending on what other forcefield this ligand-forcefield will be combined with  (OpenMM requires compatibility)
 
 **NOTES**
 
@@ -888,3 +842,115 @@ xTB-example:
 - For a ligand bound to the protein, special care must be taken. Charges are best derived from a ligand structure with all metal ions
   coordinated (e.g. including an amino acid side chain) but then the calculation will contain those extra atoms.
   This requires manual tweaking of the final charges (make sure that the sum of atom charges add up to the correct total charge).
+- DDEC3/DDEC6: Both atom charges and LJ parameters can be determined from a DFT-calculation and a DDEC3/DDEC6 population analysis using the Chargemodel. This options has not been well tested and requires external programs (Chargemol and mol2aim)
+
+
+##############################################
+small_molecule_parameterizor
+##############################################
+
+.. code-block:: python
+
+  def small_molecule_parameterizor(xyzfile=None, pdbfile=None, molfile=None, sdffile=None, smiles_string=None,
+                                  forcefield_option='GAFF', gaffversion='gaff-2.11',
+                                  output_xmlfile="ligand.xml", openff_file="openff-2.0.0.offxml",
+                                  expected_coul14=0.8333333333333334, expected_lj14=0.5):
+
+**small_molecule_parameterizor** allows you to quickly create an OpenMM XML forcefield file with bonded and nonbonded parameters for your molecule.
+You can choose between two general forcefields: `GAFF <https://ambermd.org/antechamber/gaff.html>`_  or `OpenFF <https://openforcefield.org>`_. 
+Different GAFF and OpenFF versions are also available. The limitation is that creating the small-molecule forcefield from these general forcefields can only be done for "organic" chemical elements (H,C,N,O,S,P,F,Cl,Br,I; also ions such as 
+Li+, Na+, K+, Rb+, F-, Cl-, Br-, and I-).
+These small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
+
+**small_molecule_parameterizor** is very easy to use. You simply need to provide a molecular structure. This can be an XYZ-file, PDB-file, MDL Mol-file, SDF-file but it can also
+be a `SMILES string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ .
+
+The program depends on a few Python libraries that have to be installed when prompted: `openmmforcefields <https://github.com/openmm/openmmforcefields>`_, `parmed <https://github.com/ParmEd/ParmEd>`_, `openff-toolkit <https://github.com/openforcefield/openff-toolkit>`_ and `OpenBabel <http://openbabel.org/wiki/Main_Page>`_
+ASH will tell you which libraries are missing and how to install them when you try to use the function.
+
+*Example using GAFF*
+
+.. code-block:: python
+
+  from ash import *
+  #Creating forcefield for nitrate using GAFF. Here providing a SMILES string as input
+  small_molecule_parameterizor(forcefield_option="GAFF", smiles_string="[N+](=O)([O-])[O-]")
+
+*Example using OpenFF*
+
+.. code-block:: python
+
+  from ash import *
+  #Creating forcefield for nitrate using OpenFF. Here providing xyz-file as input
+  small_molecule_parameterizor(forcefield_option="OpenFF", xyzfile="no3.xyz"
+
+
+The output is an XML-file that can then be used as input to **OpenMMTheory**, **OpenMM_Modeller** or **solvate_small_molecule** functions (see below).
+
+.. warning:: The XML-file created by this function will contain bonded parameters and it is thus important that the topology of the molecule is available when using the XML-file
+  together with OpenMM. Otherwise, the pairing of molecule and small-molecule forcefield in the XML-file will not work. As OpenMM will typically get the topology from a PDB-file you must ensure 
+  to have a PDB-file that contains CONECT lines at the bottom of the PDB-file that describes the connectivity of the small molecule. A PDB-file with connectivity is automatically created if you read in an XYZ-file
+  to small_molecule_parameterizor above. You can also use the  **xyz_to_pdb_with_connectivity** function.
+
+
+######################################
+Small molecule solvation
+######################################
+
+.. code-block:: python
+
+  def solvate_small_molecule(fragment=None, charge=None, mult=None, watermodel=None, solvent_boxdims=[70.0, 70.0, 70.0],
+                            xmlfile=None):
+
+ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is a bit simpler.
+It requires reading an ASH fragment, selection of a water model and an XML-file containing the small-molecule forcefield.
+The XML-file can come from either **write_nonbonded_FF_for_ligand** or **small_molecule_parameterizor**
+The size of the solvent box can be modified as required (default 70x70x70 Angstrom).
+
+Options:
+
+- watermodel (string). Can be: 'TIP3P' only for now
+- xmlfile (string). Name of the XML-file containing either a nonbonded or full forcefield of the molecule.
+- solvent_boxdims (list of floats). Cubic box dimensions in Angstrom.
+
+
+*Example:*
+
+.. code-block:: python
+
+    from ash import *
+
+    numcores=4
+    #Molecule definition
+    mol=Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
+
+    #Solvate molecule (70x70x70 Å TIP3P box)
+    forcefield, topology, ashfragment = solvate_small_molecule(fragment=mol, watermodel='tip3p', solvent_boxdims=[70,70,70])
+
+
+The output of **solvate_small_molecule**  are coordinate files: "system_aftersolvent.pdb" and "system_aftersolvent.xyz" .
+
+ASH will print information about how to create an OpenMMTheory for the system but typically it would look like this:
+
+.. code-block:: python
+
+    from ash import *
+    #Read in coordinates: either XYZ-file or PDB-file
+    fragment = Fragment(xyzfile="system_aftersolvent.xyz")
+    #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
+    #Note: that the XML-file for the solvent may be different (CHARMM-style, Amber-style or OpenMM-style)
+    openmmobject =OpenMMTheory(xmlfiles=["molecule.xml", "amber/tip3p_standard.xml"], pdbfile="system_aftersolvent.pdb", 
+            periodic=True, rigidwater=True, autoconstraints='HBonds')
+
+
+Additionally the function returns an OpenMM forcefield object, an OpenMM topology and an ASH fragment. These could also be used to create an OpenMMTheory object, 
+but would have to be performed in the same script as **solvate_small_molecule**
+
+.. code-block:: python
+
+    #Creating new OpenMM object from forcefield, topology and and fragment
+    openmmobject =OpenMMTheory(numcores=numcores, topoforce=True, forcefield=forcefield, topology=topology, 
+                    periodic=True, autoconstraints='HBonds', rigidwater=True)
+
+The OpenMMTheory object can then be used on its own or can be combined with a QM theory to define a QM/MM theory object etc.
+See :doc:`Explicit-solvation` workflow for more information on how to use **solvate_small_molecule** in a multi-step workflow.
