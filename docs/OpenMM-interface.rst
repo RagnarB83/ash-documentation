@@ -777,6 +777,7 @@ Note that the protein-forcefield must be compatible with the chosen implicit sol
 See `Open MM documentation <http://docs.openmm.org/latest/userguide/application/02_running_sims.html#implicit-solvent>`_ for more information.
 
 Below is an example for setting up a protein using Amber14 and the OBC2 implicit solvation model.
+
 .. code-block:: python
 
   from ash import *
