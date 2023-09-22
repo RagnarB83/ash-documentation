@@ -768,6 +768,42 @@ Valid alternative residue names for alternative protonation states of titratable
 .. note:: Note: these names should not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
 
 
+#######################################################
+Setting up a protein system with implicit solvation
+#######################################################
+
+It is also possible to use OpenMM_Modeller to setup a protein system with an implicit solvent instead of explicit.
+Note that the protein-forcefield must be compatible with the chosen implicit solvent.
+See `Open MM documentation <http://docs.openmm.org/latest/userguide/application/02_running_sims.html#implicit-solvent>`_ for more information.
+
+Below is an example for setting up a protein using Amber14 and the OBC2 implicit solvation model.
+.. code-block:: python
+
+  from ash import *
+
+  OpenMM_Modeller(pdbfile="combmol.pdb", forcefield="Amber14", implicit=True, implicit_solvent_xmlfile="implicit/obc2.xml")
+
+The system will be setup as usual using the steps in Open_Modeller but no explicit solvent or counterions will be added.
+Additionally periodicity will not be assumed during the creation of the files as implicit solvation calculations should be run without PBC.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Read in previous system from OpenMM_Modeller
+  frag = Fragment(pdbfile="finalsystem.pdb")
+
+  #Create an OpenMMTheory object without PBC. Here using a cutoff of 20 Angstroms for nonbonded interactions
+  omm = OpenMMTheory(xmlfiles=["amber14-all.xml", "implicit/obc2.xml", "gaff_ligand.xml"], pdbfile="finalsystem.pdb",
+      periodic=False, platform='OpenCL', nonbondedMethod_noPBC='CutoffNonPeriodic', nonbonded_cutoff_noPBC=20)
+
+  #NVT MD simulation for 1000 ps = 1 ns
+  OpenMM_MD(fragment=frag, theory=omm, timestep=0.004, simulation_time=10, traj_frequency=100, temperature=300,
+      integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD')
+
+MD simulations with an implicit solvation model can have their advantages as they should run considerably quicker.
+While the implicit solvation model is not as accurate as explicit solvation, it can be a good starting point for a system that is later simulated with explicit solvent.
+
 
 #######################################################
 Create forcefield for ligand / small molecule

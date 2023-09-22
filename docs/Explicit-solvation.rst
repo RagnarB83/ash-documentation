@@ -134,7 +134,7 @@ This is also required for QM/MM MD simulation (where the molecule must be in the
     #Run a NVT MD simulation (NPT could also be performed if you add a barostat)
     #Note: timesteps for QM/MM must be much smaller than in MM
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=10, 
-        temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+        temperature=300, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 
@@ -271,7 +271,7 @@ This is required for the QM/MM MD.
     #Run a NVT MD simulation (NPT could also be performed if you add a barostat)
     #Note: timesteps for QM/MM must be much smaller than in MM
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=10, 
-        temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+        temperature=300, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 
@@ -293,7 +293,10 @@ If you get an error like this from OpenMM:
 
 This indicates that there is an incompatibility between the small-molecule XML-file and the water-forcefield XML-file.
 Most likely you have selected the wrong XML-file for your solvent in OpenMMTheory. For GAFF and OpenFF you typically want to select the Amber water XML-file:
-amber/tip3p_standard.xml . For nonbondedFF-only XML-files in CHARMM-style you typically want "charmm36/water.xml".
+"amber/tip3p_standard.xml" . For nonbondedFF-only XML-files in CHARMM-style you typically want "charmm36/water.xml".
+These files are available globally (if OpenMM is installed) and can be inspected :
+dirname $(which python3)
+/Users/rb269145/miniconda3/envs/ASH_openmm/lib/python3.11/site-packages/openmm/app/data/
 
 For CHARMM and normal OpenMM XML-files the NonbondedForce line should look like this:
 
@@ -304,6 +307,8 @@ For CHARMM and normal OpenMM XML-files the NonbondedForce line should look like 
 where coulomb14scale and lj14scale are set to 1.0
 
 For Amber, GAFF and OpenFF  XML-files the NonbondedForce line should look like this:
+
+.. code-block:: text
 
   <NonbondedForce coulomb14scale="0.8333333333333334" lj14scale="0.5">
 
