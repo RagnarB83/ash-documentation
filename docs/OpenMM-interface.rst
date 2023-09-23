@@ -1,9 +1,10 @@
 OpenMM interface
 ======================================
 
-`OpenMM <https://openmm.org>`_ is an open-source molecular mechanics library written in C++. ASH features a flexible interface to the Python API of the OpenMM library. 
+`OpenMM <https://openmm.org>`_ is an open-source molecular mechanics library written in C++. 
 OpenMM has been designed to run on both CPU and GPU codes with the GPU code being particulary fast.
 
+ASH features a flexible interface to the Python API of the OpenMM library. 
 
 
 ######################################
@@ -18,22 +19,23 @@ The OpenMMTheory class:
 
 .. code-block:: python
 
-    class OpenMMTheory:
-        def __init__(self, printlevel=2, platform='CPU', numcores=None, topoforce=False, forcefield=None, topology=None,
-                     CHARMMfiles=False, psffile=None, charmmtopfile=None, charmmprmfile=None,
-                     GROMACSfiles=False, gromacstopfile=None, grofile=None, gromacstopdir=None,
-                     Amberfiles=False, amberprmtopfile=None,
-                     cluster_fragment=None, ASH_FF_file=None, PBCvectors=None,
-                     xmlfiles=None, pdbfile=None, use_parmed=False,
-                     xmlsystemfile=None,
-                     do_energy_decomposition=False,
-                     periodic=False, charmm_periodic_cell_dimensions=None, customnonbondedforce=False,
-                     periodic_nonbonded_cutoff=12, dispersion_correction=True,
-                     switching_function_distance=10,
-                     ewalderrortolerance=5e-4, PMEparameters=None,
-                     delete_QM1_MM1_bonded=False, applyconstraints_in_run=False,
-                     constraints=None, restraints=None, frozen_atoms=None, dummy_system=False, fragment=None, 
-                     autoconstraints='HBonds', hydrogenmass=1.5, rigidwater=True):
+  class OpenMMTheory:
+      def __init__(self, printlevel=2, platform='CPU', numcores=1, topoforce=False, forcefield=None, topology=None,
+                  CHARMMfiles=False, psffile=None, charmmtopfile=None, charmmprmfile=None,
+                  GROMACSfiles=False, gromacstopfile=None, grofile=None, gromacstopdir=None,
+                  Amberfiles=False, amberprmtopfile=None,
+                  cluster_fragment=None, ASH_FF_file=None, PBCvectors=None,
+                  nonbondedMethod_noPBC='NoCutoff', nonbonded_cutoff_noPBC=20,
+                  xmlfiles=None, pdbfile=None, use_parmed=False, xmlsystemfile=None,
+                  do_energy_decomposition=False,
+                  periodic=False, charmm_periodic_cell_dimensions=None, customnonbondedforce=False,
+                  nonbondedMethod_PBC='PME',
+                  periodic_nonbonded_cutoff=12,  dispersion_correction=True,
+                  switching_function_distance=10.0,
+                  ewalderrortolerance=5e-4, PMEparameters=None,
+                  delete_QM1_MM1_bonded=False, applyconstraints_in_run=False,
+                  constraints=None, restraints=None, frozen_atoms=None, fragment=None, dummysystem=False,
+                  autoconstraints='HBonds', hydrogenmass=1.5, rigidwater=True, changed_masses=None):
 
 
 **OpenMMTheory** options:
@@ -150,6 +152,11 @@ The OpenMMTheory class:
      - Boolean
      - False
      - Periodic boundary conditions or not.
+   * - ``nonbondedMethod_PBC``
+     - string
+     - 'PME'
+     - | Nonbonded method for PBC.
+       | Default: 'PME'. Other options: 'Ewald', 'CutoffPeriodic', 'LJPME'
    * - ``charmm_periodic_cell_dimensions``
      - None
      - None
@@ -181,6 +188,15 @@ The OpenMMTheory class:
      - None
      - | Optional manual parameters for the Particle Mess Ewald algorithm. 
        | Alternative to ewalderrortolerance keyword.
+   * - ``nonbondedMethod_noPBC``
+     - string
+     - NoCutoff
+     - | The nonbonded method to use for non-PBC simulations. 
+       | Default NoCutoff. Other options: 'CutoffNonPeriodics'
+   * - ``nonbonded_cutoff_noPBC``
+     - float
+     - 20
+     - | Cutoff for non-PBC simulations in Angstrom. Default 20 Angstrom (recommended).
    * - ``delete_QM1_MM1_bonded``
      - Boolean
      - False
@@ -230,10 +246,10 @@ The OpenMMTheory class:
      - | Whether to automatically apply rigid water constraints for recognized 
        | water models (e.g. TIP3P) found in system. Note: needs to be turned off for 
        | Singlepoint/Optimizations.
-
-
-
-
+   * - ``changed_masses``
+     - Dict
+     - None
+     - | Change masses for selected indices. Should be a dict of ={atomindex: mass} 
 
 
 
@@ -493,7 +509,8 @@ General X-H constraints and deuterium-mass example:
 
 
 Dealing with PBC image problems in trajectory. See `OpenMM FAQ <https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work>`_
-To obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory afterwards using the program mdtraj (requires installation of mdtraj: pip install mdtraj)
+To obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory afterwards using the program mdtraj (requires installation of mdtraj: pip install mdtraj).
+See :doc:`module_dynamics`  for more details on the mdtraj interface.
 
 Example:
 
@@ -504,8 +521,9 @@ Example:
     MDtraj_imagetraj("output_traj.dcd", "final_MDfrag_laststep.pdb", format='DCD')
     
     #If periodic box info is missing from trajectory file (can happen with CHARMM files):
-    MDtraj_imagetraj("out", pdbtopology, format='DCD', unitcell_lengths=[100.0,100.0,100.0], unitcell_angles=[90.0,90.0,90.0])
-
+    MDtraj_imagetraj("output_traj.dcd", "final_MDfrag_laststep.pdb", format='DCD', unitcell_lengths=[100.0,100.0,100.0], unitcell_angles=[90.0,90.0,90.0])
+    #Sometimes the procedure fails for small molecules unless you specify that solute_anchor=True
+    MDtraj_imagetraj("output_traj.dcd","final_MDfrag_laststep.pdb", solute_anchor=True)
 
 ######################################
 PBC box relaxation via NPT 
@@ -623,7 +641,7 @@ Such a protocol can work where a minimization fails or at the very least it can 
 
 ASH provides a convenient function, Gentle_warm_up_MD, that can be called to do such a gentle warmup MD in a few steps.
 In addition, the function reports the largest atom forces present in the initial geometry and will report atoms with the largest root-mean-square fluctuations
-after each MD simulation it performs (requires mdtraj to be installed).
+after each MD simulation it performs (requires mdtraj to be installed). See :doc:`module_dynamics`  for more details on the mdtraj interface.
 
 To use it, you simple call the function with the OpenMMTheory object and Fragment object as input.
 
@@ -644,6 +662,7 @@ A DCD trajectory is written for each MD simulation and each snapshot is written 
 
 Gentle_warm_up_MD will by default use `mdtraj <https://www.mdtraj.org>`_ to image trajectories
 for better visualization as well as calculate root-mean-square fluctuations.  mdtraj can be installed like this: pip install mdtraj
+See :doc:`module_dynamics`  for more details on the mdtraj interface.
 
 ######################################
 System setup via OpenMM: Modeller
@@ -655,14 +674,25 @@ As ASH features a highly convenient interface to these programs and OpenMM itsel
 
 .. code-block:: python
 
-    def OpenMM_Modeller(pdbfile=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0,
-                        solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
-                        ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-', platform='CPU'):
+  def OpenMM_Modeller(pdbfile=None, forcefield_object=None, forcefield=None, xmlfile=None, waterxmlfile=None, watermodel=None, pH=7.0,
+                      solvent_padding=10.0, solvent_boxdims=None, extraxmlfile=None, residue_variants=None,
+                      ionicstrength=0.1, pos_iontype='Na+', neg_iontype='Cl-', use_higher_occupancy=False,
+                      platform="CPU", use_pdbfixer=True, implicit=False, implicit_solvent_xmlfile=None):
 
 
 The OpenMM_Modeller function returns an ASH OpenMMTheory object and ASH fragment object that can be used directly as theory level for future calculations.
 OpenMM_Modeller will also print various PDB-files associated with each step of the setup (H-addition, solvation, ionization etc.) that can be visualized for correctness.
 An XML file associated with the system is created that can be used to create future OpenMMtheory objects from.
+
+Some example Modeller inputs:
+
+.. code-block:: python
+
+  #CHARMM36 with TIP3P watermodel
+  OpenMM_Modeller(pdbfile="test.pdb", forcefield="CHARMM36", watermodel="tip3p", extraxmlfile="gaff_ligand.xml")
+
+  #Amber14 with TIP3P-FB watermodel
+  OpenMM_Modeller(pdbfile="test.pdb", forcefield="Amber14", watermodel="tip3p-fb", extraxmlfile="gaff_ligand.xml")
 
 Lysozyme example (simple, no modifications required):
 
