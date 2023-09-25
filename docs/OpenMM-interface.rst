@@ -84,7 +84,7 @@ The OpenMMTheory class:
    * - ``charmmtopfile``
      - string
      - None
-     - YYYYYYYYYYYY
+     - Name of CHARMM topology file.
    * - ``charmmprmfile``
      - string
      - None
