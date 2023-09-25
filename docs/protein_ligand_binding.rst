@@ -27,7 +27,7 @@ This PDB-file needs to contain all the hydrogen atoms and needs to have The file
     from ash import *
 
     #Example: Create PDB-file from an XYZ-file. Creates file: ligand.pdb (requires OpenBabel).
-    pdbfile = ligand_pdbfile = xyz_to_pdb_with_connectivity("ligand.xyz")
+    pdbfile = xyz_to_pdb_with_connectivity("ligand.xyz")
 
     #Example: Create PDB-file with correct connectivity. Creates file: ligand__withcon.pdb (requires OpenBabel).
     pdbfile = writepdb_with_connectivity("ligand.pdb")
