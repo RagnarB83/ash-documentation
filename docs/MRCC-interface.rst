@@ -105,7 +105,6 @@ Examples
     mem=9000MB
     scftype=UHF
     ccmaxit=150
-    core=frozen
     """
     MRCCcalc = MRCCTheory(mrccinput=mrccinput, numcores=2)
     
@@ -142,7 +141,6 @@ to directly create the Cubefile. Or use other functions describe din :doc:`elstr
   mem=9000MB
   scftype=UHF
   ccmaxit=150
-  core=frozen
   dens=1
   """
   MRCCcalc = MRCCTheory(mrccinput=mrccinput, numcores=numcores)
