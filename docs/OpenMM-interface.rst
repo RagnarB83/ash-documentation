@@ -852,7 +852,7 @@ The nonbonded forcefield can also be used in classical simulation if one makes s
 See next section below: **write_nonbonded_FF_for_ligand**
 
 The second option (full forcefield) is generally better and is required if one wants to perform classical simulations where the molecule is flexible.
-ASH features a function (**small_molecule_parameterizor**) that allows one to expedite this process with the help of the `openmm-forcefields <https://github.com/openmm/openmmforcefields>`_, 
+ASH features a function (**small_molecule_parameterizer**) that allows one to expedite this process with the help of the `openmm-forcefields <https://github.com/openmm/openmmforcefields>`_, 
 that provides a convenient way of getting forcefield parameters from the `GAFF <https://ambermd.org/antechamber/gaff.html>`_ and `OpenFF <https://openforcefield.org>`_ projects. 
 The limitation is that this option is primarily available for organic or drug-like molecules.
 Additionally these small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
@@ -913,23 +913,23 @@ The Lennard-Jones parameters can either come from UFF (very crude: element-speci
 
 
 ##############################################
-small_molecule_parameterizor
+small_molecule_parameterizer
 ##############################################
 
 .. code-block:: python
 
-  def small_molecule_parameterizor(xyzfile=None, pdbfile=None, molfile=None, sdffile=None, smiles_string=None,
+  def small_molecule_parameterizer(xyzfile=None, pdbfile=None, molfile=None, sdffile=None, smiles_string=None,
                                   forcefield_option='GAFF', gaffversion='gaff-2.11',
                                   output_xmlfile="ligand.xml", openff_file="openff-2.0.0.offxml",
                                   expected_coul14=0.8333333333333334, expected_lj14=0.5):
 
-**small_molecule_parameterizor** allows you to quickly create an OpenMM XML forcefield file with bonded and nonbonded parameters for your molecule.
+**small_molecule_parameterizer** allows you to quickly create an OpenMM XML forcefield file with bonded and nonbonded parameters for your molecule.
 You can choose between two general forcefields: `GAFF <https://ambermd.org/antechamber/gaff.html>`_  or `OpenFF <https://openforcefield.org>`_. 
 Different GAFF and OpenFF versions are also available. The limitation is that creating the small-molecule forcefield from these general forcefields can only be done for "organic" chemical elements (H,C,N,O,S,P,F,Cl,Br,I; also ions such as 
 Li+, Na+, K+, Rb+, F-, Cl-, Br-, and I-).
 These small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
 
-**small_molecule_parameterizor** is very easy to use. You simply need to provide a molecular structure. This can be an XYZ-file, PDB-file, MDL Mol-file, SDF-file but it can also
+**small_molecule_parameterizer** is very easy to use. You simply need to provide a molecular structure. This can be an XYZ-file, PDB-file, MDL Mol-file, SDF-file but it can also
 be a `SMILES string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ .
 
 The program depends on a few Python libraries that have to be installed when prompted: `openmmforcefields <https://github.com/openmm/openmmforcefields>`_, `parmed <https://github.com/ParmEd/ParmEd>`_, `openff-toolkit <https://github.com/openforcefield/openff-toolkit>`_ and `OpenBabel <http://openbabel.org/wiki/Main_Page>`_
@@ -941,7 +941,7 @@ ASH will tell you which libraries are missing and how to install them when you t
 
   from ash import *
   #Creating forcefield for nitrate using GAFF. Here providing a SMILES string as input
-  small_molecule_parameterizor(forcefield_option="GAFF", smiles_string="[N+](=O)([O-])[O-]")
+  small_molecule_parameterizer(forcefield_option="GAFF", smiles_string="[N+](=O)([O-])[O-]")
 
 *Example using OpenFF*
 
@@ -949,7 +949,7 @@ ASH will tell you which libraries are missing and how to install them when you t
 
   from ash import *
   #Creating forcefield for nitrate using OpenFF. Here providing xyz-file as input
-  small_molecule_parameterizor(forcefield_option="OpenFF", xyzfile="no3.xyz"
+  small_molecule_parameterizer(forcefield_option="OpenFF", xyzfile="no3.xyz"
 
 
 The output is an XML-file that can then be used as input to **OpenMMTheory**, **OpenMM_Modeller** or **solvate_small_molecule** functions (see below).
@@ -957,7 +957,7 @@ The output is an XML-file that can then be used as input to **OpenMMTheory**, **
 .. warning:: The XML-file created by this function will contain bonded parameters and it is thus important that the topology of the molecule is available when using the XML-file
   together with OpenMM. Otherwise, the pairing of molecule and small-molecule forcefield in the XML-file will not work. As OpenMM will typically get the topology from a PDB-file you must ensure 
   to have a PDB-file that contains CONECT lines at the bottom of the PDB-file that describes the connectivity of the small molecule. A PDB-file with connectivity is automatically created if you read in an XYZ-file
-  to small_molecule_parameterizor above. You can also use the  **xyz_to_pdb_with_connectivity** function.
+  to small_molecule_parameterizer above. You can also use the  **xyz_to_pdb_with_connectivity** function.
 
 
 ######################################
@@ -971,7 +971,7 @@ Small molecule solvation
 
 ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is a bit simpler.
 It requires reading an ASH fragment, selection of a water model and an XML-file containing the small-molecule forcefield.
-The XML-file can come from either **write_nonbonded_FF_for_ligand** or **small_molecule_parameterizor**
+The XML-file can come from either **write_nonbonded_FF_for_ligand** or **small_molecule_parameterizer**
 The size of the solvent box can be modified as required (default 70x70x70 Angstrom).
 
 Options:

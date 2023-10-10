@@ -66,22 +66,22 @@ We also need to consider the compatibility between the forcefield for the ligand
 Here we choose to use the Amber14 forcefield for the protein and the GAFF (Generalized Amber force field) forcefield for the ligand as this can be conveniently set up using ASH.
 Another option is to use one of the OpenFF forcefields for the ligands (also compatible with Amber14).
 
-ASH features a convenient function : **small_molecule_parameterizor** that can automatically generate the forcefield for the ligand
+ASH features a convenient function : **small_molecule_parameterizer** that can automatically generate the forcefield for the ligand
 by determining the topology of the input ligand and matching it to general parameters available for either GAFF or OpenFF.
 This is made possible by functionality available in the **openmm-forcefields** package (https://github.com/openmm/openmmforcefields) 
 which needs to be installed when prompted.
 
-The **small_molecule_parameterizor** function requires in principle only the input PDB-file for the ligand.
+The **small_molecule_parameterizer** function requires in principle only the input PDB-file for the ligand.
 The PDB-file will be automatically converted into a SMILES string that is then used to generate the topology and suitable parameters
 are found in the GAFF (or OpenFF) forcefield. If for some reason this does not work it is also possible to provide other inputfiles to
-**small_molecule_parameterizor** such as : xyzfile, molfile, sdffile. One can also provide a SMILES string (smiles_string keyword).
+**small_molecule_parameterizer** such as : xyzfile, molfile, sdffile. One can also provide a SMILES string (smiles_string keyword).
 
 
 .. code-block:: python
 
     from ash import *
     #Get Amber compatible forcefield for small molecule using GAFF or OpenFF
-     small_molecule_parameterizor(pdbfile="ligand.pdb", forcefield_option='GAFF', output_xmlfile="ligand.xml")
+     small_molecule_parameterizer(pdbfile="ligand.pdb", forcefield_option='GAFF', output_xmlfile="ligand.xml")
 
 
 .. warning:: Make sure that the PDB-file, MOL-file or SDF-file atom ordering and connectivity matches the information present in the PDB-file (the merged PDB-file) 

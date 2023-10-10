@@ -21,7 +21,7 @@ Creates a simple nonbonded forcefield. Useful for inorganic molecules (e.g. meta
 forcefield is hard to create. Good option for QM/MM MD simulations. Classical MD simulations will require the internal
 degrees of freedom of the molecule to be constrained.
 
-**small_molecule_parameterizor**
+**small_molecule_parameterizer**
 
 Creates a full forcefield of the molecule with bonded and nonbonded parameters. Works when molecule is organic or drug-like.
 Can either use a GAFF or OpenFF forcefield.
@@ -46,7 +46,7 @@ Example 1. Modelling of an organic molecule in explicit water with a ligand forc
     from ash import *
 
     #Parameterize small molecule using OpenFF
-    small_molecule_parameterizor(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF")
+    small_molecule_parameterizer(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF")
 
 The function will create a file, called openff_ligand.xml.
 
