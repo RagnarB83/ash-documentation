@@ -122,8 +122,8 @@ contain the CCSDT density. MRCC also produces a MOLDEN file, hower, this file co
 To get the CCSDT density we can use functionality built-into Multiwfn (See :doc:`Multiwfn_interface` for details) to create correlated natural orbitals.
 You can use the ASH function **convert_MRCC_Molden_file** that interfaces to Multiwfn to create the correct Molden-file.
 
-Once you have the correct Moldenfile you can either use the  **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) 
-to directly create the Cubefile. Or use other functions describe din :doc:`elstructure_analysis` to create the Cubefile.
+Once you have the correct Moldenfile you can use it on its own or  use the  **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) 
+to perform various types of WF and density analysis or plot surfaces. See also :doc:`elstructure_analysis` .
 
 .. code-block:: python
 
