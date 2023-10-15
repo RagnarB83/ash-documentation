@@ -929,13 +929,21 @@ Different GAFF and OpenFF versions are also available. The limitation is that cr
 Li+, Na+, K+, Rb+, F-, Cl-, Br-, and I-).
 These small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
 
-**small_molecule_parameterizer** is very easy to use. You simply need to provide a molecular structure. This can be an XYZ-file, PDB-file, MDL Mol-file, SDF-file but it can also
-be a `SMILES string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ .
-
-The program depends on a few Python libraries that have to be installed when prompted: `openmmforcefields <https://github.com/openmm/openmmforcefields>`_, `parmed <https://github.com/ParmEd/ParmEd>`_, `openff-toolkit <https://github.com/openforcefield/openff-toolkit>`_ and `OpenBabel <http://openbabel.org/wiki/Main_Page>`_
+The program depends on a few Python libraries that have to be installed when prompted: `openff-toolkit <https://github.com/openforcefield/openff-toolkit>`_ , `openmmforcefields <https://github.com/openmm/openmmforcefields>`_ , `parmed <https://github.com/ParmEd/ParmEd>`_ and `OpenBabel <http://openbabel.org/wiki/Main_Page>`_ .
 ASH will tell you which libraries are missing and how to install them when you try to use the function.
+Specifically we use the OpenFF toolkit to create a Molecule object (see `OpenFF Molecule <https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Molecule.html>`_ and `Molecule Cookbook <https://docs.openforcefield.org/projects/toolkit/en/stable/users/molecule_cookbook.html>`_) .
 
-*Example using GAFF*
+**small_molecule_parameterizer** is very easy to use. You simply need to provide molecular structure information in the form of a `SMILES string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ .
+However, for convenience it is also possible to provide coordinate file containing Cartesian coordinates such as: XYZ-file, PDB-file, MDL Mol-file or SDF-file.
+In this case the coordinate will be read and a SMILES-string will automatically be generated from the coordinates.
+
+.. warning:: Do note that there are cases where the SMILES-string creation from an XYZ/PDB/SDF/MOL file fails. You then will have to provide the SMILES-string manually.
+  This will occur if e.g. molecule contain a quaternary ammonium groups ([NR4]+). See `Molecule Cookbook <https://docs.openforcefield.org/projects/toolkit/en/stable/users/molecule_cookbook.html>`_ , 
+  `SMILES tutorial: <http://hjkgrp.mit.edu/tutorials/2013-10-29-geometries-strings-smiles-and-openbabel>`_ and 
+
+
+
+*Example using GAFF and SMILES string*
 
 .. code-block:: python
 
@@ -943,16 +951,19 @@ ASH will tell you which libraries are missing and how to install them when you t
   #Creating forcefield for nitrate using GAFF. Here providing a SMILES string as input
   small_molecule_parameterizer(forcefield_option="GAFF", smiles_string="[N+](=O)([O-])[O-]")
 
-*Example using OpenFF*
+*Example using OpenFF and XYZ-file*
 
 .. code-block:: python
 
   from ash import *
   #Creating forcefield for nitrate using OpenFF. Here providing xyz-file as input
-  small_molecule_parameterizer(forcefield_option="OpenFF", xyzfile="no3.xyz"
+  small_molecule_parameterizer(forcefield_option="OpenFF", xyzfile="no3.xyz")
 
 
 The output is an XML-file that can then be used as input to **OpenMMTheory**, **OpenMM_Modeller** or **solvate_small_molecule** functions (see below).
+
+
+
 
 .. warning:: The XML-file created by this function will contain bonded parameters and it is thus important that the topology of the molecule is available when using the XML-file
   together with OpenMM. Otherwise, the pairing of molecule and small-molecule forcefield in the XML-file will not work. As OpenMM will typically get the topology from a PDB-file you must ensure 
