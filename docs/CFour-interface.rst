@@ -262,7 +262,7 @@ CCSD(T)/cc-pVTZ:
     result = Optimizer(theory=cfourcalc, fragment=frag)
 
 
-CCSDT/cc-PVTZ:
+CCSDT/cc-pVTZ:
 
 .. code-block:: python
 
