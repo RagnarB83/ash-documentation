@@ -185,6 +185,52 @@ Examples
     result = Singlepoint(theory=cfourcalc, fragment=frag)
 
 
+**Specifying special basis set:**
+
+As CFour may not have all desired basis sets built-in it is convenient to be able to specify user-defined basis sets.
+ASH has a few basis sets built-in that can be used with the specialbasis keyword in the CFourTheory class.
+
+ASH-basis set files for CFour are stored in ASH-source-directory/basis-sets/cfour (https://github.com/RagnarB83/ash/tree/master/basis-sets/cfour)
+Currently includes :
+
+- cc basis sets from H to Kr: cc-pVDZ, cc-pVTZ, cc-pVQZ and cc-pV5Z 
+- def2 basis sets H to Kr: def2-SVP, def2-TZVP 
+
+You can add your own basis set files (e.g. downloaded from https://www.basissetexchange.org in CFour format) to this directory.
+
+To use these special basis sets you then need to use the ash_basisfile keyword inside CFourTheory object definition and also 
+specify the specialbasis keyword that defines a dictionary that specifies what basis set to use for each element.
+Also make sure to not include 'BASIS' in the cfouroptions dictionary.
+ASH will then at run-time copy the specified basis-set file to the working directory and rename the file as GENBAS (which CFour looks for).
+
+Example for FeS molecule below using cc-pVDZ (CFour lacks a built-in cc-pVDZ basis for Fe):
+
+.. code-block:: python
+
+  from ash import *
+
+  #Define fragment
+  frag=Fragment(diatomic="FeS", bondlength=2.005, charge=1, mult=6)
+
+  cfouroptions = {
+  'CALC':'CCSD',
+  'REF':'UHF',
+  'FROZEN_CORE':'ON',
+  'MEM_UNIT':'MB',
+  'MEMORY':3100,
+  'CC_PROG':'VCC',
+  'SCF_CONV':10,
+  'LINEQ_CONV':10,
+  'CC_MAXCYC':300,
+  'SYMMETRY':'OFF',
+  'HFSTABILITY':'OFF'
+  }
+  cfourcalc = CFourTheory(cfouroptions=cfouroptions, ash_basisfile="cc-pVDZ", 
+              specialbasis={'Fe':'cc-pVDZ', 'S':'cc-pVDZ'})
+
+  Singlepoint(theory=cfourcalc, fragment=frag)
+
+
 **Geometry optimization at CCSD(T) and CCSDT levels of theory:**
 
 CCSD(T)/cc-pVTZ:
