@@ -68,7 +68,7 @@ Contents of active_atoms file:
     716 717 718 719 720 721 722 723 724 725 726
 
 
-**define_activeregion function:**
+**actregiondefine function:**
 
 While defining a list of atoms can often be done manually, when selecting a large region (e.g. an active region of ~1000 atoms) it is usually more convenient
 to automate this task by using the **actregiondefine** function which can select atoms based on distance and residue information of the MM system. 

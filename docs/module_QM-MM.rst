@@ -122,12 +122,15 @@ Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMT
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="topology.pdb", 
               periodic=True, platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
-    #QM/MM theory object
-    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment="coordinates.xyz", embedding="Elstat", 
+    #QM/MM theory object. QM-region defined as atom indices 500,501,502 and 503
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=fragment, embedding="Elstat", 
               qmatoms=[500,501,502,503], printlevel=2, qm_charge=-1, qm_mult=6)
 
 
-**Defining the charge of the QM-region**
+##################################################################
+Defining the charge and spin multiplicity of the QM-region
+##################################################################
+
 
 To define the charge and spin multiplicity of the QM-region in QM/MM calculations you can choose between 3 options:
 
@@ -151,8 +154,82 @@ To define the charge and spin multiplicity of the QM-region in QM/MM calculation
 
 This information will be passed onto the QM-program when called. The qm_charge/qm_mult option takes precedence over the other options, followed by the job-type keyword.
 
- 
+Note that the specified charge and multiplicity of the QM-region needs to be consistent with what chemical groups are present in the QM-region. 
 
+######################################
+Defining QM-region and active region
+######################################
+
+The QM-region needs to be defined in the QMMMTheory object by specifying which atom indices (of the full system) should be QM-atoms (everything else is MM).
+
+.. code-block:: python
+
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=fragment, 
+              qmatoms=[500,501,502,503], qm_charge=-1, qm_mult=6)
+
+Similarly the active-region (when performing a geometry optimization) needs to be defined by specifying which atoms are allowed to move.
+This information should be provided to the Optimizer.
+
+.. code-block:: python
+
+    Optimizer(fragment=fragment, theory=QMMMobject, ActiveRegion=True, actatoms=[400,450,500,501,502,503,550,600,700])
+
+Both the QM-region and Active regions are thus defined as simple Python lists of integers (corresponding to atom indices).
+This approach allows you considerable flexibility in defining the QM/MM job. The QM-regions and active regions can be the same or different (quite common).
+
+Definition of the QM-region when part of a larger molecule (e.g. a protein) requires a bit of insight into the system and knowledge of how the QM/MM boundary (see next section).
+It is usually best to define the QM-region by manually creating the list of atoms. 
+One can double-check whether the region is correct by using the **fragedit.py** script (see :doc:`coordinate-tools`) or check the QM-region coordinates printed in the ASH output.
+
+The active region is typically much larger than the QM-region (for a protein, an active region of approx. 1000 atoms is common)
+and it is usually inconvenient to define it manually. ASH provides a convenient function **actregiondefine** (see :doc:`coordinate-tools`) to define
+such a large list of atom indices.
+
+As these lists can be large it is convenient to read them from a file. 
+ASH provides a function **read_intlist_from_file** (see :doc:`coordinate-tools`) to read a list of integers from a file and return a Python list.
+The file should contain integers separated by spaces or newlines.
+
+.. code-block:: python
+
+    qmatoms = read_intlist_from_file("qmatoms")
+    actatoms = read_intlist_from_file("active_atoms")
+
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=fragment, 
+                qmatoms=qmatoms, qm_charge=-1, qm_mult=6)
+    Optimizer(fragment=fragment, theory=QMMMobject, ActiveRegion=True, actatoms=actatoms)
+
+######################################
+QM/MM boundary treatment
+######################################
+
+If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied.
+In ASH this is treated by the popular linkatom method, combined with charge-shifting.
+A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
+Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
+applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.
+
+The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
+In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
+By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). 
+To override this behaviour add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
+
+In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
+
+.. code-block:: python
+
+    #Excluding QM-atom 5785 from linkatom-creation.
+   qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, fragment=frag, embedding="Elstat",
+            qmatoms=qmatoms, excludeboundaryatomlist=[5785])
+
+
+Special care should be taken when defining a QM-region for a biomolecular system
+General recommendations:
+
+- Always cut a C-C bond that is as nonpolar as possible.
+- Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
+- Amino acid sidechains are straighforward but make sure to not cut through CHARMM charge groups.
+- Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.
+  
 
 ######################################
 QM/MM Truncated PC approximation
@@ -190,39 +267,6 @@ The error from the approximation depends on the TruncPCRadius parameter (smaller
     qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=frag, embedding="Elstat", qmatoms=qmatoms, printlevel=2,
         TruncatedPC=True, TruncPCRadius=35, TruncatedPC_recalc_iter=50)
 
-
-######################################
-QM/MM boundary treatment
-######################################
-
-If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied.
-In ASH this is treated by the popular linkatom method, combined with charge-shifting.
-A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
-Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
-applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.
-
-The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
-In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
-By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). 
-To override this behaviour add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
-
-In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
-
-.. code-block:: python
-
-    #Excluding QM-atom 5785 from linkatom-creation.
-   qmmmobject = QMMMTheory(qm_theory=orcaobject, mm_theory=openmmobject, fragment=frag, embedding="Elstat",
-            qmatoms=qmatoms, excludeboundaryatomlist=[5785])
-
-
-Special care should be taken when defining a QM-region for a biomolecular system
-General recommendations:
-
-- Always cut a C-C bond that is as nonpolar as possible.
-- Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
-- Amino acid sidechains are straighforward but make sure to not cut through CHARMM charge groups.
-- Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.
-  
   
 #############################################
 Example: QM/MM with ORCA and NonbondedTheory
