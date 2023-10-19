@@ -177,13 +177,13 @@ This information should be provided to the Optimizer.
 Both the QM-region and Active regions are thus defined as simple Python lists of integers (corresponding to atom indices).
 This approach allows you considerable flexibility in defining the QM/MM job. The QM-regions and active regions can be the same or different (quite common).
 
-Definition of the QM-region when part of a larger molecule (e.g. a protein) requires a bit of insight into the system and knowledge of how the QM/MM boundary (see next section).
+Definition of the QM-region when part of a larger molecule (e.g. a protein) requires a bit of insight into the system and knowledge of how the QM/MM boundary works (see next section).
 It is usually best to define the QM-region by manually creating the list of atoms. 
 One can double-check whether the region is correct by using the **fragedit.py** script (see :doc:`coordinate-tools`) or check the QM-region coordinates printed in the ASH output.
 
 The active region is typically much larger than the QM-region (for a protein, an active region of approx. 1000 atoms is common)
 and it is usually inconvenient to define it manually. ASH provides a convenient function **actregiondefine** (see :doc:`coordinate-tools`) to define
-such a large list of atom indices.
+such a large list of atom indices. This function can also be used to define the QM-region.
 
 As these lists can be large it is convenient to read them from a file. 
 ASH provides a function **read_intlist_from_file** (see :doc:`coordinate-tools`) to read a list of integers from a file and return a Python list.

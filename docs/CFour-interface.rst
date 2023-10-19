@@ -123,14 +123,14 @@ Consult the CFour manual about which CC program to use.
 
 Generally:
 
-CC_PROG='VCC' : Default in CFour,except for CCSDT(Q) and CCSDTQ.
-CC_PROG='ECC' : Generally better performance than VCC for CCSD(T) and closed-shell CCSDT. Not recommended for ROHF gradients.
-CC_PROG='NCC' : New program. Recommended for CCSDT(Q) and CCSDTQ. Only closed-shell.
+- CC_PROG='VCC' : Default in CFour,except for CCSDT(Q) and CCSDTQ.
+- CC_PROG='ECC' : Generally better performance than VCC for CCSD(T) and closed-shell CCSDT. Not recommended for ROHF gradients.
+- CC_PROG='NCC' : New program. Recommended for CCSDT(Q) and CCSDTQ. Only closed-shell.
 
 Also note the keyword ABCDTYPE which specifies how MO integrals are handled in all post-HF calculations.
 Options are:
-'ABCDTYPE'='STANDARD' : Default. Excessive use of disk space.
-'ABCDTYPE'='AOBASIS' : AO-based algorithm, less disk space. Recommended for CC calculations, available up to CCSD(T).
+- 'ABCDTYPE'='STANDARD' : Default. Excessive use of disk space.
+- 'ABCDTYPE'='AOBASIS' : AO-based algorithm, less disk space. Recommended for CC calculations, available up to CCSD(T).
 
 
 ######################################################

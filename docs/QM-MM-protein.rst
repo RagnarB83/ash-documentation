@@ -27,6 +27,7 @@ The importance of taking this step seriously before starting any QM/MM can not b
 
 
 There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
+However, the most convenient way to set up a new protein model from scratch.
 
 ASH is currently capable of reading in (via OpenMM library):
 
@@ -39,13 +40,11 @@ ASH is currently capable of reading in (via OpenMM library):
 - Amber files (PRMTOP)
 - OpenMM files (XML-file)
 
-
-
-*Option a. OpenMM using the CHARMM forcefield*
+*Option a. OpenMM using built-in CHARMM/Amber forcefields*
 
 
 The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
-This has the convenience of using the same MM program that ASH uses for QM/MM.
+This has the convenience of using the same MM program that ASH uses for QM/MM, and no need to switch between different programs.
 
 Example on lysozyme:
 
@@ -67,6 +66,7 @@ Example on lysozyme:
     residue_variants={}
 
     #Setting up new system, adding hydrogens, solvent, ions and defining forcefield, topology
+    #Here using CHARMM, Amber is also possible
     openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36', watermodel="tip3p", pH=7.0, 
         solvent_padding=10.0, ionicstrength=0.1, residue_variants=residue_variants)
 
@@ -130,8 +130,6 @@ CHARMM example:
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
         charmmprmfile=parfile, autoconstraints=None, rigidwater=False)
 
-
-
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
     Singlepoint(theory=openmmobject, fragment=frag)
 
@@ -188,7 +186,8 @@ The script above (e.g. called MMtest.py) can then be executed like this:
 
     python3 MMtest.py
 
-It should finish in just a few seconds (or 1-2 minutes at most).
+It should finish in just a few seconds (or 1-2 minutes at most). If you have a GPU available on the machine then specifying platform='CUDA' 
+or platform='OpenCL' in the OpenMMTheory object will result in faster execution.
 
 ############################################################################
 **3. Create the QM/MM model and test it by running an energy calculation**
@@ -314,7 +313,7 @@ actregiondefine.py:
 
 Once the QM-region and Active Region has been defined one can then run a geometry optimization of the full system where
 only the active region is allowed to move. Instead of calling the Singlepoint function, one would call the
-geomeTRICOptimizer like below:
+Optimizer like below:
 
 .. code-block:: python
 
@@ -324,7 +323,7 @@ geomeTRICOptimizer like below:
 
     #Run QM/MM geometry optimization using geomeTRIC optimizer and HDLC coordinates
     #Only active-region passed to optimizer
-    geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
+    Optimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatomslist, maxiter=500, coordsystem='hdlc')
 
 
 
@@ -542,7 +541,7 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
 
 The power of ASH, together with the flexible OpenMM library, is that in principle one could write a single script that performs an elaborate workflow that sets up a new protein from a crystal structure, solvates, minimizes, runs MD, before switching to a QM/MM geometry optimization.
 The example below (can also be found in examples directory)  shows how this can be performed for a simple protein, lysozyme. This is of course an idealistic scenario and for a real system there will be problems
-to deal with and it will simply make more sense to split up the system-setup, classical MM MD and QM/MM optimizations into different scripts.
+to deal with and usually it will simply make more sense to split up the system-setup, classical MM MD and QM/MM optimizations into different scripts.
 
 .. code-block:: python
 
