@@ -187,8 +187,8 @@ Examples
 
 **Specifying special basis set:**
 
-As CFour may not have all desired basis sets built-in it is convenient to be able to specify user-defined basis sets.
-ASH has a few basis sets built-in that can be used with the specialbasis keyword in the CFourTheory class.
+As CFour may not have all desired basis sets built-in, it is convenient to be able to specify user-defined basis sets.
+ASH has a few basis sets built-in in CFour-format that can be used together with the specialbasis and ash_basisfile keywords in the CFourTheory class.
 
 ASH-basis set files for CFour are stored in ASH-source-directory/basis-sets/cfour (https://github.com/RagnarB83/ash/tree/master/basis-sets/cfour)
 Currently includes :
@@ -327,13 +327,14 @@ CCSD(T)/cc-pVTZ:
 **CFour CCSD(T) density calculation and visualization:**
 
 As the CFour program can calculate densities at all levels of theory for which analytic gradients are available
-one can calculate and visualize densities associated with the CCSD, CCSD(T), CCSDT wavefunctions.
+it is possible to create density plots (or difference densities) or various molecular properties associated with 
+the CCSD, CCSD(T), CCSDT wavefunctions.
 If one includes 'PROP':'FIRST_ORDER' in the cfouroptions dictionary input to CFourTheory, 
 then the density will be calculated at the requested level of theory. 
 This density can be used to define various electric properties at the CC level of theory (dipole, EFG etc.), population analysis
 but the density can also be useful on its own.
 Here we utilize the MOLDEN_NAT file that CFour creates, which contains the natural orbitals of the CC wavefunction
-that define the correlated WF density. Unfortunately this CFour-created Molden-file is not compatible with Multiwfn that is convenient
+that defines the correlated WF density. Unfortunately this CFour-created Molden-file is not compatible with Multiwfn that is convenient
 to plot the density so here use an ASH function, **convert_CFour_Molden_file** to convert the CFour Molden file to a Multiwfn-compatible file.
 **convert_CFour_Molden_file** utilizes the **molden2aim** program to convert the Moldenfile. Molden2aim ships with ASH but requires a quick compilation (see instructions when running).
 

@@ -138,11 +138,19 @@ Final output
 
 Once the displacements are complete, the gradients for all displacements are combined to give the full (or partial) Hessian.
 The Hessian is mass-weighted and diagonalized which results in the harmonic vibrational frequencies as eigenvalues and the normal modes as eigenvectors.
-
-.. warning:: Limitation: translational and rotational modes are currently not projected out in ASH. This has no effect on partial Hessians or systems with frozen atoms but may give deviations (w.r.t. other programs) of 1-2 cm-1 for gas phase systems.
+Rotational and translational modes are projected out if the full Hessian is calculated.
 
 
 An elemental normal mode composition factor analysis is automatically performed on the modes and thermochemistry based on the rigid-rotor-harmonic-oscillator (RRHO) approximation with a default temperature and pressure of 298 K and 1 atm.
+
+Upon completion of the job, the full Hessian can be accessed in a few different ways:
+
+- It is stored in the **hessian** attribute of the ASH_Results object returned from the **NumFreq** function (see example below).
+- It is present in a file named "Hessian" in the "Numfreq_dir" (created by ASH). Can be read back into ASH using the **read_hessian** function.
+- It is present in an ORCA_formatted Hessian-file named "orcahessfile.hess". Can be read back into ASH using **read_ORCA_Hessian**
+
+Additionally ASH creates a file "orcahessfile.hess_dummy.out" which is a dummy ORCA output file that contains the frequencies and normal modes.
+This file can be conveniently opened by some visualization programs such as Chemcraft and allows you to visualize the normal modes.
 
 
 **Examples:**
@@ -165,6 +173,8 @@ An elemental normal mode composition factor analysis is automatically performed 
     freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='serial')
 
     print("freqresult:", freqresult)
+    #Print Hessian
+    print("Hessian:", freqresult.hessian)
 
 
 The resulting object from a NumFreq calculation is an ASH_Results dataclass object.
