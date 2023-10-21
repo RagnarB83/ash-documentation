@@ -248,7 +248,7 @@ Thermochemistry corrections are automatically calculated when either a **Numfreq
   
 The return object from **AnFreq** or **NumFreq** contains a thermochemistry dictionary that contains the following 
 information as dictionary keys.
-Note that the entropy terms (TS) are un energy units (Eh) as they have been multiplied by temperature T.
+Note that the entropy terms (TS) are in energy units (Eh) as they have been multiplied by temperature T.
 
 +------------------+-----------------------------------------------------+
 | **Key**          | **Property**                                        |

@@ -35,15 +35,15 @@ at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 
 **Strongly recommended (and mostly necessary):**
 
-- geomeTRIC (optimizer). Python library, easily installed via pip. Required for geometry optimizations.
-- OpenMM (molecular mechanics library). Only needed for MM and QM/MM. Installed via conda.
+- geomeTRIC (optimizer). Python library, easily installed via pip or conda. Required for geometry optimizations.
+- OpenMM (MM and MD library). Needed for MM, QM/MM and MD. Installed via conda.
 - Matplotlib. Only for plotting options.
 
 **Required for specific functionality**
 
 - Julia installation. Only required right now for faster Julia versions of routines in the molecular crystal QM/MM code.
 
-**Optional Python modules for specific functionality (can be installed via pip or conda):**
+**Optional Python modules for specific functionality (can be installed via either pip or conda):**
 
 - PySCF (C++/Python quantum chemistry code)
 - Psi4 (C++/Python quantum chemistry code)
@@ -52,16 +52,22 @@ at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 
 **Optional external QM codes (separate installations):**
 
-- ORCA
-- Dalton
-- CFour
-- MRCC
-- xTB
-- Dice
-- Block2
-- NWChem
-- TeraChem
-- QUICK
+- ORCA (general DFT/WFT program)
+- CFour (high-level WFT program)
+- MRCC (high-level WFT program)
+- xTB (semi-empirical QM)
+- Dice (SHCI program)
+- Block2 (DMRG program)
+- NWChem (general DFT/WFT program)
+- Dalton (general DFT/WFT program)
+- TeraChem (HF/DFT code using GPU)
+- QUICK (HF/DFT code using GPU)
+
+**Various helper tools sometimes requested by ASH:**
+
+- OpenBabel (file-format conversions)
+- Plumed library (for Plumed-based metadynamics)
+- PyFrame
 
 
 #####################
@@ -80,7 +86,7 @@ Features
 - GROMACS .gro file
 - Python lists
 - ASH fragment file format (.ygg)
-- Mol and SDF files (requires OpenBabel)
+- Mol and SDF files (requires OpenBabel installation)
 
 
 **Interfaces to various QM codes:**
@@ -119,7 +125,6 @@ Features
 - Flexible definition of charges and Lennard-Jones potentials. Either via forcefield inputfile or in script.
 - Both energy and gradient available.
 - Slow Python version and fast Julia version available.
-- Limitation: No bonded MM .
 
 **Full Molecular Mechanics (MM) via OpenMM interface**
 
