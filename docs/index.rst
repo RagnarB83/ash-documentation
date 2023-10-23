@@ -101,6 +101,8 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    QM-MM-protein
    workflows-examples
    Highlevel_CC_CBS_workflows
+   Highlevel-density-analysis
+
 .. toctree::
    :maxdepth: 2
    :caption: Tools

@@ -2,7 +2,7 @@ Plotting
 ======================================
 
 ASH includes some basic functions for conveniently plotting data: including reaction profiles, contourplots, broadened spectra etc.
-These are essentially wrapper-functions around Matplotlib functionality.
+These are essentially wrapper-functions around `Matplotlib <https://matplotlib.org>`_  functionality.
 
 All the plotting functions documented here require a Matplotlib installation in the Python environment. Should be easily installed via either pip or Anaconda.
 
@@ -12,21 +12,25 @@ All the plotting functions documented here require a Matplotlib installation in 
  ASH_plot: Basic plotting
 ##############################################################################
 
-ASH_plot is a simple wrapper around the powerful Matplotlib library, just designed to make basic plotting of data (calculated by ASH) as straightforward as possible.
+ASH_plot is a simple wrapper around the powerful `Matplotlib <https://matplotlib.org>`_  library, just designed to make basic plotting of data (calculated by ASH) as straightforward as possible.
 
-.. note::  If you need more advanced plotting options than provided here, it may be best to use Matplotlib directly instead of ASH_plot. 
-    Contact the developer if you have suggestions for simple improvements in ASH_plot.
+.. note::  If you need more advanced plotting options than provided here, it is probably best to use Matplotlib directly instead of ASH_plot. 
+    Let the developer know if you have suggestions for simple improvements to ASH_plot.
 
 .. code-block:: python
 
   class ASH_plot():
     def __init__(self, figuretitle='Plottyplot', num_subplots=1, dpi=200, imageformat='png', figsize=(9,5),
         x_axislabel='X-axis', y_axislabel='Energy (X)', x_axislabels=None, y_axislabels=None, title='Plot-title', 
-        subplot_titles=None, invert_x_axis=False, invert_y_axis=False, xlimit=None, ylimit=None,
-        legend_pos=None):
-    def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, label='Series', color='blue', pointsize=40, 
-                    scatter=True, line=True, scatter_linewidth=2, line_linewidth=1, marker='o', legend=True):
+        subplot_titles=None, xlimit=None, ylimit=None, backend='Agg',
+        legend_pos=None, horizontal=False, tight_layout=True, padding=None):
+    def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, x_labels=None, label='Series', color='blue', pointsize=40, 
+                    scatter=True, line=True, bar=False, scatter_linewidth=2, line_linewidth=1, barwidth=None, barcolors=None, marker='o', legend=True, x_scaling=1.0,y_scaling=1.0,
+                    xticklabelrotation=80, x_scale_log=False, y_scale_log=False, colormap='viridis'):
+    def invert_x_axis(self,subplot):
+    def invert_y_axis(self,subplot):
     def savefig(self, filename, imageformat=None, dpi=None):
+    def showplot(self):
 
 ..  https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html
 
@@ -138,7 +142,11 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
    * - ``color``
      - string
      - 'blue'
-     - What color to use for series. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ 
+     - What color to use for series. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_
+   * - ``barcolors``
+     - list
+     - None
+     - List of colors to use for each bar. `Matplotlib colors <https://matplotlib.org/stable/gallery/color/named_colors.html>`_
    * - ``pointsize``
      - integer
      - 40
@@ -151,6 +159,10 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
      - Boolean
      - True
      - Do lineplot or not.
+   * - ``bar``
+     - Boolean
+     - False
+     - Do barplot or not. Incompatible with line and scatter above.
    * - ``scatter_linewidth``
      - integer
      - 2
@@ -158,7 +170,11 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
    * - ``line_linewidth``
      - integer
      - 1
-     - Linewidth of line plots.
+     - Linewidth of lines in line-plots.
+   * - ``barwidth``
+     - integer
+     - None
+     - Width of bar columns. Default is None, ie. width is automatically adapted to data.
    * - ``marker``
      - string
      - 'o'
@@ -167,6 +183,10 @@ ASH_plot is a simple wrapper around the powerful Matplotlib library, just design
      - Boolean
      - True
      - Whether to plot legend or not.
+   * - ``colormap``
+     - string
+     - 'viridis'
+     - Optional colormap to use. Currently only used for barplots (if barcolors=None)
 
 
 To use, you just need to create an ASH_plot object, add one or more dataseries to the object (using the .addseries method) and then save (using the .savefig method). 
@@ -200,39 +220,74 @@ Since the data is provided via simply Python lists you could of course run an AS
    :align: center
    :width: 600
 
+**Barplot 1-subplot example:**
+
+Barplots are sometimes more suitable. Use bar=True in this case and turn off lines and scatter by: line=False and scatter=False.
+To control the colors of the barplot you can use the barcolors keyword. This should be a list of colors, one for each bar.
+By default (if no barcolors list provided), a colormap is used to generate colors for the datapoints, here taken from the default colormap 'viridis'.
+You can change the colormap via the colormap keyword (some options: 'viridis', 'inferno', 'inferno_r', 'plasma', 'magma')
+
+.. code-block:: python
+
+    from ash import *
+
+    #Dataseries1. Data are simply Python lists
+    xvalues1=[1,2,3,4,5,6,7]
+    yvalues1=[0.1, 10.0, 12.0, 15.0, 17.0, 50.0, 60.0]
+    #Dataseries2
+    xvalues2=[1,2,3,4,5,6,7]
+    yvalues2=[0.2, 12.0, 13.0, 23.0, 30.0, 40.0, 55.0]
+
+    #Create ASH_plot object named edplot
+    eplot = ASH_plot("Plotname", num_subplots=1, x_axislabel="x-axis", y_axislabel='y-axis')
+
+    #Add a dataseries to subplot 0 (the only subplot)
+    eplot.addseries(0, x_list=xvalues1, y_list=yvalues1, label='Series1', color='blue', bar=True, scatter=False, line=False)
+
+    #Save figure
+    eplot.savefig('Barplot')
+
+
+.. image:: figures/Barplot.png
+   :align: center
+   :width: 600
+
+
+
+
 You can also create a figure with multiple subplots. Currently, num_subplots=1, 2, 3 or 4 works.
 
 **Basic 4-subplot example:**
 
 .. code-block:: python
 
-    from ash import *
+  from ash import *
 
-    #Series1
-    xvalues1=[1,2,3,4,5,6,7]
-    yvalues1=[0.1, 10.0, 12.0, 15.0, 17.0, 50.0, 60.0]
-    #Series2
-    xvalues2=[1,2,3,4,5,6,7]
-    yvalues2=[0.2, 12.0, 13.0, 23.0, 30.0, 40.0, 55.0]
-    #Series3
-    xvalues3=[1,2,3,4,5,6,7]
-    yvalues3=[0.25, 22.0, 33.0, 43.0, 47.0, 48.0, 50.0]
-    #Series4
-    xvalues4=[1,2,3,4,5,6,7]
-    yvalues4=[1.2, 9.0, 5.0, 17.0, 20.0, 21.0, 30.0]
+  #Series1
+  xvalues1=[1,2,3,4,5,6,7]
+  yvalues1=[0.1, 10.0, 12.0, 15.0, 17.0, 50.0, 60.0]
+  #Series2
+  xvalues2=[1,2,3,4,5,6,7]
+  yvalues2=[-5, 12.0, 13.0, 23.0, 30.0, 40.0, 55.0]
+  #Series3
+  xvalues3=[1,2,3,4,5,6,7]
+  yvalues3=[0.25, 22.0, 33.0, 43.0, 47.0, 48.0, 50.0]
+  #Series4
+  xvalues4=[1,2,3,4,5,6,7]
+  yvalues4=[1.2, 9.0, 5.0, 17.0, 20.0, 21.0, 30.0]
 
-    #Create ASH_plot object named edplot
-    eplot = ASH_plot("Plotname", num_subplots=4, x_axislabels=["x-axis1", "x-axis2","x-axis3","x-axis4"], 
-            y_axislabels=["y-axis1", "y-axis2","y-axis3","y-axis4"], figsize=(9,7))
+  #Create ASH_plot object named edplot
+  eplot = ASH_plot("Plotname", num_subplots=4, x_axislabels=["x-axis1", "x-axis2","x-axis3","x-axis4"],
+          y_axislabels=["y-axis1", "y-axis2","y-axis3","y-axis4"], figsize=(9,7))
 
-    #Add a series to each subplot (0, 1, 2 or 3)
-    eplot.addseries(0, x_list=xvalues1, y_list=yvalues1, label='Series1', color='blue', line=True, scatter=True)
-    eplot.addseries(1, x_list=xvalues2, y_list=yvalues2, label='Series2', color='red', line=False, scatter=True)
-    eplot.addseries(2, x_list=xvalues3, y_list=yvalues3, label='Series3', color='purple', line=False, scatter=True, marker='x')
-    eplot.addseries(3, x_list=xvalues4, y_list=yvalues4, label='Series4', color='green', line=True, scatter=False)
+  #Add a series to each subplot (0, 1, 2 or 3)
+  eplot.addseries(0, x_list=xvalues1, y_list=yvalues1, label='Series1', color='blue', line=True, scatter=True)
+  eplot.addseries(1, x_list=xvalues2, y_list=yvalues2, label='Series2', bar=True, line=False, scatter=False)
+  eplot.addseries(2, x_list=xvalues3, y_list=yvalues3, label='Series3', color='purple', line=False, scatter=True, marker='x')
+  eplot.addseries(3, x_list=xvalues4, y_list=yvalues4, label='Series4', color='green', line=True, scatter=False)
 
-    #Save figure
-    eplot.savefig('Simple-subplot4')
+  #Save figure
+  eplot.savefig('Simple-subplot4')
 
 
 .. image:: figures/Simple-subplot4.png
