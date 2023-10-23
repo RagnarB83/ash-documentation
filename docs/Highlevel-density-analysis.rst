@@ -354,12 +354,38 @@ Difference density analysis is a simple but useful tool for understanding change
 One simply needs to plot the electron density on a grid for each calculation and then subtract the density of a reference density for each gridpoint
 It is important to plot the density in the same way, i.e. using the same grid and the molecule needs to have the same orientation in Cartesian space.
 Here we use the ASH interface to Multiwfn to conveniently perform this analysis using Molden-files of the natural orbitals for each WF calculation.
+Specifically we use the **diffdens_tool** function in ASH that automatically reads all Moldenfiles and calls Multiwfn to create Cube density-files and then
+performs the difference density. See :doc:`elstructure_analysis`.
+
+.. code-block:: python
+
+   from ash import *
+
+   #Get list of Moldenfiles in current directory
+   moldenfiles=glob.glob("*molden*")
+   #Call diffdens_tool, specifying which file should be the reference
+   diffdens_tool(reference_orbfile="ICE_CI_mp2nat_tgen_1e-06.molden",
+      dir='.', grid=3)
 
 The reference density can be chosen depending on the context, e.g. the HF density in which the density changes would directly reveal directly the effect of electron correalation.
-Here we choose on the near-Full-CI densities (ICE-CI with a TGen=1e-6 threshold), assumed to be practically at the exact FCI limit, as the reference density. 
+Here we choose one of the near-Full-CI densities (ICE-CI with a TGen=1e-6 threshold), assumed to be practically at the exact FCI limit, as the reference density. 
 The density changes for other methods can then mostly be interpreted as deficiencies with respect to Full-CI.
 
-The densities are plotted on an isosurface with a value of 0.001 below. 
+The densities are plotted on an isosurface with a value of 0.001 below.
+To conveniently visualize the isosurfaces we utilize an ASH function **write_VMD_script_cube** that creates a VMD-statefile that will upon loading,
+automatically load the Cubefiles and render them using the chosen isovalues and colors.
+
+.. code-block:: python
+
+   from ash import *
+
+   diff_cubefiles=glob.glob("*diff_density.cube")
+
+   #Optional VMD state-file
+   write_VMD_script_cube(cubefiles=diff_cubefiles,VMDfilename="Diffdens.vmd",
+                           isovalue=0.001, isosurfacecolor_pos="blue", isosurfacecolor_neg="red")
+
+
 A large difference between HF and ICE-CI is found as expected, showing HF be predicting a more polarized electron density than ICE-CI (more electron density associated with oxygen and less on carbon).
 The CASSCF(10,8) density removes the main HF density artifact but still display some odd density changes. 
 The unrelaxed MP2 density gives a very similar result as HF (consistent with the dipole moment analysis), demonstrating the failure of the unrelaxed MP2 density approximation.
