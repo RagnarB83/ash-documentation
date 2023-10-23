@@ -145,14 +145,13 @@ using ICE-CI WF with e.g. *TGen* = 1e-4, the WF can be made much more compact ( 
 Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI not being fully size-consistency 
 (errors will reduce with threshold).
 
-In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out.
+In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out (unless requested)
 
 .. note::  It is possible to perform orbital-optimization with an ICE-CI WF using the %casscf module of ORCA (cistep ICE), however, when using ICE-CI to perform full CI (i.e. including the entire orbital space) it is more cost-effective to use approximate orbitals.
 
-Useful approximate will be natural orbitals (orbitals that make the density matrix diagonal) from some kind of approximate WF theory.
-Here we will compare 5 types of input orbitals: RHF orbitals, MP2 natural orbitals from an unrelaxed density, MP2 natural orbitals from a relaxed density,
+Useful approximate input orbitals are typically natural orbitals (orbitals that make the 1st-order density matrix diagonal) from some kind of approximate WF theory.
+We will compare 5 types of input orbitals: RHF canonical orbitals, MP2 natural orbitals from an unrelaxed density, MP2 natural orbitals from a relaxed density,
 CCSD natural orbitals from a linearized density, CCSD natural orbitals from an unrelaxed density and finally CCSD natural orbitals from a relaxed density.
-
 
 Here we utilize a convenient function (**Auto_ICE_CAS**) in ASH that allows us to conveniently automate ORCA ICE-CI calculations by looping over *TGen* thresholds,
 select different input-orbital approximations and control size of the orbital space (if desired).
