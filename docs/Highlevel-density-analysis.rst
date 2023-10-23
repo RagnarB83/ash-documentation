@@ -288,7 +288,7 @@ Population analysis
 While the dipole moment can be useful for analyzing the convergence of the WF, it may not reveal very much about the 
 electronic-structure changes occurring in the molecule as electron correlation is captured.
 Population analysis such as atomic charges and bond orders, however, can sometimes give a clearer picture.
-Here we will analyze Hirshfeld atomic charges and Mayer bond orders as a function of WF complexity.
+Here we will analyze Hirshfeld atomic charges and Mayer bond orders of CO as a function of WF complexity, using the cc-PVDZ basis set.
 
 As Hirshfeld population analysis and Mayer bond orders are not implemented in all the different QM codes used,
 we utilize the ASH interface to Multiwfn to conveniently perform this analysis. This relies on providing Molden files to Multiwfn that 
@@ -352,7 +352,7 @@ Difference density analysis
 Difference density analysis is a simple but useful tool for understanding changes in the density as electron correlation is included.
 One simply needs to plot the electron density on a grid for each calculation and then subtract the density of a reference density for each gridpoint
 It is important to plot the density in the same way, i.e. using the same grid and the molecule needs to have the same orientation in Cartesian space.
-Here we use the ASH interface to Multiwfn to conveniently perform this analysis using Molden-files of the natural orbitals for each WF calculation.
+Here we use the ASH interface to Multiwfn to conveniently perform this analysis using Molden-files of the natural orbitals for each previous WF calculation (using a cc-pVDZ basis set).
 Specifically we use the **diffdens_tool** function in ASH that automatically reads all Moldenfiles and calls Multiwfn to create Cube density-files and then
 performs the difference density. See :doc:`elstructure_analysis`.
 
