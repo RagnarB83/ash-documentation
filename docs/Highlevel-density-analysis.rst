@@ -29,7 +29,7 @@ this reduces the problem to 10 electrons in 25 orbitals.
 Densities for correlated WF methods
 ##############################################################################
 - For single-determinant methods (i.e. HF and Kohn-Sham DFT), the electron density and related properties is straightforwardly derived from the set of canonical orbitals calculated. No additional calculations need to be carried out. We will here use ORCA to conveniently create a Molden-file from HF/DFT calculations that allows us to 
-- In the case of MP2, the correlated density is typically not automatically calculated (due to the additional cost).  If we want the correlated density we have to ask for it and furthermore we can choose between an unrelaxed and relaxe MP2 density. We will use ORCA to perform MP2 calculations and will request calculations of natural orbitals derived from the unrelaxed/relaxed density.
+- In the case of MP2, the correlated density is typically not automatically calculated (due to the additional cost).  If we want the correlated density we have to ask for it and furthermore we can choose between an unrelaxed and relaxed MP2 density. We will use ORCA to perform MP2 calculations and will request calculations of natural orbitals derived from the unrelaxed/relaxed density.
 - For CC methods, only the energy is calculated by default. Additional equations have to be solved to define a useful CC density. Densities are not always available for all CC truncations.
 - For CASSCF the density is calculated by default due to the variational nature of CASSCF. For CASPT2/NEVPT2 the density is typically not available. For MRCI we can get a density.
 - For near-Full-CI methods we can usually get the density. Here we use ICE-ICE (ORCA), SHCI (Dice and pySCF) and DMRG (Block2 and pySCF) methods using interfaces in ASH.
@@ -89,10 +89,11 @@ This is not the case for carbon monoxide (no near-degeneracies), but it can stil
 captured by the CASSCF and MRCI+Q approaches for a molecule with a non-exotic electronic structure. This allows us to see what accuracy we can expect when using these methods
 for genuine multireference systems.
 
-Going to a minimical CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is obvious because an active space of (2,2) only includes 3 configurations (vs. 1 for RHF).
+Going to a minimial CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is not entirely surprising because an active space of (2,2) only includes 3 configurations (vs. 1 for RHF)
+and the small active space probably results in an imbalance of the WF. 
 A larger CASSCF(6,5) WF includes 65 configurations which is enough to include enough correlation for a qualitatively correct result of 0.1080 au.
-Increasing to a full valence-space CASSCF(10,8) WF (784 configurations) WF interestingly diverges, giving a value of 0.1451 a.u.
-The multiconfigurational CASSCF approach performs Full-CI within the active but space actually does not capture very much correlation due to the small active space.
+Increasing to a full valence-space CASSCF(10,8) WF (784 configurations) WF interestingly diverges slightly, giving a value of 0.1451 a.u.
+The multiconfigurational CASSCF approach performs Full-CI within the active but space actually does not capture very much correlation due to the still relatively small active space.
 While we could increase the active space further in CASSCF, to a limit of about 14-16 orbitals, this would not improve things very much as our active-space limitation
 allows us only to capture correlation associated with a few number of occupied and virtual orbitals. 
 It is actually much more important to capture correlation associated with a large number of orbitals (i.e. dynamic correlation) even though the n-excitation level is smaller.
@@ -106,7 +107,7 @@ They furthermore do not offer very high accuracy, being second-order perturbatio
 The MRCI method, however, allows us to perform effectively a CISD calculation on top of each of the CSF within the CASSCF reference WF.
 This will capture dynamic correlation outside the active space and being a CI method, we can diagonalize the MRCI CI-matrix and get the energy, WF and density.
 The quality of the MRCI WF depends on the size and composition of the CASSCF reference WF, i.e. the active space and also the quality of the size-consistency correction (here +Q).
-Here, the results reveal that MRCI+Q is able give a qualitatively correct result with a CASSCF(2,2) reference WF and then improves considerably
+Here, the results reveal that MRCI+Q is able to give a qualitatively correct result with a CASSCF(2,2) reference WF and then improves considerably
 as we go to CAS(6,5) and CAS(10,8) reference WF.
 The uncontracted MRCI module in ORCA (%mrci block) controls the diagonalization size of the MRCI matrix by an individual selection procedure (via 2nd-order perturbation theory).
 The selection is controlled by two keywords (TSel and TPre, see ORCA manual). Results using the default values (TSel=1e-6 and TPre=1e-4) and complete-selection (TSel=0 and TPre=0; expensive!) are shown below. 
@@ -165,7 +166,7 @@ select different input-orbital approximations and control size of the orbital sp
 Note that *nmin* and *nmax* are used to control the size of the orbital space using the natural occupations of the calculated natural orbitals.
 Natural orbitals with occupation numbers < *nmin* and > *nmax* will be included. Here *nmin* = 1.999 will enforce a frozen-core approximation (check to make sure),
 while *nmax* = 0.0 will include all virtual orbitals (i.e. Full-CI within a frozen-core approximation).
-The inputfiles for these calculations can be found in: the ORCA-ICE-CI directory.
+The inputfiles for these calculations can be found in the ORCA-ICE-CI directory.
 
 .. image:: figures/Dipole_ICE-CI.png
    :align: center
@@ -272,7 +273,7 @@ We will here choose CCSD(T) as our truncated WF approximation and will examine h
 
 The results calculated with both an unrelaxed CCSD(T) density (using pySCF) and a relaxed CCSD(T) density (using CFour) are shown below.
 The results reveal considerable basis set effects (not surprisingly) as we go from the cc-pVDZ basis set to the cc-pV5Z basis set using the CCSD(T) method.
-For the case of the dipole moment of CCSD(T) the general dynamic correlation effects captured by basis set expansion, clearly outweigh any beyond CCSD(T) correlation effects.
+For the case of the dipole moment of CCSD(T), the general dynamic correlation effects captured by basis set expansion, clearly outweigh any beyond CCSD(T) correlation effects.
 The FCI/cc-pVZ - CCSD(T)/cc-pVDZ difference amounts to approx. 0.0024 - 0.0029 au (CCSD(T) unrelaxed or relaxed), 
 which is an order of magnitude smaller than the cc-pVDZ -> cc-pV5Z basis set effect of approx. -0.0378 - 0.0411 au.
 However, one could include this Full-CI correction to the CCSD(T)/5Z result, evaluated at the cc-pVDZ basis to account for this.
@@ -385,7 +386,7 @@ automatically load the Cubefiles and render them using the chosen isovalues and 
                            isovalue=0.001, isosurfacecolor_pos="blue", isosurfacecolor_neg="red")
 
 
-A large difference between HF and ICE-CI is found as expected, showing HF be predicting a more polarized electron density than ICE-CI (more electron density associated with oxygen and less on carbon).
+A large difference between HF and ICE-CI is found as expected, showing HF to be predicting a more polarized electron density than ICE-CI (more electron density associated with oxygen and less on carbon).
 The CASSCF(10,8) density removes the main HF density artifact but still display some odd density changes. 
 The unrelaxed MP2 density gives a very similar result as HF (consistent with the dipole moment analysis), demonstrating the failure of the unrelaxed MP2 density approximation.
 The relaxed MP2 density is a big improvement and the linearized CCSD density is similar. An unrelaxed CCSD density further improves the result and overall higher-order CC WFs or densities become hard to tell apart.

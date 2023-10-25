@@ -6,6 +6,12 @@ Mulitiwfn is an open-source quantum chemistry code full of wavefunction and dens
 ASH features a simple wrapper interface that allows you to quickly use some Multiwfn functionality in an
 ASH script to e.g. create density or MO Cube-file.
 
+Multiwfn can be compiled or binaries downloaded for the requested platform. 
+It is probably best to use the noGUI version of Multiwfn.
+
+You can provide multiwfndir (path to Multiwfn containing the Multiwfn binary) to ASH or alternatively
+ASH will search for the "Multiwfn" binary in the PATH.
+
 
 .. code-block:: python
 
