@@ -87,13 +87,14 @@ Creating/modifying fragment objects
 ######################################################
 
 Fragments in ASH are Python objects containing basic information about a molecule. You can create as many fragment objects
-as you want. A typical fragment will contain at least Cartesian coordinates about a molecule and the elemental information.
+as you want. A fragment object will contain Cartesian coordinates about a molecule, elemental information and masses.
+Sometimes additional information such as connectivity constraints, charges and multiplicity information is present as well.
 Fragments can be created in multiple ways but will behave the same after creation.
 
-Fragments are Python objects created from the ASH *Fragment* object class (see above).
+Fragments are created from the ASH *Fragment* object class above.
 
 ######################################################
-Direct creation of fragment from coordinates
+Direct creation of an ASH fragment from coordinates
 ######################################################
 
 *From string*
@@ -147,12 +148,23 @@ can be created upon request. To read an old file from disk (here "previous.ygg")
 
 *From external PDB file*
 
-Also possible to read coordinates from a PDB file. This functionality is very rudimentary, only supporting read-in of
+It is also possible to read coordinates from a PDB file. This functionality is very rudimentary, only supporting read-in of
 elements and coordinates, not atom-types or residue information.
 
 .. code-block:: python
 
     pdbfrag = Fragment(pdbfile="mol.pdb")
+
+*From XYZ-file in ASH database*
+
+ASH contains an internal database of some small molecules.
+These are XYZ-files that are present in the ASH repository (`ASH-code/databases/fragments directory<https://github.com/RagnarB83/ash/tree/master/databases/fragments>`_)
+Examples of available files: h2o.xyz, nh3.xyz, n2.xyz, butane.xyz, glycine.xyz 
+The coordinates in these files have been pre-optimized by some level of theory.
+
+.. code-block:: python
+
+    pdbfrag = Fragment(databasefile="h2o.xyz")
 
 
 ######################################################

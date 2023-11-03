@@ -9,8 +9,9 @@ In this tutorial we  show how we can acquire highly correlated densities from di
 going all the way up to the near-exact Full-CI limit, for a small molecule in a small basis set and analyze how correlation affects the density.
 By utilizing a fixed small basis set and approaching the Full-CI limit systematically using single-reference, multi-reference and near-Full-CI methods 
 we can evaluate the accuracy of more cost-effective truncated WF approximations against the near-exact result. 
-Being able to estimate the Full-CI limit, even in a small basis set, can thus give much insight into the limitations of truncated WF approximations.
-If basis set effects can be shown to be small, DFT methods can furthermore be benchmarked against the high-level results.
+Being able to estimate the Full-CI limit, even in a small basis set, can thus give much insight into advantages and disadvantages of different 
+truncated WF approximations.
+If basis set effects can be also be controlled, DFT methods can furthermore be benchmarked against the high-level results.
 
 All ASH scripts are available in the `examples/density-analysis/Tutorial-HLWFT-analysis/CO` directory of the ASH repository.
 Reproducing the calculations in this tutorial requires separate installation of ORCA, MRCC, CFour, pySCF, Dice, DMRG.
@@ -19,20 +20,72 @@ Reproducing the calculations in this tutorial requires separate installation of 
 The nature of the problem
 ##############################################################################
 Here we will perform correlated WF calculations on the CO molecule (**r**:sub:`e` = 1.1294 Å) in the cc-pVDZ basis set.
-CO contains 14 electrons and 7 occupied orbitals. A cc-pVDZ basis set for CO gives 27 orbitals.
+CO contains 14 electrons and 7 occupied orbitals. A cc-pVDZ basis set for CO gives 27 orbitals in total.
 This means that the Full-CI/cc-pVDZ problem for CO is 14 electrons in 27 orbitals but if we apply the frozen-core approximation (i.e. we freeze the core C 1s and O 1s electrons)
-this reduces the problem to 10 electrons in 25 orbitals.
+this reduces the Full-CI problem to 10 electrons in 25 orbitals.
 
 
 
 ##############################################################################
 Densities for correlated WF methods
 ##############################################################################
-- For single-determinant methods (i.e. HF and Kohn-Sham DFT), the electron density and related properties is straightforwardly derived from the set of canonical orbitals calculated. No additional calculations need to be carried out. We will here use ORCA to conveniently create a Molden-file from HF/DFT calculations that allows us to 
-- In the case of MP2, the correlated density is typically not automatically calculated (due to the additional cost).  If we want the correlated density we have to ask for it and furthermore we can choose between an unrelaxed and relaxed MP2 density. We will use ORCA to perform MP2 calculations and will request calculations of natural orbitals derived from the unrelaxed/relaxed density.
-- For CC methods, only the energy is calculated by default. Additional equations have to be solved to define a useful CC density. Densities are not always available for all CC truncations.
-- For CASSCF the density is calculated by default due to the variational nature of CASSCF. For CASPT2/NEVPT2 the density is typically not available. For MRCI we can get a density.
-- For near-Full-CI methods we can usually get the density. Here we use ICE-ICE (ORCA), SHCI (Dice and pySCF) and DMRG (Block2 and pySCF) methods using interfaces in ASH.
+
+.. note::  When performing post-HF property/density calculations it is important to make sure that what you are analyzing 
+   refers to the correlated WF rather than just the HF. The dipole moment may be printed for both the HF and the post-HF density.
+   An ORCA GBW file for a post-HF method may only contain the HF orbitals.
+
+For single-determinant methods (i.e. HF and Kohn-Sham DFT), the electron density and related properties is straightforwardly derived from the set of canonical orbitals calculated (via the SCF procedure). No additional calculations need to be carried out. 
+We will use ORCA to perform the calculations and get the dipole moment. 
+We can either use the **orca_2mkl** tool to get a Molden-file : 
+
+.. code-block:: text
+
+   orca_2mkl HF  # assumes that a file named HF.gbw is present
+
+or we can use the ASH function **make_molden_file_ORCA** . The latter is more convenient as it can be used in the same script (see example files).
+
+In the case of MP2, the correlated density is typically not automatically calculated (due to the additional cost).  If we want the correlated density we have to ask for it
+in the ORCA inputfile,choosing between an unrelaxed and a relaxed MP2 density. We additionally request calculations of natural orbitals derived from the unrelaxed/relaxed density.
+
+.. code-block:: text
+
+   %mp2
+   density unrelaxed
+   natorbs true
+   end
+
+The MP2 calculation will produce a file named e.g. MP2calc.mp2nat . This is an ORCA GBW file containing the natural orbitals of the MP2 density.
+To create a Moldenfile from this GBW file we can use the **orca_2mkl** tool again but note that we have to first rename the file to have a .gbw ending.
+
+.. code-block:: text
+
+   orca_2mkl MP2calc.mp2nat  # assumes that the file is named MP2calc.mp2nat.gbw
+
+
+For CC methods, the energy is calculated by default and additionally a linearized density is calculated by default.
+Additional equations have to be solved to define a more correct CC density. Densities are not always available for all CC truncations.
+
+.. code-block:: text
+
+   %mdci
+   density unrelaxed
+   natorbs true
+   end
+
+The CC calculation will produce a file named e.g. CCSDcalc.mdci.nat containing the natural orbitals of the density chosen.
+
+For CASSCF the density is available by default due to the variational nature of CASSCF. 
+The GBW file from a CASSCF calculation will by default contain the natural orbitals of the CASSCF 1-particle density matrix.
+For CASPT2/NEVPT2 the density is typically not available. For MRCI we can request a density in the inputfile like this:
+
+.. code-block:: text
+
+   %mrci
+   donatorbs 2
+   end
+
+For near-Full-CI methods we can usually get the density. 
+Here we use ICE-ICE (ORCA), SHCI (Dice and pySCF) and DMRG (Block2 and pySCF) methods using interfaces in ASH.
 
 
 ##############################################################################
@@ -59,7 +112,7 @@ Calculating an MP2 wavefunction with an approximate unrelaxed density improves t
 calculating a relaxed MP2 density results in a much better, qualitatively correct result (+0.1488). 
 Orbital-optimized MP2 only marginally improves the result (0.151), suggesting that we have reached the limit of what can be achieved with second-order perturbation theory.
 
-Calculating a CCSD WF but with a linearized density approximation (calculated automatically by ORCA) at first glance offers no improvement (0.15610) over MP2,
+Calculating a CCSD WF but with the default density approximation (calculated automatically by ORCA) at first glance offers no improvement (0.15610) over MP2,
 however, this arises due to the use of the linearized density approximation which is rather crude and far from ideal here.
 Calculating an unrelaxed CCSD density results in considerable improvement (0.0979) while utilizing the option "density orbopt" reduce the value down to 0.0653.
 The "orbopt" CCSD density option in ORCA corresponds to a relaxed density but using the orbital-optimized CCSD method (OO-CCD). 
@@ -77,7 +130,7 @@ CCSDT-unrelaxed gives 0.0915 and CCSDT-relaxed gives 0.0844 a.u.
 CCSDTQ-unrelaxed gives 0.0889 and CCSDTQ-relaxed gives 0.0879 a.u.
 
 It seems that we have reached an effective FCI-limit using coupled cluster theory, based on the smaller changes seen between CCSD(T), CCSDT and CCSDTQ as well as the smaller variations between unrelaxed and relaxed densities.
-Clearly, inclusion of triples correlation effects seems critical and the density approximation in CC needs to be reliable.
+Clearly, inclusion of triples correlation effects seems critical (quadruples effects less so) and the density approximation in CC needs to be reliable.
 
 
 
@@ -89,11 +142,11 @@ This is not the case for carbon monoxide (no near-degeneracies), but it can stil
 captured by the CASSCF and MRCI+Q approaches for a molecule with a non-exotic electronic structure. This allows us to see what accuracy we can expect when using these methods
 for genuine multireference systems.
 
-Going to a minimial CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is not entirely surprising because an active space of (2,2) only includes 3 configurations (vs. 1 for RHF)
+Going to a minimial CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is not entirely surprising because an active space of (2,2) only results in 3 total configurations (vs. 1 for RHF)
 and the small active space probably results in an imbalance of the WF. 
 A larger CASSCF(6,5) WF includes 65 configurations which is enough to include enough correlation for a qualitatively correct result of 0.1080 au.
 Increasing to a full valence-space CASSCF(10,8) WF (784 configurations) WF interestingly diverges slightly, giving a value of 0.1451 a.u.
-The multiconfigurational CASSCF approach performs Full-CI within the active but space actually does not capture very much correlation due to the still relatively small active space.
+The multiconfigurational CASSCF approach performs Full-CI within the active space but actually does not capture very much correlation due to the still relatively small active space.
 While we could increase the active space further in CASSCF, to a limit of about 14-16 orbitals, this would not improve things very much as our active-space limitation
 allows us only to capture correlation associated with a few number of occupied and virtual orbitals. 
 It is actually much more important to capture correlation associated with a large number of orbitals (i.e. dynamic correlation) even though the n-excitation level is smaller.
@@ -127,9 +180,10 @@ or by partitioning the CI space into a small active space (treated by Full-CI as
 Below we discuss ICE-CI, SHCI and DMRG as examples of near-Full-CI methods.
 
 .. note::  These near-Full-CI methods also see use as approximate Full-CI algorithms within a CASSCF framework. As they result in less-scaling Full-CI they 
-    allow large active-space CASSCF calculations (up to 40-100 orbitals even). Here, however, we will use them as stand-alone methods to approximate Full-CI with a full orbital space.
+    allow large active-space CASSCF calculations (up to 40-100 orbitals even). 
+    Here, however, we will use them as stand-alone methods to approximate Full-CI with a full orbital space. This is only possible for small molecules with small basis sets.
 
-We will perform calculations in the full orbital space except that the frozen-core approximation will be used, meaning that 1s orbitals of C and O are frozen.
+We will perform calculations in the full orbital space except that the frozen-core approximation will be used, meaning that 1s orbitals of C and O are frozen (a very good approximation).
 
 
 *Convergence of the ICE-CI CIPSI method*
@@ -163,7 +217,7 @@ select different input-orbital approximations and control size of the orbital sp
         Auto_ICE_CAS(fragment=frag, basis="cc-pVDZ", nmin=1.999, nmax=0.0, numcores=8, CASCI=True, tgen=tgen, memory=10000,
             initial_orbitals='RI-MP2', MP2_density='relaxed')
 
-Note that *nmin* and *nmax* are used to control the size of the orbital space using the natural occupations of the calculated natural orbitals.
+Note that *nmin* and *nmax* are used to control the size of the orbital space using the natural occupations of the calculated natural orbitals (MP2 or CCSD).
 Natural orbitals with occupation numbers < *nmin* and > *nmax* will be included. Here *nmin* = 1.999 will enforce a frozen-core approximation (check to make sure),
 while *nmax* = 0.0 will include all virtual orbitals (i.e. Full-CI within a frozen-core approximation).
 The inputfiles for these calculations can be found in the ORCA-ICE-CI directory.
@@ -280,6 +334,8 @@ However, one could include this Full-CI correction to the CCSD(T)/5Z result, eva
 
 Overall, the agreement for CCSD(T)/cc-pV5Z of 0.0443 - 0.0472 a.u. with experiment (0.0480 a.u.) is excellent.
 Accounting for a FCI/DZ-correction to the CCSD(T)/cc-pV5Z value we get 0.0469 - 0.0502 a.u which is in near-perfect agreement.
+
+The good performance of CCSD(T) is here entirely expected from a molecule with a non-exotic electronic structure.
 
 
 ##############################################################################

@@ -11,10 +11,10 @@ An ASH inputfile is a Python script/program with ASH loaded as a library that gi
 This means that ASH does not behave like a regular QM program with a specific inputfile syntax for a specific job.
 Instead, an ASH inputfile is its own program/script (in Python), written by the user that when executed (by the Python interpreter) will carry out all instructions in the file.
 This means that when a user's ASH script is executed, the Python interpreter will carry out all of the instructions defined in the script but nothing else.
-This gives a lot of flexiblity as it allows the user to create simple or complex, specific or general, single-job or multi-job calculations depending on the need or taste.
+This gives a lot of flexiblity as it allows the user to create simple or complex, specific or general, single-calculation or multi-calculation job depending on the need or taste.
 
-The only drawback is that it requires the user to learn some simple Python programming basics in order to use the program.
-There are many, many resources available for learning Python.
+The only drawback of this flexible approach is that it requires the user to learn some simple Python programming basics 
+in order to use the program. There are many, many resources available for learning Python.
 
 **Learning Python resources:**
 
@@ -110,7 +110,7 @@ Here we define first a Python multi-line string (the 3 quotation marks are neces
     #Create H2O fragment from xyz-file
     H2O=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 
-where h2o.xyz must be present in working directory and should look like (a 2-line header is always necessary containing the number of atoms in the first line):
+where h2o.xyz must be present in working directory and should look like below (a 2-line header is always necessary containing the number of atoms in the first line):
 
 .. code-block:: text
 
@@ -145,13 +145,15 @@ The syntax can be very different for different theory levels.
 
 *Defining an ORCATheory level:*
 
+See :doc:`ORCA-interface` for more information on ORCATheory syntax.
+
 .. code-block:: python
 
     from ash import *
 
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=8)
 
-When a Theory object is created, ASH by default prints out information on the object and may also check whether it can find the external program and whether the parallelization will work.
+When a Theory object is created, ASH by default prints out information on the object and may also check whether it can find the external program and whether the parallelization is active.
 For the ORCATheory object created above, ASH would print out:
 
 .. code-block:: text
@@ -185,6 +187,8 @@ Note, however, that defining a Theory object will not result in a calculation to
 
 *Defining an xTBTheory level:*
 
+See :doc:`xTB-interface` for more information on xTBTheory syntax.
+
 .. code-block:: python
 
     from ash import *
@@ -192,6 +196,8 @@ Note, however, that defining a Theory object will not result in a calculation to
     xTBcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
 *Defining an OpenMMTheory level:*
+
+See :doc:`OpenMM-interface` for more information on OpenMMTheory syntax.
 
 .. code-block:: python
 

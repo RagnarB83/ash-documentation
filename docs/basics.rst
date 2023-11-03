@@ -43,26 +43,30 @@ Here is a basic ASH Python script, e.g. named: ashtest.py
 
     #Defining a numcores variable with the number of available CPU cores. Will be given to ORCA object.
     numcores=4
-    #Create fragment from a multi-line Python string.
+    #Create fragment from a multi-line Python string (Cartesian coordinates in Angstrom)
     fragstring="""
     H 0.0 0.0 0.0
     F 0.0 0.0 1.0
     """
     molecule = Fragment(coordsstring=fragstring, charge=0, mult=1)
 
-    #Defining ORCA-related variables
+    #Defining string containing ORCA Simple-input line
     orcasimpleinput="! BP86 def2-SVP tightscf"
-    orcablocks="%scf maxiter 200 end"
-
+    #Multi-line string containing ORCA block-input:
+    orcablocks="""
+    %scf maxiter 200
+    end
+    """"
+    #Defining ORCATheory object
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
-    #Geometry Optimization using geomeTRIC
+    #Geometry Optimization using the Optimizer (requires geomeTRIC library)
     Optimizer(fragment=molecule, theory=ORCAcalc, coordsystem='tric')
 
 
 The script above loads ASH, creates a new fragment from a string (see :doc:`coordinate-input` for other ways),
 defines variables related to the ORCA-interface , creates an ORCA-theory object
-(see :doc:`QM-interfaces` and :doc:`ORCA-interface` ), and runs a geometry optimization using the geomeTRICOptimizer optimizer function  (see :doc:`job-types` and :doc:`Geometry-optimization` ).
+(see :doc:`QM-interfaces` and :doc:`ORCA-interface` ), and runs a geometry optimization using the Optimizer optimizer function  (see :doc:`job-types` and :doc:`Geometry-optimization` ).
 
 
 ######################################
@@ -83,6 +87,7 @@ To save the output it is better to redirect the output to a file.
     python3 ashtest.py >& ashtest.out
 
 For a really long job you would typically submit a jobscript to a queuing system instead.
+See e.g. **subash** script at the bottom of this page.
 
 #####################################################
 Interactive ASH in a REPL or iPython environment
@@ -90,8 +95,8 @@ Interactive ASH in a REPL or iPython environment
 It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
 This allows for interactive use of ASH. See video below for an example.
 
-If ASH has been set up correctly (PYTHONPATH etc.) and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
-Make sure to use the iPython that uses the same Python as ASH.
+If ASH has been set up correctly (setting PYTHONPATH etc.) and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
+Make sure to use the iPython that uses the same Python environment as ASH.
 
 .. raw:: html
 
@@ -112,8 +117,10 @@ The PythonCall/juliacall library is recommended.
 ASH settings
 #####################
 
-Global settings are stored in  */path/to/ash/ash/settings_ash.py* and can in principle be modified. However, it is better to instead create a settings file called **ash_user_settings.ini** for your user in your home-directory that should look like below.
-Here you can set whether to use ANSI colors in output, whether to print inputfile and logo, timings etc.
+Global settings are stored in  */path/to/ash/ash/settings_ash.py* and can in principle be modified. 
+However, it is better to instead create a settings file called **ash_user_settings.ini** for your user 
+in your home-directory that should look like below.
+Here you can set whether to use ANSI colors in output, whether to print inputfile and logo at the top, timings at the bottom etc.
 ASH will attempt to read this file on startup.
 
 .. code-block:: text
@@ -149,8 +156,6 @@ If these paths are set in the settings file, one can avoid defining them in the 
     crestdir = /path/to/crestdir
 
 
-
-
 ###############################
 Use of colors in ASH output
 ###############################
@@ -160,7 +165,7 @@ This makes the output more readable.
 
 Note, however, that colors will only display properly if using a text reader that supports it:
 
-| - less may require the -R flag: less -R outputfile. Or setting: export LESS=-R
+| - less may require the -R flag: less -R outputfile. Or use the global setting: export LESS=-R
 | - vim and emacs require plugins
 
 
@@ -168,12 +173,13 @@ Note, however, that colors will only display properly if using a text reader tha
 Submitting job
 #####################
 
-For a more complicated job to be submitted to the queuing system on a cluster, one would like to have a submission
-script that also configures the environment, copies inputfiles to local scratch and results from scratch to back etc.
+For a more complicated job to be submitted to the queuing system on a cluster, 
+it is best to have a submission script that configures the environment, 
+copies inputfiles to local scratch and copies results back from scratch to submission directory.
 
-The **subash**  script below can be used for this purpose.
+The **subash**  script below can be used for this purpose (with appropriate modifications for your cluster)
 The number of cores can be provided in the command-line (should match the number of cores requested for the Theory level).
-Alternatively this script can read the numcores variable in the inputfile.py (if present). 
+Alternatively the **subash** script will automatically look for and read a numcores variable in the ASH inputfile (if present). 
 Make sure to have a line containing: "numcores=X" in the Python script (as in the ashtest.py example above).
 
 Using **subash**:
@@ -184,8 +190,9 @@ Using **subash**:
     subash input.py -p 8  (where -p 8 indicates 8 cores to request from the queuing system)
 
 **subash**:
-This script is written for the SLURM queuing system.
-To use, one needs to change the name of the queue, default walltime, name of local scratch location on each node in the first lines of the script below.
+This script is written for the SLURM queuing system (could be adapted easily to others).
+To use, one needs to change the name of the queue, default walltime, name of local scratch location on each node etc. 
+in the first lines of the script below.
 Also one needs provide the path to an environment-file that configures the ASH environment (PYTHONPATH, PATH, LD_LIBRARY_PATH etc.).
 If you set up ASH using the Conda instructions `Conda <https://ash.readthedocs.io/en/latest/setup.html#b1-semi-automatic-miniconda-setup-easiest>`_
 you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
@@ -200,17 +207,30 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     #CLUSTER SETTINGS (to be modified by user)
 
     #Default name of cluster queue to submit to. Can be verridden by -q or --queue option
-    queue=default1
+    queue=LocalQ
 
     #Default walltime. Overridden by -w or --walltime
-    walltime=8760
+    walltime=900
+
+    #Default memory per CPU
+    memory_per_cpu=10
+
+    #Default number of threads (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENMM_CPU_THREADS)
+    threads=1  #If threads=auto then threads are set to SLURM CPU cores
+
+    #Default number of GPU slots
+    number_of_gpus=0
+    gpu_memory=1
+    #-g gpu_mem:4G
 
     # Path to local scratch on nodes (Script will create temporary user and job-directory here)
-    SCRATCHLOCATION=/nobackup
+    #8TB HDD scratch: /data-hdd/SCRATCH
+    #1 TB SSD scratch. /data-nvme/SCRATCH
+    SCRATCHLOCATION=/data-hdd/SCRATCH
 
     #Path to bash file containing PATH and LD_LIBRARY_PATH definitions
     #Should define environment for ASH and external QM programs
-    ENVIRONMENTFILE=/home/rb269145/ASH/NEW/ash/set_environment_ash.sh
+    ENVIRONMENTFILE=/homelocal/rb269145/scripts/set_environment_ash.sh
 
     #Default ASH branch to use
     ashbranch="new"
@@ -230,8 +250,15 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     echo "${green}subash${normal}"
     echo "${yellow}Usage: subash input.py      Dir should contain .py Python script.${normal}"
     echo "${yellow}Or: subash input.py -p 8      Submit with 8 cores.${normal}"
+    echo "${yellow}Or: subash input.py -g 1:1GB      Submit with 1 GPU core and request 1 GB of memory.${normal}"
     echo "${yellow}Or: subash input.py -master      Submit using ASH masterbranch.${normal}"
     echo "${yellow}Or: subash input.py -new      Submit using ASH newbranch.${normal}"
+    echo "${yellow}Or: subash input.py -m X      Memory setting per CPU (in GB): .${normal}"
+    echo "${yellow}Or: subash input.py -t T      Submit using T threads (for OpenMP/OpenMM/MKL).${normal}"
+    echo "${yellow}Or: subash input.py -s /path/to/scratchdir      Submit using specific scratchdir .${normal}"
+    echo "${yellow}Or: subash input.py -mw            Submit multi-Python job (multiple walkers) .${normal}"
+    echo "${yellow}Or: subash input.py -n aar154      Submit to specific node (-n, --node).${normal}"
+    echo "${yellow}Or: subash input.py -q queuname    Submit to specific queue: .${normal}"
     exit
     }
 
@@ -247,6 +274,9 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     echo
     print_usage
     fi
+
+    #multiwalker default false
+    multiwalker=false
 
     #Go through arguments
     while [[ $# -gt 0 ]]
@@ -267,8 +297,41 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
         shift # past argument
         shift # past value
         ;;
-        -w|--walltime) #Name of queue
+        -t|--threads) #Number of threads
+        threads="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -m|--mempercpu) #Memory per core (GB)
+        memory_per_cpu="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -g|--gpu) #Number of GPUcores and memory
+        gpustuff="$2"
+        gpuoptions=(${gpustuff//:/ })
+        number_of_gpus=${gpuoptions[0]}
+        gpu_memory=${gpuoptions[1]}
+        shift # past argument
+        shift # past value
+        ;;
+        -mw|--multiwalker) #Multiwalker
+        multiwalker=true
+        shift # past argument
+        #shift # past value
+        ;;
+        -w|--walltime) #Walltime
         walltime="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -n|--node) #Name of node
+        specificnode="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -s|--scratchdir) #Name of scratchdir
+        SCRATCHLOCATION="$2"
         shift # past argument
         shift # past value
         ;;
@@ -295,6 +358,33 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     fi
     fi
 
+    #Memory setting
+    echo "Memory setting per CPU: $memory_per_cpu GB"
+    slurm_mem_line="#SBATCH --mem-per-cpu=${memory_per_cpu}G"
+
+    #THREADS-setting. Applies to programs using multithreading that needs to be controlled by:
+    #OMP_NUM_THREADS, MKL_NUM_THREADS or OPENMM_CPU_THREADS variables
+    #If threads is auto
+    if [[ $threads == auto ]]
+    then
+    echo "Threads-setting is auto. Setting threads equal to numcores: $numcores"
+    threads=$numcores
+    else
+    echo "Threads set to $threads"
+    fi
+
+    #Possible request of GPUs
+    if [[ $number_of_gpus != 0 ]]
+    then
+    echo "GPUs requested: $number_of_gpus"
+    echo "GPU memory: $gpu_memory"
+    slurm_gpu_line1="#SBATCH --gres=gpu:$number_of_gpus"
+    slurm_gpu_line2="#SBATCH --mem-per-gpu $gpu_memory"
+    else
+    slurm_gpu_line1=""
+    slurm_gpu_line2=""
+    fi
+
     ######################
     #Job-script creation
     ######################
@@ -306,8 +396,11 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     #SBATCH --tasks-per-node=$numcores
     #SBATCH --time=$walltime:00:00
     #SBATCH -p $queue
+    $slurm_gpu_line1
+    $slurm_gpu_line2
     #SBATCH --output=%x.o%j
     #SBATCH --error=%x.o%j
+    $slurm_mem_line
 
     export job=\$SLURM_JOB_NAME
     export job=\${job%%.*}
@@ -315,21 +408,24 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     #Outputname
     outputname="\$job.out"
 
+    #Multiwalker option
+    multiwalker=$multiwalker
+
+
     #NUM_CORES
     NUM_CORES=\$((SLURM_JOB_NUM_NODES*SLURM_CPUS_ON_NODE))
 
-    #For OpenMM
-    export OPENMM_CPU_THREADS=\$NUM_CORES
+    #For OpenMM we set this variable
+    export OPENMM_CPU_THREADS=$threads
 
-    # Usage:
-    #ulimit -u unlimited
-    #limit stacksize unlimited
-
-    #Necessary?
-    #setopt EXTENDED_GLOB
-    #setopt NULL_GLOB
-    export MKL_NUM_THREADS=\$NUM_CORES
-    export OMP_NUM_THREADS=\$NUM_CORES
+    #Setting MKL_NUM_THREADS and OMP_NUM_THREADS to 1 by default.
+    #Note: pyscf threading will not work without this.
+    #OpenMM uses variable above instead.
+    #Wfoverlap should be set by subprocess call. Should be possible to control all subprocess calls by embedding export OMP_NUM_THREADS into subprocess call
+    #Python libraries are trickier
+    export MKL_NUM_THREADS=1
+    export OMP_NUM_THREADS=1
+    export OPENBLAS_NUM_THREADS=1
     export OMP_STACKSIZE=1G
     export OMP_MAX_ACTIVE_LEVELS=1
 
@@ -337,6 +433,10 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     echo "MKL_NUM_THREADS: \$MKL_NUM_THREADS"
     echo "OMP_NUM_THREADS: \$OMP_NUM_THREADS"
 
+
+    # Usage:
+    #ulimit -u unlimited
+    #limit stacksize unlimited
 
     #Create scratch
     scratchlocation=$SCRATCHLOCATION
@@ -385,13 +485,18 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     cp \$SLURM_SUBMIT_DIR/*.xyz \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.c \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.gbw \$tdir/ 2>/dev/null
+    cp \$SLURM_SUBMIT_DIR/*nat \$tdir/ 2>/dev/null
+    cp \$SLURM_SUBMIT_DIR/*.chk \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.xtl \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.ff \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.ygg \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.pdb \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.info \$tdir/ 2>/dev/null
+    cp \$SLURM_SUBMIT_DIR/POTENTIAL \$tdir/ 2>/dev/null
+    cp \$SLURM_SUBMIT_DIR/BASIS_MOLOPT \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/qmatoms \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/hessatoms \$tdir/ 2>/dev/null
+    cp \$SLURM_SUBMIT_DIR/Hessian* \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/act* \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.xml \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*.txt \$tdir/ 2>/dev/null
@@ -404,6 +509,7 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
     cp \$SLURM_SUBMIT_DIR/*.itp \$tdir/ 2>/dev/null
     cp \$SLURM_SUBMIT_DIR/*prmtop \$tdir/ 2>/dev/null
 
+    echo "Node(s): \$SLURM_JOB_NODELIST"
     # cd to scratch
     echo "Entering scratchdir: \$tdir"
     cd \$tdir
@@ -433,7 +539,40 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 
     #Start ASH job from scratch dir.  Output file is written directly to submit directory
     export PYTHONUNBUFFERED=1
+
+
+    # Multiple walker ASH run (intended for multiwalker metadynamics primarily
+
+    if [ "\$multiwalker" = true ]
+    then
+    echo "Multiwalker True! NUM_CORES: \$NUM_CORES"
+    #Creating multiple subdir walkersim$i HILLS files are stored in $tdir
+    for (( i=0; i<\$NUM_CORES; i++ ))
+    do
+        echo "Creating dir: walkersim\$i"  >> \$SLURM_SUBMIT_DIR/\$outputname
+        mkdir walkersim\$i
+        echo "Copying files to dir: walkersim\$i"  >> \$SLURM_SUBMIT_DIR/\$outputname
+        cp * walkersim\$i/
+        cd walkersim\$i
+        echo "Entering dir: walkersim\$i"  >> \$SLURM_SUBMIT_DIR/\$outputname
+        echo "Process launched : \$i"  >> \$SLURM_SUBMIT_DIR/\$outputname
+        sleep 2
+        python3 \$job.py >> \$SLURM_SUBMIT_DIR/\${job}_walker\${i}.out 2>&1 &
+        declare P\$i=\$!
+        cd ..
+    done
+    wait
+    # \$P1 \$P2  #Does not matter?
+
+    else
+    #Regular job
     python3 \$job.py >> \$SLURM_SUBMIT_DIR/\$outputname 2>&1
+
+    fi
+
+    #Making sure to delete potentially massive  files before copying back
+    rm -rf core.*  #If  segfaults
+    rm -rf orca.*tmp* #ORCA tmp files from e.g. MDCI
 
     header=\$(df -h | grep Filesy)
     echo "header: \$header"
@@ -449,7 +588,21 @@ you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 
     EOT
     ######################
+
     #Submit job.
+    if [[  -z "$specificnode" ]]; then
     sbatch -J $file ash.job
+    else
+    #Submit to a specific node
+    echo "Submitting to specific node: $specificnode"
+    sbatch -J $file -w $specificnode ash.job
+    fi
     echo "${cyan}ASH job: $file submitted using $numcores cores.${normal}"
     echo "Queue: $queue and walltime: $walltime"
+
+    #Multiwalker
+    if [[ "$multiwalker" == true ]]
+    then
+    echo "Multiwalker option chosen. ASH will create multiple dirs on scratch and submit $numcores jobs"
+    echo "Make sure to adjust numcores inside ASH script!"
+    fi
