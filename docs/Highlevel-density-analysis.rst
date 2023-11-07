@@ -63,7 +63,8 @@ To create a Moldenfile from this GBW file we can use the **orca_2mkl** tool agai
 
 
 For CC methods, the energy is calculated by default and additionally a linearized density is calculated by default.
-Additional equations have to be solved to define a more correct CC density. Densities are not always available for all CC truncations.
+Additional equations have to be solved to define a more correct CC density.
+ Densities are only available for the CCSD truncation in ORCA version 5.
 
 .. code-block:: text
 
@@ -98,7 +99,8 @@ a property closely related to the quality of the WF and density (and in the case
 The experimental dipole moment of CO is 0.04799 au (0.112 Debye). See `Scuseria et al  <https://doi.org/10.1063/1.460293>`_ for a discussion of the dipole moment of CO.
 
 As we will be utilizing a small cc-pVDZ basis set set to begin with, we can not expect to reproduce the experimental dipole moment.
-In fact, the Full-CI WF result in a cc-pVDZ basis set appears to be approximately 0.088 au (see later).
+In fact, the Full-CI WF result in a cc-pVDZ basis set appears to be approximately 0.088 au (as we will confirm later). 
+However, utilizing a Full-CI result as a reference, even with a very small basis set can be useful to understand the accuracy of other WF methods.
 
 **Convergence of single-reference WF methods**
 
@@ -129,7 +131,7 @@ We first see that MRCC gives unrelaxed and relaxed CCSD density results of 0.097
 CCSDT-unrelaxed gives 0.0915 and CCSDT-relaxed gives 0.0844 a.u.
 CCSDTQ-unrelaxed gives 0.0889 and CCSDTQ-relaxed gives 0.0879 a.u.
 
-It seems that we have reached an effective FCI-limit using coupled cluster theory, based on the smaller changes seen between CCSD(T), CCSDT and CCSDTQ as well as the smaller variations between unrelaxed and relaxed densities.
+It seems that we have reached an effective FCI-limit using coupled cluster theory, based on the small changes seen between CCSD(T), CCSDT and CCSDTQ as well as the smaller variations between unrelaxed and relaxed densities.
 Clearly, inclusion of triples correlation effects seems critical (quadruples effects less so) and the density approximation in CC needs to be reliable.
 
 
@@ -139,17 +141,17 @@ Clearly, inclusion of triples correlation effects seems critical (quadruples eff
 
 Multiconfigurational and multireference methods are typically used to describe systems with strong static correlation.
 This is not the case for carbon monoxide (no near-degeneracies), but it can still be useful to analyze how much dynamic electron correlation is 
-captured by the CASSCF and MRCI+Q approaches for a molecule with a non-exotic electronic structure. This allows us to see what accuracy we can expect when using these methods
-for genuine multireference systems.
+captured by the CASSCF and MRCI+Q approaches for a molecule with a non-exotic electronic structure. This allows us to roughly estimate what accuracy
+we can expect when we use these methods for genuine multireference systems.
 
-Going to a minimial CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is not entirely surprising because an active space of (2,2) only results in 3 total configurations (vs. 1 for RHF)
+Going to a minimal CASSCF(2,2) WF we see a deterioration (-0.13) of the RHF result which is not entirely surprising because an active space of (2,2) only results in 3 total configurations (vs. 1 for RHF)
 and the small active space probably results in an imbalance of the WF. 
-A larger CASSCF(6,5) WF includes 65 configurations which is enough to include enough correlation for a qualitatively correct result of 0.1080 au.
+A larger CASSCF(6,5) WF includes 65 configurations which includes enough correlation for at least a qualitatively correct result of 0.1080 au.
 Increasing to a full valence-space CASSCF(10,8) WF (784 configurations) WF interestingly diverges slightly, giving a value of 0.1451 a.u.
-The multiconfigurational CASSCF approach performs Full-CI within the active space but actually does not capture very much correlation due to the still relatively small active space.
-While we could increase the active space further in CASSCF, to a limit of about 14-16 orbitals, this would not improve things very much as our active-space limitation
+The multiconfigurational CASSCF approach performs Full-CI within the active space but actually does not capture very much electron correlation due to the still relatively small active space.
+While we could increase the active space further in CASSCF, to a limit of about 14-16 orbitals (this can be increased to 40-60 orbitals via DMRG,ICE-CI or SHCI), this would not improve things very much as our active-space limitation
 allows us only to capture correlation associated with a few number of occupied and virtual orbitals. 
-It is actually much more important to capture correlation associated with a large number of orbitals (i.e. dynamic correlation) even though the n-excitation level is smaller.
+It is actually in general typically more important to capture correlation associated with a large number of orbitals (i.e. dynamic correlation) even though the n-excitation level is smaller (e.g. single-reference CC).
 
 .. image:: figures/DM-MR.png
    :align: center
@@ -192,15 +194,15 @@ The ICE-CI method is a variant of the CIPSI method which is a selected CI approa
 It relies on a systematic selection of many-particle basis functions (can be CFGs, CSFs or determinants) in the overall WF, 
 based on a systematic selection procedure based on perturbation theory. In the CFG-form of ICE-CI (used here), only CFGs strongly interacting 
 with selected generator CFGs are included.
-The selection is controlled by the *TGen* parameter which controls the size of the generator set of configurations and *Tvar* which controls the size of the variational space.
-It is usually convenient to control the size of the ICE-CI WF only by the *TGen* threshold, in case of which *Tvar* is automatically determined (*TVar* = *TGen* * 1e-7). This is done below.
+The selection is controlled by the *TGen* parameter which controls the size of the generator set of configurations and *TVar* which controls the size of the variational space.
+It is usually convenient to control the size of the ICE-CI WF only by the *TGen* threshold, in case of which *TVar* is automatically determined (*TVar* = *TGen* * 1e-7). This is done below.
 If *TGen* (and *TVar*) are set to 0 then the exact Full-CI WF is recovered. 
 However, because of the systematic tree-based selection procedure in ICE-CI,
 using ICE-CI WF with e.g. *TGen* = 1e-4, the WF can be made much more compact ( < 1% of configurations of Full-CI) and can recover most of the correlation energy ( > 99 %).
-Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI not being fully size-consistency 
-(errors will reduce with threshold).
+Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI
+ not being fully size-consistent (errors will reduce with threshold).
 
-In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out (unless requested)
+In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out (unless requested).
 
 .. note::  It is possible to perform orbital-optimization with an ICE-CI WF using the %casscf module of ORCA (cistep ICE), however, when using ICE-CI to perform full CI (i.e. including the entire orbital space) it is more cost-effective to use approximate orbitals.
 
@@ -315,7 +317,7 @@ This Full-CI/cc-pVDZ estimate of 0.088-0.089 au is quite far from the experiment
 However, having now established the convergence of the many-electron WF with a small basis set we can now pick a well-behaved method 
 and examine how the dipole moment converges with basis set.
 Increasing the basis set captures additional correlation energy (due to the increase of virtual orbitals resulting in more possible excitations) which will reduce the basis set incompleteness error.
-The previous results suggests multireference methods do not offer any advantages for this system, while single-reference CC theory is well-behaved as long as triples excitations effects are accounted for in some way.
+The previous results suggests multireference methods do not offer any advantages for this system (unsurprisingly), while single-reference CC theory is well-behaved as long as triples excitations effects are accounted for in some way.
 The near-Full-CI methods SHCI, ICE-CI and DMRG are well-behaved once the selection threshold are chosen well, however, these methods can not easily be used to perform calculations with larger basis sets.
 This is because increasing the basis set to the TZ or QZ level will increase the size of the total orbital space to 59 (TZ), 109 (QZ) and 181 (5Z) 
 which are orbital limits outside the scope of these methods (approx. 50 for DMRG/ICE-CI and up to 100 for SHCI).
@@ -325,7 +327,7 @@ We will here choose CCSD(T) as our truncated WF approximation and will examine h
    :align: center
    :width: 600
 
-The results calculated with both an unrelaxed CCSD(T) density (using pySCF) and a relaxed CCSD(T) density (using CFour) are shown below.
+The results calculated with both an unrelaxed CCSD(T) density (using pySCF) and a relaxed CCSD(T) density (using CFour) are shown above.
 The results reveal considerable basis set effects (not surprisingly) as we go from the cc-pVDZ basis set to the cc-pV5Z basis set using the CCSD(T) method.
 For the case of the dipole moment of CCSD(T), the general dynamic correlation effects captured by basis set expansion, clearly outweigh any beyond CCSD(T) correlation effects.
 The FCI/cc-pVZ - CCSD(T)/cc-pVDZ difference amounts to approx. 0.0024 - 0.0029 au (CCSD(T) unrelaxed or relaxed), 
@@ -333,9 +335,10 @@ which is an order of magnitude smaller than the cc-pVDZ -> cc-pV5Z basis set eff
 However, one could include this Full-CI correction to the CCSD(T)/5Z result, evaluated at the cc-pVDZ basis to account for this.
 
 Overall, the agreement for CCSD(T)/cc-pV5Z of 0.0443 - 0.0472 a.u. with experiment (0.0480 a.u.) is excellent.
-Accounting for a FCI/DZ-correction to the CCSD(T)/cc-pV5Z value we get 0.0469 - 0.0502 a.u which is in near-perfect agreement.
+Accounting for a FCI/DZ-correction to the CCSD(T)/cc-pV5Z value we get 0.0469 - 0.0502 a.u which is in basically perfect agreement, 
+with only some minor uncertainty due mostly to basis set incompleteness error and accuracy of the Full-CI correction.
 
-The good performance of CCSD(T) is here entirely expected from a molecule with a non-exotic electronic structure.
+The excellent performance of CCSD(T) is here entirely expected for a molecule with a non-exotic electronic structure.
 
 
 ##############################################################################
@@ -345,10 +348,10 @@ Population analysis
 While the dipole moment can be useful for analyzing the convergence of the WF, it may not reveal very much about the 
 electronic-structure changes occurring in the molecule as electron correlation is captured.
 Population analysis such as atomic charges and bond orders, however, can sometimes give a clearer picture.
-Here we will analyze Hirshfeld atomic charges and Mayer bond orders of CO as a function of WF complexity, using the cc-PVDZ basis set.
+Here we will analyze Hirshfeld atomic charges and Mayer bond orders of CO as a function of WF complexity, using the cc-pVDZ basis set.
 
 As Hirshfeld population analysis and Mayer bond orders are not implemented in all the different QM codes used,
-we utilize the ASH interface to Multiwfn to conveniently perform this analysis. This relies on providing Molden files to Multiwfn that 
+we utilize the ASH interface to Multiwfn (see :doc:`Multiwfn_interface`) to conveniently perform this analysis. This relies on providing Molden files to Multiwfn that 
 that contain natural orbitals (the orbitals that make the first-order density matrix diagonal).
 
 
