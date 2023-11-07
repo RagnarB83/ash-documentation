@@ -167,7 +167,7 @@ This file can be conveniently opened by some visualization programs such as Chem
     frag=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 
     #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
-    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", numcores=numcores)
 
     #Serial Numfreq job (default):
     freqresult = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial')
@@ -193,7 +193,7 @@ It contains the calculated frequencies, eigenvectors, normalmodes, list-of frequ
     frag=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 
     #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
-    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c")
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
 
     #Parallel mode: ASH will use the number of cores given to run same number of displacments simultaneously.
     freqresult = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
@@ -223,7 +223,7 @@ Example:
 .. code-block:: python
 
     HF_frag=Fragment(xyzfile="hf.xyz")
-    ORCAcalc = ORCATheory(orcasimpleinput='BP86 def2-SVP def2/J', orcablocks="", numcores=1)
+    ORCAcalc = ORCATheory(orcasimpleinput='BP86 def2-SVP def2/J tightscf', orcablocks="", numcores=1)
     freqresult = AnFreq(theory=ORCAcalc, fragment=HF_frag)
 
     print("Thermochem properties dict:", freqresult.thermochemistry)
@@ -325,10 +325,10 @@ final IR intensity for each normal mode. The IR intensities are stored in the AS
 
   frag=Fragment(databasefile="h2o.xyz", charge=0, mult=1)
 
-  #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
-  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", numcores=4)
+  #ORCA theory
+  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", numcores=4)
 
-  #Serial Numfreq job (default):
+  #Serial Numfreq job
   result = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial')
 
   print("Vibrational frequencies (cm**-1) : ", result.frequencies)
@@ -349,13 +349,13 @@ To get the Raman activities one must i) tell the QM-code to calculate polarizabi
 
   frag=Fragment(databasefile="h2o.xyz", charge=0, mult=1)
 
-  #
+  # ORCA Theory requesting polarizability calculation
   blocks="""
   %elprop
   polar 1
   end
   """
-  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", orcablocks=blocks, numcores=4)
+  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", orcablocks=blocks, numcores=4)
 
   #NumFreq
   result = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial', Raman=True)
