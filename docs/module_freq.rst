@@ -167,10 +167,10 @@ This file can be conveniently opened by some visualization programs such as Chem
     frag=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 
     #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
-    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c, numcores=numcores)
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", numcores=numcores)
 
     #Serial Numfreq job (default):
-    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='serial')
+    freqresult = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial')
 
     print("freqresult:", freqresult)
     #Print Hessian
@@ -193,10 +193,10 @@ It contains the calculated frequencies, eigenvectors, normalmodes, list-of frequ
     frag=Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
 
     #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
-    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c)
+    ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c")
 
     #Parallel mode: ASH will use the number of cores given to run same number of displacments simultaneously.
-    freqresult = NumFreq(fragment=Reactant, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
+    freqresult = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
 
     print("Vibrational frequencies (cm**-1) : ", freqresult['frequencies'])
     print("ZPVE (Eh) : ", freqresult['ZPVE'])
@@ -297,3 +297,120 @@ The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be speci
     #Manually defined frequencies for system
     frequencies=[1600.1, 2300.2, 2400.3]
     thermochemcalc(frequencies,3,h2o_frag, 1, temp=298.18, pressure=1.0)
+
+
+#########################################
+Calculating IR and Raman spectra
+#########################################
+
+Calculation of IR and Raman spectra requires either the dipole derivatives or the polarizability derivatives along the normal modes.
+This means that to get IR/Raman intensitites from a numerical frequency calculation the dipole moment (IR) or polarizability (Raman) 
+must be calculated for each displacement by the QM-code.
+
+IR/Raman spectra can be calculated for any QM-level of theory for which analytical gradients (first derivatives) are available and if dipole moments/polarizabilities
+are available in the code or supported by ASH interface (see below). QM/MM theories within ASH are also supported.
+
+**IR intensities:**
+
+In the ASH interfaces to ORCA, pySCF, xTB, MRCC, CFour, Block and Dice, the dipole moments are automatically available and the NumFreq module will
+in this case get the dipole moment from each calculation and automatically calculate the dipole derivatives along the normal modes and provide the 
+final IR intensity for each normal mode. The IR intensities are stored in the ASH_Results object returned from the NumFreq function.
+
+
+*Example: IR intensities using ORCA*
+
+.. code-block:: python
+
+  from ash import *
+
+  frag=Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+
+  #ORCA theory object, ORCA parallelization turned off by not providing numcores keyword
+  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", numcores=4)
+
+  #Serial Numfreq job (default):
+  result = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial')
+
+  print("Vibrational frequencies (cm**-1) : ", result.frequencies)
+  print("IR intensities (km/mol): ", result.IR_intensities)
+
+
+**Raman activities:**
+
+Raman activities are a bit more complicated. Analytic polarizabilities are not always available in the QM-code and they are much more expensive.
+Polarizabilities are available in the ASH interface to ORCA, pySCF and CFour.
+To get the Raman activities one must i) tell the QM-code to calculate polarizabilities and ii) tell the NumFreq module that one wants Raman (Raman=True).
+
+*Example: Raman activities using ORCA*
+
+.. code-block:: python
+
+  from ash import *
+
+  frag=Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+
+  #
+  blocks="""
+  %elprop
+  polar 1
+  end
+  """
+  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", orcablocks=blocks, numcores=4)
+
+  #NumFreq
+  result = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial', Raman=True)
+
+  print("Vibrational frequencies (cm**-1) : ", result.frequencies)
+  print("Raman activities (Å^4/amu): ", result.Raman_activities)
+
+  
+**Plot IR/Raman spectra:**
+
+The vibrational frequencies, IR intensities and Raman activitites can be found in the ASH output:
+
+.. code-block:: text
+
+  ----------------------------------------
+  VIBRATIONAL FREQUENCY SUMMARY
+  ----------------------------------------
+  Note: imaginary modes shown as negative
+    Mode    Freq(cm**-1)   IR Int.(km/mol)  Raman Act.(Å^4/amu)
+    0             0.0000        0.0000          0.0000            (TR mode)
+    1             0.0000        0.0000          0.0000            (TR mode)
+    2             0.0000        0.0000          0.0000            (TR mode)
+    3             0.0000        0.0000          0.0000            (TR mode)
+    4             0.0000        0.0000          0.0000            (TR mode)
+    5             0.0000        0.0000          0.0000            (TR mode)
+    6          1608.3146       81.7550          1.3155
+    7          3851.9971        4.3099         74.7428
+    8          3993.9783       63.5039         22.0644
+
+and can also be found in the ASH Results object.
+If one wants to plot a broadened IR/Raman spectra one can use **plot_Spectrum** function (see :doc:`module_plotting`),
+providing the frequencies and intensities from the Results object as x- and y-values.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag=Fragment(databasefile="acetone.xyz", charge=0, mult=1)
+
+  #ORCA theory object
+  ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c", numcores=4)
+
+  #Optimization
+  Optimizer(fragment=frag, theory=ORCAcalc)
+  #Frequencies
+  result = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='serial')
+
+  print("Vibrational frequencies (cm**-1) : ", result.frequencies)
+  print("IR intensities (km/mol): ", result.IR_intensities)
+
+  #Plotting broadened IR spectrum (11 cm-1 broadening, 5000 points) for 1000-2000 cm-1 window.
+  plot_Spectrum(xvalues=result.frequencies, yvalues=result.IR_intensities, plotname='IR_spectrum', range=[1000,2000], unit='cm-1',
+      broadening=11, points=5000, imageformat='png', dpi=200)
+
+
+.. image:: figures/IR_spectrum_acetone.png
+   :align: center
+   :width: 600

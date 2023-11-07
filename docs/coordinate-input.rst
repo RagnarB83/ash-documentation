@@ -158,9 +158,10 @@ elements and coordinates, not atom-types or residue information.
 *From XYZ-file in ASH database*
 
 ASH contains an internal database of some small molecules.
-These are XYZ-files that are present in the ASH repository (`ASH-code/databases/fragments directory<https://github.com/RagnarB83/ash/tree/master/databases/fragments>`_)
-Examples of available files: h2o.xyz, nh3.xyz, n2.xyz, butane.xyz, glycine.xyz 
-The coordinates in these files have been pre-optimized by some level of theory.
+These are XYZ-files that are present in the ASH repository ( see `ASH-code/databases/fragments directory <https://github.com/RagnarB83/ash/tree/master/databases/fragments>`_ )
+Examples of available files: h2o.xyz, nh3.xyz, n2.xyz, butane.xyz, glycine.xyz  etc.
+
+The coordinates in these files have been pre-optimized by some level of theory and are reasonable but should obviously be re-optimized for any serious calculations.
 
 .. code-block:: python
 
