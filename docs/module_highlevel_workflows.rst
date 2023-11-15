@@ -517,11 +517,93 @@ Output:
 .. warning:: The plots require the Matplotlib library to be installed. 
 
 
+################################################
+WFT theory with flexible orbital-input option
+################################################
+
+For many single-reference and multireference methods the reference determinant or orbitals are not optimized, 
+resulting in an input-orbital dependence that can be either mild or sometimes severe.
+For single-reference CC theory a HF determinant is traditionally used with the assumption that the T1 operator will account indirectly for orbital-relaxation.
+There are molecules where this has been found to be a problematic choice with either Kohn-Sham, Brueckner or orbital-optimized CC references being recommended instead.
+For selected CI methods such as ICE-CI (see below), standard CI without orbital optimization is typically performed, 
+resulting in a mild orbital dependency. Typically natural orbitals from a cheaper WF are used in such cases. 
+Natural orbitals are the orbitals that diagonalize the 1-electron density matrix.
+
+To facilitate the use of different orbitals in WFT calculations using ORCA, ASH features the **ORCA_orbital_setup** function
+which given an orbital-input choice and basis set runs an ORCA calculation and returns the name of the orbital file to be used for another calculation.
+
+.. code-block:: python
+
+  def ORCA_orbital_setup(orbitals_option=None, fragment=None, basis=None, basisblock="", extrablock="", extrainput="",
+        MP2_density=None, MDCI_density=None, memory=10000, numcores=1, charge=None, mult=None, moreadfile=None, 
+        gtol=2.50e-04, nmin=1.98, nmax=0.02, CAS_nel=None, CAS_norb=None,
+        CASCI=True, tgen=1e-4, no_moreadfile_in_CAS=False, ciblockline=""):
+
+The *orbitals_option* keyword can be an MP2-method like:
+'MP2', 'RI-MP2', 'RI-SCS-MP2', 'OO-RI-MP2'
+which together with the MP2_density keyword (takes options: 'unrelaxed' or 'relaxed')
+will result in the calculation of natural orbitals from the chosen MP2 Hamiltonian.
+
+**Example: MP2 natural orbitals as input for CCSD(T)**
+
+.. code-block:: python
+
+  from ash import *
+  frag = Fragment(databasefile="hf.xyz")
+  basis="cc-pVDZ"
+  #Using ORCA_orbital_setup to calculate MP2 natural orbitals using the relaxed MP2 density
+  orbfile, natoccs = ORCA_orbital_setup(fragment=frag, basis=basis, orbitals_option='MP2', MP2_density='relaxed')
+  #Defining an ORCA CCSD(T) noiter calculation using the natural orbitals from the MP2 calculation
+  ORCA_CCSD_T = ORCATheory(orcasimpleinput=f"! CCSD(T) {basis} tightscf noiter", moreadfile=orbfile)
+  Singlepoint(theory=ORCA_CCSD_T, fragment=frag)
+
+Alternative one can use a CC-type method using the MDCI module in ORCA.
+Options are: 'CCSD', 'QCISD', 'CEPA/1', 'CPF/1'
+which together with the MDCI_density keyword (takes options: 'linearized', 'unrelaxed' or 'orbopt')
+will result in the calculation of natural orbitals using the selected method and density.
+
+**Example: QCISD natural orbitals as input for CCSD(T)**
+
+.. code-block:: python
+
+  from ash import *
+  frag = Fragment(databasefile="hf.xyz")
+  basis="cc-pVDZ"
+  #Using ORCA_orbital_setup to calculate QCISD unrelaxed natural orbitals
+  orbfile, natoccs = ORCA_orbital_setup(fragment=frag, basis=basis, orbitals_option='QCISD', MDCI_density='unrelaxed')
+  #Defining an ORCA CCSD(T) noiter calculation using the natural orbitals from the QCISD calculation
+  ORCA_CCSD_T = ORCATheory(orcasimpleinput=f"! CCSD(T) {basis} tightscf noiter", moreadfile=orbfile)
+  Singlepoint(theory=ORCA_CCSD_T, fragment=frag)
+
+
+There is also an option to perform a multireference calculation using the CASSCF and MRCI modules in ORCA.
+Options are: 'CASSCF', 'MRCI', 'MRCI+Q', 'MRSORCI', 'MRDDCI1', 'MRDDCI2', 'MRDDCI3', 'MRAQCC', 'MRACPF'.
+An active space needs to be defined for this option via CAS_nel and CAS_norb keywords
+and the user should additionally specify whether CASCI is True or not (if False then CASSCF orbital optimization is carried out).
+Here the user may want to read in some orbitals via the *moreadfile* keyword.
+
+
+**Example: MRCI+Q natural orbitals as input for CCSD(T)**
+
+.. code-block:: python
+
+  from ash import *
+  frag = Fragment(databasefile="hf.xyz")
+  basis="cc-pVDZ"
+  #Using ORCA_orbital_setup to calculate MRCI+Q (CAS(2,4) reference) natural orbitals
+  orbfile, natoccs = ORCA_orbital_setup(fragment=frag, basis=basis, orbitals_option='MRCI+Q', 
+        CAS_nel=2, CAS_norb=4, CASCI=False, moreadfile="orbitals_rotated.gbw")
+  #Defining an ORCA CCSD(T) noiter calculation using the natural orbitals from the MRCI+Q calculation
+  ORCA_CCSD_T = ORCATheory(orcasimpleinput=f"! CCSD(T) {basis} tightscf noiter", moreadfile=orbfile)
+  Singlepoint(theory=ORCA_CCSD_T, fragment=frag)
+
+
+
 ##############################
 ICE-CI workflows
 ##############################
 
-ICE-CI contains a few built-in options to facilitate ICE-CI or CASCI/CASSCF ICE-based workflows.
+ASH contains a few built-in options to facilitate ICE-CI or CASCI/CASSCF ICE-based workflows.
 The function **make_ICE_theory** allows one to conveniently define ICE-CI ORCA theories for a given basis set and molecule.
 
 .. code-block:: python
