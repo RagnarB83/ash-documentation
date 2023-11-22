@@ -63,8 +63,7 @@ To create a Moldenfile from this GBW file we can use the **orca_2mkl** tool agai
 
 
 For CC methods, the energy is calculated by default and additionally a linearized density is calculated by default.
-Additional equations have to be solved to define a more correct CC density.
- Densities are only available for the CCSD truncation in ORCA version 5.
+Additional equations have to be solved to define a more correct CC density. Densities are only available for the CCSD truncation in ORCA version 5.
 
 .. code-block:: text
 
@@ -199,8 +198,8 @@ It is usually convenient to control the size of the ICE-CI WF only by the *TGen*
 If *TGen* (and *TVar*) are set to 0 then the exact Full-CI WF is recovered. 
 However, because of the systematic tree-based selection procedure in ICE-CI,
 using ICE-CI WF with e.g. *TGen* = 1e-4, the WF can be made much more compact ( < 1% of configurations of Full-CI) and can recover most of the correlation energy ( > 99 %).
-Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI
- not being fully size-consistent (errors will reduce with threshold).
+Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI 
+not being fully size-consistent (errors will reduce with threshold).
 
 In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out (unless requested).
 
@@ -306,6 +305,7 @@ TODO: explore localized input orbitals
 
 Based on the results above we can estimate the dipole moment of CO in the Full-CI limit with a cc-pVDZ basis set as:
 0.088-0.089 au. This is based on : 0.0879 (CCSDTQ relaxed), 0.0888 au (ICE-CI), 0.0887 au (SHCI) and 0.0888 au (DMRG). The MRCI+Q-CAS(10,8) number of 0.0905 a.u. is likely less reliable and is not considered here to be a Full-CI estimate.
+While the CCSDTQ WF does not include any higher order excitations (quintuples, hextuples etc.) it includes the most important triples and quadruples and unlike the other methods it is rigourously size-consistent.  
 This Full-CI/cc-pVDZ estimate of 0.088-0.089 au is quite far from the experimental value of 0.04799 au, which is due to the small basis set used.
 
 .. image:: figures/Dipole-moment-near-FCI.png
@@ -336,10 +336,9 @@ However, one could include this Full-CI correction to the CCSD(T)/5Z result, eva
 
 Overall, the agreement for CCSD(T)/cc-pV5Z of 0.0443 - 0.0472 a.u. with experiment (0.0480 a.u.) is excellent.
 Accounting for a FCI/DZ-correction to the CCSD(T)/cc-pV5Z value we get 0.0469 - 0.0502 a.u which is in basically perfect agreement, 
-with only some minor uncertainty due mostly to basis set incompleteness error and accuracy of the Full-CI correction.
+with only some minor uncertainty due mostly to basis set incompleteness error, density approximation and accuracy of the Full-CI correction.
 
 The excellent performance of CCSD(T) is here entirely expected for a molecule with a non-exotic electronic structure.
-
 
 ##############################################################################
 Population analysis
