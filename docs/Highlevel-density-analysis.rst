@@ -425,7 +425,7 @@ performs the difference density. See :doc:`elstructure_analysis`.
    diffdens_tool(reference_orbfile="ICE_CI_mp2nat_tgen_1e-06.molden",
       dir='.', grid=3)
 
-The reference density can be chosen depending on the context, e.g. the HF density in which the density changes would directly reveal directly the effect of electron correalation.
+The reference density can be chosen depending on the context, e.g. the HF density in which the density changes would directly reveal the effect of electron correlation.
 Here we choose one of the near-Full-CI densities (ICE-CI with a TGen=1e-6 threshold), assumed to be practically at the exact FCI limit, as the reference density. 
 The density changes for other methods can then mostly be interpreted as deficiencies with respect to Full-CI.
 
@@ -447,8 +447,9 @@ automatically load the Cubefiles and render them using the chosen isovalues and 
 A large difference between HF and ICE-CI is found as expected, showing HF to be predicting a more polarized electron density than ICE-CI (more electron density associated with oxygen and less on carbon).
 The CASSCF(10,8) density removes the main HF density artifact but still display some odd density changes. 
 The unrelaxed MP2 density gives a very similar result as HF (consistent with the dipole moment analysis), demonstrating the failure of the unrelaxed MP2 density approximation.
-The relaxed MP2 density is a big improvement and the linearized CCSD density is similar. An unrelaxed CCSD density further improves the result and overall higher-order CC WFs or densities become hard to tell apart.
+The relaxed MP2 density is a big improvement and the linearized CCSD density is similar. An unrelaxed CCSD density improves the result a lot and overall higher-order CC WFs or densities become hard to tell apart.
 The changes between SHCI, DMRG, CCSDTQ and MRCI+Q are overall very similar and small and are here not interpreted to be significant.
+This analysis demonstrates well how one can obtain convergence of the electron density to the Full-CI limit with very different WF methodology and QC programs and the systematic behaviour of CC theory.
 
 .. image:: figures/diffdensities-CO-iso0_001_refICE.png
    :align: center
