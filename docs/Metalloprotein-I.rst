@@ -391,7 +391,7 @@ To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup 
 
     #Creating new OpenMM object by specifying the general CHARMM36 XML files and the special residue file
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
-                platform='OpenCL', numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
+                numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
 The charmm36.xml and charmm36/water.xml files should be found automatically in the OpenMM library while the specialresidue.xml file needs to be present in the directory.
 
@@ -403,7 +403,7 @@ the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory
 .. code-block:: python
 
     #Creating new OpenMM object from OpenMM full system file
-    omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile="finalsystem.pdb", periodic=True, platform='OpenCL', numcores=numcores,
+    omm = OpenMMTheory(xmlsystemfile="system_full.xml", pdbfile="finalsystem.pdb", periodic=True, numcores=numcores,
                         autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
 .. warning:: The xmlsystemfile="system_full.xml" option has the disadvantage that all constraints of the system have been hardcoded into the XML file and can not be changed later.
@@ -416,6 +416,9 @@ the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory
 
 To show how we can run classical simulations of our rubredoxin setup consider the script below. It should run in less than 3-5 minutes on a decent CPU or GPU.
 
+
+.. note:: If you have access to a GPU on your laptop or your HPC-cluster it will be much more effient to set platform='OpenCL' (or platform='CUDA' for Nvidia cards)
+    inside OpenMMTheory (default platform is 'CPU'). This will make OpenMM use the GPU instead of the CPU which will speed things up considerably.
 
 *2a-classicalMD.py:*
 
@@ -434,7 +437,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 
     #Creating new OpenMM object from OpenMM full system file
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True,
-                numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
+                platform='CPU', numcores=numcores, autoconstraints='HBonds', constraints=bondconstraints, rigidwater=True)
 
     #MM minimization for 100 steps
     OpenMM_Opt(fragment=fragment, theory=omm, maxiter=100, tolerance=1)
@@ -448,7 +451,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
     #Re-image trajectory so that protein is in middle
-    MDtraj_imagetraj("trajectory.dcd", "trajectory.pdb", format='DCD')
+    MDtraj_imagetraj("trajectory.dcd", "trajectory_lastframe.pdb", format='DCD')
 
 
 .. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will upon completion, update the coordinates of that ASH fragment
@@ -473,7 +476,7 @@ The trajectory can be visualized using VMD:
 
 .. code-block:: shell
 
-    vmd trajectory.pdb trajectory.dcd
+    vmd trajectory_lastframe.pdb trajectory.dcd
 
 
 
@@ -486,7 +489,7 @@ The trajectory can be visualized using VMD:
     </div>
 
 
-The trajectory or the PDB-file associated with the last snapshot (final_MDfrag_laststep.pdb) may appear quite odd as seen above with the protein
+The trajectory or the PDB-file associated with the last snapshot (trajectory_lastframe.pdb) may appear quite odd as seen above with the protein
 being partially outside the box and centered on one of the box corners (and then jumping between corners). It is important to realize that there is 
 nothing wrong with the simulation, it's only a visualization oddity due to the periodic boundary conditions enforced during the simulation (and OpenMM's choice of image representation). 
 If one inspects neighbouring boxes in VMD (Periodic tab in the Graphical Representations window) one can see that each protein is fully solvated 
@@ -500,7 +503,7 @@ However, it is also possible to reimage the trajectory so that the protein appea
 
 .. code-block:: python
 
-    MDtraj_imagetraj("trajectory.dcd", "trajectory.pdb", format='DCD')
+    MDtraj_imagetraj("trajectory.dcd", "trajectory_lastframe.pdb", format='DCD')
 
 The reimaged trajectory, "trajectory_imaged.dcd",  will look like this:
 
@@ -562,15 +565,15 @@ Once the simulation is found to be converged, the last snapshot together with th
                           volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
                           traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1)
 
-    #NVT MD simulation for 1000 ps = 1 ns
+    #NVT MD simulation for 1000 ps = 1 ns. Here using trajfilename to name the trajectory file and last-frame PDB-file
     OpenMM_MD(fragment=fragment, theory=omm, timestep=0.004, simulation_time=1000, traj_frequency=1000, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD')
 
 
     #Re-image trajectory so that protein is in middle
-    MDtraj_imagetraj("NVTtrajectory.dcd", "NVTtrajectory.pdb", format='DCD')
+    MDtraj_imagetraj("NVTtrajectory.dcd", "NVTtrajectory_lastframe.pdb", format='DCD')
 
-To test whether the system is stable during the long final NVT simulation we can do some analysis of the trajectory.
+To test whether the system is stable during the long  NVT simulation we can do some analysis of the trajectory.
 
 **TODO: Make plots of :**
 
@@ -616,7 +619,7 @@ Use of xTB requires xtb to be downloaded and the xtb binary needs to be availabl
     qmatoms=[93,94,95,96,133,134,135,136,564,565,566,567,604,605,606,607,755]
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
-    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    lastpdbfile="trajectory_lastframe.pdb"
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM full system file
@@ -631,14 +634,14 @@ Use of xTB requires xtb to be downloaded and the xtb binary needs to be availabl
 
     #QM/MM MD simulation for 10 ps. More conservative timestep
     OpenMM_MD(fragment=fragment, theory=qmmm, timestep=0.001, simulation_time=10, traj_frequency=50, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, charge=-1, mult=6)
+        integrator='LangevinMiddleIntegrator', trajfilename="QM_MM", coupling_frequency=1, charge=-1, mult=6)
 
 
 The QM/MM MD trajectory can be visualized using e.g VMD. 
 
 Finally, note that we are of course not limited to semi-empirical methods for QM/MM MD.
-The xTBTheory we used as QM theory can be replaced by any QM-theory implemented in ASH, including ORCATheory, allowing for a regular DFT method as QM-method instead.
-This, however, will mean that each QM energy+gradient step will take longer, meaning only shorter timescales can be reached.
+The xTBTheory we used as QM theory can be replaced by any QM-theory implemented in ASH that supports QM/MM, including ORCATheory, allowing for a regular DFT method as QM-method instead.
+This, however, will mean that each QM energy+gradient step will take much longer, meaning only shorter timescales can be reached.
 
 
 ####################################################################################
@@ -670,7 +673,7 @@ See :doc:`Geometry-optimization` for information on the Optimizer function.
     qmatoms=[93,94,95,96,133,134,135,136,564,565,566,567,604,605,606,607,755]
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
-    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    lastpdbfile="trajectory_lastframe_imaged.pdb"
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
@@ -693,11 +696,12 @@ See :doc:`Geometry-optimization` for information on the Optimizer function.
 This optimization should converge in about 13 optimization steps.
 geomeTRICOptimizer writes out 2 trajectory files that can be visualized: geometric_OPTtraj.xyz (active-region only) geometric_OPTtraj_Full.xyz (full system) using e.g VMD:
 See :doc:`Geometry-optimization`
+
 .. code-block:: text
 
     vmd geometric_OPTtraj.xyz  # visualize trajectory with active region 
     vmd geometric_OPTtraj_Full.xyz # visualize full trajectory
-    vmd final_MDfrag_laststep_imaged.pdb geometric_OPTtraj_Full.xyz # visualize trajectory with topology information available
+    vmd trajectory_lastframe_imaged.pdb geometric_OPTtraj_Full.xyz # visualize trajectory with topology information available
 
 .. raw:: html
 
@@ -730,7 +734,7 @@ atom indices of whole residues that are 12 Å away from the origin atom (here th
     from ash import *
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
-    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    lastpdbfile="trajectory_lastframe_imaged.pdb"
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)
@@ -807,7 +811,7 @@ The number of optimization cycles may be especially large since we are minimizin
     qmatoms=[93,94,95,96,133,134,135,136,564,565,566,567,604,605,606,607,755]
 
     #Defining fragment containing coordinates (can be read from XYZ-file, ASH fragment, PDB-file)
-    lastpdbfile="final_MDfrag_laststep_imaged.pdb"
+    lastpdbfile="trajectory_lastframe_imaged.pdb"
     fragment=Fragment(pdbfile=lastpdbfile)
 
     #Creating new OpenMM object from OpenMM XML files (built-in CHARMM36 and a user-defined one)

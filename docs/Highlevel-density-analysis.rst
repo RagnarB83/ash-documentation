@@ -32,7 +32,7 @@ Densities for correlated WF methods
 
 .. note::  When performing post-HF property/density calculations it is important to make sure that what you are analyzing 
    refers to the correlated WF rather than just the HF. The dipole moment may be printed for both the HF and the post-HF density.
-   An ORCA GBW file for a post-HF method may only contain the HF orbitals.
+   Also note that an ORCA GBW file for a post-HF method (MP2, CC) usually only contains the HF orbitals.
 
 For single-determinant methods (i.e. HF and Kohn-Sham DFT), the electron density and related properties is straightforwardly derived from the set of canonical orbitals calculated (via the SCF procedure). No additional calculations need to be carried out. 
 We will use ORCA to perform the calculations and get the dipole moment. 
@@ -45,7 +45,7 @@ We can either use the **orca_2mkl** tool to get a Molden-file :
 or we can use the ASH function **make_molden_file_ORCA** . The latter is more convenient as it can be used in the same script (see example files).
 
 In the case of MP2, the correlated density is typically not automatically calculated (due to the additional cost).  If we want the correlated density we have to ask for it
-in the ORCA inputfile,choosing between an unrelaxed and a relaxed MP2 density. We additionally request calculations of natural orbitals derived from the unrelaxed/relaxed density.
+in the ORCA inputfile, choosing between an unrelaxed and a relaxed MP2 density. We additionally request calculations of natural orbitals derived from the unrelaxed/relaxed density.
 
 .. code-block:: text
 
@@ -94,6 +94,28 @@ Analysis of the dipole moment
 
 A convenient way of analyzing the convergence of the WF is to analyze the dipole moment,
 a property closely related to the quality of the WF and density (and in the case of MP2 and CC, the approximation of the CC density used).
+
+When calculating the dipole moment it is important to be aware of the orientation of the molecule in Cartesian space.
+In this example the CO molecule has Cartesian coordinates of :
+
+.. code-block:: text
+
+   C 0.0 0.0 0.0
+   O 0.0 0.0 1.1294
+
+Many QM programs automatically reorient the molecule to a standard orientation (e.g. center of mass) in the beginning of the job (CFour, MRCC) or does a reorientation only for the molecular properties (ORCA).
+Other programs output the dipole moment vector using the origin of the coordinate system: 0,0,0 (pySCF). 
+The ASH interfaces to the QM programs generally prevent any automatic reorientations (e.g. MRCC, CFour), primarily for the purpose of enabling difference density plots, see later (also required for QM/MM)
+which means that it is important to make sure that the molecule coordinates are well reoriented from the start for the dipole moment to make sense. 
+This means that pySCF, CFour and MRCC will all give the exact same dipole moment using the origin of the coordinate system.
+However, since ORCA by default uses a center-of-mass orientation for electric properties, one often needs to prevent this and do:
+
+.. code-block:: text
+
+   %elprop
+   Origin 0 # 0: origin of coord-system, 1: center-of-mass, 2: center of nuclear charge, 3: arbitrary, set with OriXYZ
+   end
+
 
 The experimental dipole moment of CO is 0.04799 au (0.112 Debye). See `Scuseria et al  <https://doi.org/10.1063/1.460293>`_ for a discussion of the dipole moment of CO.
 
@@ -293,8 +315,7 @@ Use of the Block2 interface in ASH is quite straightforward, a PySCFTheory objec
 
 The DMRG results are shown below as a function of maxM (Max number of M renormalized states) and input orbitals.
 The DMRG results are here only somewhat sensitive to input orbitals with CCSD(T) overall providing the best converging results.
-
-TODO: explore localized input orbitals
+Finally we note that the use of localized orbitals is another recommended option in DMRG calculations, not explored here.
 
 .. image:: figures/Dipole_DMRG.png
    :align: center
