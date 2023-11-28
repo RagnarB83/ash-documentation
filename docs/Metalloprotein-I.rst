@@ -588,17 +588,38 @@ A convenient script to plot temperature, density and box-volume as a function of
     #Plot temperature from the NVT simulation (nvtsim.csv)
     python3 ASH-code/scripts/plot_md_data.py nvtsim.csv
 
+
+.. image:: figures/rubredoxin_NPT_BoxVolume.png
+   :align: left
+   :width: 300
+
+.. image:: figures/rubredoxin_NPT_Density.png
+   :align: left
+   :width: 300
+
+
+.. image:: figures/rubredoxin_NPT_Temperature.png
+   :align: left
+   :width: 300
+
+
+
+
 More analysis of the MD trajectory is beyond the scope of this tutorial and typically requires dedicated trajectory-analysis tools not directly implemented in ASH.
 The `mdtraj <https://www.mdtraj.org>`_ library  (used above to reimage trajectory) is, however, a very powerful tool for 
 performing all sorts of MD-trajectory analysis and is best used on its own.
 
-A simple script utilizing mdtraj to calculate the heavy-atom RMSD of the trajectory can be found in the scripts directory of the ASH-code and can be called like this:
+A simple script utilizing mdtraj to calculate the protein heavy-atom RMSD of the NVT trajectory can be found in the scripts directory of the ASH-code and can be called like this:
 
 .. code-block:: text
 
-    python3 ASH-code/scripts/plot_rmsd_via_mdtraj.py relaxbox_NPT.dcd frag-min
+    python3 ~/PROGRAMS/ASH-PROGRAM/ash/scripts/plot_rmsd_via_mdtraj.py NVTtrajectory_imaged.dcd NVTtrajectory_lastframe_imaged.pdb
 
 That script can be adapted for plotting various other quantities of interest (if implemented in mdtraj).
+
+.. image:: figures/rubredoxin_RMSD.png
+   :align: center
+   :width: 300
 
 
 ###########################################################################
