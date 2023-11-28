@@ -528,7 +528,7 @@ We will use a 4fs timestep which is relatively large (a longer timestep allows l
 Classical MD simulations in OpenMM with the LangevinMiddleIntegrator and appropriate constraints (autoconstraints='HBonds', rigidwater=True, default hydrogenmass scaling of 1.5)
 can typically use such large timesteps without problems.
 
-We will use the original files from OpenMM_Modeller, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_relaxation function)
+We will use the original files from OpenMM_Modeller, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_equilibration function)
 that uses both a barostat that changes the box dimensions (to keep pressure constant) until the volume and density of the system reaches convergence.
 Once the simulation is found to be converged, the last snapshot together with the converged box vectors are used to start a long 1 ns NVT simulation.
 
@@ -561,30 +561,44 @@ Once the simulation is found to be converged, the last snapshot together with th
 
 
     #NPT simulation until density and volume converges
-    OpenMM_box_relaxation(fragment=fragment, theory=omm, datafilename="nptsim.csv", numsteps_per_NPT=10000,
+    OpenMM_box_equilibration(fragment=fragment, theory=omm, datafilename="nptsim.csv", numsteps_per_NPT=10000,
                           volume_threshold=1.0, density_threshold=0.001, temperature=300, timestep=0.004,
                           traj_frequency=100, trajfilename='relaxbox_NPT', trajectory_file_option='DCD', coupling_frequency=1)
 
     #NVT MD simulation for 1000 ps = 1 ns. Here using trajfilename to name the trajectory file and last-frame PDB-file
     OpenMM_MD(fragment=fragment, theory=omm, timestep=0.004, simulation_time=1000, traj_frequency=1000, temperature=300,
-        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD')
+        integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD',
+        datafilename="nvtsim.csv")
 
 
     #Re-image trajectory so that protein is in middle
     MDtraj_imagetraj("NVTtrajectory.dcd", "NVTtrajectory_lastframe.pdb", format='DCD')
 
-To test whether the system is stable during the long  NVT simulation we can do some analysis of the trajectory.
 
-**TODO: Make plots of :**
+The NPT trajectory (from the **OpenMM_box_equilibration** call) and the NVT trajectory (from the regular **OpenMM_MD** call) can be analyzed.
+The datafile nptsim.csv contains temperature, kinetic energy, potential energy, Box volume and density.
+Note that to get a data-file from the **OpenMM_MD** call (here nvtsim.csv) the keyword argument "datafilename" should be present in the **OpenMM_MD** function above.
 
-- temperature vs. time
-- RMSD vs. time
-- other things vs. time
-  
-Note that while in principle NPT simulations are more realistic conditions than NVT, the NVT simulations have the benefit that the
-periodic box vectors are constant and will not change from snapshot to snapshot, a convenient property when grabbing arbitrary snapshots from the trajectory
-for other calculations.
+A convenient script to plot temperature, density and box-volume as a function of step size for the NPT simulation is provided in the scripts directory:
 
+.. code-block:: text
+
+    #Plot temperature, box volume and density from the NPT-simulation data (nptsim.csv)
+    python3 ASH-code/scripts/plot_md_data.py nptsim.csv
+    #Plot temperature from the NVT simulation (nvtsim.csv)
+    python3 ASH-code/scripts/plot_md_data.py nvtsim.csv
+
+More analysis of the MD trajectory is beyond the scope of this tutorial and typically requires dedicated trajectory-analysis tools not directly implemented in ASH.
+The `mdtraj <https://www.mdtraj.org>`_ library  (used above to reimage trajectory) is, however, a very powerful tool for 
+performing all sorts of MD-trajectory analysis and is best used on its own.
+
+A simple script utilizing mdtraj to calculate the heavy-atom RMSD of the trajectory can be found in the scripts directory of the ASH-code and can be called like this:
+
+.. code-block:: text
+
+    python3 ASH-code/scripts/plot_rmsd_via_mdtraj.py relaxbox_NPT.dcd frag-min
+
+That script can be adapted for plotting various other quantities of interest (if implemented in mdtraj).
 
 
 ###########################################################################
