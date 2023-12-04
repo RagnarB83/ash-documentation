@@ -466,7 +466,7 @@ Typicall the pySCFTheory theory object is simply used as an input-theory object
 
   from ash import *
   n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
-  #Initialization of the PySCFTheory object
+  #Initialization of the PySCFTheory object (restricted HF here)
   pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
   #Calling Singlepoint function
   Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
@@ -580,6 +580,31 @@ Shown below are the relevant keywords with their default values:
                   fractional_occupation=False, scf_maxiter=50)
 
 
+################################################################################
+Controlling integral approximation for Coulomb and HF Exchange
+################################################################################
+
+Density fitting for Coulomb and HF Exchange integrals is implemented in pySCF, it is not on by default in the interface.
+For HF and hybrid-DFT it is also possible to use semi-numerical exchange approximation for HF exchange integrals (similar to RIJCOSX in ORCA).
+
+See https://pyscf.org/user/df.html for more details on what is available in pySCF.
+
+.. code-block:: python
+
+  #Density fitting for Coulomb integrals only (recommended for non-hybrid DFT)
+  #Note: Selecting the efficient Coulomb-only auxiliary basis set here
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional='BLYP',
+        densityfit=True, auxbasis='weigend')
+  #RIJK: i.e. Density fitting for both Coulomb and HF Exchange (applies if HF or hybrid functional).
+  #Note: Here we let pySCF automatically choose the RIJK auxiliary basis set (which hopefully exists for the basis set)
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional='BLYP',
+        densityfit=True)
+  #Density fitting for Coulomb and + semi-numerical Exchange for HF Exchange integrals
+  #Note: Here choosing again the more efficient Coulomb-only auxiliary basis set by Weigend
+  #Warning: no analytical gradient available for this option
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional='BLYP',
+        densityfit=False, auxbasis='weigend', sgx=True)
+
 
 ################################################################################
 Typical Examples
@@ -624,8 +649,116 @@ Typical Examples
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", numcores=2, scf_type="UHF", CC=True,
     CCmethod='CCSD(T)', memory=3000, filename='pyscf.out', printsetting=False)
 
-
   Singlepoint(theory=PySCFcalc, fragment=o2_triplet)
+
+################################################################################
+Natural orbital calculations from various WF methods
+################################################################################
+
+################################################################################
+Multireference calculations (CASSCF, MCPDFT etc.)
+################################################################################
+
+CASSCF calculations are possible in the interface.
+Calculations are controlled by the CAS keyword (CAS=True or False) and the CASSCF keyword (CASSCF=True or False).
+If CAS=True but CASSCF=False then a CAS-CI calculation is performed (only CI, no orbital optimization).
+If CAS=True and CASSCF=True then a CASSCF calculation is performed (both CI and orbital optimization).
+The active space is selected by providing a list of n electrons in m orbitals: active_space=[n,m].
+Additionally one can solve for multiple states (controlled by CASSCF_numstates keyword) 
+and it is also possible to specify the multiplicities for each state (CASSCF_mults), weights of the states (CASSCF_weights keyword).
+
+.. code-block:: python
+
+  #CASSCF calculation for a single-state
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RHF', 
+          CAS=True, CASSCF=True, CASSCF_numstates=1, active_space=[6,5], casscf_maxcycle=200)
+
+  #State-averaged CASSCF calculations for 3-roots with equal weights
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='UHF', CAS=True, CASSCF=True, 
+      CASSCF_numstates=3, active_space=[6,5], CASSCF_mults=[1,3,5], CASSCF_weights=[0.33,0.33,0.33])
+
+
+A regular HF-SCF-calculation is currently automatically performed and can currently not be avoided. 
+However, the HF-orbital guess for the CASSCF calculation can be controlled in a few different ways.
+The options are: i) reading in a checkpoint-file (moreadfile keyword), ii) use the AVAS automatic active space method (AVAS=True),
+iii) use the DMET_CAS automatic active space method (DMET_CAS=True), iv) use the APC automatic active space method v) use automatic MP2 natural orbitals.
+
+AVAS and DMET_CAS requires one to set CAS_AO_labels keyword which is a list of atom-orbital labels (e.g. ['Fe 3d', 'Fe 4d', 'C 2pz']).
+
+MC-PDFT calculations are also possible (mcpdft and mcpdft_functional keywords) but has not been tested.
+
+
+################################################################################
+Excited state calculation examples
+################################################################################
+
+**TDDFT calculations with NTO analysis**
+
+.. code-block:: python
+
+  from ash import *
+
+  cstring="""
+  O 0.0 0.0  0.0
+  H 0.0 -0.757 0.587
+  H 0.0 0.757 0.587
+  """
+  frag = Fragment(coordsstring=cstring, charge=0, mult=1)
+  pyscf = PySCFTheory(scf_type='RKS', basis='6-31G', functional='b3lyp', 
+    TDDFT=True, tddft_numstates=10, NTO=True, NTO_states=[1,2])
+  Singlepoint(theory=pyscf, fragment=frag)
+
+
+The relevant TDDFT output is shown in the main ASH output like below.
+Also note that additional output will be present in the pySCF outputfile (by default: pyscf.out)
+
+.. code-block:: text
+
+  postSCF is True
+  Now running TDDFT (Num states: 10)
+  ----------------------------------------
+  TDDFT RESULTS
+  ----------------------------------------
+  TDDFT transition energies (eV): [ 7.81984875  9.9212168   9.95812916 12.38331843 14.75956804 18.1889349
+  27.77290941 28.15925452 29.1502703  30.1015163 ]
+  Transition dipoles: [[-2.45304512e-01  2.68057788e-15  6.69547081e-16]
+  [-2.01237402e-16 -1.21055864e-14  6.29424552e-01]
+  [ 2.25211670e-15 -5.66428336e-15  2.04238232e-14]
+  [ 5.34022012e-16 -5.35950517e-01 -7.01298803e-15]
+  [ 1.12422599e-16  1.06732201e+00  2.04454308e-15]
+  [-8.19417866e-16  2.28946438e-14  7.35926479e-01]
+  [ 3.14351405e-14  2.32109432e-15 -7.66443771e-16]
+  [-6.61659079e-16  1.36249903e-15  1.55571253e-01]
+  [-3.49120535e-01  2.89921400e-15  1.48016888e-15]
+  [-5.21074382e-15 -4.48622759e-01 -1.51123214e-14]]
+  Oscillator strengths (length): [1.15283538e-02 9.62964261e-02 1.10832607e-28 8.71453664e-02
+  4.11929077e-01 2.41342606e-01 6.76438154e-28 1.66969721e-02
+  8.70464866e-02 1.48425612e-01]
+  Oscillator strengths (velocity): [4.05425305e-02 1.70258256e-01 1.76701202e-28 1.13797326e-01
+  3.86383743e-01 2.15322494e-01 1.72972290e-28 1.70834214e-02
+  2.70699046e-02 1.03027463e-01]
+
+  NTO analysis for state 1
+  Now doing NTO analysis for states: [1, 2]
+  See pySCF outputfile (pyscf.out) for the NTO analysis
+  Doing NTO for state: 1
+  Writing
+  Doing NTO for state: 2
+  Writing
+
+
+pyscf.out contains the following NTO output:
+
+.. code-block:: text
+
+  State 1: 7.8198 eV  NTO largest component 0.9998830310985499
+      occ-NTO: 1.000000 (MO #5)
+      vir-NTO: 0.999752 (MO #6)
+  State 2: 9.92117 eV  NTO largest component 0.986473412324918
+      occ-NTO: 0.999699 (MO #4)
+      vir-NTO: 0.999874 (MO #6)
+
+The NTO-orbitals can be visualized using the Molden-files created: here nto-td-1.molden, nto-td-2.molden
 
 **delta-SCF calculation using Maximum Overlap Method:**
 
