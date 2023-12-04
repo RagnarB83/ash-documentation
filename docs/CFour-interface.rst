@@ -129,6 +129,7 @@ Generally:
 
 Also note the keyword ABCDTYPE which specifies how MO integrals are handled in all post-HF calculations.
 Options are:
+
 - 'ABCDTYPE'='STANDARD' : Default. Excessive use of disk space.
 - 'ABCDTYPE'='AOBASIS' : AO-based algorithm, less disk space. Recommended for CC calculations, available up to CCSD(T).
 
