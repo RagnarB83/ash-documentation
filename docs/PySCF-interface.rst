@@ -1,15 +1,16 @@
 PySCF interface
 ======================================
 
-`PySCF <https://pyscf.org>`_ is a very powerful open-source quantum chemistry code with the entire outer interface written in Python and everything else in C, 
+`PySCF <https://pyscf.org>`_ is a very powerful open-source quantum chemistry program (or rather library) with the entire outer interface written in Python and everything else in C, 
 including the very powerful libcint integral library.
 
 ASH features a pretty good interface to PYSCF that allows one to conveniently use the various powerful DFT and WFT based features in the program 
 that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, QM/MM,  MD and metadynamics features of ASH.
 Due to the nature of PySCF as a Python library (with an essentially unlimited number of options) it is difficult to extensively support 
-every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful features.
+every PySCF feature and ASH instead takes the approach of writing wrapper-code around the most useful features that makes it suitable for ASH workflows, QM/MM etc.
 This makes it very easy to use PySCF within ASH for the most basic features but the drawback being that every single PySCF method can not be supported.
-If the use of special features inside PySCF are required, you may have to use PySCF directly (outside ASH) or contact us about adding the feature in the ASH interface.
+The pySCF interface in ASH is also used as part of the interface to Block2 and Dice for DMRG, SHCI and QMC calculations.
+If the use of special features inside PySCF are desired, you may have to use PySCF directly (i.e. outside ASH) or contact us about adding the feature in the ASH interface.
 
 **List of features:**
 
@@ -26,7 +27,9 @@ If the use of special features inside PySCF are required, you may have to use Py
 
 **Limitations:**
 
-- post-SCF gradient not yet available in the interface
+- Not all PySCF features are supported by the interface.
+- post-SCF gradient currently not yet available in the interface
+
 
 
 **PySCFTheory class:**
@@ -34,19 +37,25 @@ If the use of special features inside PySCF are required, you may have to use Py
 .. code-block:: python
     
   class PySCFTheory:
-      def __init__(self, printsetting=False, printlevel=2, numcores=1, label=None,
-                    scf_type=None, basis=None, ecp=None, functional=None, gridlevel=5, symmetry=False, guess='minao',
+      def __init__(self, printsetting=False, printlevel=2, numcores=1, label="pyscf",
+                    scf_type=None, basis=None, basis_file=None, ecp=None, functional=None, gridlevel=5, symmetry=False, 
+                    guess='minao', dm=None, moreadfile=None, write_chkfile_name='pyscf.chk', 
+                    noautostart=False, autostart=True,
                     soscf=False, damping=None, diis_method='DIIS', diis_start_cycle=0, level_shift=None,
                     fractional_occupation=False, scf_maxiter=50, direct_scf=True, GHF_complex=False, collinear_option='mcol',
+                    NMF=False, NMF_sigma=None, NMF_distribution=None, stability_analysis=False, 
                     BS=False, HSmult=None,spinflipatom=None, atomstoflip=None,
-                    TDDFT=False, tddft_numstates=10, mom=False, mom_virtindex=1, mom_spinmanifold=0,
+                    TDDFT=False, tddft_numstates=10, NTO=False, NTO_states=None,
+                    mom=False, mom_occindex=0, mom_virtindex=1, mom_spinmanifold=0,
                     dispersion=None, densityfit=False, auxbasis=None, sgx=False, magmom=None,
                     pe=False, potfile='', filename='pyscf', memory=3100, conv_tol=1e-8, verbose_setting=4, 
-                    CC=False, CCmethod=None, CC_direct=False, frozen_core_setting='Auto', cc_maxcycle=200,
-                    CAS=False, CASSCF=False, active_space=None, stability_analysis=False, casscf_maxcycle=200,
-                    frozen_virtuals=None, FNO=False, FNO_thresh=None, x2c=False,
-                    moreadfile=None, write_chkfile_name='pyscf.chk', noautostart=False,
-                    AVAS=False, DMET_CAS=False, CAS_AO_labels=None, 
+                    CC=False, CCmethod=None, CC_direct=False, frozen_core_setting='Auto', cc_maxcycle=200, cc_diis_space=6,
+                    CC_density=False, cc_conv_tol_normt=1e-06, cc_conv_tol=1e-07,
+                    MP2=False,MP2_DF=False,MP2_density=False, DFMP2_density_relaxed=False,
+                    CAS=False, CASSCF=False, CASSCF_numstates=1, CASSCF_weights=None, CASSCF_mults=None, 
+                    CASSCF_wfnsyms=None, active_space=None, casscf_maxcycle=200,
+                    frozen_virtuals=None, FNO=False, FNO_orbitals='MP2', FNO_thresh=None, x2c=False,
+                    AVAS=False, DMET_CAS=False, CAS_AO_labels=None, APC=False, apc_max_size=(2,2),
                     cas_nmin=None, cas_nmax=None, losc=False, loscfunctional=None, LOSC_method='postSCF',
                     loscpath=None, LOSC_window=None,
                     mcpdft=False, mcpdft_functional=None):
@@ -344,6 +353,96 @@ If the use of special features inside PySCF are required, you may have to use Py
      - 0
      - What spin manifold to do MOM-deltaSCF calculations in. Default is 0 (i.e. alpha)
 
+################################################################################
+Advanced: PySCFTheory methods
+################################################################################
+
+The PySCFTheory class includes several methods that can also be called on their own (if you know what you are doing!)
+
+.. code-block:: python
+
+  def create_mol(self, qm_elems, current_coords, charge, mult):
+
+  def define_basis(self,basis_string_from_file=None):
+
+  def create_mf(self):
+
+  def determine_frozen_core(self,elems):
+
+  def set_numcores(self,numcores):
+
+  def cleanup(self):
+
+  def print_orbital_en_and_occ(self,mo_energies=None, mo_occ=None):
+
+  def write_orbitals_to_Moldenfile(self,mol, mo_coeffs, occupations, mo_energies=None, label="orbs"):
+
+  #Write Cube files for orbital, density or MEP
+  def cubegen_orbital(self, mol, name, coeffs, nx=60,ny=60,nz=60):
+  def cubegen_density(self, mol, name, dm, nx=60,ny=60,nz=60):
+  def cubegen_mep(self, mol, name, dm, nx=60,ny=60,nz=60):
+
+  def calculate_natural_orbitals(self,mol, mf, method='MP2', CAS_AO_labels=None, elems=None, relaxed=False, numcores=1):
+
+  def calculate_CCSD_natorbs(self,ccsd=None, mf=None):
+
+  def calculate_CCSD_T_natorbs(self,ccsd=None, mf=None):
+
+  def run_population_analysis(self, mf, unrestricted=True, dm=None, type='Mulliken', label=None, verbose=3):
+
+  def run_stability_analysis(self):
+
+  def stability_analysis_loop(self,mf,mos,maxcyc=10):
+
+  def read_chkfile(self,chkfile):
+
+  def setup_guess(self):
+
+  def calc_losc(self):
+
+  def run_SCF(self,mf=None, dm=None, max_cycle=None):
+
+  def run_MP2(self,frozen_orbital_indices=None, MP2_DF=None):
+
+  def run_MP2_density(self, mp2object, MP2_DF=None, DFMP2_density_relaxed=None):
+
+  def run_CC(self,mf, frozen_orbital_indices=None, CCmethod='CCSD(T)', CC_direct=False, mo_coefficients=None):
+
+  def run_CC_density(self,ccobject,mf):
+
+  def get_dipole_moment(self, dm=None, label=None):
+
+  def get_polarizability_tensor(self):
+
+  def set_mf_scfconv_options(self):
+
+  def set_mf_smearing(self):
+
+  def set_dispersion_options(self):
+
+  def set_DF_mf_options(self):
+
+  def set_DFT_options(self):
+
+  def set_printing_option_mf(self):
+
+  def set_collinear_option(self):
+
+  def set_frozen_core_settings(self, elems):
+
+  def set_embedding_options(self, PC=False):
+
+  def density_potential_inversion(self, dm, lambda_par=8, method='ZMP', DF=True):
+
+  def run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None,
+          elems=None, Grad=False, PC=False, numcores=None, pe=False, potfile=None, restart=False, label=None,
+          charge=None, mult=None):
+  def prepare_run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None,
+            elems=None, Grad=False, PC=False, numcores=None, pe=False, potfile=None, restart=False, label=None,
+            charge=None, mult=None):
+  def actualrun(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None,
+          elems=None, Grad=False, PC=False, numcores=None, pe=False, potfile=None, restart=False, label=None,
+          charge=None, mult=None,pyscf=None ):
 
 ################################################################################
 PySCF installation
@@ -358,8 +457,145 @@ Parallelization
 The PySCF parallelization is OpenMP thread-based. The numcores keyword is used to specify the number of threads available to PySCF.
 
 ################################################################################
-Examples
+Using the interface
 ################################################################################
+
+Typicall the pySCFTheory theory object is simply used as an input-theory object
+
+.. code-block:: python
+
+  from ash import *
+  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  #Initialization of the PySCFTheory object
+  pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
+  #Calling Singlepoint function
+  Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
+
+However, in more advanced usage of the interface you can also call individual methods of the PySCFTheory object.
+This is considered expert-territory and is typically not recommended.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag  = Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+
+  #Initialization of the PySCFTheory object
+  pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
+
+  #Prepare pySCFTheory object for run: This defines the pyscf mol and mf objects internally
+  #Also sets various options inside mf and mol object previously defined
+  pyscf_object.prepare_run(elems=frag.elems, current_coords=frag.coords, charge=frag.charge, mult=frag.mult)
+  #Setup guess for SCF
+  pyscf_object.setup_guess()
+  #Run SCF with optional density-matrix input (dm) and max-cycle input (here 0, i.e. no SCF)
+  pyscf_object.run_SCF(dm=None, max_cycle=0) #HF-SCF
+  #Print orbitals, population analysis and dipole
+  pyscf_object.print_orbital_en_and_occ() #HF-SCF
+  pyscf_object.run_population_analysis(pyscf_object.mf)
+  pyscf_object.get_dipole_moment()
+  #Run CC using frozen core
+  fc_indices=pyscf_object.set_frozen_core_settings(frag.elems)
+  pyscf_object.run_CC(frozen_orbital_indices=fc_indices, CCmethod='CCSD(T)')
+
+################################################################################
+Controlling restart and guess 
+################################################################################
+
+How an SCF calculations begins can be controlled in a different ways.
+Internally the SCF guess is handled by the setup_guess method which can be called on its own (see above for example).
+First it is checked whether the PySCFTheory object already contains a density matrix (dm) and if so, then this is used as the guess.
+Next it is checked whether the moreadfile keyword has been specified (should contain the name of a pySCF checkpointfile, something.chk) 
+and if so, then the orbitals from the checkpoint-file are used as the guess.
+Next it is checked whether Auto-Start has been disabled (either noautostart=True, or autostart=False). Autostart is on by default which means that it will try to read a checkpoint file in the directory with the default filename ("pyscf.chk").
+If so then a new orbital-guess is used (based on the guess keyword, defaults to 'minao'). Guess options are: ['minao', 'atom', 'huckel', 'vsap','1e'].
+
+.. code-block:: python
+
+  #Reading in a density matrix. some_dm should here be a Numpy array
+  pyscf_obj = PySCFTheory(scf_type="RHF", basis="def2-SVP", dm=some_dm)
+  #Reading in a checkpoint file using moreadfile
+  pyscf_obj = PySCFTheory(scf_type="RHF", basis="def2-SVP", moreadfile="previous.chk")
+  #Disabling autostart by autostart=False
+  pyscf_obj = PySCFTheory(scf_type="RHF", basis="def2-SVP", autostart=False)
+  #Changing guess to huckel
+  pyscf_obj = PySCFTheory(scf_type="RHF", basis="def2-SVP", autostart=False, guess="huckel")
+ 
+
+The SCF-control functionality above can be utilized to do special things such as performing non-selfconsistent calculations using
+some energy functional (HF or KS-DFT) on some other set of orbitals or density matrix. 
+This requires one to i) read in the orbitals (or the density matrix) and ii) turn off SCF iterations.
+Performing a non-selfconsistent DFT calculation using HF orbitals/density is called HF-DFT (or sometimes density-corrected DFT, DC-DFT) in the literature.
+An example for this is shown below.
+
+*Non-selfconsistent calculation using another set of orbitals (here HF-DFT)*
+
+.. code-block:: python
+  
+  #Here we do a HF-DFT calculation by running first a HF calculation 
+  #and then using the HF density matrix as a guess for the DFT calculation
+  from ash import *
+  frag = Fragment(databasefile="h2o.xyz")
+  #Run HF calculation from scratch 
+  pySCF_HF = PySCFTheory(scf_type="RHF", basis="def2-SVP", autostart=False)
+  Singlepoint(fragment=frag, theory=pySCF_HF)
+  #Create DFT object and reading in HF density matrix, also setting scf_maxiter=0 to avoid SCF
+  pyscf_DFT_HF = PySCFTheory(scf_type="RHF", basis="def2-SVP", autostart=False, functional="PBE", dm=pySCF_HF.dm, scf_maxiter=0)
+  Singlepoint(fragment=frag, theory=pyscf_DFT_HF)
+
+
+Sometimes in unrestricted SCF calculations, one wants to guide the SCF procedure to find a symmetry-broken solution.
+This is typically performed in the context of broken-symmetry DFT to describe spin-coupled antiferromagnetic states.
+This can be performed in the PySCF interface by specifying BS=True, setting the spin multiplicity of the high-spin state (HSmult) 
+and specifying the atom to flip (spinflipatom string should contain both atom index and the element).
+
+*Broken-symmetry solution via spin-flipping a spin-center from the high-spin solution*
+
+.. code-block:: python
+
+  #Here we do a HF-DFT calculation by running first a HF calculation 
+  #and then using the HF density matrix as a guess for the DFT calculation
+  from ash import *
+
+  #Specify a BS-DFT calculation by setting BS=True and HSmult=3 (high-spin multiplicity)
+  pySCF_HF = PySCFTheory(scf_type="RHF", basis="def2-SVP", functional='PBE', 
+      autostart=False, BS=True, HSmult=3, spinflipatom="0 Fe")
+  Singlepoint(fragment=frag, theory=pySCF_HF, charge=0, mult=1)
+
+################################################################################
+SCF convergence 
+################################################################################
+
+In case of SCF convergence problems there are a few options available.
+One involves modifying the initial guess (see above) or reading in orbitals from a previous calculation (see also above).
+
+If that does not work there are a few other options available such as turning on second-order SCF (SOSCF), 
+using damping, modifying DIIS start-cycle, using level-shifting, enabling fractional occupation as well as increasing max iterations.
+
+Shown below are the relevant keywords with their default values:
+
+.. code-block:: python
+
+  PySCFTheory(...,soscf=False, damping=None, diis_method='DIIS', diis_start_cycle=0, level_shift=None,
+                  fractional_occupation=False, scf_maxiter=50)
+
+
+
+################################################################################
+Typical Examples
+################################################################################
+
+**HF-SCF example:**
+
+.. code-block:: python
+
+  from ash import *
+
+  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+
+  #Minimal PySCFTheory definitino: RHF calculation
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
+  Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
 
 **DFT-SCF example:**
 
@@ -432,3 +668,6 @@ The output will look like this:
 
   Alpha electron occupation pattern of excited state : [1. 1. 1. 1. 0. 1. 0. 0. 0. 0. 0. 0. 0.]
   Beta electron occupation pattern of excited state : [1. 1. 1. 1. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+**delta-SCF calculation using Maximum Overlap Method:**
