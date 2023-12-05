@@ -274,7 +274,7 @@ Saddle-points searches can be be performed in ASH via a double-ended strategy (r
 The double-ended strategy involves use of the climbing image NEB method which also results in a minimum energy path between reactant and product.
 See :doc:`neb` for documentation.
 
-An eigenvector-following algorithm is also available via the geomeTRIC library (OptTS=True option). This option is only feasible when a good guess for the 
+An eigenvector-following algorithm is also available via the geomeTRIC library (TSOpt=True option). This option is only feasible when a good guess for the 
 saddlepoint geometry is available, e.g. from a surface scan, previous NEB/NEB-CI job etc. It furthermore requires a good initial approximation to the Hessian (default: exact Hessian in first step).
 See :doc:`Geometry-optimization` for all features.
 
@@ -287,8 +287,8 @@ See :doc:`Geometry-optimization` for all features.
     HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1) #Fragment object creation
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
-    #OptTS=True enables saddlepoint optimization in geomeTRIC. Note: Exact Hessian is calculated in the first step by default.
-    Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric', OptTS=True)
+    #TSOpt=True enables saddlepoint optimization in geomeTRIC. Note: Exact Hessian is calculated in the first step by default.
+    Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric', TSOpt=True)
 
 
 .. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version be installed like this: "conda install -c veloxchem geometric".
@@ -316,7 +316,7 @@ See :doc:`neb` for documentation on the NEB-TS function.
     Product=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
-    #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
+    #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(TSOpt=True) job.
     result = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0)
 
 
