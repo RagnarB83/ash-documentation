@@ -291,9 +291,6 @@ See :doc:`Geometry-optimization` for all features.
     Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric', TSOpt=True)
 
 
-.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. This version be installed like this: "conda install -c veloxchem geometric".
-  This will change with the 1.0 release of geomeTRIC.
-
 -----------------------------------
 **NEB-TS**
 -----------------------------------
