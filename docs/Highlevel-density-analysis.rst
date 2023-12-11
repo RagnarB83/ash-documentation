@@ -350,7 +350,7 @@ We will here choose CCSD(T) as our truncated WF approximation and will examine h
 
 The results calculated with both an unrelaxed CCSD(T) density (using pySCF) and a relaxed CCSD(T) density (using CFour) are shown above.
 The results reveal considerable basis set effects (not surprisingly) as we go from the cc-pVDZ basis set to the cc-pV5Z basis set using the CCSD(T) method.
-For the case of the dipole moment of CCSD(T), the general dynamic correlation effects captured by basis set expansion, clearly outweigh any beyond CCSD(T) correlation effects.
+For the case of the dipole moment of CO, the general dynamic correlation effects captured by basis set expansion, clearly outweigh any beyond CCSD(T) correlation effects.
 The FCI/cc-pVZ - CCSD(T)/cc-pVDZ difference amounts to approx. 0.0024 - 0.0029 au (CCSD(T) unrelaxed or relaxed), 
 which is an order of magnitude smaller than the cc-pVDZ -> cc-pV5Z basis set effect of approx. -0.0378 - 0.0411 au.
 However, one could include this Full-CI correction to the CCSD(T)/5Z result, evaluated at the cc-pVDZ basis to account for this.

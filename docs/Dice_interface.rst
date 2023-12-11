@@ -58,6 +58,10 @@ The program needs to be compiled and set-up together with PySCF.
      - string
      - 'input.dat'
      - Name used for Dice inputfile
+   * - ``memory``
+     - integer
+     - 20000
+     - Memory in MB for Dice.
    * - ``pyscftheoryobject``
      - PySCFTheory object
      - None

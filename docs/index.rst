@@ -81,6 +81,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    Dalton-interface
    PySCF-interface
    Dice_interface
+   Block-interface
    Psi4-interface
    crest-interface
    QUICK-interface
