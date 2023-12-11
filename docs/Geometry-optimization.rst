@@ -222,6 +222,11 @@ then this can be done by providing an extra value to the list while also providi
     constraints={'bond':[[0,1,0.97],[3,4,0.97]]} #This defines multiple bond constraints of 0.97 Å.
     constraints={'angle':[[98,99,100,104.5]]} #This defines an angle constraint of 104.5° between atoms 98,99 and 100
 
+
+It should be noted that geomeTRIC handles constraints a little different than many codes and the constraints are not fully enforced until the end of the constrained optimization.
+There are also rare cases where the minimization stalls because constraints can not be fully satisfied.
+Changing the convergence tolerance of the constraints are then necessary (see Convergence criteria section below).
+
 *Example:*
 
 .. code-block:: python
@@ -329,6 +334,9 @@ Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_V
      - 1.0e-1
      - 1.0e-1
 
+
+.. note:: Additionally all settings above also use a tolerance for enforcing any present constraints (convergence_cmax) which is by default convergence_cmax=1.0e-2
+
 *Example: Setting convergence criteria to GAU_TIGHT:*
 
 .. code-block:: python
@@ -350,9 +358,13 @@ Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_V
     xtbcalc=xTBTheory(xtbmethod='GFN1')
 
     conv_criteria_dict = {'convergence_energy' : 1e-6, 'convergence_grms' : 1e-5, 'convergence_gmax' : 1.5e-5, 
-        'convergence_drms' : 4.0e-5, 'convergence_dmax' : 6.0e-5 }
+        'convergence_drms' : 4.0e-5, 'convergence_dmax' : 6.0e-5, 'convergence_cmax' : 1.0e-1 }
     geomeTRICOptimizer(theory=xtbcalc, fragment=frag, conv_criteria=conv_criteria_dict)
 
+
+geomeTRIC handles constraints a little different than many codes and the constraints are not fully enforced until the end of the constrained optimization.
+There are also cases where the minimization stalls because constraints can not be fully satisfied.
+Changing *convergence_cmax* to a smaller value than 1.0e-2 may be necessary in these cases.
 
 ######################################################
 The geomeTRICOptimizer class
