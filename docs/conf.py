@@ -103,7 +103,7 @@ from pygments.token import Keyword, Name, Comment, String, Error, Text, \
      Number, Operator, Generic, Whitespace, Punctuation, Other, Literal
 #RB. Modification to Monokai to mimic okaidia
 
-class RB_themeStyle(Style):
+class Rb_ThemeStyle(Style):
     """
     This style mimics the Monokai color scheme.
     """
@@ -211,7 +211,7 @@ def pygments_monkeypatch_style(mod_name, cls):
     STYLE_MAP[mod_name] = mod_name + "::" + cls_name
 
 
-pygments_monkeypatch_style("RB_theme", RB_themeStyle)
+pygments_monkeypatch_style("RB_theme", Rb_ThemeStyle)
 pygments_style = "RB_theme"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.

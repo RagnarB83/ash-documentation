@@ -17,7 +17,7 @@ from pygments.style import Style
 from pygments.token import Keyword, Name, Comment, String, Error, Text, \
      Number, Operator, Generic, Whitespace, Punctuation, Other, Literal
 
-class RB_themeStyle(Style):
+class Rb_ThemeStyle(Style):
     """
     This style mimics the Monokai color scheme.
     """
