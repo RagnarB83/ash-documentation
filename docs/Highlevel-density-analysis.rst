@@ -13,7 +13,7 @@ Being able to estimate the Full-CI limit, even in a small basis set, can thus gi
 truncated WF approximations.
 If basis set effects can be also be controlled, DFT methods can furthermore be benchmarked against the high-level results.
 
-All ASH scripts are available in the `examples/density-analysis/Tutorial-HLWFT-analysis/CO` directory of the ASH repository.
+All ASH scripts are available in the `examples/density-analysis/Tutorial-HLWFT-analysis/CO <https://github.com/RagnarB83/ash/tree/master/examples/density-analysis/Tutorial-HLWFT-analysis/CO>`_ directory of the ASH repository.
 Reproducing the calculations in this tutorial requires separate installation of ORCA, MRCC, CFour, pySCF, Dice, DMRG.
 
 ##############################################################################
@@ -220,8 +220,7 @@ It is usually convenient to control the size of the ICE-CI WF only by the *TGen*
 If *TGen* (and *TVar*) are set to 0 then the exact Full-CI WF is recovered. 
 However, because of the systematic tree-based selection procedure in ICE-CI,
 using ICE-CI WF with e.g. *TGen* = 1e-4, the WF can be made much more compact ( < 1% of configurations of Full-CI) and can recover most of the correlation energy ( > 99 %).
-Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI 
-not being fully size-consistent (errors will reduce with threshold).
+Since ICE-CI is a CI-based method, the selected CI matrix is simply diagonalized to get the energy, WF and density. However, the method can contain some errors due to approximate CI not being fully size-consistent (errors will reduce with threshold).
 
 In addition to depending on the *TGen* threshold, the ICE-CI WF will also depend on the input orbitals. This is because no orbital optimization is carried out (unless requested).
 
