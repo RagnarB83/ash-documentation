@@ -73,8 +73,8 @@ Typically we want to also define the charge and spin multiplicity of the fragmen
 
 *Defining a diatomic molecule:*
 
-Similarly we can create a diatomic molecule using the diatomic keyword (where a 2-element symbol string is expected) and by providing the diatomic_bondlength keyword as well (bondlength in Å).
-ASH will by default put the first atom at position 0.0 0.0 0.0 and the next at coordinate 0.0 0.0 X (where X is equal to the diatomic_bondlength value) 
+Similarly we can create a diatomic molecule using the diatomic keyword (where a 2-element symbol string is expected) and by providing the bondlength keyword as well (bondlength in Å).
+ASH will by default put the first atom at position 0.0 0.0 0.0 and the next at coordinate 0.0 0.0 X (where X is equal to the bondlength value) 
 
 
 .. code-block:: python
@@ -82,7 +82,7 @@ ASH will by default put the first atom at position 0.0 0.0 0.0 and the next at c
     from ash import *
 
     #Create HCl diatomic fragment
-    HCl=Fragment(diatomic="HCl", diatomic_bondlength="1.3", charge=0, mult=1)
+    HCl=Fragment(diatomic="HCl", bondlength="1.3", charge=0, mult=1)
 
 *Defining a water molecule from a multi-line string of Cartesian coordinates (Å):*
 
@@ -133,6 +133,22 @@ where lysozyme.pdb must be present in working directory and be a regular PDB-fil
 
 .. note:: When ASH creates a **Fragment** from a PDB-file, it will only extract element and coordinate information from the file, not atom-type or topology information. OpenMMTheory (see :doc:`OpenMM-interface`) is needed for reading topology from a PDB-file.
 
+*From a SMILES-string*
+
+ASH now also supports creating a Fragment using a `SMILES-string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ as input.
+This feature requires OpenBabel to be installed in the same Python environment as ASH.
+OpenBabel will parse the string, add H-atoms and guess the 3D-structure in Cartesian coordinates which is passed onto ASH.
+If everything is successful the ASH Fragment can be used just like any other Fragment for further calculations.
+
+.. code-block:: python
+
+    #ASH fragment from a SMILES string for aspirine
+    #From: https://en.wikipedia.org/wiki/Aspirin
+    frag = Fragment(smiles="CC(=O)OC1=CC=CC=C1C(=O)O")
+    #Write out XYZ file of fragment
+    frag.write_xyzfile()
+
+.. note:: OpenBabel can be installed in your ASH conda environment like this: conda install --yes -c conda-forge openbabel
 
 #########################################
 Defining theories 

@@ -11,7 +11,7 @@ The Fragment class
     class Fragment:
         def __init__(self, coordsstring=None, fragfile=None, databasefile=None, xyzfile=None, pdbfile=None, grofile=None,
                     amber_inpcrdfile=None, amber_prmtopfile=None,
-                    chemshellfile=None, coords=None, elems=None, connectivity=None, atom=None, diatomic=None, diatomic_bondlength=None,
+                    chemshellfile=None, coords=None, elems=None, connectivity=None, atom=None, diatomic=None, bondlength=None,
                     atomcharges=None, atomtypes=None, conncalc=False, scale=None, tol=None, printlevel=2, charge=None,
                     mult=None, label=None, readchargemult=False, use_atomnames_as_elements=False):
 
@@ -168,6 +168,23 @@ The coordinates in these files have been pre-optimized by some level of theory a
     pdbfrag = Fragment(databasefile="h2o.xyz")
 
 
+*From a SMILES-string*
+
+ASH now also supports creating a Fragment using a `SMILES-string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ as input.
+This feature requires OpenBabel to be installed in the same Python environment as ASH.
+OpenBabel will parse the string, add H-atoms and guess the 3D-structure in Cartesian coordinates which is passed onto ASH.
+If everything is successful the ASH Fragment can be used just like any other Fragment for further calculations.
+
+.. code-block:: python
+
+    #ASH fragment from a SMILES string for aspirine
+    #From: https://en.wikipedia.org/wiki/Aspirin
+    frag = Fragment(smiles="CC(=O)OC1=CC=CC=C1C(=O)O")
+    #Write out XYZ file of fragment
+    frag.write_xyzfile()
+
+.. note:: OpenBabel can be installed in your ASH conda environment like this: conda install --yes -c conda-forge openbabel
+
 ######################################################
 Adding coordinates to object
 ######################################################
@@ -188,8 +205,7 @@ Adding coordinates to object
     HCl_frag.add_coords_from_string(fragcoords)
 
 
-**Note:** This will append coordinates to fragment. If fragment already contains some coordinates the specified coordinates
-will be appended.
+.. note:: This will append coordinates to fragment. If fragment already contains some coordinates the specified coordinates will be appended.
 
 *Add coordinates from lists*
 
@@ -205,8 +221,7 @@ where elems and coords are lists:
     coords=[[0.0, 0.0, 0.0], [0.0, 0.0, 0.9]]
 
 
-**Note:** This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates
-will follow.
+.. note:: This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates will follow.
 
 *Add coordinates from XYZ file*
 
@@ -215,8 +230,7 @@ will follow.
     HF_frag.read_xyzfile("hcl.xyz")
 
 
-**Note:** This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates
-will follow.
+.. note:: This will append coordinates to fragment. If fragment already contains some coordinates the added coordinates will follow.
 
 ######################################################
 Replace coordinates of object

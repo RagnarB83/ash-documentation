@@ -465,7 +465,7 @@ Typicall the pySCFTheory theory object is simply used as an input-theory object
 .. code-block:: python
 
   from ash import *
-  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
   #Initialization of the PySCFTheory object (restricted HF here)
   pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
   #Calling Singlepoint function
@@ -478,7 +478,7 @@ This is considered expert-territory and is typically not recommended.
 
   from ash import *
 
-  frag  = Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  frag  = Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
 
   #Initialization of the PySCFTheory object
   pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
@@ -616,7 +616,7 @@ Typical Examples
 
   from ash import *
 
-  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
 
   #Minimal PySCFTheory definitino: RHF calculation
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
@@ -628,7 +628,7 @@ Typical Examples
 
   from ash import *
 
-  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
 
   #Define PySCF theory: RKS-PBE0 hybrid-DFT calculation
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
@@ -643,7 +643,7 @@ Typical Examples
 
   from ash import *
 
-  o2_triplet= Fragment(diatomic="O2", diatomic_bondlength=1.2075, charge=0, mult=3)
+  o2_triplet= Fragment(diatomic="O2", bondlength=1.2075, charge=0, mult=3)
 
   #PySCF with UHF SCF and CCSD(T) on top
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", numcores=2, scf_type="UHF", CC=True,

@@ -118,8 +118,8 @@ See :doc:`singlepoint` and :doc:`module_workflows` for more information.
 
     numcores=1
     #Haber-Bosch reaction: N2 + 3H2 => 2NH3
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
@@ -142,8 +142,8 @@ Even better syntax is to create an ASH **Reaction** object and give as input to 
 
     numcores=1
     #Haber-Bosch reaction: N2 + 3H2 => 2NH3
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     reaction = Reaction(fragments=[N2, H2, NH3], stoichiometry=[-1, -3, 2], unit='kcal/mol')
 

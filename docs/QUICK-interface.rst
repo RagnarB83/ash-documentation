@@ -89,7 +89,7 @@ Examples
 
   from ash import *
 
-  n2_singlet= Fragment(diatomic="N2", diatomic_bondlength=1.09, charge=0, mult=1)
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
 
   #Define QUICK theory : B3LYP/6-31G* calculation (note: do not put job-keyword in string)
   quick = QUICKTheory(quickinput="B3LYP BASIS=6-31G* cutoff=1.0e-8")

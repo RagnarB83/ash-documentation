@@ -113,8 +113,8 @@ You could of course easily write a for-loop for this purpose in ASH, making sure
     from ash import *
 	
     #Species of the Haber-Bosch reaction: N2 + 3H2 => 2NH3
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", bondlength=0.741, charge=0, mult=1)
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
 
     fragment_list=[N2, H2, NH3] #An ordered list of ASH fragments.
@@ -145,8 +145,8 @@ that does the same thing:
     from ash import *
 
     #Species of the Haber-Bosch reaction: N2 + 3H2 => 2NH3
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", bondlength=0.741, charge=0, mult=1)
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     xtbcalc=xTBTheory(xtbmethod='GFN1') # GFN1-xTB theory-level
@@ -189,7 +189,7 @@ For this case you can use **Singlepoint_theories** instead.
 .. code-block:: python
 
     #Define the fragment. Here providing charge/mult also.
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1)
 
     #Defining theory levels. NOTE: For clearer printing it is recommended to add a label to each theory object.
     gfn1_xtbcalc=xTBTheory(xtbmethod='GFN1', label='GFN1-xTB') # GFN1-xTB theory-level
@@ -233,8 +233,8 @@ You might even want to perform calculation on multiple fragments with multiple t
     from ash import *
 
     #Haber-Bosch reaction: N2 + 3H2 => 2NH3
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", bondlength=0.741, charge=0, mult=1)
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
@@ -336,8 +336,8 @@ See :doc:`module_workflows` about ASH Reaction class.
     from ash import *
 
     #Defining Haber-Bosch reaction: N2 + 3H2 => 2NH3 Reaction object
-    N2=Fragment(diatomic="N2", diatomic_bondlength=1.0975, charge=0, mult=1)
-    H2=Fragment(diatomic="H2", diatomic_bondlength=0.741, charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1)
+    H2=Fragment(diatomic="H2", bondlength=0.741, charge=0, mult=1)
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
