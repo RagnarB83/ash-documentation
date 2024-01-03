@@ -561,8 +561,27 @@ Simple minimization via OpenMM
 
 A classical system setup typically requires a minimization to get rid of large initial forces related to non-ideal atom positions.
 These large initial forces are usually responsible for the system blowing up in the beginning (error messages of e.g. 'Particle number is NaN' etc.).
-The simple minimizer in the OpenMM library works well for this purpose although achieving convergence can be difficult.
-Typically a few 100-1000 steps of minimization is sufficient to get rid of the major forces.
+The simple minimizer module in the OpenMM library works well for this purpose and typically just a few 100-1000 steps of minimization is sufficient 
+to get rid of the major forces. Inside ASH it can be accessed via the **OpenMM_Opt** wrapper function.
+
+.. code-block:: python
+
+  def OpenMM_Opt(fragment=None, theory=None, maxiter=1000, tolerance=1, enforcePeriodicBox=True, traj_frequency=100):
+
+One simply provides an ASH Fragment object, an OpenMMTheory object as theory and one controls the minimization by choosing max-number of 
+iterations and a convergence tolerance (units of kJ/mol/nm of the RMS of the forces).
+Once the minimization is done (regardless of whether it converged or not), the coordinates in the ASH fragment object are updated and could next be used
+as input for an MD simulation for example. The enforcePeriodicBox keyword can be used to specify whether the PBC conditions are enforced during the minimization or not.
+The traj_frequency keyword controls how many frames are written to a trajectory file (PDB-format) during the minimization (default: 100 frames).
+
+.. note:: If OpenMM version 8.1 is installed, energy and force information is printed in each optimization step and a trajectory file is written out during the minimization.
+  This is not available in earlier versions of OpenMM.
+
+
+While the **OpenMM_Opt** function could in principle also be utilized for regular geometry optimization (although only for an MM-only system)
+it has not been tested very much for this purpose. Make sure to use at least OpenMM 8.1, control the behaviour using tolerance and maxiter keywords and
+monitor carefully the convergence of energy and gradient.
+
 
 Example:
 

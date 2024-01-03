@@ -88,8 +88,8 @@ Creating/modifying fragment objects
 
 Fragments in ASH are Python objects containing basic information about a molecule. You can create as many fragment objects
 as you want. A fragment object will contain Cartesian coordinates about a molecule, elemental information and masses.
-Sometimes additional information such as connectivity constraints, charges and multiplicity information is present as well.
-Fragments can be created in multiple ways but will behave the same after creation.
+Sometimes additional information such as connectivity, constraints, charges and multiplicity information is present as well.
+Fragments can be created in many different ways (from XYZ-file,PDB-file, coordinate string, lists or Numpy arrays etc.) but will behave the same after creation.
 
 Fragments are created from the ASH *Fragment* object class above.
 
@@ -135,6 +135,8 @@ Perhaps most convenient is to define the fragment directly from reading an XYZ-f
 .. code-block:: python
 
     HI_frag = Fragment(xyzfile="hi.xyz")
+
+Note that the XYZ-file should be in XMol format meaning that a 2-line header must be present, containing the number of atoms (1st line) and a comment line (2nd line).
 
 *From previous ASH fragment file*
 
@@ -250,8 +252,9 @@ If you want to replace coords and elems of a fragment object with new informatio
 Calculate connectivity of fragment object
 ######################################################
 
-Connectivity is an important aspect of the fragment as it distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) and atoms further apart and obviously not bonded. 
-Correct connectivity is crucial for some ASH functionality (the Molcrys functionality in particular).
+Connectivity between atoms can be an important attribute of a fragment object, especially for molecules.
+The connectivity distinguishes atoms that are in close-contact (i.e. forming some kind of stable covalent bond) 
+and atoms further apart and obviously not bonded. Correct connectivity is crucial for some ASH functionality (the Molcrys functionality in particular).
 Connectivity is calculated based on a distance and covalent radii-based criterion.
 Atoms A and B will be defined to be connected according to:
 
@@ -280,8 +283,9 @@ The connectivity table is available as:
     mol_frag.connectivity
 
 
-The connectivity table is calculated or recalculated automatically needed. For large systems it can be expensive to calculate and thus not calculated by default.
-For large systems, ASH will call a Julia routine for the calculation.
+The connectivity table is calculated or recalculated automatically when needed. 
+For large systems the connectivity is expensive to calculate and is thus not calculated by default (but only when needed).
+For large systems, ASH will try to call a Julia routine for the calculation.
 
 ######################################################
 Charge and Multiplicity
@@ -346,7 +350,9 @@ To inspect a defined fragment one can print out a Python dictionary of all defin
 
 .. code-block:: python
 
-    print("HF_frag dict", HF_frag.__dict__)
+    print("HF_frag dict", HF_frag.info())
+
+This will print out all defined attributes of the object including list of elements, coordinates, masses, connectivity etc.
 
 One can also access individual attributes like accessing the pure coordinates only:
 
@@ -354,7 +360,7 @@ One can also access individual attributes like accessing the pure coordinates on
 
     print("HF_frag.coords : ", HF_frag.coords)
 
-More conveniently would be to use the print_coords function though (to print elems and coords):
+For printing coordinates is may also be more convenient to use the print_coords function though (to print elems and coords):
 
 .. code-block:: python
 
@@ -412,3 +418,42 @@ Print charge and mult attributes (if not defined, then None will be outputted).
 
     print(HF_frag.charge)
     print(HF_frag.mult)
+
+##############################################################################
+Calculate distances,angles and dihedral angles between atoms in a fragment
+##############################################################################
+
+Sometimes it is useful to get the distance, angle or dihedral angles defined by some atoms in a fragment.
+This can be done using the following functions:
+
+.. code-block:: python
+
+    #Distance between atoms
+    def distance_between_atoms(fragment=None, atoms=None):
+    #Angle between atoms
+    def angle_between_atoms(fragment=None, atoms=None):
+    #Dihedral angle between atoms
+    def dihedral_between_atoms(fragment=None, atoms=None):
+
+
+Examples:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Defining an ethanol fragment
+    ethanol = Fragment(databasefile="ethanol.xyz")
+    ethanol.print_coords() #Printing coordinates
+
+    #Distance between atoms 0 (C) and 7 (O)
+    distance = distance_between_atoms(fragment=ethanol, atoms=[0,7])
+    print(f"Distance between atoms 0 and 7 is {distance} Angstrom")
+    
+    #Angle between atoms 0, 7 and 8 (< C-O-H)
+    angle = angle_between_atoms(fragment=ethanol, atoms=[0,7,8])
+    print(f"Angle between atoms 0,7,8 is {angle} °")
+    
+    #Dihedral angle between atoms 3,0,7,8
+    dihedral = dihedral_between_atoms(fragment=ethanol, atoms=[3,0,7,8])
+    print(f"Dihedral between atoms 3,0,7,8 is {dihedral} °")
