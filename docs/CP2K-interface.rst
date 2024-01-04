@@ -449,3 +449,45 @@ Here using the simple solvated lysozyme protein as a test system with a threonin
     NumFreq(theory=qmmmobject, fragment=frag, hessatoms=actatoms)
 
 **Periodic QM/MM MD simulation of a protein**
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=2
+
+  #Defining path to dir containing forcefield files and coordinates
+  forcefielddir="./"
+  psffile=forcefielddir+"step3_pbcsetup.psf"
+  topfile=forcefielddir+"top_all36_prot.rtf"
+  prmfile=forcefielddir+"par_all36_prot.prm"
+  xyzfile=forcefielddir+"coordinates.xyz"
+
+  #Read coordinates from XYZ-file
+  frag = Fragment(xyzfile=xyzfile)
+
+  #Creating OpenMM object
+  openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
+      charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
+      do_energy_decomposition=True, autoconstraints=None, rigidwater=False)
+  #QM
+  basis_dict={'C':'DZVP-MOLOPT-SR-GTH','N':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH'}
+  potential_dict={'C':'GTH-PBE-q4','N':'GTH-PBE-q5', 'O':'GTH-PBE-q6','H':'GTH-PBE-q1'}
+  functional='PBE'
+  qm = CP2KTheory(basis_dict=basis_dict,potential_dict=potential_dict,functional=functional, psolver='periodic', coupling='GAUSS',
+      periodic=True, cell_dimensions=[82.0, 82.0, 82.0, 90.0, 90.0, 90.0], qm_cell_dims=[12.0,12.0,12.0], numcores=numcores)
+
+  #act and qmatoms lists. Defines QM-region (atoms described by QM) and Active-region (atoms allowed to move)
+  #IMPORTANT: atom indices begin at 0.
+  #Here selecting the side-chain of threonine
+  qmatoms = [569,570,571,572,573,574,575,576]
+  actatoms = qmatoms
+
+
+  # Create QM/MM OBJECT by combining QM and MM objects above
+  qmmmobject = QMMMTheory(qm_theory=qm, mm_theory=openmmobject, printlevel=2, dipole_correction=False,
+                          fragment=frag, embedding="Elstat", qmatoms=qmatoms, qm_charge=0, qm_mult=1)
+
+  #MD simulation with 0.5 fs timestep for 2 ps. enforcePeriodicBox=False to prevent OpenMM PBC wrapping
+  OpenMM_MD(fragment=frag, theory=qmmmobject, timestep=0.0005, simulation_time=2, traj_frequency=1, temperature=300,
+      integrator='LangevinIntegrator', coupling_frequency=1, enforcePeriodicBox=False)
