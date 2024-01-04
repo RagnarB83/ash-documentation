@@ -76,6 +76,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
 
    ORCA-interface
    xTB-interface
+   CP2K-interface
    MRCC-interface
    CFour-interface
    Dalton-interface
