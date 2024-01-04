@@ -25,7 +25,8 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
                     qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
                     functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
                     basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
-                    method='QUICKSTEP', numcores=1, center_coords=True, scf_convergence=1e-6,
+                    method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
+                    center_coords=True, scf_convergence=1e-6,
                     coupling='COULOMB', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None):
 
 .. list-table::
@@ -56,6 +57,18 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - integer
      - 1
      - The number of CPU cores used.
+   * - ``parallelization``
+     - string
+     - 'OMP'
+     - Parallelization strategy. Options: 'OMP', 'MPI', 'Mixed'
+   * - ``mixed_mpi_procs``
+     - integer
+     - 1
+     - If parallelization='Mixed':  The number of MPI processes active.
+   * - ``mixed_omp_threads``
+     - integer
+     - None
+     - If parallelization='Mixed':  The number of OpenMP threads per MPI process.
    * - ``basis_dict``
      - dict
      - None
@@ -190,14 +203,43 @@ ASH will search for executables in this order: ["cp2k.psmp", "cp2k.popt", "cp2k.
 Parallelization
 ################################################################################
 
-CP2K binaries differ in their parallelization:
+CP2K binaries differ in their parallelization capabilities:
 - sopt: no parallelization
-- ssmp: uses OpenMP parallelization
-- popt: uses MPI parallelization
+- ssmp: only OpenMP parallelization
+- popt: only MPI parallelization
 - psmp: mixed MPI and OpenMP parallelization. Primarily useful for massive parallelization (>10K cores). 
 
-The CP2K manual advises to use the cp2k.psmp executable as it is the most flexible.
-The number of cores that CP2K will use for either MPI-runs or OpenMP runs is controlled by the numcores keyword in the CP2KTheory object.
+The CP2K manual advises to use the cp2k.psmp executable as it is the most flexible (can be used for serial, MPI, OpenMP and Mixed calculations).
+If this executable is available it is best to specify this in the CP2KTheory object using the *cp2k_bin_name* keyword.
+
+The parallelization that ASH will tell CP2K to use is controlled by the *parallelization* keyword when defining the CP2KTheory object in ASH.
+It can be se set to 'OMP' (OpenMP threading, default), 'MPI' or 'Mixed'. The best parallelization strategy depends on the system and the hardware
+and you may have to do your own benchmarks.
+
+**OpenMP parallelization**
+
+This is the easiest parallelization strategy to start using and is hence the default (parallelization='OMP'). 
+It requires either a cp2k.ssmp or cp2k.psmp executable. One simply has to specify the number of CPU cores to be used via the *numcores* keyword in CP2KTheory.
+1 CP2K process (either cp2k.ssmp or cp2k.psmp) executable will be launched which will be capable of OpenMP threading up to the chosen number of cores.
+
+**MPI parallelization**
+
+For MPI-parallelization one should set parallelization='MPI'. It requires either the cp2k.popt or cp2k.psmp executable.
+Additionally a CP2K-compatible MPI program needs to be installed and in PATH. ASH assumes OpenMPI and will search for this.
+If numcores=4 and parallelization='MPI' then 4 CP2K processes will be launched by the mpirun program.
+
+As discussed on https://www.cp2k.org/faq:mpi_vs_openmp CP2K is primarily MPI-parallelized and is thus probably a faster option than OpenMP overall.
+
+**Mixed OMP/MPI parallelization**
+
+The mixed OMP/MPI parallelization is only possible using the cp2k.psmp executable.
+This parallelization strategy is primarily useful for massively parallel calculations (thousands of cores) and will likely not be 
+beneficial for small systems or a small amount of CPU cores.
+
+To use one should set: *parallelization='Mixed'* , specify the total number of CPU cores by the *numcores* keyword and additionally one must 
+specify how many MPI processes and how many OMP threads per process via the *mixed_mpi_procs* and *mixed_omp_threads* keywords.
+For example, if numcores=8, mixed_mpi_procs=4 and mixed_omp_threads=2 then 4 MPI processes will be used with 2 OMP threads used per process, for a total of 8 utilized CPU cores.
+Note that ASH will give an error if numcores is not equal to mixed_mpi_procs*mixed_omp_threads.
 
 Warning: Massively parallel CP2K within ASH has not been tested much.
 
