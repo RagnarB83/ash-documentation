@@ -81,14 +81,14 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    CFour-interface
    Dalton-interface
    PySCF-interface
-   Dice_interface
+   Dice-interface
    Block-interface
    Psi4-interface
    crest-interface
    QUICK-interface
    NWChem-interface
    TeraChem-interface
-   Multiwfn_interface
+   Multiwfn-interface
 
 
 .. toctree::

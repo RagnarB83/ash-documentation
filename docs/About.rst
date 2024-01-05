@@ -62,6 +62,7 @@ at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 - Dalton (general DFT/WFT program)
 - TeraChem (HF/DFT code using GPU)
 - QUICK (HF/DFT code using GPU)
+- CP2K (periodic DFT program)
 
 **Various helper tools sometimes requested by ASH:**
 
@@ -102,6 +103,7 @@ Features
 - NWChem
 - TeraChem
 - QUICK
+- CP2K
 
 **Parallelization :**
 
@@ -114,7 +116,7 @@ Features
 
 **Single-point electrostic embedding QM/MM**
 
-- Full QM/MM support (including pointcharge-gradient) for  ORCA, xTB, PySCF, NWChem, TeraChem and QUICK.
+- Full QM/MM support (including pointcharge-gradient) for  ORCA, xTB, PySCF, CFour, MRCC, NWChem, CP2K, TeraChem and QUICK.
 
 **Polarizable embedding via Psi4, PySCF and CPPE library**
 
