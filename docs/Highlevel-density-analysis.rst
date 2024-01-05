@@ -370,7 +370,7 @@ Population analysis such as atomic charges and bond orders, however, can sometim
 Here we will analyze Hirshfeld atomic charges and Mayer bond orders of CO as a function of WF complexity, using the cc-pVDZ basis set.
 
 As Hirshfeld population analysis and Mayer bond orders are not implemented in all the different QM codes used,
-we utilize the ASH interface to Multiwfn (see :doc:`Multiwfn_interface`) to conveniently perform this analysis. This relies on providing Molden files to Multiwfn that 
+we utilize the ASH interface to Multiwfn (see :doc:`Multiwfn-interface`) to conveniently perform this analysis. This relies on providing Molden files to Multiwfn that 
 that contain natural orbitals (the orbitals that make the first-order density matrix diagonal).
 
 

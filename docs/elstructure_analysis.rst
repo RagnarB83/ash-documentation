@@ -60,7 +60,7 @@ It is also possible to directly create Cubefiles from wavefunction files.
 If an ORCA GBW file (containing the SCF wavefunction), ORCA natural orbital file or a Molden file (e.g. created by CFOUR or MRCC) 
 is provided then create_cubefile_from_orbfile can directly create a Cubefile from the associated WF.
 The function recognized the file type from the file extension and creates the Cubefile accordingly with the help of the orca_2mkl program (requires ORCA to be installed),
-and Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn_interface` for details).
+and Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn-interface` for details).
 
 .. code-block:: python
 
@@ -83,7 +83,7 @@ The **diffdens_tool** function can be used for this purpose.
 It reads all files in a directory with a given extension (e.g. .gbw, .molden, .nat) and creates difference densities
 w.r.t. to a reference file (e.g. HF.gbw).
 
-This function use Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn_interface` for details).
+This function use Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn-interface` for details).
 
 .. code-block:: python
 

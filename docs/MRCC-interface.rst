@@ -119,11 +119,11 @@ MRCC allows you to not only calculate the CCSDT energy but also the CCSDT densit
 You can request this by adding dens=1 to the MRCC inputstring which will result in a file "CCDENSITIES" that will
 contain the CCSDT density. MRCC also produces a MOLDEN file, hower, this file contains the SCF orbitals.
 
-To get the CCSDT density we can use functionality built-into Multiwfn (See :doc:`Multiwfn_interface` for details) to create correlated natural orbitals.
+To get the CCSDT density we can use functionality built-into Multiwfn (See :doc:`Multiwfn-interface` for details) to create correlated natural orbitals.
 You can use the ASH function **convert_MRCC_Molden_file** that interfaces to Multiwfn to create the correct Molden-file.
 The Moldenfile created by the function is called:  mrccnew.molden
 
-Once you have the correct Moldenfile you can use it on its own or  use the  **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) 
+Once you have the correct Moldenfile you can use it on its own or  use the  **multiwfn_run function** (See :doc:`Multiwfn-interface` for details) 
 to perform various types of WF and density analysis or plot surfaces. See also :doc:`elstructure_analysis` .
 
 .. code-block:: python

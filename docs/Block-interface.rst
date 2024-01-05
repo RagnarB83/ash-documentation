@@ -70,8 +70,7 @@ The interface in ASH intended to be used together with pySCF.
    * - ``initial_orbitals``
      - string
      - 'MP2'
-     - Type of input-orbitals for Block2. Options: ['RKS', 'UKS', 'RHF', 'UHF', 'MP2', 'CCSD','CCSD(T)', 
-            'SHCI', 'AVAS-CASSCF', 'DMET-CASSCF','CASSCF'] .
+     - Type of input-orbitals for Block2. Options: ['RKS', 'UKS', 'RHF', 'UHF', 'MP2', 'CCSD','CCSD(T)', 'SHCI', 'AVAS-CASSCF', 'DMET-CASSCF','CASSCF'] .
    * - ``CAS_AO_labels``
      - list
      - None

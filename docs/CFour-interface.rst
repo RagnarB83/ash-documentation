@@ -339,7 +339,7 @@ that defines the correlated WF density. Unfortunately this CFour-created Molden-
 to plot the density so here use an ASH function, **convert_CFour_Molden_file** to convert the CFour Molden file to a Multiwfn-compatible file.
 **convert_CFour_Molden_file** utilizes the **molden2aim** program to convert the Moldenfile. Molden2aim ships with ASH but requires a quick compilation (see instructions when running).
 
-You can then use the **multiwfn_run function** (See :doc:`Multiwfn_interface` for details) that creates the density in
+You can then use the **multiwfn_run function** (See :doc:`Multiwfn-interface` for details) that creates the density in
 realspace using Multiwfn. 
 The function will create a Cube-file that can be visualized in VMD, Chemcraft or other programs.
 
