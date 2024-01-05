@@ -195,7 +195,7 @@ ASH will find a CP2K binary to use according to this logic:
 3. if cp2kdir variable NOT provided but cp2k_bin_name provided: search for cp2k_bin_name in PATH
 4. if cp2kdir variable NOT provided and cp2k_bin_name not provided: search for cp2k.X executables in PATH
 
-Note that the search for executables will only work if the binaries are named: cp2k.X where X is one of ssmp, sopt, popt, psmp.
+Note that the search for executables will only work if the binaries are named: cp2k.X where X is one of: ssmp, sopt, popt, psmp.
 ASH will search for executables in this order: ["cp2k.psmp", "cp2k.popt", "cp2k.ssmp","cp2k.sopt"]
 
 
@@ -204,10 +204,11 @@ Parallelization
 ################################################################################
 
 CP2K binaries differ in their parallelization capabilities:
-- sopt: no parallelization
-- ssmp: only OpenMP parallelization
-- popt: only MPI parallelization
-- psmp: mixed MPI and OpenMP parallelization. Primarily useful for massive parallelization (>10K cores). 
+
+- **sopt**: no parallelization
+- **ssmp**: only OpenMP parallelization
+- **popt**: only MPI parallelization
+- **psmp**: mixed MPI and OpenMP parallelization. Primarily useful for massive parallelization (>10K cores). 
 
 The CP2K manual advises to use the cp2k.psmp executable as it is the most flexible (can be used for serial, MPI, OpenMP and Mixed calculations).
 If this executable is available it is best to specify this in the CP2KTheory object using the *cp2k_bin_name* keyword.
@@ -218,15 +219,15 @@ and you may have to do your own benchmarks.
 
 **OpenMP parallelization**
 
-This is the easiest parallelization strategy to start using and is hence the default (parallelization='OMP'). 
+This is the easiest parallelization strategy to start using and is hence the default (*parallelization='OMP'*). 
 It requires either a cp2k.ssmp or cp2k.psmp executable. One simply has to specify the number of CPU cores to be used via the *numcores* keyword in CP2KTheory.
 1 CP2K process (either cp2k.ssmp or cp2k.psmp) executable will be launched which will be capable of OpenMP threading up to the chosen number of cores.
 
 **MPI parallelization**
 
-For MPI-parallelization one should set parallelization='MPI'. It requires either the cp2k.popt or cp2k.psmp executable.
+For MPI-parallelization one should set *parallelization='MPI'*. It requires either the cp2k.popt or cp2k.psmp executable.
 Additionally a CP2K-compatible MPI program needs to be installed and in PATH. ASH assumes OpenMPI and will search for this.
-If numcores=4 and parallelization='MPI' then 4 CP2K processes will be launched by the mpirun program.
+If *numcores=4* and *parallelization='MPI'* then 4 CP2K processes will be launched by the mpirun program.
 
 As discussed on https://www.cp2k.org/faq:mpi_vs_openmp CP2K is primarily MPI-parallelized and is thus probably a faster option than OpenMP overall.
 
@@ -238,7 +239,7 @@ beneficial for small systems or a small amount of CPU cores.
 
 To use one should set: *parallelization='Mixed'* , specify the total number of CPU cores by the *numcores* keyword and additionally one must 
 specify how many MPI processes and how many OMP threads per process via the *mixed_mpi_procs* and *mixed_omp_threads* keywords.
-For example, if numcores=8, mixed_mpi_procs=4 and mixed_omp_threads=2 then 4 MPI processes will be used with 2 OMP threads used per process, for a total of 8 utilized CPU cores.
+For example, if *numcores=8*, *mixed_mpi_procs=4* and *mixed_omp_threads=2* then 4 MPI processes will be used with 2 OMP threads used per process, for a total of 8 utilized CPU cores.
 Note that ASH will give an error if numcores is not equal to mixed_mpi_procs*mixed_omp_threads.
 
 Warning: Massively parallel CP2K within ASH has not been tested much.
@@ -255,7 +256,7 @@ Pseudopotential-based calculations can be performed with both methods, however, 
 GAPW may have more stable forces and require reduced cutoff but may be more expensive.
 
 Depending on whether GPW or GAPW is used, suitable basis set and pseudopotential information should be provided.
-This is controlled by defining the basis_dict and potential_dict keywords in the CP2KTheory object.
+This is controlled by defining the *basis_dict* and *potential_dict* keywords in the CP2KTheory object.
 The chosen basis sets and pseudopotentials must be available in the specified basis and potential files.
 For all-electron GAPW calculations one should set value for each element in the potential_dict to 'ALL'.
 
@@ -272,12 +273,12 @@ Note that if the specified basis-file or potential-file is not in the current di
 copy a file containing GTH pseudopotentials (renamed from GTH_POTENTIALS to POTENTIAL) and MOLOPT basis sets (renamed from BASIS_MOLOPT to BASIS).
 This will only work if MOLOPT basis sets are being used. For all other basis sets, then the user must provide the basis and potential files.
 
-For the planewave part of the basis set, the cutoff and rel_cutoff keywords can be used to control the cutoffs used.
-The number of grids also play a role in the accuracy of the calculation and can be controlled by the ngrids keyword (default=4).
+For the planewave part of the basis set, the *cutoff* and *rel_cutoff* keywords can be used to control the cutoffs used.
+The number of grids also play a role in the accuracy of the calculation and can be controlled by the *ngrids* keyword (default is 4).
 Suitable cutoff values and grids require some experience or testing.
 See https://www.cp2k.org/howto:converging_cutoff for some information on how to choose cutoffs and grids.
 A reasonable value for the Cutoff is 250 Ry and a good value for the rel_cutoff is usually 60 Ry. These cutoff should be varied simultaneously.
-These are the ASH defaults but we don't have a lot of experience with CP2K. 
+These are the ASH defaults but we don't have a lot of experience with CP2K so don't rely on these values. 
 Some system setups (depends on elements, basis set and pseudopotential) may require larger values and other systems will run more efficiently with smaller values.
 
 
@@ -299,7 +300,7 @@ will extend the box by an additional amount (6.0 Angstrom by default).
 
 For non-periodic calculations, the CP2KTheory object should be defined with *periodic=False*, this is the default.
 The cell should be specified as described above. Poisson solver should also be specified with the psolver keyword. 
-The default is 'wavelet' which is probably the most efficient for non-periodic calculations. The accuracy of the solver can be controlled by the wavelet_scf_type keyword (see `CP2K-manual-wavelet <https://manual.cp2k.org/trunk/CP2K_INPUT/FORCE_EVAL/DFT/POISSON/WAVELET.html>`_ ).
+The default is 'wavelet' which is probably the most efficient for non-periodic calculations. The accuracy of the solver can be controlled by the *wavelet_scf_type* keyword (see `CP2K-manual-wavelet <https://manual.cp2k.org/trunk/CP2K_INPUT/FORCE_EVAL/DFT/POISSON/WAVELET.html>`_ ).
 Another Poisson solver option is 'MT' (`CP2K-manual-MT <https://manual.cp2k.org/trunk/CP2K_INPUT/FORCE_EVAL/DFT/POISSON/MT.html>`_ ).
 In the case of the MT solver the cell should be at least 2 as large as the charge density (i.e. the molecule). The cell can be smaller for the wavelet solver.
 
@@ -318,7 +319,7 @@ QM/MM
 QM/MM calculations are possible in the ASH interface to CP2K. 
 Unlike most other QM-codes, however, regular electrostatic embedding is not available for DFT-methods in CP2K so instead we use the 
 GEEP (Gaussian Expansion of Electrostatic Potential) approach available in CP2K. This approach expands the MM pointcharges as Gaussians.
-The GEEP approach is overall an improvement over traditional electrostatic embedding as it should prevent charge-leakage onto MM atoms (electron spill-out effect).
+The GEEP approach is overall an improvement over traditional electrostatic embedding as it should prevent charge-leakage onto MM atoms (electron spill-out effect) which can be a larger problem for planewave-basis calculations.
 The GEEP approach, however, requires definition of radii on the MM-atoms which control the width of the Gaussians used to expand the MM pointcharges.
 
 To use CP2K as QM-code in an ASH QM/MM calculation one needs be aware of a few things:
