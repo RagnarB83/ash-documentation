@@ -44,7 +44,7 @@ If the use of special features inside PySCF are desired, you may have to use PyS
                     soscf=False, damping=None, diis_method='DIIS', diis_start_cycle=0, level_shift=None,
                     fractional_occupation=False, scf_maxiter=50, direct_scf=True, GHF_complex=False, collinear_option='mcol',
                     NMF=False, NMF_sigma=None, NMF_distribution=None, stability_analysis=False, 
-                    BS=False, HSmult=None,spinflipatom=None, atomstoflip=None,
+                    BS=False, HSmult=None,atomstoflip=None,
                     TDDFT=False, tddft_numstates=10, NTO=False, NTO_states=None,
                     mom=False, mom_occindex=0, mom_virtindex=1, mom_spinmanifold=0,
                     dispersion=None, densityfit=False, auxbasis=None, sgx=False, magmom=None,
@@ -199,19 +199,15 @@ If the use of special features inside PySCF are desired, you may have to use PyS
    * - ``BS``
      - Boolean
      - False
-     - Whether to find broken-symmetry solution by spin-flipping. Requires HSmult, spinflipatom and atomstoflip.
+     - Whether to find broken-symmetry solution by spin-flipping. Requires HSmult, and atomstoflip.
    * - ``HSmult``
      - integer
      - None
      - BS option: High-spin multiplicity to flip spin from.
-   * - ``spinflipatom``
-     - string
-     - None
-     - What atom to flip. String example: '0 Fe' (first Fe atom in system)
    * - ``atomstoflip``
      - list of integers
      - None
-     - What atom index to flip. NOTE: CURRENTLY INACTIVE
+     - What atom indices to flip spin on. Example: atomstoflip=[0,5] for atoms 0 and 5
    * - ``TDDFT``
      - Boolean
      - False
@@ -547,7 +543,7 @@ An example for this is shown below.
 Sometimes in unrestricted SCF calculations, one wants to guide the SCF procedure to find a symmetry-broken solution.
 This is typically performed in the context of broken-symmetry DFT to describe spin-coupled antiferromagnetic states.
 This can be performed in the PySCF interface by specifying BS=True, setting the spin multiplicity of the high-spin state (HSmult) 
-and specifying the atom to flip (spinflipatom string should contain both atom index and the element).
+and specifying the atom(s) to flip (atomstoflip is a list of atom indices ).
 
 *Broken-symmetry solution via spin-flipping a spin-center from the high-spin solution*
 
@@ -559,7 +555,7 @@ and specifying the atom to flip (spinflipatom string should contain both atom in
 
   #Specify a BS-DFT calculation by setting BS=True and HSmult=3 (high-spin multiplicity)
   pySCF_HF = PySCFTheory(scf_type="RHF", basis="def2-SVP", functional='PBE', 
-      autostart=False, BS=True, HSmult=3, spinflipatom="0 Fe")
+      autostart=False, BS=True, HSmult=3, atomstoflip=[0])
   Singlepoint(fragment=frag, theory=pySCF_HF, charge=0, mult=1)
 
 ################################################################################
