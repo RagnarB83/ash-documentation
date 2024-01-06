@@ -26,7 +26,7 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
                     functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
                     basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
                     method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
-                    center_coords=True, scf_convergence=1e-6,
+                    center_coords=True, scf_convergence=1e-6, eps_default=1e-10,
                     coupling='COULOMB', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None):
 
 .. list-table::
@@ -141,6 +141,14 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - float
      - 1e-6
      - SCF convergence in Hartree.
+   * - ``scf_maxiter``
+     - integer
+     - 200
+     - Max number of SCF iterations
+   * - ``eps_default``
+     - float
+     - 1e-10
+     - Overall CP2K convergence setting (see manual). Probably more useful than scf_convergence
    * - ``method``
      - string
      - 'QUICKSTEP'
