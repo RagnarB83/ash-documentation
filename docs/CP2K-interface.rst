@@ -19,15 +19,17 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
 
 .. code-block:: python
     
-    class CP2KTheory:
-        def __init__(self, cp2kdir=None, filename='cp2k', cp2k_bin_name=None, printlevel=2, basis_dict=None, potential_dict=None, label="CP2K",
-                    periodic=False, periodic_type='XYZ', qm_periodic_type=None,cell_dimensions=None, cell_vectors=None,
-                    qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
-                    functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
-                    basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
-                    method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
-                    center_coords=True, scf_convergence=1e-6, eps_default=1e-10,
-                    coupling='COULOMB', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None):
+  class CP2KTheory:
+      def __init__(self, cp2kdir=None, cp2k_bin_name=None, filename='cp2k', printlevel=2, basis_dict=None, potential_dict=None, label="CP2K",
+                  periodic=False, periodic_type='XYZ', qm_periodic_type=None,cell_dimensions=None, cell_vectors=None,
+                  qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
+                  functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
+                  basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
+                  method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
+                  center_coords=True, scf_maxiter=50, outer_SCF=True, outer_scf_maxiter=10, scf_convergence=1e-6, eps_default=1e-10,
+                  coupling='GAUSSIAN', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None,
+                  OT=True, OT_minimizer='DIIS', OT_preconditioner='FULL_ALL', 
+                  OT_linesearch='3PNT', outer_SCF_optimizer='DIIS', OT_energy_gap=0.08):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -143,12 +145,44 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - SCF convergence in Hartree.
    * - ``scf_maxiter``
      - integer
-     - 200
-     - Max number of SCF iterations
+     - 50
+     - Max number of (inner) SCF iterations
    * - ``eps_default``
      - float
      - 1e-10
      - Overall CP2K convergence setting (see manual). Probably more useful than scf_convergence
+   * - ``OT``
+     - Boolean
+     - True
+     - Whether the OT SCF method is on or not
+   * - ``OT_minimizer``
+     - string
+     - 'DIIS'
+     - Type of minimizer method. Options: 'DIIS', 'CG', 'SD', 'BROYDEN'
+   * - ``OT_preconditioner``
+     - string
+     - 'FULL_ALL'
+     - OT preconditioner. Options: 'FULL_ALL', 'FULL_SINGLE_INVERSE' and more
+   * - ``OT_linesearch``
+     - string
+     - '3PNT'
+     - OT linesearch option. Options: '3PNT', '2PNT', 'NONE', 'GOLD'.
+   * - ``outer_SCF``
+     - Boolean
+     - True
+     - Whether outer-SCF loop is on or not. 
+   * - ``outer_scf_maxiter``
+     - integer
+     - 10
+     - How many outer SCF iterations to perform.
+   * - ``outer_SCF_optimizer``
+     - string
+     - 'DIIS'
+     - Outer SCF optimizer method. Options: 'DIIS', 'CG'
+   * - ``OT_energy_gap``
+     - float
+     - 0.08
+     - Energy gap to use in OT method.
    * - ``method``
      - string
      - 'QUICKSTEP'
