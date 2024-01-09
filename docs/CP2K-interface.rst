@@ -235,6 +235,7 @@ The cp2k.psmp binary is the most flexible and is recommended to use if available
 We have had success installing the latest CP2K version (2024.1) via conda/mamba like this:
 
 .. code-block:: shell
+  
   #CP2K 2024.1 with OpenMPI and OpenBLAS: installs cp2k.psmp binary
   #Note: mamba install cp2k will install non-MPI version: cp2k.ssmp binary
   mamba install cp2k=2024.1=openblas_openmpi_h7c9ef3d_1
