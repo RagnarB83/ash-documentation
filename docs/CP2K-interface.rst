@@ -223,14 +223,24 @@ CP2K installation
 ################################################################################
 
 CP2K can be installed in several different ways, see https://www.cp2k.org/download
-It is easiest to either download binaries (see link) or install via conda (see https://anaconda.org/conda-forge/cp2k).
+It can be tricky to compile.
+It is easiest to either download binaries (see link, though MPI-parallel version not typically available) or install via conda/mamba (see https://anaconda.org/conda-forge/cp2k).
 Alternatively you can compile CP2K from source: https://github.com/cp2k/cp2k/blob/master/INSTALL.md
 
 Note that downloaded or compiled CP2K binaries may come in a few different forms: e.g. cp2k.ssmp, cp2k.sopt, ccp2k.popt, cp2k.psmp 
 where sopt means serial-optimized, ssmp means single-process with OpenMP, 
 popt means parallel-optimized with MPI and psmp means parallel-optimized with MPI and OpenMP.
+The cp2k.psmp binary is the most flexible and is recommended to use if available.
 
-ASH will find a CP2K binary to use according to this logic:
+We have had success installing the latest CP2K version (2024.1) via conda/mamba like this:
+
+.. code-block:: shell
+  #CP2K 2024.1 with OpenMPI and OpenBLAS: installs cp2k.psmp binary
+  #Note: mamba install cp2k will install non-MPI version: cp2k.ssmp binary
+  mamba install cp2k=2024.1=openblas_openmpi_h7c9ef3d_1
+
+
+ASH will then try find the CP2K installation to use according to this logic:
 
 1. if cp2kdir variable provided (containing path to where the binaries are) and cp2k_bin_name provided: use that binary in that directory
 2. if cp2kdir variable provided but cp2k_bin_name NOT provided: search for cp2k.X executables in the cp2kdir directory
@@ -261,7 +271,7 @@ and you may have to do your own benchmarks.
 
 **OpenMP parallelization**
 
-This is the easiest parallelization strategy to start using and is hence the default (*parallelization='OMP'*). 
+This is the easiest parallelization strategy to start using and is hence the default (*parallelization='OMP'*) in ASH. 
 It requires either a cp2k.ssmp or cp2k.psmp executable. One simply has to specify the number of CPU cores to be used via the *numcores* keyword in CP2KTheory.
 1 CP2K process (either cp2k.ssmp or cp2k.psmp) executable will be launched which will be capable of OpenMP threading up to the chosen number of cores.
 
@@ -276,16 +286,13 @@ As discussed on https://www.cp2k.org/faq:mpi_vs_openmp CP2K is primarily MPI-par
 **Mixed OMP/MPI parallelization**
 
 The mixed OMP/MPI parallelization is only possible using the cp2k.psmp executable.
-This parallelization strategy is primarily useful for massively parallel calculations (thousands of cores) and will likely not be 
-beneficial for small systems or a small amount of CPU cores.
+This parallelization strategy is particularly useful for massively parallel calculations (thousands of cores) and may not be as
+beneficial for small systems or a small amount of CPU cores. But this depends on the system and hardware so test it out.
 
 To use one should set: *parallelization='Mixed'* , specify the total number of CPU cores by the *numcores* keyword and additionally one must 
 specify how many MPI processes and how many OMP threads per process via the *mixed_mpi_procs* and *mixed_omp_threads* keywords.
 For example, if *numcores=8*, *mixed_mpi_procs=4* and *mixed_omp_threads=2* then 4 MPI processes will be used with 2 OMP threads used per process, for a total of 8 utilized CPU cores.
 Note that ASH will give an error if numcores is not equal to mixed_mpi_procs*mixed_omp_threads.
-
-Warning: Massively parallel CP2K within ASH has not been tested much.
-
 
 ################################################################################
 Controlling the basis set
@@ -375,7 +382,7 @@ To use CP2K as QM-code in an ASH QM/MM calculation one needs be aware of a few t
 
 
 One then should specify the QM/MM electrostatic coupling. For DFT only the Gaussian-based GEEP approach is available (*coupling='GAUSSIAN'*) while *coupling='COULOMB'* is available for semi-empirical systems.
-GEEP can only be used with the wavelet or periodic Poisson solver (not 'MT')
+GEEP can only be used with the wavelet or periodic Poisson solver (not 'MT').
 The number of Gaussians used to expand each MM-center is controlled by the *GEEP_num_gauss keyword* (default=6). 
 The width of the Gaussians depends on the defined MM-radius for each MM site which should vary according to the element. 
 Element information of the MM-region is automatically passed onto CP2K and default MM-radii will be used:
