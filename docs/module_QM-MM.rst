@@ -341,7 +341,7 @@ The files for this example (DHFR protein) are available in the `examples/QM-MM-e
 
   #Creating OpenMM object
   openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-      charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
+      charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
       do_energy_decomposition=True, autoconstraints=None, rigidwater=False)
 
 

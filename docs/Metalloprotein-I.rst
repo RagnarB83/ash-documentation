@@ -49,8 +49,8 @@ Next we create a simple naive ASH script (here called *1-modelsetup-bad1.py*) th
     # Setting up system via OpenMM_Modeller and requesting the CHARMM36 forcefield
     OpenMM_Modeller(pdbfile=pdbfile, forcefield='CHARMM36')
 
-The script calls the OpenMM_Modeller function taking the PDB-file as input. See :doc:`OpenMM-interface` for details on all the options to OpenMM_Modeller.
-OpenMM_Modeller will read the unmodified PDB-file and attempt to set up the system using the CHARMM36 protein forcefield.
+The script calls the **OpenMM_Modeller** function taking the PDB-file as input. See :doc:`OpenMM-interface` for details on all the options to **OpenMM_Modeller**.
+**OpenMM_Modeller** will read the unmodified PDB-file and attempt to set up the system using the CHARMM36 protein forcefield.
 
 -----------------------------------
 1a. Multiple occupancy problems
@@ -72,7 +72,7 @@ The script will exit almost immediately with an error, however:
 
     These residues should be manually inspected and fixed in the PDB-file before continuing
     You should delete either the labelled A or B location of the residue-atom/atoms and then remove the A/B label from column 17 in the file
-    Alternatively, you can choose use_higher_occupancy=True keyword in OpenMM_Modeller and ASH will keep the higher occupied form and go on
+    Alternatively, you can choose use_higher_occupancy=True keyword in **OpenMM_Modeller** and ASH will keep the higher occupied form and go on
     Make sure that there is always an A or B form present.
     Exiting.
     ASH exiting with code: 1
@@ -107,7 +107,7 @@ As suggested by the error message the solution is to modify manually the PDB-fil
 Visualization of the relevant residue-atoms with a program like VMD is recommended. 
 For a residue like valine where the multiple conformations arise due to the free rotation of the sidechain the choice of which conformation is not critical.
 If you have inspected the residue carefully and have concluded that the choice of which residue to pick is not critical you can also choose to use the 
-option: use_higher_occupancy=True as a keyword argument to OpenMM_Modeller.
+option: use_higher_occupancy=True as a keyword argument to **OpenMM_Modeller**.
 With this option active, ASH will keep the atom with the highest occupancy and delete the other.
 
 
@@ -188,12 +188,15 @@ While we could ignore the LJ parameters for Fe, since this Fe is a fully coordin
 in practice it is usually better to put some simple Lennard-Jones parameters on the ion to prevent artifical behaviour such as a water molecule attempting to bind to the +3 pointcharge. 
 Here we use available parameters for the Zn(II) ion from the CHARMM forcefield which should be a fine approximation.
 
+.. note:: The OpenMM XML file format to define forcefield parameters is documented in the `OpenMM documentation: Creating Force Fields <http://docs.openmm.org/7.6.0/userguide/application/05_creating_ffs.html>`_
+    For the LJ parameters sigma is in units of nm and epsilon in units kJ/mol.
+
 Note that in this case we need to define both NonbondedForce and LennardJonesForce in order to be consistent with the CHARMM36 forcefield as defined within OpenMM.
 In the NonbondedForce block sigma/epsilon are set to dummy parameters 1.0 and 0.0 while the actual parameters are defined in the LennardJonesForce block instead.
 The form of the XML file will be different if using another forcefield than CHARMM.
 
 
-Now that we have created an XML-file (*specialresidue.xml*) associated with the Fe ion residue that OpenMM complained about, we can try to call OpenMM_Modeller again, this time telling OpenMM_Modeller about the extra forcefield file.
+Now that we have created an XML-file (*specialresidue.xml*) associated with the Fe ion residue that OpenMM complained about, we can try to call **OpenMM_Modeller** again, this time telling **OpenMM_Modeller** about the extra forcefield file.
 
 .. warning:: For OpenMM to correctly map the information from the specialresidue.xml onto the PDB-file topology, it is important that the PDB-file contains an element definition (column 77-78) for
     each element of the special residue.
@@ -231,11 +234,11 @@ This is obviously not what we want for our Fe ion that should be coordinated to 
 
 
 
-In order to let OpenMM_Modeller know that we do not want those cysteine sidechains protonated we need to define 
+In order to let **OpenMM_Modeller** know that we do not want those cysteine sidechains protonated we need to define 
 the residue_variants keyword argument.
 The residue_variants value needs to be a dictionary of dictionaries that points to alternative residuenames for residues with 
 other protonation states in each chain (identified by chainname)
-Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residues (deprotonated CYS).
+Here we tell **OpenMM_Modeller** that these 4 cysteine residues should be CYX residues (deprotonated CYS).
 
 
 *1-modelsetup_simple.py:*
@@ -260,7 +263,7 @@ Here we tell OpenMM_Modeller that these 4 cysteine residues should be CYX residu
         extraxmlfile=extraxmlfile, residue_variants=residue_variants, use_higher_occupancy=True)
 
 
-OpenMM_Modeller prints a table with to-be-modified residues indicated, that confirms that we have selected the correct residues (though best to visually confirm):
+**OpenMM_Modeller** prints a table with to-be-modified residues indicated, that confirms that we have selected the correct residues (though best to visually confirm):
 
 .. code-block:: text
 
@@ -295,14 +298,14 @@ Valid alternative residue names for alternative protonation states of titratable
 - HID instead of HIS: histidine protonated at delta nitrogen
 - HIE instead of HIS: histidine protonated at epsilon nitrogen
 
-.. note:: These names can not be used in the PDB-file. Only in the residue_variants dictionary that you provide to OpenMM_Modeller.
+.. note:: These names can not be used in the PDB-file. Only use in the residue_variants dictionary that you provide to **OpenMM_Modeller**.
 
 -----------------------------------
 1d. Final setup
 -----------------------------------
 
 Script *1-modelsetup_simple.py* is the final version of the setup script that will setup a more-or-less acceptable model for solvated rubredoxin.
-When OpenMM_Modeller runs through the whole protocol without errors, it will print out the the following output in the end:
+When **OpenMM_Modeller** runs through the whole protocol without errors, it will print out the the following output in the end:
 
 
 .. code-block:: text
@@ -331,7 +334,7 @@ When OpenMM_Modeller runs through the whole protocol without errors, it will pri
     1. Define using separate forcefield XML files:
     omm = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "./specialresidue.xml"], pdbfile="finalsystem.pdb", periodic=True)
 
-OpenMM_Modeller has here executed a multi-step protocol that fixes problems in the PDB-file, corrects for missing atoms, intelligently added H-atoms according to topology and takes pH into account for titratable residues (default pH=7.0) 
+**OpenMM_Modeller** has here executed a multi-step protocol that fixes problems in the PDB-file, corrects for missing atoms, intelligently added H-atoms according to topology and takes pH into account for titratable residues (default pH=7.0) 
 and finally added a solvent box around the protein as well as ions according to a desired ion strength (here 0.1).
 PDB-files are created for each step and can be inspected.
 
@@ -341,7 +344,7 @@ PDB-files are created for each step and can be inspected.
 
 Figure above shows a visualization of the PDB after basic fixes (missing heavy atoms added) at the top left, after adding all hydrogen atoms (top right), after adding a solvent box (bottom left) and after adding ions (bottom right).
 
-.. note:: Even though OpenMM_Modeller exits successfully without errors you should be highly 
+.. note:: Even though **OpenMM_Modeller** exits successfully without errors you should be highly 
     critical of the final results and visual inspection of the final system PDB-file should always be a requirement. 
     Pay special attention to the environment around unusual residues and inspect the protonation states of titratable residues, 
     e.g. by analyzing hydrogen bonding networks.
@@ -379,13 +382,13 @@ control protonation state of titratable residues according to pH value, change i
 **2a. Minimize system and run a classical MD simulation**
 ###############################################################
 
-Once OpenMM_Modeller has finished setting up the system we need to do some basic classical simulations to make sure 
-the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD. While OpenMM_Modeller returns a valid OpenMMTheory ASH object that could be used 
+Once **OpenMM_Modeller** has finished setting up the system we need to do some basic classical simulations to make sure 
+the system is stable before attemping future QM/MM geometry optimizations or QM/MM MD. While **OpenMM_Modeller** returns a valid OpenMMTheory ASH object that could be used 
 as input in the next steps, it is more
-convenient to separate the OpenMM_Modeller setup in one script and simulations in another script. It is also required in this case as we
+convenient to separate the **OpenMM_Modeller** setup in one script and simulations in another script. It is also required in this case as we
 need to be able define bond-constraints for the metal ion in the OpenMMTheory definition. 
 
-To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup we can read in a list of forcefield XML files that were used in the original setup together with the PDB-file:
+To create an OpenMMTheory object in a new script from the **OpenMM_Modeller** setup we can read in a list of forcefield XML files that were used in the original setup together with the PDB-file:
 
 .. code-block:: python
 
@@ -395,7 +398,7 @@ To create an OpenMMTheory object in a new script from the OpenMM_Modeller setup 
 
 The charmm36.xml and charmm36/water.xml files should be found automatically in the OpenMM library while the specialresidue.xml file needs to be present in the directory.
 
-Alternatively, we can also read in the XML-file that OpenMM_Modeller created for the full system ("system_full.xml") together with 
+Alternatively, we can also read in the XML-file that **OpenMM_Modeller** created for the full system ("system_full.xml") together with 
 the PDB-file ("finalsystem.pdb") using the xmlsystemfile= option to OpenMMTheory:
 
 
@@ -457,7 +460,7 @@ To show how we can run classical simulations of our rubredoxin setup consider th
 .. note:: All optimizers and MD-simulators in ASH that take an ASH fragment as input will upon completion, update the coordinates of that ASH fragment
     with the coordinates of the last step.
 
-This script defines an ASH fragment from the final PDB-file created by OpenMM_Modeller. It then defines an OpenMM_Theory object using the 
+This script defines an ASH fragment from the final PDB-file created by **OpenMM_Modeller**. It then defines an OpenMM_Theory object using the 
 full system XML file (and PDB topology). In addition to basic automatic X-H bondconstraints and rigid-water constraints we also have to
 add constraints associated with the Fe-S cysteine bonds as our simple forcefield does not define bonded parameters associated with the Fe-Cysteine interaction.
 The bond constraints are easily defined as a list of lists using the atom indices of the Fe (755) and the sulfurs (96,136,567,607). Note that ASH counts from 0.
@@ -528,7 +531,7 @@ We will use a 4fs timestep which is relatively large (a longer timestep allows l
 Classical MD simulations in OpenMM with the LangevinMiddleIntegrator and appropriate constraints (autoconstraints='HBonds', rigidwater=True, default hydrogenmass scaling of 1.5)
 can typically use such large timesteps without problems.
 
-We will use the original files from OpenMM_Modeller, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_equilibration function)
+We will use the original files from **OpenMM_Modeller**, redo the 100-step minimization but then request a long NPT simulation (using the OpenMM_box_equilibration function)
 that uses both a barostat that changes the box dimensions (to keep pressure constant) until the volume and density of the system reaches convergence.
 Once the simulation is found to be converged, the last snapshot together with the converged box vectors are used to start a long 1 ns NVT simulation.
 

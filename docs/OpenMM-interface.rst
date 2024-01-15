@@ -28,7 +28,7 @@ The OpenMMTheory class:
                   nonbondedMethod_noPBC='NoCutoff', nonbonded_cutoff_noPBC=20,
                   xmlfiles=None, pdbfile=None, use_parmed=False, xmlsystemfile=None,
                   do_energy_decomposition=False,
-                  periodic=False, charmm_periodic_cell_dimensions=None, customnonbondedforce=False,
+                  periodic=False, periodic_cell_dimensions=None, customnonbondedforce=False,
                   nonbondedMethod_PBC='PME',
                   periodic_nonbonded_cutoff=12,  dispersion_correction=True,
                   switching_function_distance=10.0,
@@ -124,7 +124,7 @@ The OpenMMTheory class:
    * - ``PBCvectors``
      - list
      - None
-     - List of lists of floats (nm) or list of OpenMM Vec3 objects. Units are nm.
+     - List of lists of floats (in Angstrom)
    * - ``xmlfiles``
      - list
      - None
@@ -157,11 +157,11 @@ The OpenMMTheory class:
      - 'PME'
      - | Nonbonded method for PBC.
        | Default: 'PME'. Other options: 'Ewald', 'CutoffPeriodic', 'LJPME'
-   * - ``charmm_periodic_cell_dimensions``
+   * - ``periodic_cell_dimensions``
      - None
      - None
-     - | Periodic cell dimension for CHARMM-setup of system. Example: 
-       | charmm_periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]
+     - | Manual periodic cell dimensions. Example: 
+       | periodic_cell_dimensions= [200, 200, 200, 90, 90, 90]
    * - ``customnonbondedforce``
      - Boolean
      - False
@@ -295,7 +295,7 @@ Any Openmmtheory object can used to create a QM/MM theory object. See :doc:`modu
 
 **Periodic boundary conditions:**
 
-- If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile or in the case of CHARMM-files they need to be provided: charmm_periodic_cell_dimensions
+- If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile. Somtimes they have to be provided by periodic_cell_dimensions
 - The Ewald error tolerance (ewalderrortolerance) can be modified (default: 5e-4)
 - PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
 - The periodic nonbonded cutoff can be modified. Default: 12 Å
@@ -466,7 +466,7 @@ Example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90],
         dispersion_correction=False, periodic_nonbonded_cutoff=12, switching_function_distance=10,
         PMEparameters=[1.0/0.34, 90, 90, 90])
 
@@ -500,7 +500,7 @@ General X-H constraints and deuterium-mass example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
 
     #Launching a molecular dynamics simulation
     OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
@@ -601,7 +601,7 @@ Example:
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80, 80, 80, 90, 90, 90])
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90])
 
     #Launching a minimization
     OpenMM_Opt(fragment=frag, theory=openmmobject, maxiter=1000, tolerance=1)

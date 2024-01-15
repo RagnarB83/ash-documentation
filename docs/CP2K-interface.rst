@@ -235,7 +235,7 @@ The cp2k.psmp binary is the most flexible and is recommended to use if available
 We have had success installing the latest CP2K version (2024.1) via conda/mamba like this:
 
 .. code-block:: shell
-  
+
   #CP2K 2024.1 with OpenMPI and OpenBLAS: installs cp2k.psmp binary
   #Note: mamba install cp2k will install non-MPI version: cp2k.ssmp binary
   mamba install cp2k=2024.1=openblas_openmpi_h7c9ef3d_1
@@ -471,7 +471,7 @@ Here using the simple solvated lysozyme protein as a test system with a threonin
 
     #Creating OpenMM object from CHARMM-files
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-        charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
+        charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
         autoconstraints=None, rigidwater=False)
     #CP2KTheory object
     basis_dict={'C':'DZVP-MOLOPT-SR-GTH','N':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH'}
@@ -519,7 +519,7 @@ Here using the simple solvated lysozyme protein as a test system with a threonin
 
   #Creating OpenMM object
   openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
-      charmmprmfile=prmfile, periodic=True, charmm_periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
+      charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80.0, 80.0, 80.0, 90.0, 90.0, 90.0],
       do_energy_decomposition=True, autoconstraints=None, rigidwater=False)
   #QM
   basis_dict={'C':'DZVP-MOLOPT-SR-GTH','N':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH'}
