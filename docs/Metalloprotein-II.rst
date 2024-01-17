@@ -1,7 +1,7 @@
 Metalloprotein tutorial II: Ferredoxin
 ======================================
 
-If you have not gone through the rubredoxin tutorial before, then please do so before.
+If you have not gone through the rubredoxin tutorial (:doc:`Metalloprotein-I` ) before, then please do so before.
 Here we encounter a slightly more complex metalloprotein example, ferredoxin.
 This protein setup require slightly more work due to errors arising parsing the more complicated PDB-file with a slightly more complicated metal cluster.
 

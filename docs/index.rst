@@ -101,6 +101,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    mtd_tutorial
    protein_ligand_binding
    QM-MM-protein
+   QM-MM-boundary_tutorial
    workflows-examples
    Highlevel_CC_CBS_workflows
    Highlevel-density-analysis

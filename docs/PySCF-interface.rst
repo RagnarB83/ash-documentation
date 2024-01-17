@@ -800,3 +800,57 @@ The output will look like this:
 
 
 **delta-SCF calculation using Maximum Overlap Method:**
+
+
+################################################################################
+Kohn-Sham potential inversion
+################################################################################
+
+Thanks to the `KS-pies library (Kohn-Sham inversion toolkit) <https://github.com/ssnam92/KSPies>`_ is is possible to perform 
+Kohn-Sham potential inversion using the PySCF interface in ASH. 
+This is the inverse Kohn Sham problem, where instead of solving the standard potential-> density problem, 
+one solves the density->potential problem.
+This in particular allows one to take a correlated density matrix and derive the Kohn-Sham potential (and Kohn-Sham MOs) 
+corresponding to that density matrix. This in turn allows one to benchmark a DFA error by decomposing it into a density-driven error (DE) and a functional-driven error (FE).
+
+
+KS-pies is easily installed like this:
+
+.. code-block:: shell
+  
+    pip install kspies
+
+
+One can then in an ASH script use the ASH function **density_potential_inversion** to perform the inversion.
+
+.. code-block:: python
+
+  #Standalone density-potential inversion function: takes pyscfheoryobject and DM as input
+  #Solves the inversion problem and returns MO coefficients, occupations,energies and new DM
+  def density_potential_inversion(pyscftheoryobj, dm, method='WY', WY_method='trust-exact',
+                                  ZMP_lambda=128, ZMP_levelshift=False, ZMP_cycles=400, DF=True):
+
+**density_potential_inversion** requires a PySCFTheory object as input and a density matrix (dm) as input.
+The density matrix needs to have been calculated using pySCF. 
+A calculated dm object is often available from a PySCFTheory object (pyscftheoryobj.dm) that has been run.
+
+One can choose between the WY method or the ZMP method (*method* keyword) with the accuracy of the ZMP method controlled by 
+*ZMP_lambda*. In case of problems with ZMP convergence it is best to enable level-shifting (*ZMP_levelshift* Boolean keyword) 
+as well as increasing the number of ZMP cycles (*ZMP_cycles* keyword).
+If problems with WY convergence (happens with large basis sets) then changing the optimization method (WY_method) from 'trust-exact' to either 'bfgs' or 'cg'
+often works.
+
+
+Kohn-Sham inversion of a reference density furthermore allows one to benchmark DFT errors in a different way
+as the DFT energy error can be separated into a density-driven error (DE) and a functional-driven error (FE).
+The **DFA_error_analysis** function in ASH can be used to easily perform this analysis.
+
+.. code-block:: python
+
+  def DFA_error_analysis(DFA_obj=None, REF_obj=None, DFA_DM=None, REF_DM=None, REF_E=None,
+                            inversion_method='WY', WY_method='trust-exact',
+                            ZMP_lambda=128, ZMP_levelshift=False, ZMP_cycles=400, DF=True):
+
+
+Example:
+

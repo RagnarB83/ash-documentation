@@ -204,6 +204,10 @@ If the QM-MM boundary crosses a covalent bond (usually the case for proteins) th
 automatically created.
 The linkatom coordinates are added to the QM-region coordinates when passed to the QM program.
 
+Making a good QM/MM boundary is vital when doing QM/MM. 
+See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary.
+
+
 Note: Example below uses CHARMM. To use Amber or OpenMM files, modify the creation of the OpenMMTheory object like before.
 
 CHARMM example:

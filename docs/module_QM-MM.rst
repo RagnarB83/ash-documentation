@@ -206,14 +206,15 @@ If the QMregion-MMregion boundary is between two bonded atoms, then a boundary c
 In ASH this is treated by the popular linkatom method, combined with charge-shifting.
 A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
 Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
-applied by adding additional pointcharges. These pointcharges are only visible to the QM theory.
+applied by adding additional pointcharges (can be turned off by dipole_correction=False). These pointcharges are only visible to the QM theory.
 
 The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
 By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). 
 To override this behaviour add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
 
-In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
+In rare cases you may want to prevent ASH from adding a linkatom for a specific QM-atom, e.g. if you are making unusual QM-MM boundaries. 
+This can be accomplished like below. Note, however, that the QM-MM bonded terms will still be included.
 
 .. code-block:: python
 
@@ -223,13 +224,37 @@ In rare cases you may want to prevent ASH from adding a linkatom for a specific 
 
 
 Special care should be taken when defining a QM-region for a biomolecular system
-General recommendations:
+
+**General recommendations:**
 
 - Always cut a C-C bond that is as nonpolar as possible.
 - Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
 - Amino acid sidechains are straighforward but make sure to not cut through CHARMM charge groups.
 - Including protein backbone is more involved and needs careful inspection. The only good option is typically to cut the C-C bond between the C=O and the C-alpha.
-  
+
+
+See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary for proteins.
+
+############################################
+How QM/MM works behind the scenes in ASH
+############################################
+
+During a QM/MM energy+gradient calculation in ASH the following steps take place:
+
+1.	QM/MM program reads in the full model of the system, containing all atoms (no fake atoms,dummy atoms or linkatoms).
+2.	ASH determines connectivity of the system, i.e. finds what atoms are bonded to each other. E.g. atom no. 17 and atom no. 18 may be close enough that ASH thinks they are bonded.
+3.	The program parses the qmatoms list. The qmatoms list only contains real atoms (not linkatoms because they don‘t exist yet). The qmatoms list may e.g. contain atoms 1,2,3,4,14,15,16,17) and the program next checks if there is a covalent QM-MM boundary. Since atom no. 17 was (according to step 2)  bound to atom no. 18 (which is an MM-atom) then that means we have a covalent QM-MM boundary.
+4.	ASH will next automatically calculate the need for a linkatom for all QM-MM boundaries. Any required linkatom (H) coordinates will be calculated and MM charges will be modified to account for the QM-MM boundary.
+5.	The Cartesian coordinates of the QM-atoms are taken and passed to the QM-program. A hydrogen link atom is automatically added to this list of QM-coordinates (so that the QM-system will not have a dangling boundary). Additionally the MM pointcharges (also passed to the QM-program) are modified so that overpolarization will not occur (electron density at atom no. 17 and linkatom would be overpolarized by the closeness to MM-atom no. 18 ). Additional MM charges are also added so that the dipole is more realistic.
+6.	The QM-program calculates the energy and gradient of the QM-atoms (with linkatoms) with the electrostatic effect of the MM-atoms included (enters the 1-electron Hamiltonian). The QM energy and gradient (of the QM-atoms and also the PC gradient of the MM atoms) is passed back to ASH.
+7.	An MM calculation is performed for the whole system. The pointcharges of the atoms that have been labelled QM-atoms have been set to zero to avoid calculating the electrostatic energy (would double-count otherwise). Bonded MM terms for the same QM-atoms are removed (if present, to avoid doublecounting). Bonded terms at the QM-MM boundary are dealt with in a special way. The MM program never sees any linkatoms,charge-shifted MM charges or dipole charges. 
+8.	The QM/MM energy is calculated by combining the contribution calculated by the QM-program and the MM-program. This will include the coupling energy of the QM and MM subsystems. Correction for artificial linkatom energy could be done here (not done in practice in ASH). The QM/MM gradient of the full system is assembled from the QM-gradient, MM-gradient and PC-gradient. The gradient calculated on the dummy linkatom during the QM-atoms (which does  not exist in the real system) is taken and it is projected onto the relevant MM and QM-atoms instead.
+9.	The complete QM/MM gradient of the whole system is used to make a step in the relevant job.
+10. if part of a geometry optimization then the step is taken so as to minimize the QM/MM gradient
+11. or: if part of a dynamics simulation is taken according to Newton‘s equations  (the QM/MM gradient or force is used to calculate an acceleration which results in a change in velocity and positions of all the (real) atoms).
+
+.. note:: Neither the geometry optimization or dynamics algorithms see or experience any linkatoms, only real atoms of the system.
+
 
 ######################################
 QM/MM Truncated PC approximation
