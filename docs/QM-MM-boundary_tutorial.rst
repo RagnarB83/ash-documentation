@@ -93,6 +93,9 @@ For ASH scripts related to the QM-region definitions in this tutorial see direct
 
 In rubredoxin the Fe ion is bound to 4 cysteine residues.
 It is always best to try to start as simple as possible and figure out what the minimal QM-region is for a decent description of the system.
+Note that visualizing the PDB-file of the full system (containing all atoms) in a visualization program like VMD 
+is probably the best way to figure out what a good QM-region should look like and to get the atom indices involved (VMD like ASH will count atom indices from 0).
+Visualizing the PDB-file is better than an XYZ-file because VMD will then show atomnames and residuenames and resids when you select individual atoms.
 
 --------------------------------------------------------------
 Option 1: Only Fe and S-atom in the QM-region (BAD)
@@ -145,7 +148,7 @@ Note that ASH also prints the QM-region coordinates in the output (without any l
 If we use the *unusualboundary=True*  keyword to override the ASH-exit, ASH will continue and it will automatically determine linkatoms
 to terminate the boundary to make 4 Fe-S-L(H) junctions.  The linkatom (L) would be a H-atom added automatically by ASH but only when the QM-calculation is being performed.
 The QM-code would thus see coordinate for an Fe(SH)4 complex.
-If the QM-code is ORCA the ORCA inputfile will look something like this:
+If the QM-code is ORCA the ORCA inputfile created by ASH will look something like this:
 
 .. code-block:: text
 
@@ -199,7 +202,7 @@ This would terminate the boundary to make a Fe-S-CH2-L junction. The linkatom (L
    :align: center
    :width: 200
 
-The ORCA inputfile would look like this:
+The ORCA inputfile created by ASH would look like this:
 
 .. code-block:: text
 
