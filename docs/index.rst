@@ -105,6 +105,7 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    workflows-examples
    Highlevel_CC_CBS_workflows
    Highlevel-density-analysis
+   Density-inversion
 
 .. toctree::
    :maxdepth: 2

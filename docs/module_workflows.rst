@@ -190,8 +190,8 @@ and then a theory for the high-level single-point level is chosen (SP_theory). C
 	DLPNO_CC_calc = ORCA_CC_CBS_Theory(elements=["N", "H"], cardinals = [2,3], basisfamily="def2", DLPNO=True, 
 					pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
 	#Alternative: Thermochemistry protocol on the whole N2 + 3 H2 => 2 NH3 reaction
-	thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry,
-						numcores=numcores, Opt_theory=B3LYP_opt, SP_theory=DLPNO_CC_calc, unit='kcal/mol')
+	thermochemprotocol_reaction(reaction=fraglist=HB_reaction, numcores=numcores, Opt_theory=B3LYP_opt, 
+								SP_theory=DLPNO_CC_calc, unit='kcal/mol')
 
 
 **thermochemprotocol_single example:**

@@ -7,7 +7,7 @@
 Setup
 ======================================
 
-To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository.
+To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository or alternatively install via pip (see later).
 
 ASH is 99% Python with 1 % Julia.
 A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
@@ -31,7 +31,7 @@ For Molecular crystal QM/MM functionality:
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ or `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
-Recommended external codes (most ASH examples will use these):
+Recommended external QM codes (most ASH examples will use these):
 
 * `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ The semi-empirical tightbinding DFT code by Grimme and coworkers.
 * `ORCA <https://orcaforum.kofo.mpg.de>`_ The popular free-for-academic-use HF,DFT,WFT program by Neese and coworkers.
@@ -48,15 +48,8 @@ Useful libraries for specific functionality:
 * `ASE <https://wiki.fysik.dtu.dk/ase/>`_ Atomic Simulation Environment
 
 
-##############################################
-A. Download ASH
-##############################################
-Clone or download the archive from `Github <https://github.com/RagnarB83/ash>`_ containing ASH and put the directory (named ash) in some appropriate location.
-The ash directory contains the Python source code files, e.g. ash_header.py and several directories.
-
-
 ##################################################
-B. Installation and Configuration
+A. Python environment setup
 ##################################################
 
 Installing `Miniforge <https://github.com/conda-forge/miniforge>`_ is recommended to handle Python and package installations (openMM in particular).
@@ -70,16 +63,16 @@ Here is a simple workflow for a Linux/Unix system:
 .. code-block:: shell
 
     #Download Miniforge (mamba,conda)
-    #https://github.com/conda-forge/miniforge and https://github.com/mamba-org/mamba
+    #Sites: https://github.com/conda-forge/miniforge and https://github.com/mamba-org/mamba
     wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
     #Install without prompt (this accepts the license). Remove -b if you want to control where it installs miniforge3
     sh Miniforge3-Linux-x86_64.sh -b #creates a ~/miniforge3 directory
     #Initialize mamba/conda for your shell (if desired). 
     ~/miniforge3/bin/mamba init #This will add code to your shell-config file (.bashrc or equivalent)
     #Log out and log in again to activate the new shell-config
-    #Create new environment (recommended):
-    mamba create --name ASH
-    mamba activate ASH
+    #Create new environment for ASH (recommended):
+    mamba create --name ASH #This creates a new environment called ASH
+    mamba activate ASH #This activates ASH.
     #Install python and numpy in the ASH environment
     mamba install python3 numpy
 
@@ -89,29 +82,47 @@ Here is a simple workflow for a Linux/Unix system:
 B0. The lazy/impatient way to set up ASH (easy but incomplete)
 ***************************************************************
 
-If you are impatient and want to get ASH going immediately without all features enabled.
+If you are impatient and want to get ASH going immediately without all features enabled. 
+Make sure you have a suitable Python interpreter available, ideally in a conda environemnt (see above).
 
-1. Download the ASH repository from `Github <https://github.com/RagnarB83/ash>`_
-2. Make sure there is a python3 interpreter on your system (with numpy), see e.g. above.
-3. Set: export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing the source-code directory (called "ash"))
-4. Test ASH by launching: **python3**  and then do: from ash import *        (this will fail if PYTHONPATH is set incorrectly)
+Option1 : Install ASH via pip (recommended):
+This will also add the Numpy and geometric dependency.
 
-.. warning:: If your installation path is e.g. /home/ragnar/ASH-program/ash  (where the ash directory contains bunch of files including ash_header.py) then you should set PYTHONPATH like this: export PYTHONPATH=/home/ragnar/ASH-program:$PYTHONPATH   but NOT:  export PYTHONPATH=/home/ragnar/ASH-program/ash:$PYTHONPATH
+.. code-block:: shell
 
-.. note:: ASH will complain when you try to use features that require additional installations (e.g. geometric, julia, OpenMM etc). You then have to install them via conda/mamba or pip.
+    #Install ASH using pip (default main branch)
+    pip install git+https://github.com/RagnarB83/ash.git
+    #Install the NEW (development) branch of ASH
+    pip install git+https://github.com/RagnarB83/ash.git@NEW
 
-.. note:: If you want to use the latest development branch of ASH (called NEW) then you have to go inside the ash directory and do: git checkout NEW
+Option 2 (mostly if you want to help develop ASH): Download ASH from Github and set PYTHONPATH.
+
+.. code-block:: shell
+
+    #Download ASH from Github
+    git clone https://github.com/RagnarB83/ash.git 
+    #git checkout NEW if you want the development branch
+    #Set PYTHONPATH to the ASH directory
+    export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing README.md)
+
+
+Test ASH by launching: **python3**  and then do: from ash import *
+
+.. note:: ASH will complain when you try to use features that require additional installations (e.g. OpenMM, julia, etc). You then have to install them via conda/mamba or pip. 
+    Note that OpenMM requires a conda/mamba environment. See below.
+
 
 *****************************************************
 B1. Semi-Automatic Miniconda setup (recommended)
 *****************************************************
 
-This is the recommended way for a fully functioning ASH. Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/miniconda).
+This is the recommended way for a fully functioning ASH. 
+Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/miniconda).
 
-1. Install Miniforge or Miniconda (see above).  Install it in a location where your user has access (e.g. your home-directory)
+1. Install Miniforge or Miniconda (see A above).  Install it in a location where your user has access (e.g. your home-directory)
 2. Create new environment (recommended): **mamba create --name ASH**
-3. Load environment: **mamba activate ASH**
-4. Change directory to ASH location (that you downloaded from Github).
+3. Load environment: **mamba activate ASH** #IMPORTANT
+4. pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your environment
 5. Install some of the desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred). 
 6. Run: **bash conda_setup_ash.sh** # This creates the file: set_environment_ash.sh
 7. Run: **source set_environment_ash.sh**  (this sets necessary PATHs for activating ASH and should probably be put in each user's .bash_profile, job-submission script etc.)
@@ -150,7 +161,7 @@ Note: You need to be able to install packages to this installation via pip
 B3. Manual
 *****************************************************
 
-(Use only if semi-automatic approach B1 or B2 does not work)
+(Use only if optons B0, B1 or B2 do not work)
 
 **Step 1.** 
 
@@ -179,32 +190,6 @@ A miniconda/miniforge distribution can be used. Make sure the conda/mamba enviro
 If you don't already have a suitable Python3 distribution, go to Step 2b.
 
 
-**Step 2b. Install Python if required** 
-
-*Option 1: Python3 via system package manager*
-
-.. note:: This option might be preferred if installing on a cluster for multiple users.
-
-Linux: Install Python3 via a Linux package manager (e.g. Centos: yum -y install python3, Ubuntu: apt install python3).
-Installing via a package manager is preferable than compiling from source (see python.org for compile options).
-Mac OS X: Use the system Python3 (if available) or install Python3 via Homebrew (https://brew.sh/).
-Windows: See https://www.python.org/downloads/windows/ for options.
-
-Install numpy via pip:
-
-.. code-block:: shell
-
-    pip3 install numpy
-
-
-Make sure that the Python3 that you have installed is in your PATH environment while finishing the setup process and when using ASH:
-
-.. code-block:: shell
-
-    export PATH=/path/to/python3/bin:$PATH
-
-
-
 *Option 2: Miniforge/Miniconda Python3 setup*
 
 Download `Miniforge <https://github.com/conda-forge/miniforge>`_ or `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ and install in e.g. your user directory.
@@ -220,7 +205,7 @@ Follow Miniforge/Miniconda installation instructions. Install numpy unless alrea
     export PATH=$ASHPATH:$PATH
     export LD_LIBRARY_PATH=$ASHPATH/lib:$LD_LIBRARY_PATH
 
-where */path/to/ash* is the dir that contains the "ash" source-code diretory .
+where */path/to/ash* is the dir that contains README.md.
 Put these environment definitions in your shell environment startup file e.g. .bashrc, .bash_profile or .zshrc.
 This step will be necessary for each user on the cluster.
 
@@ -383,17 +368,22 @@ Error message:
 
     ModuleNotFoundError: No module named 'ash'
 
-This means that you have not correctly told your Python environment where ASH exists.
-If your installation path is e.g. /home/ragnar/ASH-program/ash  (where the ash directory contains bunch of files including ash_header.py) 
-then :
+This means that you have not correctly told your Python environment where ASH exists. If you downloaded or cloned the code you need to either do:
 
-.. code-block:: text
-    
-    #DO THIS:
-    export PYTHONPATH=/home/ragnar/ASH-program:$PYTHONPATH
-    #DO NOT DO THIS:
-    export PYTHONPATH=/home/ragnar/ASH-program/ash:$PYTHONPATH
+.. code-block:: shell
 
+    #Option 1: Set PYTHONPATH
+    export PYTHONPATH=/path/to/ash:$PYTHONPATH 
+
+    #Locally install using pip
+    cd /path/to/ash #Where the README.md file is located
+    pip install .
+
+However, it is usually better to install directly from the repository:
+
+.. code-block:: shell
+
+    pip install git+https://github.com/RagnarB83/ash.git
 
 
 **Module numpy not found**

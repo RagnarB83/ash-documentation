@@ -18,13 +18,7 @@ You create a Python3 script (e.g. called ashtest.py) and import the ASH library:
     import ash   # If you use this option you will have to add the "ash." prefix in front of ASH functions/classes.
 
 
-ASH functionality can only be imported if the ASH source dir is in the PYTHONPATH.
-Make sure you have already set in the shell (part of Setup):
-
-.. code-block:: shell
-
-    export PYTHONPATH=/path/to/ash_dir:$PYTHONPATH
-
+ASH can only be imported if the ASH source dir has either been installed (or manually set in the PYTHONPATH). See :doc:`setup`.
 
 You then have the freedom of writing a Python script in whatever way you prefer but taking the advantage
 of ASH functionality. Typically you would first create one (or more) molecule fragments, then define a theory
@@ -95,7 +89,7 @@ Interactive ASH in a REPL or iPython environment
 It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
 This allows for interactive use of ASH. See video below for an example.
 
-If ASH has been set up correctly (setting PYTHONPATH etc.) and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
+If ASH has been set up correctly and iPython is available (pip install ipython), then ASH within iPython should be straightforward.
 Make sure to use the iPython that uses the same Python environment as ASH.
 
 .. raw:: html
@@ -193,7 +187,7 @@ Using **subash**:
 This script is written for the SLURM queuing system (could be adapted easily to others).
 To use, one needs to change the name of the queue, default walltime, name of local scratch location on each node etc. 
 in the first lines of the script below.
-Also one needs provide the path to an environment-file that configures the ASH environment (PYTHONPATH, PATH, LD_LIBRARY_PATH etc.).
+Also one needs provide the path to an environment-file that configures the ASH environment (e.g. PATH, PYTHONPATH, LD_LIBRARY_PATH etc.).
 If you set up ASH using the Conda instructions `Conda <https://ash.readthedocs.io/en/latest/setup.html#b1-semi-automatic-miniconda-setup-easiest>`_
 you should have a file in the ASH directory: /path/to/ash/set_environment_ash.sh
 

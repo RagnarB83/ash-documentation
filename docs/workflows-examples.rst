@@ -109,7 +109,7 @@ that calculates the single-point energy for each fragment.
     print("Reaction energy:", reaction_energy, "kcal/mol")
 
 The script above is verbose but the structure gives you a lot of flexibility that you can adapt to your needs.
-Of course, ASH already contains functions to carry out such a job in a simpler way: **Singlepoint_fragments** and **ReactionEnergy**.
+Of course, ASH already contains functions to carry out such a job in a simpler way: **Singlepoint_fragments**, **Singlepoint_reaction** and **ReactionEnergy**.
 See :doc:`singlepoint` and :doc:`module_workflows` for more information.
 
 .. code-block:: python
@@ -123,6 +123,8 @@ See :doc:`singlepoint` and :doc:`module_workflows` for more information.
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
     specieslist=[N2, H2, NH3] #An ordered list of ASH fragments.
     stoichiometry=[-1, -3, 2] #Using same order as specieslist.
+
+
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
     energies = Singlepoint_fragments(theory=ORCAcalc, fragments=specieslist) #Calculating list of energies
 
@@ -145,12 +147,11 @@ Even better syntax is to create an ASH **Reaction** object and give as input to 
     N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
     H2=Fragment(diatomic="H2", bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
-    reaction = Reaction(fragments=[N2, H2, NH3], stoichiometry=[-1, -3, 2], unit='kcal/mol')
+    HB_reaction = Reaction(fragments=[N2, H2, NH3], stoichiometry=[-1, -3, 2], unit='kcal/mol')
 
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
-    energies = Singlepoint_fragments(theory=ORCAcalc, fragments=specieslist) #Calculating list of energies
 
-    #Calculate reaction energy using Singlepoint_reaction
+    #Calculate reaction energy using Singlepoint_reaction.
     result = Singlepoint_reaction(reaction=HB_reaction, theory=dft)
 
 
@@ -169,19 +170,20 @@ and calculate the reaction energy directly at a high-level of theory together wi
 
     numcores=4
 
-    N2=Fragment(xyzfile="n2.xyz", charge=0, mult=1)
-    H2=Fragment(xyzfile="h2.xyz", charge=0, mult=1)
+    N2=Fragment(diatomic="N2", bondlength=1.0975, charge=0, mult=1) #Diatomic molecules can be defined like this also
+    H2=Fragment(diatomic="H2", bondlength=0.74, charge=0, mult=1) #Diatomic molecules can be defined like this also
     NH3=Fragment(xyzfile="nh3.xyz", charge=0, mult=1)
 
     ##Defining reaction
     specieslist=[N2, H2, NH3] #Use same order as stoichiometry
     stoichiometry=[-1, -3, 2] #Use same order as specieslist
+    HB_reaction = Reaction(fragments=[N2, H2, NH3], stoichiometry=[-1, -3, 2], unit='kcal/mol')
 
     #Define theories
     OptFreqtheory = ORCATheory(orcasimpleinput="! BP86 def2-SVP def2/J", orcablocks="", numcores=numcores)
     HL=ORCA_CC_CBS_Theory(elements=["N","H"], basisfamily="cc", cardinals=[3,4], numcores=numcores)
     #Thermochemistry protocol
-    thermochemprotocol_reaction(fraglist=specieslist, stoichiometry=stoichiometry, Opt_theory=OptFreqtheory, SP_theory=HL, 
+    thermochemprotocol_reaction(reaction=HB_reaction, Opt_theory=OptFreqtheory, SP_theory=HL, 
                 numcores=numcores, memory=5000, analyticHessian=True, temp=298.15, pressure=1.0)
 
 
@@ -238,7 +240,7 @@ Such a job could be written directly like this:
         # Run single-point job
         result = Singlepoint(theory=ORCAcalc, fragment=h2)
         #Keep ORCA outputfile for each functional
-        os.rename('orca-input.out', functional+'_orcajob.out')
+        os.rename('orca.out', functional+'_orcajob.out')
         #Adding energy to dictionary
         energies_dict[functional] = result.energy
         #Cleaning up after each job (not always necessary)
@@ -659,7 +661,7 @@ Such an example can be written in ASH like this in a rather verbose manner:
     print("Workflow done!")
 
 
-The manually defined workflow above is a bit verbose and can of course also be more conveniently run like below where we use the 
+The manually defined workflow above is rather verbose and can of course also be more conveniently run like below where we use the 
 **confsampler_protocol** function (see :doc:`crest-interface`), that takes as input the ASH fragment and 2 levels of ASH theories to be used for geometry optimizations and high-level singlepoint energies.
 
 .. code-block:: python

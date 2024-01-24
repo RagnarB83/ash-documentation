@@ -308,10 +308,10 @@ to have partial double-bond character and we want to avoid cutting through a C-N
 
 We then end up with a dangling C=O bond on the left side of the image (belong to Val-5) where a linkatom would be added to create 
 an effective aldehyde group here. That link replaces the C-alpha of Val-5.
-This cut is not perfect as the cut C-C bond involves a slightly polar carbon of the Val-5 carbonyl group but it‘s really the only good possibility here. 
+This cut is not perfect as the cut C-C bond involves a slightly polar carbon of the Val-5 carbonyl group but it is really the only good possibility here. 
 
 The C=O is its own CHARMM charge group (of the Val residue) so we are not cutting through a charge group (which is good). 
-Furthermore CH(alpha) and NH together (belonging to Cys-6) also belong to a charge group but there is no problem since we including the whole charge group.
+Furthermore CH(alpha) and NH together (belonging to Cys-6) also belong to a charge group but there is no problem since we are including the whole charge group.
 
 Finally this QM-region definition also makes a cut between the Cys-6 alpha-carbon and the C of the Cys-6 C=O group.
 However, this is fine since now there is only 1 possible linkatom on the Cys-6 alpha-carbon. QM-region with linkatoms is shown below.
@@ -332,7 +332,7 @@ Option 5: Fe, SCH2 groups + Cys-6 CH(alpha) and NH peptide group + CO of Val-5 +
    :width: 400
 
 
-The QM-region above is arguably a bit unbalanced from a QM perspective since we are only extending the peptide backbone in 1 direction.
+The QM-region option 4 is arguably a bit unbalanced from a QM perspective since we are only extending the peptide backbone in 1 direction.
 We could try to extend the QM-region further on the right side (towards Thr-7), keeping in mind that we don‘t want to cut through either 
 the C-N bond (between Cys-6 and Thr-7) or the N-C bond (within Thr-7). 
 Again we are forced to avoid the double-linkatom-on-same-QM-atom scenario so we have to extend further. 
@@ -364,15 +364,14 @@ to the X-ray structure makes a hydrogen bond to the sulfur atom of Cys-6 this ma
 Furthermore, for the rubredoxin active site one would normally want to expand the QM-region associated with the 4 cysteine residues in a balanced manner
 anyway and at some point including large peptide chain segments may be necessary.
 
-Overall defining extended QM-regions requires a bit of know-how and careful consideration.
-The best option is to start simple and then carefully expand the QM-region as needed.
 
 
 --------------------------------------------------------------
 Further reading
 --------------------------------------------------------------
 
-As you can see, making good cuts for extended QM-regions requires a bit of know-how.
+Overall defining extended QM-regions and making good cuts requires a bit of know-how and careful consideration.
+The best option is to start simple and then carefully expand the QM-region as needed.
 
 Some useful reading:
 
