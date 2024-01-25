@@ -70,11 +70,14 @@ Here is a simple workflow for a Linux/Unix system:
     #Initialize mamba/conda for your shell (if desired). 
     ~/miniforge3/bin/mamba init #This will add code to your shell-config file (.bashrc or equivalent)
     #Log out and log in again to activate the new shell-config
+    #source-ing the shell-config file should also work:
+    source ~/.bashrc
     #Create new environment for ASH (recommended):
     mamba create --name ASH #This creates a new environment called ASH
     mamba activate ASH #This activates ASH.
     #Install python and numpy in the ASH environment
-    mamba install python3 numpy
+    #Note: python 3.12 problematic at the moment
+    mamba install python=3.11 numpy  #Installs approx. 50 MB of packages
 
 .. note:: Note that mamba and conda are both installed by Miniforge. Mamba is a faster version of conda and is usually better behaved. They are pretty much interchangeable.
 
@@ -83,16 +86,17 @@ B0. The lazy/impatient way to set up ASH (easy but incomplete)
 ***************************************************************
 
 If you are impatient and want to get ASH going immediately without all features enabled. 
-Make sure you have a suitable Python interpreter available, ideally in a conda environemnt (see above).
+Make sure you have a suitable Python interpreter available, ideally in a conda/mamba environment (see above).
+For OpenMM functionality, you need to install OpenMM via conda/mamba. See below.
 
 Option1 : Install ASH via pip (recommended):
 This will also add the Numpy and geometric dependency.
 
 .. code-block:: shell
 
-    #Install ASH using pip (default main branch)
+    #Install ASH using pip (default main branch). Approx. X MB of packages
     pip install git+https://github.com/RagnarB83/ash.git
-    #Install the NEW (development) branch of ASH
+    #Install the NEW (development) branch of ASH. Approx. X MB of packages
     pip install git+https://github.com/RagnarB83/ash.git@NEW
 
 Option 2 (mostly if you want to help develop ASH): Download ASH from Github and set PYTHONPATH.
@@ -106,7 +110,12 @@ Option 2 (mostly if you want to help develop ASH): Download ASH from Github and 
     export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing README.md)
 
 
-Test ASH by launching: **python3**  and then do: from ash import *
+Test ASH immediately by launching: **python3**  and then do: 
+
+.. code-block:: python
+
+    from ash import *
+    create_ash_env_file()  #This creates a file: set_environment_ash.sh
 
 .. note:: ASH will complain when you try to use features that require additional installations (e.g. OpenMM, julia, etc). You then have to install them via conda/mamba or pip. 
     Note that OpenMM requires a conda/mamba environment. See below.
@@ -123,16 +132,22 @@ Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has
 2. Create new environment (recommended): **mamba create --name ASH**
 3. Load environment: **mamba activate ASH** #IMPORTANT
 4. pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your environment
-5. Install some of the desired packages listed in: ASH-packages.sh (inside ASH source code directory) via conda or pip (conda is preferred). 
-6. Run: **bash conda_setup_ash.sh** # This creates the file: set_environment_ash.sh
-7. Run: **source set_environment_ash.sh**  (this sets necessary PATHs for activating ASH and should probably be put in each user's .bash_profile, job-submission script etc.)
-8. Test ASH by launching: **python3**  and then do: import ash     If ash is imported without errors by the Python interpreter then things should be good. See also section D below.
+5. Install some of the desired packages listed in: `ASH-packages.sh <https://github.com/RagnarB83/ash/blob/master/ASH-packages.sh>`_ (inside ASH source code directory) via conda or pip. 
 
+Test ASH immediately by launching in the same shell session: **python3**  and then do: 
+
+.. code-block:: python
+
+    from ash import * #If you get an error here then ASH is not installed correctly
+    create_ash_env_file()  #This creates a file: set_environment_ash.sh
+
+The set_environment_ash.sh file is a convenient way to activate the ASH environment in general. 
+It can be sourced in your shell environment startup file (.bashrc, .bash_profile, .zshrc etc.) or in your jobscript. It sets the necessary PATHs for ASH to work
+without having to load the conda/mamba environment.
 
 If molecular crystal QM/MM feature is needed:
 
-- Optional: Make sure the chosen Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See Section B3: Step 5a and 5b below for details.
-- Optional: Run: **julia julia-packages-setup.jl** to install some required Julia packages. Note: Julia dependency only required for molecular-crystal QM/MM.
+- Optional: Make sure the Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See Section B3: Step 5a and 5b below for details.
 
 *****************************************************
 B2. Semi-Automatic non-Mamba/Conda setup
