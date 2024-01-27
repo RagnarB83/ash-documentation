@@ -10,7 +10,7 @@ Setup
 To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository or alternatively install via pip (see later).
 
 ASH is 99% Python with 1 % Julia.
-A Python3 distribution (version >3.6 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
+A Python3 distribution (version >= 3.7 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
 
 It is recommended to use a Miniforge/Minconda package manager to install Python and the required packages (OpenMM in particular)
 Some functionality (primarily the molecular crystal QM/MM part) require a Julia installation (as the Python routines will be too slow).
@@ -18,7 +18,7 @@ Future versions may make the Julia interface a requirement.
 
 Strict dependencies:
 
-* `Python version 3.6 <https://www.python.org>`_ or higher
+* `Python version 3.7 <https://www.python.org>`_ or higher
 * `Numpy <https://numpy.org>`_ library.
 
 
@@ -31,20 +31,20 @@ For Molecular crystal QM/MM functionality:
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ or `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
 
-Recommended external QM codes (most ASH examples will use these):
+Recommended external QM codes (many ASH examples will use these) for basic semi-empirical and DFT calculations:
 
-* `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ The semi-empirical tightbinding DFT code by Grimme and coworkers.
-* `ORCA <https://orcaforum.kofo.mpg.de>`_ The popular free-for-academic-use HF,DFT,WFT program by Neese and coworkers.
-
+* `xTB program <https://xtb-docs.readthedocs.io/en/latest/>`_ The semi-empirical tightbinding DFT code by Grimme and coworkers.
+* `ORCA program <https://orcaforum.kofo.mpg.de>`_ The popular free-for-academic-use HF,DFT,WFT program by Neese and coworkers.
+* `PySCF program <https://pyscf.org>`_  The powerful open-source Python-based electronic structure library.
 
 Useful libraries for specific functionality:
 
+* `MDtraj <https://www.mdtraj.org>`_ MD trajectory analysis
 * `Matplotlib <https://matplotlib.org>`_ library. Used to plot graphs/surfaces.
 * `Scipy <https://www.scipy.org>`_ library. Used for interpolation routines when plotting surfaces and in molecular crystal QM/MM.
 * `Plumed <https://www.plumed.org>`_ Plumed library
 * `Parmed <https://parmed.github.io/ParmEd/html/index.html>`_ May be used by OpenMM interface.
 * `MDAnalysis <https://www.mdanalysis.org>`_ MD trajectory analysis
-* `MDtraj <https://www.mdtraj.org>`_ MD trajectory analysis
 * `ASE <https://wiki.fysik.dtu.dk/ase/>`_ Atomic Simulation Environment
 
 
@@ -85,7 +85,7 @@ Here is a simple setup for a Linux/Unix system that you can copy-paste into your
 .. note:: If you do use a previous conda installation it is recommended to add the conda-forge channel like this :  conda config --add channels conda-forge
 
 ***************************************************************
-B0. The lazy/impatient way to set up ASH (easy but incomplete)
+B. The lazy/impatient way to set up ASH (easy but incomplete)
 ***************************************************************
 
 If you are impatient and want to get ASH going immediately without all features enabled. 
@@ -97,10 +97,10 @@ This will also add the Numpy and geometric dependency.
 
 .. code-block:: shell
 
-    #Install ASH using pip (default main branch). Approx. X MB of packages
-    pip install git+https://github.com/RagnarB83/ash.git
-    #Install the NEW (development) branch of ASH. Approx. X MB of packages
-    pip install git+https://github.com/RagnarB83/ash.git@NEW
+    #Install ASH using pip (default main branch). Approx. 390 MB
+    python -m pip install git+https://github.com/RagnarB83/ash.git
+    #Install the NEW (development) branch of ASH. Approx. 390 MB
+    python -m pip install git+https://github.com/RagnarB83/ash.git@NEW
 
 Option 2 (mostly if you want to help develop ASH): Download ASH from Github and set PYTHONPATH.
 
@@ -108,12 +108,12 @@ Option 2 (mostly if you want to help develop ASH): Download ASH from Github and 
 
     #Download ASH from Github
     git clone https://github.com/RagnarB83/ash.git 
-    #git checkout NEW if you want the development branch
+    #Do next: git checkout NEW if you want the development branch
     #Set PYTHONPATH to the ASH directory
     export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing README.md)
 
 
-Test ASH immediately by launching: **python3**  and then do: 
+Test ASH immediately by launching: **python3**  (same python as used above!) and then do: 
 
 .. code-block:: python
 
@@ -130,8 +130,10 @@ You can then do the following to activate the ASH environment for future shell s
     Note that OpenMM requires a conda/mamba environment. See below.
 
 
+See :doc:`basics` for information on how to use ASH, including how to submit ASH jobs to a cluster (e.g. using the **subash** submission script).
+
 *****************************************************
-B1. Semi-Automatic Miniconda setup (recommended)
+C. Semi-Automatic Miniconda setup (recommended)
 *****************************************************
 
 This is the recommended way for a fully functioning ASH. 
@@ -140,7 +142,7 @@ Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has
 1. Install Miniforge or Miniconda (see section A above).  Install it in a location where your user has access (e.g. your home-directory)
 2. Create new environment (recommended): **mamba create --name ASH** (you can also use conda)
 3. Load environment: **mamba activate ASH** #IMPORTANT
-4. pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your environment
+4. python -m pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your environment
 5. Install some of the desired packages listed in: `ASH-packages.sh <https://github.com/RagnarB83/ash/blob/master/ASH-packages.sh>`_ (inside ASH source code directory) via conda or pip.
    You can always come back to this step (just remember to do **mamba activate ASH** first).
 
@@ -156,16 +158,18 @@ It can be sourced in your shell environment startup file (e.g. *.bashrc*, *.bash
 It sets the necessary PATHs for ASH and Python to work without having to load the conda/mamba environment each time. 
 It is recommended to add PATH and LD_LIBRARY_PATH definitions for various external packages (e.g. ORCA) to this file.
 
+See :doc:`basics` for information on how to use ASH, including how to submit ASH jobs to a cluster (e.g. using the **subash** submission script).
+
 .. note:: If you want to add packages (using mamba/conda or pip) to your ASH environment (i.e. go back to step 5 above), always make sure you have activated the ASH environment first: **mamba activate ASH**. Otherwise the packages will be added to your base environment instead.
     Do **mamba info --envs** to see your environments and which one is active.
 
 Only if molecular crystal QM/MM feature is needed:
 
-- Optional: Make sure the Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See Section B3: Step 5a and 5b below for details.
+- Optional: Make sure the Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See section F for problems.
 
 
 #########################################
-C. Install External Programs
+D. Install External Programs
 #########################################
 
 See `ASH-packages.sh <https://github.com/RagnarB83/ash/blob/master/ASH-packages.sh>`_  in ASH source code directory!
@@ -187,7 +191,7 @@ Some of these QM-programs are packages installable via either pip or conda/mamba
 .. code-block:: shell
 
     #pySCF
-    pip install pyscf       #PySCF QM program: http://www.pyscf.org
+    python -m pip install pyscf       #PySCF QM program: http://www.pyscf.org
     #xtb: semi-empirical QM
     mamba install -c conda-forge xtb 
     #Psi4
@@ -195,7 +199,7 @@ Some of these QM-programs are packages installable via either pip or conda/mamba
 
 
 #########################################
-D. Test ASH
+E. Test ASH
 #########################################
 
 Example ASH script to try out with an external QM code (geometry optimization of H2O using ORCA):
@@ -231,7 +235,7 @@ This will only work if ORCA is available in the shell session. It is usually bes
 
 
 #########################################
-E. Installation problems
+F. Installation problems
 #########################################
 
 **ASH library not found by Python interpreter**
@@ -251,13 +255,13 @@ This means that you have not correctly told your Python environment where ASH ex
 
     #Option 2: Locally install using pip
     cd /path/to/ash #Where the README.md file is located
-    pip install .
+    python -m pip install .
 
 However, it is usually better to install directly from the repository:
 
 .. code-block:: shell
 
-    pip install git+https://github.com/RagnarB83/ash.git
+    python -m pip install git+https://github.com/RagnarB83/ash.git
 
 
 **Module numpy not found**
@@ -292,7 +296,7 @@ It is best to have PythonCall handle the Julia installation.
 
 .. code-block:: shell
 
-    pip install juliacall
+    python -m pip install juliacall
     
 Once juliacall is installed, check that it is working correctly by: 
 
