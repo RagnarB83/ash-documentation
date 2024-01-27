@@ -12,8 +12,9 @@ The OpenMMTheory class
 ######################################
 
 OpenMM can run either on the CPU or on the GPU platform by specifying platform as either: 'CPU', 'OpenCL' or 'CUDA' depending on whether there is a GPU available on the computer. 
-For platform='CPU' the numcores can additionally be specified in order to control the number of CPU cores. Alternatively the shell environment variable OPENMM_CPU_THREADS can be set 
-to control the number of CPU cores that OpenMM will use. If neither numcores keyword is provided or OPENMM_CPU_THREADS variable set, OpenMM will use the number of physical cores present.
+For platform='CPU' the *numcores* variable can additionally be specified in order to control the number of CPU cores. 
+ASH will automatically modify the OPENMM_CPU_THREADS environment variable (based on *numcores* attribute) that controls how many threads OpenMM uses.
+By default numcores=1, i.e. OpenMM will be told by ASH to use only one CPU core.
 
 The OpenMMTheory class:
 
