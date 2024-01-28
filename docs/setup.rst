@@ -10,7 +10,7 @@ Setup
 To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository or alternatively install via pip (see later).
 
 ASH is 99% Python with 1 % Julia.
-A Python3 distribution (version >= 3.7 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
+A Python distribution (version >= 3.7 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
 
 It is recommended to use a Miniforge/Minconda package manager to install Python and the required packages (OpenMM in particular)
 Some functionality (primarily the molecular crystal QM/MM part) require a Julia installation (as the Python routines will be too slow).
@@ -58,13 +58,13 @@ collection of repositories.
 Another option is: `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_  or some conda setup on a cluster.
 
 
-Here is a simple setup for a Linux/Unix system that you can copy-paste into your shell:
+Here is a simple setup for a Linux x86_64 (most HPC clusters) system that you can copy-paste into your shell:
 
 .. code-block:: shell
 
     #Download Miniforge (mamba,conda)
     #Sites: https://github.com/conda-forge/miniforge and https://github.com/mamba-org/mamba
-    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh #For Linux x86_64 version
     #Install without prompt (this accepts the license). Remove -b if you want to control where it installs miniforge3
     sh Miniforge3-Linux-x86_64.sh -b #creates a ~/miniforge3 directory
     #Initialize mamba/conda for your shell (if desired). 
@@ -90,9 +90,11 @@ B. The lazy/impatient way to set up ASH (easy but incomplete)
 
 If you are impatient and want to get ASH going immediately without all features enabled. 
 Make sure you have a suitable Python interpreter available, ideally in a conda/mamba environment (see above).
-For OpenMM functionality, you need to install OpenMM via conda/mamba. See below.
+For OpenMM functionality, you need to install OpenMM via conda/mamba. See section C.
 
-Option 1 : Install ASH via pip (recommended):
+*Option 1:* 
+
+Install ASH via pip (recommended):
 This will also add the Numpy and geometric dependency.
 
 .. code-block:: shell
@@ -102,7 +104,10 @@ This will also add the Numpy and geometric dependency.
     #Install the NEW (development) branch of ASH. Approx. 390 MB
     python -m pip install git+https://github.com/RagnarB83/ash.git@NEW
 
-Option 2 (mostly if you want to help develop ASH): Download ASH from Github and set PYTHONPATH.
+*Option 2:* (if you want to help develop ASH. Don't use if you already did Option 1).
+
+Download ASH from Github and set PYTHONPATH.
+(Don't do this if you did Option 1 above!)
 
 .. code-block:: shell
 
@@ -113,7 +118,12 @@ Option 2 (mostly if you want to help develop ASH): Download ASH from Github and 
     export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing README.md)
 
 
-Test ASH immediately by launching: **python3**  (same python as used above!) and then do: 
+Test ASH immediately by launching: 
+
+.. code-block:: shell
+    
+    python # Use same python as used above! Do: which python   in shell if you are unsure
+
 
 .. code-block:: python
 
@@ -138,6 +148,7 @@ C. Semi-Automatic Miniconda setup (recommended)
 
 This is the recommended way for a fully functioning ASH. 
 Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/mamba).
+If you already completed section A and B above, you can skip ahead to step 5.
 
 1. Install Miniforge or Miniconda (see section A above).  Install it in a location where your user has access (e.g. your home-directory)
 2. Create new environment (recommended): **mamba create --name ASH** (you can also use conda)
@@ -146,7 +157,7 @@ Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has
 5. Install some of the desired packages listed in: `ASH-packages.sh <https://github.com/RagnarB83/ash/blob/master/ASH-packages.sh>`_ (inside ASH source code directory) via conda or pip.
    You can always come back to this step (just remember to do **mamba activate ASH** first).
 
-Test ASH immediately (with **mamba activate ASH**  activated) by launching in the same shell session: **python3**  and then do: 
+Test ASH immediately (with **mamba activate ASH**  activated) by launching in the same shell session: **python**  and then do: 
 
 .. code-block:: python
 
@@ -206,7 +217,7 @@ Example ASH script to try out with an external QM code (geometry optimization of
 
 .. code-block:: shell
 
-    python3 first-ash-job.py
+    python first-ash-job.py
 
 
 first-ash-job.py:
@@ -300,15 +311,15 @@ It is best to have PythonCall handle the Julia installation.
     
 Once juliacall is installed, check that it is working correctly by: 
 
-1. Launch python3 interactive session : 
+1. Launch python interactive session : 
 
 .. code-block:: shell
 
-    python3 # in shell
+    python # in shell
 
-2. Run in python3 session: 
+2. Run in python session: 
 
-.. code-block:: python3
+.. code-block:: python
 
     import juliacall   #This will try to import the PythonCall/Juliacall interface, will check for Julia availability etc. 
     #This may take a while. Once done:
