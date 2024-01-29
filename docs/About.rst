@@ -27,50 +27,6 @@ at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 
 
 
-
-**Strict requirements:**
-
-- Python3 installation (version 3.6 or higher)
-- Numpy Python library
-
-**Strongly recommended (and mostly necessary):**
-
-- geomeTRIC (optimizer). Python library, easily installed via pip or conda. Required for geometry optimizations.
-- OpenMM (MM and MD library). Needed for MM, QM/MM and MD. Installed via conda.
-- Matplotlib. Only for plotting options.
-
-**Required for specific functionality**
-
-- Julia installation. Only required right now for faster Julia versions of routines in the molecular crystal QM/MM code.
-
-**Optional Python modules for specific functionality (can be installed via either pip or conda):**
-
-- PySCF (C++/Python quantum chemistry code)
-- Psi4 (C++/Python quantum chemistry code)
-- Scipy package
-- mdtraj (MD trajectory analysis)
-
-**Optional external QM codes (separate installations):**
-
-- ORCA (general DFT/WFT program)
-- CFour (high-level WFT program)
-- MRCC (high-level WFT program)
-- xTB (semi-empirical QM)
-- Dice (SHCI program)
-- Block2 (DMRG program)
-- NWChem (general DFT/WFT program)
-- Dalton (general DFT/WFT program)
-- TeraChem (HF/DFT code using GPU)
-- QUICK (HF/DFT code using GPU)
-- CP2K (periodic DFT program)
-
-**Various helper tools sometimes requested by ASH:**
-
-- OpenBabel (file-format conversions)
-- Plumed library (for Plumed-based metadynamics)
-- PyFrame
-
-
 #####################
 Features
 #####################
@@ -108,7 +64,7 @@ Features
 **Parallelization :**
 
 - Parallelization via Python multiprocessing.
-- Simulatenous QM code parallelization also possible.
+- Simultaneous QM code parallelization also possible.
 - Support for running many simultaneous single-point jobs.
 - Efficient parallelization of Numerical-Hessian displacement calculations.
 - Efficient parallelization of NEB image calculations.
@@ -118,7 +74,7 @@ Features
 
 - Full QM/MM support (including pointcharge-gradient) for  ORCA, xTB, PySCF, CFour, MRCC, NWChem, CP2K, TeraChem and QUICK.
 
-**Polarizable embedding via Psi4, PySCF and CPPE library**
+**Polarizable embedding via PySCF,Psi4 and CPPE library**
 
 - TODO
 
@@ -162,7 +118,7 @@ Features
 - Mode mapping: compare normal modes of 2 Hessians (e.g. with isotope substitution) for similarity
 - Read/write ORCA-style Hessian files
 - Print XYZ-trajectory file for individual modes
-- Thermochemistry according to RRHO approximation.
+- Thermochemistry according to RRHO or quasi-RRHO (Grimme or Truhlar).
 - Write frequency output as pseudo ORCA-outputfile (enables visualization of modes in Chemcraft/Avogadro)
 
 **Molecular dynamics**
