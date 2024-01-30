@@ -25,6 +25,8 @@ The program is  developed in the research group of
 `Laboratory for Chemistry and Biology of Metals <https://www.cbm-lab.fr/en>`_,
 at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 
+Curious?
+Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.research.google.com/drive/11-FG7eTElCvcMNZiTIEXcdWjcR4YWRS-#scrollTo=ViPg1cGuck_a>`_
 
 
 #####################

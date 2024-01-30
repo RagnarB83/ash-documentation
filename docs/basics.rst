@@ -87,6 +87,7 @@ at the bottom of this page.
 #####################################################
 Interactive ASH in a REPL or iPython environment
 #####################################################
+
 It is also possible to run ASH within a read-eval-print-loop environment such as iPython.
 This allows for interactive use of ASH. See video below for an example.
 
@@ -98,6 +99,17 @@ Make sure to use the iPython that uses the same Python environment as ASH.
     <div align=center>
    <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
     </div>
+
+#####################################################
+Interactive ASH in a Google Colab notebook
+#####################################################
+
+
+Try out the ASH basics in this Google Colab notebook: 
+
+`ASH in Google Colab <https://colab.research.google.com/drive/11-FG7eTElCvcMNZiTIEXcdWjcR4YWRS-#scrollTo=ViPg1cGuck_a>`_
+
+Requires a Google account.
 
 
 ############################

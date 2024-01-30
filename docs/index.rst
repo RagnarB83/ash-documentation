@@ -19,6 +19,11 @@ The code is available on `Github <https://github.com/RagnarB83/ash>`_
    <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
     </div>
 
+Curious?
+Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.research.google.com/drive/11-FG7eTElCvcMNZiTIEXcdWjcR4YWRS-#scrollTo=ViPg1cGuck_a>`_
+
+
+
 .. toctree::
    :maxdepth: 2
    :caption: ASH
