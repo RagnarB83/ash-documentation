@@ -641,8 +641,12 @@ of course on how well the semi-empirical method handles the system).
 Use of xTB requires xtb to be downloaded and the xtb binary needs to be available in your PATH environment variable. See 
 `xtb-documentation <https://xtb-docs.readthedocs.io>`_
 
-.. note:: This feature is in an experimental stage as OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
-    the periodic boundary conditions and will calculate a non-periodic box instead. It's unclear how reliable this approximation is in the long run.
+
+.. note:: Note that during the MD simulation, OpenMM will run with periodic boundary conditions active while the QM-theory (here xTB) does not know about
+    the periodic boundary conditions and will calculate a non-periodic box instead. This is an approximation but should be fairly reliable.
+
+Below we define a minimal QM-region for the Fe site in rubredoxin, truncating the cysteine residues as SCH2 groups. These groups are capped with hydrogen linkatoms during the QM calculation steps.
+See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary for a system (rubredoxin as an example).
 
 *3-QMMM_MD.py:*
 
@@ -695,6 +699,8 @@ We will here run QM/MM geometry optimization using the ORCATheory interface and 
 We will first choose a small active region that consists only of the QM-region (17 atoms + 4 linkatoms). This means that we don't have to worry too much about what happens at the MM-level since the whole MM-region is frozen and will interact
 with the QM-region via electrostatic embedding (MM pointcharges polarizing the QM electron density), short-range Lennard-Jones interactions (MM atoms interacting with QM atoms via the Lennard-Jones parameters defined in the forcefield) as well 
 as via the bonded terms occurring at the QM and MM boundary. 
+
+See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary for a system (rubredoxin as an example).
 
 See :doc:`Geometry-optimization` for information on the Optimizer function.
 
@@ -875,5 +881,3 @@ The number of optimization cycles may be especially large since we are minimizin
     geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints,
         charge=-1, mult=6)
 
-
-TODO: inspect QM/MM trajectory
