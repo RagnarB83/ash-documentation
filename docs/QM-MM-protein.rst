@@ -40,7 +40,9 @@ ASH is currently capable of reading in (via OpenMM library):
 - Amber files (PRMTOP)
 - OpenMM files (XML-file)
 
-*Option a. OpenMM using built-in CHARMM/Amber forcefields*
+--------------------------------------------------------------
+Option a. OpenMM using built-in CHARMM/Amber forcefields
+--------------------------------------------------------------
 
 
 The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
@@ -79,7 +81,9 @@ Example on lysozyme:
 
 See :doc:`OpenMM-interface` for details and the :doc:`Metalloprotein-I` and :doc:`Metalloprotein-II` for step-by-step tutorials on the rubredoxin and ferredoxin metalloproteins.
 
-*Option b. GROMACS using the CHARMM forcefield*
+--------------------------------------------------
+Option b. GROMACS using the CHARMM forcefield
+--------------------------------------------------
 
 GROMACS is another popular open-source code MM code and comes with convenient tools for preparing a new protein model from scratch.
 
@@ -87,27 +91,51 @@ GROMACS is another popular open-source code MM code and comes with convenient to
 
 - `Metalloprotein tutorial <https://sites.google.com/site/ragnarbjornsson/mm-and-qm-mm-setup>`_
 
-Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of a snapshot from the MD trajectory (e.g. after 5 ns simulation time). The coordinates should ideally be written out in Cartesian
-coordinates in Å and prepared as an XYZ-file. While the GROMACS files can be read in by ASH, it may also be more convenient
+Once the system has been prepared using GROMACS, and an MD simulation run, one would extract the coordinates of a snapshot from the MD trajectory (e.g. after 5 ns simulation time). 
+The coordinates should ideally be written out in Cartesian coordinates in Å and prepared as an XYZ-file. While the GROMACS files can be read in by ASH, it may also be more convenient
 to have GROMACS write out CHARMM forcefield files (if using CHARMM) or AMBER forcefield files (if using AMBER).
 Note that ParMed may help here: https://parmed.github.io/ParmEd/html/index.html
 
 Another option is to use the PSF-create script: 
 https://github.com/RagnarB83/chemshell-QMMM-protein-setup/blob/master/psfcreate.sh
 
+--------------------------------------------------------------
+Option c. Using AmberTools
+--------------------------------------------------------------
 
+`AmberTools <https://ambermd.org/AmberTools.php>`_ is another option, especially if you are intested in using the Amber forcefields.
+The AmberTools suite of packages is free of charge and can be installed using conda.
+Using AmberTools to set up a new biomolecular system will result in files in the Amber format (prmtop file in particular), which can easily be read by ASH.
+
+Some possible tutorials:
+https://ambermd.org/tutorials/
+https://ringo.ams.stonybrook.edu/index.php/2016_AMBER_tutorial_with_Beta_Trypsin#III._Simulation_using_pmemd
+https://docs.bioexcel.eu/2020_06_09_online_ambertools4cp2k/
+
+A Python wrapper around Ambertools, biobb, is possibly another alternative:
+https://biobb-wf-amber-md-setup.readthedocs.io/en/latest/readme.html
+
+--------------------------------------------------------------
+Option d. CHARMM-GUI
+--------------------------------------------------------------
+
+`CHARMM-GUI <http://www.charmm-gui.org/?doc=input/guide>`_ is a web-based tool for setting up a new biomolecular system.
+
+There are `Youtube tutorial videos <https://www.youtube.com/channel/UCtHN7aNAjDet_JKWPxSioLQ/videos?view=0&sort=dd&shelf_id=0>`_ available for helping to setup a new system in CHARMM-GUI.
 
 
 ######################################################
 **2a. Read coordinates and forcefield into ASH**
 ######################################################
 
-Here we will read in the coordinates and forcefield files from the classical system preparation.
+Here we will read in the coordinates and forcefield files from the classical system preparation (however it was done).
 The coordinates can be read-in in multiple ways: e.g. a PDB-file (See :doc:`coordinate-tools` on reading/writing PDB-files), an XYZ-file (XMol format, file.xyz), from a previous ASH-file on disk (file.ygg), or  a Chemshell fragment file (file.c).
 The forcefield can be read in using CHARMM files,Amber files, GROMACS files or OpenMM XML format.
 
 
-CHARMM example:
+--------------------------------------
+CHARMM example
+--------------------------------------
 
 .. code-block:: python
 
@@ -134,7 +162,9 @@ CHARMM example:
     Singlepoint(theory=openmmobject, fragment=frag)
 
 
-Amber example:
+--------------------------------------
+Amber example
+--------------------------------------
 
 .. code-block:: python
 
@@ -156,7 +186,10 @@ Amber example:
     #Run a simple energy+gradient job at the MM level to test whether everything is correct.
     Singlepoint(theory=openmmobject, fragment=frag)
 
-OpenMM example:
+
+--------------------------------------
+OpenMM example
+--------------------------------------
 
 If the system has been set up using OpenMM or using ASH OpenMM_Modeller then you would do something like this:
 
@@ -210,7 +243,9 @@ See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good 
 
 Note: Example below uses CHARMM. To use Amber or OpenMM files, modify the creation of the OpenMMTheory object like before.
 
-CHARMM example:
+--------------------------------------
+CHARMM example
+--------------------------------------
 
 .. code-block:: python
 
@@ -286,7 +321,7 @@ The list of active atoms is defined similarly to the qmatoms list (see above) bu
 
 See :doc:`Geometry-optimization` for more information on the geometry optimizer.
 
-actregiondefine.py:
+*actregiondefine.py:*
 
 .. code-block:: python
 
