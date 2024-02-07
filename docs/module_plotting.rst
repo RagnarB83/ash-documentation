@@ -25,8 +25,8 @@ ASH_plot is a simple wrapper around the powerful `Matplotlib <https://matplotlib
         subplot_titles=None, xlimit=None, ylimit=None, backend='Agg',
         legend_pos=None, horizontal=False, tight_layout=True, padding=None):
     def addseries(self,subplot, surfacedictionary=None, x_list=None, y_list=None, x_labels=None, label='Series', color='blue', pointsize=40, 
-                    scatter=True, line=True, bar=False, scatter_linewidth=2, line_linewidth=1, barwidth=None, barcolors=None, marker='o', legend=True, x_scaling=1.0,y_scaling=1.0,
-                    xticklabelrotation=80, x_scale_log=False, y_scale_log=False, colormap='viridis'):
+                    scatter=True, line=True, bar=False, scatter_linewidth=2, line_linewidth=1, barwidth=None, barcolors=None, 
+                    marker='o', legend=True, x_scaling=1.0,y_scaling=1.0,xticklabelrotation=80, x_scale_log=False, y_scale_log=False, colormap='viridis'):
     def invert_x_axis(self,subplot):
     def invert_y_axis(self,subplot):
     def savefig(self, filename, imageformat=None, dpi=None):
@@ -335,16 +335,16 @@ Options:
     transition_energies=[1.0, 2.0, 3.0]
     transition_intensities=[0.05, 0.11, 0.57]
 
-    plot_Spectrum(xvalues=transition_energies, yvalues=transition_intensities, plotname='PES_spectrum_TPSSh', range=[7,20], unit='eV',
+    plot_Spectrum(xvalues=transition_energies, yvalues=transition_intensities, plotname='spectrum', range=[7,20], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
 
-.. image:: figures/PES_spectrum_TPSSh.png
+.. image:: figures/spectrum.png
    :align: center
    :width: 600
 
 
-The .dat and .stk  files are CSV files that can be easily read into a numpy array like this:
+The .dat and .stk files are CSV files that can be easily read into a numpy array like this:
 
 .. code-block:: python
 
