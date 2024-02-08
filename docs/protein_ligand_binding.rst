@@ -7,6 +7,7 @@ All the steps about how to set up the system, parameterize the ligand, solvate t
 are performed within the ASH environment with the help of libraries such as OpenMM, OpenFF, OpenBabel, ParmEd, MDTraj, etc.
 Later we will also show how to run metadynamics simulations to study the free-energy surface of the ligand binding.
 
+The instructions below will be given in a general way with specific example shown for the trypsin-benzamidine protein-ligand complex with PDB-ID: 2OXS
 
 ######################################################
 **1. Preparing initial files**
@@ -15,12 +16,27 @@ Later we will also show how to run metadynamics simulations to study the free-en
 **Protein PDB-file**
 
 To get started we need a PDB file of the protein. This can be an initial crystal structure from the PDB database or a previous model. Hydrogens do not need to be present in the PDB file, as they will be added during the setup if missing.
+You can use a PDB-file of a protein-ligand complex but you will have to prepare a version of the PDB-file that only contains the protein (no ligand).
+We will use here the trypsin-benzamidine complex with PDB-ID: 2OXS. In addition to the protein, it contains benzamidine (BEN residue), a sulfate ion (SO4 residue) and a calcium ion (CA).
+We will not model the sulfate ion or the calcium ion and will delete them. Additionally we split the file so that we have files for the protein separately and the ligand separately.
+
+We will here create files with the following naming convention:
+
+- xray_2OXS_full.pdb #This is the original PDB-file
+- xray_2OXS_protein.pdb #This file contains only protein. Ligand and ion (SO4) has been manually removed
+- xray_2OXS_ligand.pdb #This file contains only the ligand at it's original coordinates in X-ray structure.
 
 **Ligand PDB-file**
 
-We also need a PDB file of the ligand. This PDB-file can be created from an XYZ-file that should have an acceptable initial geometry (ideally DFT-optimized)
-or from some other file format such as a MDL Mol-file or MDL SDF file.
-This PDB-file needs to contain all the hydrogen atoms and needs to have The file will be referered to as ligand.pdb here.
+The ligand in an X-ray structure is unlikely to contain H-atoms but we need them in order to create a reliable forcefield that can be used in MD simulations.
+We need to create a separate PDB-file for the ligand that contains all the hydrogen atoms and has a sensible internal geometry.
+This PDB-file can e.g. be created from an XYZ-file that should have an acceptable initial geometry (ideally DFT-optimized)
+or from some other file format such as a MDL Mol-file or MDL SDF file. We could in principle use the original coordinates from the X-ray structure for the ligand, but it is not necessary.
+This PDB-file needs to contain all the hydrogen atoms and needs to have a sensible internal geometry.
+The file will be referered to as ligand.pdb here.
+
+Note that since we need the PDB-file of the ligand to contain connectivity information (CONECT statements) we need to make sure that the PDB-file is created correctly.
+Here we will use OpenBabel to create the PDB-file from either an XYZ-file, Mol-file, SDF-file or another PDB-file.
 
 .. code-block:: python
 
@@ -38,22 +54,6 @@ This PDB-file needs to contain all the hydrogen atoms and needs to have The file
     #Example: Create PDB-file from an MDL SDF-file (requires OpenBabel). Creates file: ligand.pdb
     pdbfile = sdf_to_pdb("ligand.sdf")
 
-
-**Merged protein-ligand PDB-file**
-
-We also need a combined PDB-file that contains both the protein and the ligand combined. Such a PDB-file could be prepared by a GUI visualization program (VMD, Chimera). 
-The ligand coordinates can not clash with the protein and can be either away from protein or in a prospective binding site. 
-Docking could also be used to prepare such a system. It is important that the connectivity of the ligand is correct in the PDB-file by inclusion of CONECT statements.
-
-If the coordinates of protein and ligand in their respective files are already compatible (not clashing) it is possible to use the 
-ASH **merge_pdb_files** function to combine the two PDB-files into one. This function will preserve and update the CONECT statements of the ligands.
-
-.. code-block:: python
-
-    from ash import *
-    protein_pdbfile="protein.pdb"
-    ligand_pdbfile="ligand.pdb"
-    merged_pdbfile = merge_pdb_files(protein_pdbfile,ligand_pdbfile, outputname="merged.pdb")
 
 ######################################################
 **2. Preparing ligand forcefield**
@@ -84,21 +84,70 @@ are found in the GAFF (or OpenFF) forcefield. If for some reason this does not w
      small_molecule_parameterizer(pdbfile="ligand.pdb", forcefield_option='GAFF', output_xmlfile="ligand.xml")
 
 
-.. warning:: Make sure that the PDB-file, MOL-file or SDF-file atom ordering and connectivity matches the information present in the PDB-file (the merged PDB-file) 
-    that will be used to to setup the system later. Otherwise the ligand will not be recognized.
-
 The function returns an OpenMM forcefield object (that assumes Amber14 for protein and solvent and GAFF for the ligand)
 but also writes out an XML-file with the forcefield parameters for the ligand (ligand.xml). 
 It is usually best to use the ligand.xml file directly.
 
 
 ######################################################
-**3. Prepare system using OpenMM_Modeller**
+**3. Merge and align protein and ligand**
+######################################################
+
+Now that we have a ligand.pdb file (containing the ligand with H-atoms and correct connectivity) and a ligand.xml file (containing the forcefield parameters for the ligand)
+we could in principle proceed to set up the system. However, first we need to merge the protein and ligand into one PDB-file.
+If we don't care about the ligand being in a specific position w.r.t. the protein, we could simply visualize xray_2OXS_protein.pdb and ligand.pdb in e.g. VMD and make sure that protein and ligand do not clash. Otherwise modify the coordinates of the ligand in the ligand.pdb file.
+This would be fine if want to initially study the unbound form of the system or possible predict binding by MD later.
+
+However, if we want start a simulation with the ligand in the original binding site according to the X-ray structure then we have to make sure that the new hydrogenated-ligand we created is properly aligned in the protein.
+This would require either modifying the coordinates of the ligand in the ligand.pdb file using a suitable visualization program (e.g. VMD), perform docking,  or alternatively we could superimpose the new hydrogenated ligand onto the original ligand-position in the X-ray structure.
+Here we will show how to do the latter using ASH using the **flexible_align_pdb** function.
+
+**Align the ligand onto the desired previous position**
+
+.. code-block:: python
+
+    #a. Read hydrogenated ligand PDB-file into ASH
+    new_ligand_pdb="ligand.pdb"
+    newligand = Fragment(pdbfile=new_ligand_pdb)
+    print("New ligand coords:", newligand.print_coords())
+
+    #b. Read ligand from a file containing only the ligand ATOM/HETATM lines from original PDB-structure (e.g. an X-ray structure with a bound-ligand)
+    old_ligand_pdb="xray_2OXS_ligand.pdb" #This file should only contain the ligand. Probably missing H-atoms.
+    oldligand = Fragment(pdbfile=old_ligand_pdb)
+    print("Old ligand:", oldligand.print_coords())
+
+    #c. Define the atoms in common in new and old ligand (at least carbon skeleton, all nonH-atoms should work)
+    #Here defining a list of lists that contain the atom indices in new_ligand (system A) and old_ligand (systemB)
+    subsetA=newligand.get_nonH_atomindices() #Getting atom indices of non-H atoms
+    subsetB=oldligand.get_nonH_atomindices() #Getting atom indices of non-H atoms
+    subset=[subsetA,subsetB] #Combining lists into a list-of-lists
+
+    #d. Align new ligand (with H-atoms and matching XML-file) so that it matches (as well as possible) the position of the old-ligand atoms
+    #Note: subset needs to be properly chosen. Reordering is usuaully necessary for alignment (because atom order may differ)
+    newligand_aligned = flexible_align_pdb(new_ligand_pdb, old_ligand_pdb, subset=subset, reordering=True, reorder_method='brute')
+
+
+**Merged protein-ligand PDB-file**
+
+Now that we have the ligand.pdb file, oriented and aligned the way we want, we can merge protein and ligand back together in to a single PDB-file.
+We can use the **merge_pdb_files** function in ASH to do this. This function is convenient as it will preserve and update the CONECT statements of the ligands which is important for the OpenMM_Modeller step later.
+
+.. code-block:: python
+
+    from ash import *
+    protein_pdbfile="xray_2OXS_protein.pdb"
+    ligand_pdbfile="ligand_aligned.pdb" #This is the aligned ligand PDB-file (i.e. having the geometry we want). Atom-order needs to match information in ligand.xml
+    merged_pdbfile = merge_pdb_files(protein_pdbfile,ligand_pdbfile, outputname="2OXS_protein_ligand_merged.pdb")
+
+
+
+######################################################
+**4. Prepare system using OpenMM_Modeller**
 ######################################################
 
 Now we should have a merged PDB-file (containing both protein and ligand) and a forcefield for the ligand (ligand.xml).
 We can now proceed to use the **OpenMM_Modeller** function to set up the system. We use the merged protein-ligand PDB-file to define the system geometry and topology, 
-we specify an Amber14 forcefield for the protein, TIP3P forcefield for water (compatible with Amber14) and the ligand forcefield (GAFF or OpenFF) for the ligand via the 
+we specify an Amber14 forcefield for the protein (needs to be compatible with the ligand FF), TIP3P-FB forcefield for water (compatible with Amber14) and the ligand forcefield (GAFF or OpenFF) for the ligand via the 
 ligand.xml file previously created.
 
 See :doc:`OpenMM-interface` for more information on using **OpenMM_Modeller**.
@@ -110,7 +159,7 @@ See :doc:`OpenMM-interface` for more information on using **OpenMM_Modeller**.
     merged_pdbfile="merged.pdb"
     #Setup system using OpenMM_Modeller using merged PDB-file
     OpenMM_Modeller(pdbfile=merged_pdbfile, forcefield="Amber14",
-        extraxmlfile="ligand.xml", residue_variants={}, watermodel="tip3p", pH=7.0, solvent_padding=10.0, ionicstrength=0.1)
+        extraxmlfile="ligand.xml", residue_variants={}, watermodel="tip3p-fb", pH=7.0, solvent_padding=10.0, ionicstrength=0.1)
 
 **OpenMM_Modeller** will apply the Amber14 protein forcefield to the protein and the GAFF/OpenFF forcefield to the ligand.
 Note that one must make sure that the merged PDB-file of the protein and ligand contains the correct connectivity information for the ligand (CONECT lines).
@@ -122,8 +171,73 @@ can contain the system in either bound or unbound form and can be modified befor
 Note that due to the present of solvent it is trickier to change the ligand position of the solvated system after the **OpenMM_Modeller** step
 (would require running a biased MD simulation).
 
+.. warning:: Make sure that the ligand geometry in the merged PDB-file matches the information in the ligand.xml file. Otherwise the ligand will not be recognized.
+
+
 ######################################################
-**4. Run initial preparatory MD simulations**
+**5. STEPS 1-4 COMBINED**
+######################################################
+
+Here we show a script that combines the steps 1-4 into a single ASH script that could in principle be used to conveniently perform all the steps in one go.
+
+.. code-block:: python
+
+    from ash import *
+
+    #############################################################
+    #1. Parameterize ligand using a hydrogenated XYZ-structure
+    #############################################################
+    #Here choosing GAFF
+    small_molecule_parameterizer(xyzfile="ligand.xyz",forcefield_option="GAFF",
+        allow_undefined_stereo=True, resname="BEN")
+    #Note: small_molecule_parameterizer creates a PDB-file: ligand.pdb (with conect lines)
+
+    #############################################################
+    #2. Orientation of new hydrogenated ligand (with a matching
+    #FF XML file) into protein-ligand complex
+    #############################################################
+    #a. Read ligand PDB-file into ASH
+    new_ligand_pdb="ligand.pdb"
+    newligand = Fragment(pdbfile=new_ligand_pdb)
+    print("New ligand coords:", newligand.print_coords())
+
+    #b. Read ligand from a file containing ligand ATOM/HETATM lines from original PDB-structure (e.g. an X-ray structure with a bound-ligand)
+    old_ligand_pdb="xray_2OXS_ligand.pdb" #This file should only contain the ligand
+    oldligand = Fragment(pdbfile=old_ligand_pdb)
+    print("Old ligand:", oldligand.print_coords())
+
+    #c. Define the atoms in common in new and old ligand (at least carbon skeleton, all nonH-atoms should work)
+    #Here defining a list of lists that contain the atom indices in new_ligand (system A) and old_ligand (systemB)
+    subsetA=newligand.get_nonH_atomindices() #Getting atom indices of non-H atoms
+    subsetB=oldligand.get_nonH_atomindices() #Getting atom indices of non-H atoms
+    subset=[subsetA,subsetB] #Combining lists into a list-of-lists
+
+    #d. Align new ligand (with H-atoms and matching XML-file) so that it matches (as well as possible) the position of the old-ligand atoms
+    #Note: subset needs to be properly chosen. Reordering is usuaully necessary for alignment (because atom order may differ)
+    newligand_aligned = flexible_align_pdb(new_ligand_pdb, old_ligand_pdb, subset=subset, reordering=True, reorder_method='brute')
+
+    #############################################################
+    #3. Merging protein and new aligned ligand
+    #############################################################
+    protein_pdbfile="xray_2OXS_protein.pdb"
+    ligand_pdbfile="ligand_aligned.pdb"
+    merged_pdbfile = merge_pdb_files(protein_pdbfile,ligand_pdbfile, outputname="2OXS_protein_ligand_merged.pdb")
+
+    #############################################################
+    #4. Finally  using OpenMM_Modeller to setup system
+    #############################################################
+    #The inputfiles required
+    pdbfile="2OXS_protein_ligand_merged.pdb" #A merged protein-ligand complex PDB-file (needs to contain a ligand with all hydrogens)
+    ligand_xmlfile="ligand.xml" #An XML-file containing the FF for the ligand
+
+    #Calling OpenMM_Modeller
+    openmmobject, ashfragment = OpenMM_Modeller(pdbfile=pdbfile, forcefield='Amber14', watermodel="tip3pfb",pH=7.0,
+        solvent_padding=10.0, ionicstrength=0.1, extraxmlfile=ligand_xmlfile)
+
+
+
+######################################################
+**6. Run initial preparatory MD simulations**
 ######################################################
 
 Before we can start running production MD simulations to explore protein-ligand binding scenarios or even free-energy simulations we must 
@@ -143,7 +257,7 @@ density and volume of the system has converged.
     fragment=Fragment(pdbfile=pdbfile)
 
     #Creating an OpenMMTheory object using XML-files and PDB-file (only used to define topology)
-    omm = OpenMMTheory(xmlfiles=["amber14-all.xml", "amber14/tip3pfb.xml", "gaff_ligand.xml"], 
+    omm = OpenMMTheory(xmlfiles=["amber14-all.xml", "amber14/tip3pfb.xml", "ligand.xml"], 
                 pdbfile=pdbfile, periodic=True,
                 autoconstraints='HBonds', rigidwater=True)
 
@@ -169,7 +283,7 @@ that can be used to conveniently visualize the convergence of the density and vo
 
 
 ######################################################
-**5. Run long time-scale NVT simulation**
+**7. Run long time-scale NVT simulation**
 ######################################################
 
 Once the system has been properly equilibrated we can start running longer time-scale simulations to explore protein-ligand binding scenarios.
@@ -187,7 +301,7 @@ Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integr
     fragment=Fragment(pdbfile=pdbfile)
 
     #Creating an OpenMMTheory object using XML-files and PDB-file (only used to define topology)
-    omm = OpenMMTheory(xmlfiles=["amber14-all.xml", "amber14/tip3pfb.xml", "gaff_ligand.xml"], 
+    omm = OpenMMTheory(xmlfiles=["amber14-all.xml", "amber14/tip3pfb.xml", "ligand.xml"], 
                 pdbfile=pdbfile, periodic=True,
                 autoconstraints='HBonds', rigidwater=True)
 
@@ -209,7 +323,7 @@ It is likely that a few hundred ns of unbiased MD simulations are required to ev
 
 
 #########################################################
-**6. Funnel metadynamics of the protein-ligand system**
+**8. Funnel metadynamics of the protein-ligand system**
 #########################################################
 
 In order to a realistically explore protein-ligand binding scenarios we need to use enhanced sampling methods.
@@ -230,7 +344,7 @@ which adds a restraing potential with a funnel shape that prevents the ligand fr
 
 
 #########################################################
-**7. QM/MM  of the protein-ligand system**
+**9. QM/MM  of the protein-ligand system**
 #########################################################
 
 **THIS IS NOT YET COMPLETE**
