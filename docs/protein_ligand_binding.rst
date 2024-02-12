@@ -12,12 +12,14 @@ The tutorial below will be discussed in a general way, with, however, a specific
 the trypsin-benzamidine protein-ligand complex with PDB-ID:  `2OXS <https://www.rcsb.org/structure/2OXS>`_.
 
 Note that in order to use the small_molecule_parameterizer function in ASH you need to install the `openmm-forcefields package <https://github.com/openmm/openmmforcefields>`_ like this:
+
 .. code-block:: python
 
     mamba install openmmforcefields
     #Or: conda install --yes -c conda-forge openmmforcefields
 
-This will additionally install the `OpenFF Toolkit <http://github.com/openforcefield/openff-toolkit>`_ and `RDKit <https://github.com/rdkit/rdkit>`_ which are required for creating the ligand forcefield.
+By installing this package the following packages are automatically installed: 
+`OpenFF Toolkit <http://github.com/openforcefield/openff-toolkit>`_ ,  `RDKit <https://github.com/rdkit/rdkit>`_ and `Parmed <https://github.com/ParmEd/ParmEd>`_ which are used for creating the ligand forcefield (Step 2).
 
 ######################################################
 **1. Preparing initial files**
@@ -27,17 +29,47 @@ This will additionally install the `OpenFF Toolkit <http://github.com/openforcef
 
 To get started we need a PDB file of the protein. This can be an initial crystal structure from the PDB database or a previous model. Hydrogens do not need to be present in the PDB file, as they will be added during the setup if missing.
 You can use a PDB-file of a protein-ligand complex but you will have to prepare a version of the PDB-file that only contains the protein (no ligand).
-We will use here the trypsin-benzamidine complex with PDB-ID: 2OXS. In addition to the protein, it contains benzamidine (BEN residue), a sulfate ion (SO4 residue) and a calcium ion (CA).
-We will not model the sulfate ion or the calcium ion (crystallization species) and will delete them. Additionally we split the file so that we have files for the protein separately and the ligand separately.
-This is best to do manually (note that you only need to preserve ATOM/HETATM lines, everything else, including the long header can usually be deleted)
+We will use here the trypsin-benzamidine complex with PDB-ID: 2OXS. 
+In addition to the protein, it contains benzamidine (BEN residue), a sulfate ion (SO4 residue) and a calcium ion (CA).
+We will not model the sulfate ion or the calcium ion (crystallization species) and will deliberately not include them. 
 
-We will here create files with the following naming convention:
+Additionally we split the file so that we have files for the protein separately and the ligand separately (for reasons that will be explained later).
+This can be done manually (note that you only need to preserve ATOM/HETATM lines, everything else, including the long header can usually be deleted).
+However, here it works well to use simple Unix grep commands like this:
 
-- 2oxs_full.pdb #This is the original PDB-file
-- 2oxs-protein.pdb #This file contains only ATOM lines for the protein. Ligand and ion (SO4) has been manually removed
-- 2oxs-ligand.pdb #This file contains only ATOM (or HETATM) lines for the ligand at it's original coordinates in X-ray structure.
+.. code-block:: shell
 
-The 2oxs-ligand.pdb should look like below:
+    #This command will grab all ATOM lines which for this system corresponds to all protein-atoms
+    grep '^ATOM' 2oxs.pdb > 2oxs-protein.pdb
+    #This command will grab all HETATM lines that contain BEN (benzamidine)
+    #Note that we here ignore the sulfate, calcium ions and crystallized water.
+    grep '^HETATM' 2oxs.pdb | grep 'BEN' > 2oxs-ligand.pdb
+
+Now we have files named like this:
+
+- 2oxs.pdb #This is the original PDB-file
+- 2oxs-protein.pdb #This file contains only ATOM lines for the protein. Ligand, ion (SO4) and water has been removed
+- 2oxs-ligand.pdb #This file contains only the HETATM lines for the ligand at it's original coordinates in X-ray structure.
+
+The 2oxs-protein.pdb should look like below (first 10 lines):
+
+.. toggle::
+
+    .. code-block:: text
+
+        ATOM      1  N   ILE A  16      -8.051   9.604 -13.487  1.00  9.19           N
+        ATOM      2  CA  ILE A  16      -8.068   8.673 -14.660  1.00  9.32           C
+        ATOM      3  C   ILE A  16      -9.343   8.938 -15.450  1.00  9.63           C
+        ATOM      4  O   ILE A  16     -10.440   8.854 -14.905  1.00 10.12           O
+        ATOM      5  CB  ILE A  16      -8.039   7.204 -14.223  1.00  9.48           C
+        ATOM      6  CG1 ILE A  16      -6.822   6.922 -13.329  1.00 10.15           C
+        ATOM      7  CG2 ILE A  16      -8.111   6.283 -15.442  1.00 11.71           C
+        ATOM      8  CD1 ILE A  16      -5.493   6.783 -14.043  1.00 12.43           C
+        ATOM      9  N   VAL A  17      -9.172   9.272 -16.719  1.00  9.63           N
+        ATOM     10  CA  VAL A  17     -10.286   9.470 -17.643  1.00 10.69           C
+        ...
+
+while 2oxs-ligand.pdb should look like this:
 
 .. toggle::
 
@@ -55,12 +87,14 @@ The 2oxs-ligand.pdb should look like below:
 
 **Ligand coordinate-file**
 
-The ligand in an X-ray structure is unlikely to contain H-atoms but we need them in order to create a reliable forcefield that can be used in MD simulations.
+The ligand in an X-ray structure is unlikely to contain H-atoms but we need them in order to create a realistic forcefield model, that can be used in MD simulations.
 We need to create a separate coordinate file for the ligand that contains all the hydrogen atoms and has a sensible internal geometry.
-This can be done in a visualization program such as Chemcraft or Avogadro.
-Here we recommend simply creating XYZ-file that has an acceptable initial geometry (ideally DFT-optimized from e.g. ORCA) to be used for the next step.
+This can be done in a molecular-builder program such as Chemcraft or Avogadro.
+Once the ligand is complete, we recommend creating a basic XYZ-file that should have an acceptable initial geometry.
+To make sure the structure is sensible we can run a simple geometry optimization.
 
-Since the benzamidine ligand likely exists as a protonated bound cation in the protein-ligand complex we will model it as such: 2 H-atoms on each nitrogen and a total charge of +1.
+Since the benzamidine ligand likely exists as a protonated bound cation in the protein-ligand complex we will model it as such: 
+2 H-atoms on each nitrogen and a total charge of +1.
 
 .. code-block:: python
     
@@ -130,7 +164,7 @@ and after optimization:
 ######################################################
 
 We then need to think about the forcefield. Various protein/nucleic-acid forcefields are available in ASH (CHARMM, Amber etc.) and can be used automatically.
-However, the forcefield for the ligand is the main issue as it is unlikely present in the biomolecular forcefields.
+However, the forcefield for the ligand is the main issue as it is rarely present as part of the biomolecular forcefield.
 We also need to consider the compatibility between the forcefield for the ligand and the forcefield for the protein.
 
 Here we choose to use the Amber14 forcefield for the protein and the GAFF (Generalized Amber force field) forcefield for the ligand as this can be conveniently set up using ASH.
@@ -150,15 +184,14 @@ Generally we recommend an XYZ-file.
 
 .. code-block:: python
 
-    from ash import *
     #Create an Amber-compatible forcefield for a small molecule using GAFF or OpenFF
-     small_molecule_parameterizer(xyzfile="BEN-cation-opt.xyz", forcefield_option='GAFF', resname="BEN", charge=1)
+    small_molecule_parameterizer(xyzfile="BEN-cation-opt.xyz", forcefield_option='GAFF', resname="BEN", charge=1)
     #This will create a BEN.pdb file and a gaff_BEN.xml file
 
 The function writes out an XML-file with the forcefield parameters for the ligand (here BEN.xml) and also writes out a compatible PDB-file (here BEN.pdb).
 Do note that the atom ordering may have changed compared to the input XYZ-file. This PDB-file will contain CONECT lines for the ligand (necessary for OpenMM to recognize the ligand).
 
-.. note:: If you don't wish to use small_molecule_parameterizer (or if it fails; contact us if that is the case) you could prepare an OpenMM XML-file for the ligand in some other way. Make sure that the PDB-file atom ordering and names match the XML-file.
+.. note:: If you don't wish to use **small_molecule_parameterizer** (or if it fails; contact us if that is the case) you could prepare an OpenMM XML-file for the ligand in some other way. Make sure that the PDB-file atom ordering and names match the XML-file.
     
 
 ######################################################
@@ -166,7 +199,8 @@ Do note that the atom ordering may have changed compared to the input XYZ-file. 
 ######################################################
 
 We now have a PDB-file for the ligand (BEN.pdb) that contains the ligand with H-atoms and correct connectivity and an OpenMM XML file (gaff_BEN.xml, containing the forcefield parameters for the ligand).
-We could in principle proceed to set up the system. However, first we need to merge the protein and ligand into one PDB-file (as OpenMM_Modeller expects a single PDB-file) and we need to make sure that the ligand is properly aligned in the protein.
+We could in principle proceed to set up the system. However, first we need to merge the protein and ligand into one PDB-file (as **OpenMM_Modeller** expects a single PDB-file) and we need to make sure that the ligand is properly aligned in the protein.
+
 If we don't care about the ligand being in a specific position w.r.t. the protein, we could simply visualize 2oxs_protein.pdb and the ligand PDB-file in e.g. VMD, to make sure that protein and ligand do not clash and are reasonably close.
 Otherwise modify the coordinates of the ligand in the ligand PDB file. This would be fine if want to initially study the unbound form of the system or possible predict binding by MD later.
 
@@ -195,7 +229,7 @@ Here we will show how to do the latter using ASH using the **flexible_align_pdb*
     subset=[subsetA,subsetB] #Combining lists into a list-of-lists
 
     #d. Align new ligand (with H-atoms and matching XML-file) so that it matches (as well as possible) the position of the old-ligand atoms
-    #Note: subset needs to be properly chosen. Reordering is usuaully necessary for alignment (because atom order may differ)
+    #Note: subset needs to be properly chosen. The reordering option is usually necessary for alignment (because atom order may differ)
     newligand_aligned = flexible_align_pdb(new_ligand_pdb, old_ligand_pdb, subset=subset, reordering=True, reorder_method='brute')
 
 The **flexible_align_pdb** function creates a new PDB-file called BEN_aligned.pdb that contains the ligand in the same position as the old ligand. Unlike before, the new ligand contains all H-atoms and has a corresponding forcefield XML-file (same atomordering).
@@ -363,11 +397,14 @@ that can be used to conveniently visualize the convergence of the density and vo
 **7. Run long time-scale NVT simulation**
 ######################################################
 
+For a long time-scale simulation we could choose to either run an NVT or NPT simulation.
+Here we choose to run NVT.
+
 Once the system has been properly equilibrated we can start running longer time-scale simulations to explore protein-ligand binding scenarios.
 Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integrator.
 
 .. note:: OpenMM MD simulations in general run much faster using a GPU than on the CPU. Use platform='CUDA' or platform='OpenCL' to run on the GPU.
-    Using a modern graphics card, 1000 ns simulations should be achievable on a desktop in 1-3 days.
+    Using a modern graphics card, a 1 ns simulation of a typical protein is doable in just a few hours.
 
 .. code-block:: python
 
@@ -393,29 +430,39 @@ Here we will run a 1 ns NVT simulation using the LangevinMiddleIntegrator integr
 
 The resulting trajectory can be visualized using e.g. VMD. 
 It is then best to use the "imaged" versions (requires **mdtraj**) of the trajectory file (NVT-MD_imaged.dcd) where the 
-protein is in the middle of the box.
+protein has been "wrapped" to be in the center of the box (more convenient).
 
-The usefulness of the unbiased MD trajectory depends on whether any kind of binding of the ligand to a protein pocket can be observed.
-It is likely that a few hundred ns of unbiased MD simulations are required to even see any spontaneous binding event.
+The usefulness of running unbiased MD depends.
+If one starts from the ligand in an unbound state, you may or may not see spontaneous binding to the protein.
+It is difficult to interpret the significance of either lack of binding or binding from a single simulation.
+If you run MD starting from the bound-state, the simulation may give somewhat realistic deption of the dynamics 
+of the ligand in bound state (of this particular binding pocket).
+You may, however, not necessarily see any unbinding event which does not necessarily mean much.
+
+Often a few hundred ns of unbiased MD simulations are required to even see any spontaneous binding or unbinding event.
+It is unfortunately difficult to use such simulations to predict binding affinities.
 
 
 #########################################################
 **8. Funnel metadynamics of the protein-ligand system**
 #########################################################
 
-In order to a realistically explore protein-ligand binding scenarios we need to use enhanced sampling methods.
+In order to realistically explore protein-ligand binding scenarios and predict binding affinities, we need to use enhanced sampling methods
+that allow us to to simulate and derive the relevant free-energy surface.
 Metadynamics is a general free-energy simulation method that is in principle well suited to study protein-ligand binding
-as we could sample the free-energy surface of the bound vs. unbound conformation. Metadynamics use a history-dependent biasing potential
-that is built-up using Gaussians during the simulation, preventing the simulation from visiting previous parts of the free-energy surface.
+as we could sample the energies of the bound vs. unbound conformation using a suitable reaction coordinate.
+Metadynamics use a history-dependent biasing potential that is built-up using Gaussians during the simulation, 
+preventing the simulation from visiting previous parts of the free-energy surface.
 Metadynamics require the definition of one or more collective variables (CVs) that act as "reaction coordinates" for the biasing potential.
 
-A metadynamics simulation for a binding reaction such as here, however, creates a problem as the ligand encounters 
+A metadynamics simulation for a binding reaction such as here, however, creates a problem when the ligand encounters 
 the "unbound" part of the free energy surface (when the ligand is far away from the protein binding site).
 The simulation can not realistically converge as the ligand will encounter a practically infinite amount of conformations 
 outside the protein binding site.
 
 To combat this problem we will use funnel metadynamics (https://www.pnas.org/doi/10.1073/pnas.1303186110) 
 which adds a restraing potential with a funnel shape that prevents the ligand from escaping too far away from the protein binding site.
+A correction for the restraining potential is applied in the end.
 
 **THIS IS NOT YET COMPLETE**
 
