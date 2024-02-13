@@ -5,7 +5,7 @@ This is a tutorial on how to set up a model for studying organic ligand binding 
 both via a classical approach, a QM/MM approach and also via optimizations, MD simulations and free-energy simulations.
 
 All the steps about how to set up the system, parameterize the ligand, solvate the system and run MD simulations
-are performed within the ASH environment with the help of libraries such as OpenMM, OpenFF, RDKit, OpenBabel, ParmEd, MDTraj, etc.
+are performed within the ASH environment with the help of libraries such as `OpenMM <https://openmm.org>`_, `OpenFF Toolkit <http://github.com/openforcefield/openff-toolkit>`_ , `RDKit <https://github.com/rdkit/rdkit>`_ and  `Parmed <https://github.com/ParmEd/ParmEd>`_ .
 Later we will also show how to run metadynamics simulations to study the free-energy surface of the ligand binding.
 
 The tutorial below will be discussed in a general way, with, however, a specific example shown: 
