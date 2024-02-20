@@ -465,7 +465,7 @@ Typicall the pySCFTheory theory object is simply used as an input-theory object
   #Initialization of the PySCFTheory object (restricted HF here)
   pyscf_object = PySCFTheory(basis="cc-pVDZ", scf_type='RHF')
   #Calling Singlepoint function
-  Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
+  Singlepoint(theory=pyscf_object, fragment=n2_singlet)
 
 However, in more advanced usage of the interface you can also call individual methods of the PySCFTheory object.
 This is considered expert-territory and is typically not recommended.
@@ -557,6 +557,42 @@ and specifying the atom(s) to flip (atomstoflip is a list of atom indices ).
   pySCF_HF = PySCFTheory(scf_type="RHF", basis="def2-SVP", functional='PBE', 
       autostart=False, BS=True, HSmult=3, atomstoflip=[0])
   Singlepoint(fragment=frag, theory=pySCF_HF, charge=0, mult=1)
+
+################################################################################
+Controlling basis set and ECP
+################################################################################
+
+Typically it is easiest to specify the basis set as in the examples above using a string (e.g. 'def2-SVP').
+This option will work as long as the basis set is available inside pySCF and you specify the correct name of the basis set (see pySCF documentation).
+
+If one needs more flexibility, such as using different basis sets for different elements, 
+then one can use a dictionary to specify the basis set for each element.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag= Fragment(diatomic="HF", bondlength=1.09, charge=0, mult=1)
+  #Initialization of the PySCFTheory object (restricted HF here)
+  basis_dict={'H':'cc-pVDZ', 'F':'def2-SVP'}
+  pyscf_object = PySCFTheory(basis=basis_dict, scf_type='RHF')
+  #Calling Singlepoint function
+  Singlepoint(theory=pyscf_object, fragment=frag)
+
+If one wants to use a custom basis set, e.g. something not available inside pySCF, then one can use the basis_file keyword to specify a file containing the basis set.
+The basis-set file needs to contain the basis set for all elements and needs to be in the NWChem basis set format.
+It is best to go to the `Basis Set Exchange <https://www.basissetexchange.org/>`_ and download the basis set in NWChem format.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag= Fragment(diatomic="HF", bondlength=1.09, charge=0, mult=1)
+  #pySCF object using a basis-set file
+  pyscf_object = PySCFTheory(scf_type="UHF", basis_file="bla.basis")
+  #Calling Singlepoint function
+  Singlepoint(theory=pyscf_object, fragment=frag)
+
 
 ################################################################################
 SCF convergence 

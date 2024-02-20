@@ -40,7 +40,7 @@ We can either use the **orca_2mkl** tool to get a Molden-file :
 
 .. code-block:: text
 
-   orca_2mkl HF  # assumes that a file named HF.gbw is present
+   orca_2mkl HF -molden  # assumes that a file named HF.gbw is present
 
 or we can use the ASH function **make_molden_file_ORCA** . The latter is more convenient as it can be used in the same script (see example files).
 
@@ -59,7 +59,7 @@ To create a Moldenfile from this GBW file we can use the **orca_2mkl** tool agai
 
 .. code-block:: text
 
-   orca_2mkl MP2calc.mp2nat  # assumes that the file is named MP2calc.mp2nat.gbw
+   orca_2mkl MP2calc.mp2nat -molden  # assumes that the file is named MP2calc.mp2nat.gbw
 
 
 For CC methods, the energy is calculated by default and additionally a linearized density is calculated by default.

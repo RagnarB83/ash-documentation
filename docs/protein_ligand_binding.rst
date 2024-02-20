@@ -448,7 +448,7 @@ It is unfortunately difficult to use such simulations to predict binding affinit
 #########################################################
 
 In order to realistically explore protein-ligand binding scenarios and predict binding affinities, we need to use enhanced sampling methods
-that allow us to to simulate and derive the relevant free-energy surface.
+that allow us to simulate and derive the relevant free-energy surface.
 Metadynamics is a general free-energy simulation method that is in principle well suited to study protein-ligand binding
 as we could sample the energies of the bound vs. unbound conformation using a suitable reaction coordinate.
 Metadynamics use a history-dependent biasing potential that is built-up using Gaussians during the simulation, 
