@@ -664,7 +664,7 @@ Typical Examples
 
   #Define PySCF theory: RKS-PBE0 hybrid-DFT calculation
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
-    numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
+    numcores=2, memory=3000, filename='pyscf', printsetting=False)
 
   Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
 
@@ -679,7 +679,7 @@ Typical Examples
 
   #PySCF with UHF SCF and CCSD(T) on top
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", numcores=2, scf_type="UHF", CC=True,
-    CCmethod='CCSD(T)', memory=3000, filename='pyscf.out', printsetting=False)
+    CCmethod='CCSD(T)', memory=3000, filename='pyscf', printsetting=False)
 
   Singlepoint(theory=PySCFcalc, fragment=o2_triplet)
 
@@ -717,7 +717,7 @@ Note that the pySCFTheory object needs to have been run (i.e. the Singlepoint ca
   n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
   #pyscf object
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
-      numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
+      numcores=2, memory=3000, filename='pyscf', printsetting=False)
   #Singlepoint  calculation
   Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
 
@@ -737,7 +737,7 @@ This could e.g. be used to write out natural orbitals if we have diagonalized a 
   from ash import *
   n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
   PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
-    numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
+    numcores=2, memory=3000, filename='pyscf', printsetting=False)
   Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
 
   #Using the write_orbitals_to_Moldenfile method of the PySCTheory object
