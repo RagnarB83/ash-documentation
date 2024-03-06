@@ -134,7 +134,12 @@ ORCATheory class:
        | to a specific ORCA fragment (e.g. for ORCA multi-level PNO calculations). 
        | Example: [[1,2,3],[10,11,12],[13,14,15]]. Will affect the coordinate-block
        | in the ORCA inputfile. For QM/MM: atom indices must be in QM-region. 
-
+   * - ``cpcm_radii``
+     - list of floats
+     - None
+     - | By providing a list of radii (in Å) for each atom in the molecule, 
+       | the CPCM radii will manually be changed in the ORCA inputfile. 
+       | Typically used with DRACO-radii :doc:`Helper-programs`
 
 ################################
 Finding the ORCA program
