@@ -687,6 +687,79 @@ Typical Examples
 Natural orbital calculations from various WF methods
 ################################################################################
 
+Natural orbitals are defined as the orbitals that diagonalize a one-particle reduced density matrix (1-RDM).
+If the 1-RDM is available from a WF calculation (e.g. MP2, CCSD, CASSCF) then it is possible to calculate the natural orbitals, which is a convenient orbital representation of a many-particle WF.
+The naturals orbitals can be visualized (from its MO coefficients) and the natural occupations can be analyzed.
+
+The natural orbitals can be calculated from MP2, CCSD, CCSD(T), CASSCF methods (any method in principle as long as the 1-RDM is available). Natural orbitals can also be calculated for DMRG and SHCI WFs (see Block and Dice interfaces for more information).
+For MP2 and CC methods the 1-RDM is not automatically available, you have to request it (e.g. by *MP2_density=True* or *CC_density=True*), since it takes additional computational effort.
+If a CC_density or MP2_density calculation is requested then natural orbitals are automatically calculated and written to a Molden file. Otherwise, the natural orbitals can also be written to a Molden file manually as shown below.
+
+
+################################################################################
+Write Molden files of orbitals
+################################################################################
+
+To get access to the orbitals or wavefunction of a pySCF calculation it is easiest to write the orbitals to a Molden file.
+For WFT calculations it is best to calculate the natural orbitals (see above) and then write the MO-coefficients associated with the natural orbitals to a Molden file.
+This can be accomplished in a few different ways.
+
+**Option 1:** 
+
+If we are running a simple DFT-calculation (or HF) like below, we can simply call the **pySCF_write_Moldenfile** function that takes the pySCFTheory object as input and writes the orbitals to a Molden file.
+Note that the pySCFTheory object needs to have been run (i.e. the Singlepoint calculation is necessary) before.
+
+.. code-block:: python
+    
+  from ash import *
+
+  #Fragment
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
+  #pyscf object
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
+      numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
+  #Singlepoint  calculation
+  Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
+
+  #Write moldenfile
+  pySCF_write_Moldenfile(pyscfobject=PySCFcalc, label="orbs")
+
+
+**Option 2:** 
+
+Another option is to use the **write_orbitals_to_Moldenfile** method of the PySCFTheory object.
+Here we specify the internal mol and mf objects of the PySCFTheory object as arguments to the write_orbitals_to_Moldenfile method.
+This allows some more flexibility as we could in principle change the input MO-coefficients, MO-occupations and MO-energies (simple numpy arrays).
+This could e.g. be used to write out natural orbitals if we have diagonalized a correlated density matrix and we have access to the natural orbital MO-coefficients and natural orbital occupations.
+
+.. code-block:: python
+
+  from ash import *
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
+  PySCFcalc = PySCFTheory(basis="cc-pVDZ", scf_type='RKS', functional="PBE0", gridlevel=6,
+    numcores=2, memory=3000, filename='pyscf.out', printsetting=False)
+  Singlepoint(theory=PySCFcalc, fragment=n2_singlet)
+
+  #Using the write_orbitals_to_Moldenfile method of the PySCTheory object
+  PySCFcalc.write_orbitals_to_Moldenfile(PySCFcalc.mol, PySCFcalc.mf.mo_coeff, PySCFcalc.mf.mo_occ, PySCFcalc.mf.mo_energy, label="orbs")
+
+**Option 3:**
+
+If you have already run a calculation and you have a PySCF checkpoint file available (only for HF or DFT calculations) then you can create a Molden-file directly from the checkpoint file
+using the **make_molden_file_PySCF_from_chkfile** function (note: you need to import it first). Note that the ASH fragment still needs to be loaded and you have to specify the same basis set as used previously.
+
+.. code-block:: python
+
+  from ash import *
+  from ash.interfaces.interface_pyscf import make_molden_file_PySCF_from_chkfile
+
+  #Define fragment again (geometry needed)
+  n2_singlet= Fragment(diatomic="N2", bondlength=1.09, charge=0, mult=1)
+  make_molden_file_PySCF_from_chkfile(fragment=n2_singlet, basis="cc-pVDZ",
+      chkfile="pyscf.chk",label="orbs2")
+
+
+
 ################################################################################
 Multireference calculations (CASSCF, MCPDFT etc.)
 ################################################################################
