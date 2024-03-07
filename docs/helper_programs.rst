@@ -70,11 +70,52 @@ to make sure the new radii are being used.
 DFT-D4 dispersion correction
 ####################################################################
 
-It is usually convenient to utilize dispersion corrections as they have been implemented in the respective QM-programs but
-sometimes the respective QM program has not implemented dispersion corrections. 
-Or more flexibility in the choice of dispersion correction is desired. 
+It is usually convenient to utilize dispersion corrections as they have been implemented in the respective QM-programs (e.g. specify the ORCA built-in dispersion correction when defining the ORCATheory) but
+sometimes the respective QM program has not implemented any dispersion corrections. 
+Or perhaps more flexibility in the choice of dispersion correction is desired. 
 
-ASH features an interface to the DFT-D4 program by the Grimme group for such cases.
+ASH features a simple interface to the `DFT-D4 program <https://github.com/dftd4/dftd4>`_ by the Grimme group for such cases.
+To install, see the Github page. Best option is probably to install via conda/mamba like this:
 
-Not yet ready
- https://github.com/dftd4/dftd4
+.. code-block:: bash
+
+    mamba install dftd4-python
+
+Once installed in the ASH Python environment you can either use the **calc_DFTD4** function or the DFTD4Theory class.
+
+.. code-block:: python
+
+    def calc_DFTD4(fragment=None, functional=None, Grad=True):
+
+The function **calc_DFTD4** takes a fragment as input and the functional name (string) that needs of course to match the functional used by the QM_program.
+It returns the DFTD4 energy and gradient.
+
+If one, however, wants to use the DFTD4 interface to correct a QM-calculation that will be used for geometry optimization, frequencies, molecular dynamics etc. (i.e. anything beyond a single-point calculation)
+then, it is necessary to use the DFTD4Theory class and then to combine it with the QM-theory using the WrapTheory class, see :doc:`module_Hybrid_Theory`.
+
+.. code-block:: python
+
+    class DFTD4Theory:
+        def __init__(self, functional=None, printlevel=2, numcores=1):
+
+
+Example below shows how to perform a geometry optimization using an ORCATheory object (defining a PBE calculation without dispersion correction) and the DFTD4 dispersion correction via the DFTD4 program.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Glycine fragment from database
+    frag = Fragment(databasefile="glycine.xyz")
+
+    #PBE/def2-SVP via ORCA (no dispersion correction)
+    orca = ORCATheory(orcasimpleinput="! PBE def2-SVP tightscf")
+    #DFTD4 dispersion correction using DFTD4 library
+    dftd4 = DFTD4Theory(functional="PBE")
+    #Combining the two theories using WrapTheory
+    dft_plus_dftd4_theory = WrapTheory(theory1=orca, theory2=dftd4)
+
+    #Calling the Optimizer function using the WrapTheory object as theory 
+    Optimizer(theory=dft_plus_dftd4_theory, fragment=frag)
+
+

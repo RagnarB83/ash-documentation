@@ -2,7 +2,7 @@ Hybrid Theory
 ==========================
 
 Hybrid Theories are multi-level ASH theories that combine multiple theory level objects to give some kind of combined theory description of the system.
-The different theories might be used for different parts of the system (here called **Multilevel Theory methods**) or on the same part of the system (here called **DualTheory methods**)
+The different theories might be used for different parts of the system (here called **Multilevel Theory methods** , e.g. QM/MM) or on the same part of the system (examples are **WrapTheory** and **DualTheory methods**)
 
 
 
@@ -13,7 +13,56 @@ Multilevel Theory Methods
 The **QMMMTheory** class in ASH (:doc:`module_QM-MM`) is considered a special type of a multilevel method where a QMTheory is combined with an MMTheory to describe different parts of the system.
 QM/MM is typically used when the system can naturally be divided up into a local important part (described by a QM method) and an environment part (described by a classical MM method).
 
-ASH will at some point feature ONIOM multilevel methods that are similar to QM/MM but have a different philosophy.
+ASH will at some point feature also ONIOM multilevel methods that are similar to QM/MM but have a different philosophy.
+
+
+######################################################
+WrapTheory methods
+######################################################
+
+**WrapTheory** is an ASH Theory class that wraps two different theory objects to get a combined theory description. It is assumed that the energy and gradient from each theory is completely additive.
+
+.. code-block:: python
+
+    class WrapTheory:
+        """ASH WrapTheory theory.
+        Combines 2 theories to give a modified energy and modified gradient
+        """
+        def __init__(self, theory1=None, theory2=None, printlevel=1, label=None):
+
+        def run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None, mm_elems=None,
+        elems=None, Grad=False, PC=False, numcores=None, restart=False, label=None,
+        charge=None, mult=None):
+
+
+**WrapTheory** was created for the purpose of allowing one to combine a regular theory-level with a correction (both energy and gradient) from another source.
+Specifically, it was created to allow one to easily add dispersion corrections using DFTD4Theory to a regular DFT calculation (without dispersion).
+
+Example:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Glycine fragment from database
+    frag = Fragment(databasefile="glycine.xyz")
+
+    #PBE/def2-SVP via ORCA (no dispersion correction)
+    orca = ORCATheory(orcasimpleinput="! PBE def2-SVP tightscf")
+    #DFTD4 dispersion correction using DFTD4 library
+    dftd4 = DFTD4Theory(functional="PBE")
+    #Combining the two theories using WrapTheory
+    dft_plus_dftd4_theory = WrapTheory(theory1=orca, theory2=dftd4)
+
+    #Calling the Optimizer function using the WrapTheory object as theory 
+    Optimizer(theory=dft_plus_dftd4_theory, fragment=frag)
+
+
+WrapTheory could be used for many other purposes, one would simply have to make sure that the 2 theories are compatible and that the sum of the 2 theory-description does not result in double-counting of any similar physical energy terms.
+A regular DFT calculation (barely describes dispersion) + an atom pairwise dispersion correction (DFT-D4) is a good example of this.
+
+See DFTD4 section in :doc:`helper_programs` for more information on the DFTD4Theory object.
+
 
 ######################################################
 DualTheory methods
