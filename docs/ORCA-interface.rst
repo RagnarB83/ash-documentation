@@ -139,7 +139,7 @@ ORCATheory class:
      - None
      - | By providing a list of radii (in Å) for each atom in the molecule, 
        | the CPCM radii will manually be changed in the ORCA inputfile. 
-       | Typically used with DRACO-radii :doc:`Helper-programs`
+       | Typically used with DRACO-radii :doc:`helper_programs`
 
 ################################
 Finding the ORCA program

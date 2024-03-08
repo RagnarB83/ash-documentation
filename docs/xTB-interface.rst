@@ -56,7 +56,7 @@ xTB interface
    * - ``accuracy``
      - integer
      - 0.1
-     - The xtB accuracy parameter in the SCC calculation. See `xtbdocs <https://xtb-docs.readthedocs.io/en/latest/sp.html?highlight=accuracy#accuracy-and-iterations>`_ 
+     - The xtB accuracy parameter in the SCC calculation. See `xtb-docs <https://xtb-docs.readthedocs.io/en/latest/sp.html?highlight=accuracy#accuracy-and-iterations>`_ 
    * - ``hardness_PC``
      - integer
      - 1000

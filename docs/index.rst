@@ -92,6 +92,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    crest-interface
    QUICK-interface
    NWChem-interface
+   Gaussian-interface
    TeraChem-interface
    Multiwfn-interface
    helper_programs

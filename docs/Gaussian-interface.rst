@@ -1,7 +1,7 @@
 Gaussian interface
 ======================================
 
-`Gaussian <https://gaussian.com`_  is one of the oldest and widely used quantum chemistry programs.
+`Gaussian <https://gaussian.com>`_  is one of the oldest and widely used quantum chemistry programs.
 
 ASH features a basic interface to Gaussian, allowing you to use it for DFT and WFT based methods within the program.
 Energies and gradients are available in the interface so GaussianTheory in ASH can be used for single-point energies, geometry optimizations, 
