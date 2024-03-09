@@ -117,8 +117,7 @@ ASH with Julia support
 ############################
 
 Some ASH functionality (primarily the molecular crystal QM/MM code) requires a working Python-Julia interface as some of the Python routines are too slow.
-ASH can use both `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ and `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
-The PythonCall/juliacall library is recommended.
+ASH uses `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ for this.
 
 #####################
 ASH settings

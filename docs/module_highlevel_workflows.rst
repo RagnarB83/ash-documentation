@@ -557,7 +557,7 @@ will result in the calculation of natural orbitals from the chosen MP2 Hamiltoni
   ORCA_CCSD_T = ORCATheory(orcasimpleinput=f"! CCSD(T) {basis} tightscf noiter", moreadfile=orbfile)
   Singlepoint(theory=ORCA_CCSD_T, fragment=frag)
 
-Alternative one can use a CC-type method using the MDCI module in ORCA.
+Alternatively one can use a CC-type method using the MDCI module in ORCA.
 Options are: 'CCSD', 'QCISD', 'CEPA/1', 'CPF/1'
 which together with the MDCI_density keyword (takes options: 'linearized', 'unrelaxed' or 'orbopt')
 will result in the calculation of natural orbitals using the selected method and density.

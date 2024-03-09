@@ -29,7 +29,7 @@ Strongly recommended (necessary for some ASH functionality):
 
 For Molecular crystal QM/MM functionality:
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
-* Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ or `PyJulia <https://pyjulia.readthedocs.io/en/latest/>`_
+* Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ 
 
 Recommended external QM codes (many ASH examples will use these) for basic semi-empirical and DFT calculations:
 
