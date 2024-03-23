@@ -185,7 +185,7 @@ copies inputfiles to local scratch on the computing node, runs the ASH-Python sc
 
 A submission script,  `subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_ ,  
 has been created for this purpose which can be found in the scripts directory of the ASH source code.
-It assumes the Slurm queuing system but should be fairly easily be adaptable to other systems.
+It assumes the Slurm queuing system but should be fairly easily adaptable to other systems.
 
 Simply `download subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_  or copy/paste the script into a file called e.g. subash.sh or subash:
 
@@ -212,9 +212,9 @@ Using **subash**:
     subash input.py   # (where input.py is your ASH script). subash will figure out cores if numcores variable define in input.py
     subash input.py -p 8  # (where -p 8 indicates 8 cores to request from the queuing system)
 
-When you use subash it will perform some checks such as whether the inputfile exists, whether you have provided CPU-core information etc.
+When you use **subash** it will perform some checks such as whether the inputfile exists, whether you have provided CPU-core information etc.
 It will create a Slurm submission file in the current directory (called ash.job) and then submit the job to the queuing system.
-The number of CPU cores to use when submitting, can be provided as a flag to subash (should then match the number of cores requested for the Theory level in the inputfile).
+The number of CPU cores to use when submitting, can be provided as a flag to **subash** (should then match the number of cores requested for the Theory level in the inputfile).
 
 However, our preferred way is to have the **subash** script automatically find out suitable number of CPU cores from the inputfile.
 This will work if you have a line containing: "numcores=X" in the Python script (as in the ashtest.py example above and throughout the documentation) and then make sure 

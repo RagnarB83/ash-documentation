@@ -6,18 +6,36 @@
 ASH: Documentation
 ======================================
 
-These are the documentation pages of ASH, an open-source multiscale modelling program.
-The code is available on `Github <https://github.com/RagnarB83/ash>`_
-
 .. image:: figures/ASH-QBIC-poster-small.png
    :align: right
-   :width: 200
+   :width: 300
    :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
-.. raw:: html
 
-    <div align=center>
-   <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
-    </div>
+ASH is a Python-based computational chemistry and multiscale modelling program
+designed for ultimate flexibility. This works by separating the Hamiltonians (of the QM or MM programs) from the 
+typical jobtypes of computational chemistry (optimization, frequencies, MD, scans etc.).
+The program is open-source and the code is available on `Github <https://github.com/RagnarB83/ash>`_
+
+The program allows for convenient ways of doing single-point calculations, geometry optimizations, surface scans, 
+nudged elastic band optimizations, molecular dynamics and numerical frequencies using any MM or QM method in a program for which there is an interface.
+MM and QM objects are easily combined into QM/MM objects.
+ASH is a great solution for automating workflows and performing multi-scale and multi-theory calculations.
+Interfaces are available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. 
+Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
+
+
+..
+   .. raw:: html
+
+      <div align=center>
+      <script id="asciicast-MUrhNGhDx9mAjdqomBppIGWsI" src="https://asciinema.org/a/MUrhNGhDx9mAjdqomBppIGWsI.js" async></script>
+      </div>
+
+The program is  developed in the research group of 
+`Dr. Ragnar Bjornsson <https://sites.google.com/site/ragnarbjornsson/home>`_ in the `CoMX group <https://www.cbm-lab.fr/en/COMX>`_ , of the 
+`Laboratory for Chemistry and Biology of Metals <https://www.cbm-lab.fr/en>`_,
+at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
+
 
 Curious?
 Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.research.google.com/drive/11-FG7eTElCvcMNZiTIEXcdWjcR4YWRS-#scrollTo=ViPg1cGuck_a>`_
@@ -95,6 +113,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    Gaussian-interface
    TeraChem-interface
    Multiwfn-interface
+   MNDO-interface
    helper_programs
 
 
@@ -113,6 +132,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    Highlevel_CC_CBS_workflows
    Highlevel-density-analysis
    Density-inversion
+   Tutorial_fast_QM_MM_MD
 
 .. toctree::
    :maxdepth: 2

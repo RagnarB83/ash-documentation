@@ -299,7 +299,7 @@ Example: QM/MM with ORCA and NonbondedTheory
 
 Example for a H2O-MeOH system where the MeOH is described by QM and H2O by MM. 
 Here we read in a forcefield-file containing a nonbonded forcefield (see :doc:`MM-interfaces`).
-The files for this example are available in the `examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory <https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory>`_ directory of the ASH repository.  
+The files for this example are available in the `examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory <https://github.com/RagnarB83/ash/tree/master/ash/examples/QM-MM-examples/QM-MM-ORCA-nonbondedtheory>`_ directory of the ASH repository.  
 
 
 .. code-block:: python
@@ -345,7 +345,7 @@ Example: QM/MM with ORCA and OpenMMTheory
 
 See also :doc:`QM-MM-protein`.
 
-The files for this example (DHFR protein) are available in the `examples/QM-MM-examples/QM-MM-CHARMM-example <https://github.com/RagnarB83/ash/tree/master/examples/QM-MM-examples/QM-MM-CHARMM-example>`_ directory of the ASH repository.  
+The files for this example (DHFR protein) are available in the `examples/QM-MM-examples/QM-MM-CHARMM-example <https://github.com/RagnarB83/ash/tree/master/ash/examples/QM-MM-examples/QM-MM-CHARMM-example>`_ directory of the ASH repository.  
 
 
 .. code-block:: python
