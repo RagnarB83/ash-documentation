@@ -28,6 +28,7 @@ Strongly recommended (necessary for some ASH functionality):
 * `OpenMM <http://openmm.org>`_ version 7.6 or later. Required for most MM and MD functionality in ASH.
 
 For Molecular crystal QM/MM functionality:
+
 * `Julia 1.7 <https://julialang.org/downloads>`_ installation for fast routines in MolCrys QM/MM
 * Python-Julia library: `PythonCall <https://cjdoris.github.io/PythonCall.jl/stable/pycall/>`_ 
 

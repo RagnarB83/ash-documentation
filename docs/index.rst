@@ -20,7 +20,7 @@ The program allows for convenient ways of doing single-point calculations, geome
 nudged elastic band optimizations, molecular dynamics and numerical frequencies using any MM or QM method in a program for which there is an interface.
 MM and QM objects are easily combined into QM/MM objects.
 ASH is a great solution for automating workflows and performing multi-scale and multi-theory calculations.
-Interfaces are available to popular free-for-academic QM codes: ORCA, xTB, Psi4, PySCF, Dalton, MRCC, CFour. 
+Interfaces are available to various popular QM codes, such as ORCA, xTB, CP2K, Psi4, PySCF, Dalton, MRCC, CFour, MNDO, Terachem, QUICK, Gaussian, NWChem. 
 Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
 
 
