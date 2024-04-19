@@ -234,8 +234,7 @@ Calculations in table used Amber forcefield and ran on the GPU(CUDA).
 When you switch from MM to QM/MM you should expect a massive drop in speed. This is because of 2 factors:
 
 A. The slower speed of the QM energy+gradient calculation that has to be performed in each simulation step.
-B. A regular MM simulation keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; 
-meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
+B. A regular MM simulation keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
 
 We can see some of this speed-drop from factor B that occurs if we switch from running a regular MM MD (with all positions and velocities in memory
 and simulation proceeding by the compiled code) to a simulation where each simulation step is iterated at the Python-level and each MM-call is performed explicitly by ASH.
@@ -312,8 +311,6 @@ QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per times
 ===================  ================================ ================================
 
 
-
-
 ################################################################################
 3. Lysozyme: QM/MM MD using non-hybrid DFT and composite methods
 ################################################################################
@@ -350,7 +347,7 @@ We will run the cheapest correlated WF method, MP2, as implemented in ORCA for c
 
 
 ################################################################################
-7. Lysozyme: Truncated PC gradient approximation
+7. Lysozyme: The cost of electrostic embedding
 ################################################################################
 
 
