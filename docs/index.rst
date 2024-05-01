@@ -133,7 +133,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    Highlevel-density-analysis
    Density-inversion
    Tutorial_fast_QM_MM_MD
-
+   Dev-writing-newQMinterface
 .. toctree::
    :maxdepth: 2
    :caption: Tools

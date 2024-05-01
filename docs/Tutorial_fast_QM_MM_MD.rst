@@ -297,4 +297,67 @@ the QM-Hamiltonian is calculated here without periodic boundary conditions. This
 
 The results are shown in table below.
 
+<<<<<<< HEAD
+=======
+===================  ================================ ================================
+QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per timestep
+===================  ================================ ================================
+ MNDO-PM3                        4650                               0.465
+ ORCA-PM3                        8949                               0.895
+ OM2 or OM3                         X                                  X
+ ODM2 or ODM3                         X                                  X
+ GFN1-xTB (1 CPU)             6551                               0.655
+ GFN1-xTB (8 CPUs)            7194                                  X
+ GFN2-XTB                     X                                  X
+ GFN0-XTB                     X                                  X
+===================  ================================ ================================
+
+
+################################################################################
+3. Lysozyme: QM/MM MD using non-hybrid DFT and composite methods
+################################################################################
+
+
+
+################################################################################
+4. Lysozyme: QM/MM MD using hybrid-DFT
+################################################################################
+
+The HF exchange integrals in hybrid-DFT typically dominates the cost of a hybrid-DFT calculation and this makes
+hybrid-DFT ill-suited for dynamics studies as each timestep simply will be too expensive too compute.
+
+However, hybrid-DFT is nevertheless typically the more accurate flavor of DFT and for some systems, 
+hybrid-DFT may be necessary for a correct description.
+We here discuss options for running efficient hybrid-DFT QM/MM simulations.
+
+
+################################################################################
+5. Lysozyme: QM/MM MD using GPU-based DFT-programs
+################################################################################
+
+
+
+
+################################################################################
+6. Lysozyme: QM/MM MD using WFT methods
+################################################################################
+
+Typically QM/MM MD simulations are limited to semi-empirical or DFT-based Hamiltonians.
+MD simultations based on correlated wavefunction methods are typically too expensive and often lack gradients.
+
+We will run the cheapest correlated WF method, MP2, as implemented in ORCA for comparison.
+
+
+################################################################################
+7. Lysozyme: The cost of electrostic embedding
+################################################################################
+
+
+################################################################################
+8. Lysozyme: QM/MM MD SUMMARY
+################################################################################
+
+
+
+>>>>>>> 656dccd94889d64f95984050e2a4c0e008164054
 
