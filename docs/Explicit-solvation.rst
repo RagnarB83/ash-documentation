@@ -48,7 +48,7 @@ Example 1. Modelling of an organic molecule in explicit water with a ligand forc
     #Parameterize small molecule using OpenFF
     small_molecule_parameterizer(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF")
 
-The function will create a file, called openff_ligand.xml.
+The function will create a file, called openff_LIG.xml.
 
 2. Solvate the system
 
@@ -60,7 +60,7 @@ The function will create a file, called openff_ligand.xml.
 
     mol = Fragment(xyzfile="isobutyraldehyde.xyz", charge=0, mult=1)
     #Solvate molecule in a 30x30x30 Å TIP3P water box.
-    solvate_small_molecule(fragment=mol, xmlfile="openff_ligand.xml", watermodel='tip3p', solvent_boxdims=[30,30,30])
+    solvate_small_molecule(fragment=mol, xmlfile="openff_LIG.xml", watermodel='tip3p', solvent_boxdims=[30,30,30])
 
 This creates files: system_aftersolvent.xyz and system_aftersolvent.pdb
 
@@ -76,7 +76,7 @@ This creates files: system_aftersolvent.xyz and system_aftersolvent.pdb
     pdbfile="system_aftersolvent.pdb"
     fragment = Fragment(pdbfile=pdbfile)
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["openff_ligand.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
 
     #Gently warms up the system
@@ -121,7 +121,7 @@ This is also required for QM/MM MD simulation (where the molecule must be in the
     pdbfile="equilibration_NPT_imaged.pdb"
     fragment = Fragment(pdbfile=pdbfile)
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["openff_ligand.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
     #Create a QM/MM object
     qm = xTBTheory(xtbmethod='GFN2')

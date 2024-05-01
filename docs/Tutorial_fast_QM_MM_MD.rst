@@ -234,8 +234,7 @@ Calculations in table used Amber forcefield and ran on the GPU(CUDA).
 When you switch from MM to QM/MM you should expect a massive drop in speed. This is because of 2 factors:
 
 A. The slower speed of the QM energy+gradient calculation that has to be performed in each simulation step.
-B. A regular MM simulation keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; 
-meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
+B. A regular MM simulation keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
 
 We can see some of this speed-drop from factor B that occurs if we switch from running a regular MM MD (with all positions and velocities in memory
 and simulation proceeding by the compiled code) to a simulation where each simulation step is iterated at the Python-level and each MM-call is performed explicitly by ASH.
@@ -297,67 +296,5 @@ We note that while the MM Hamiltonian is still calculated with periodic boundary
 the QM-Hamiltonian is calculated here without periodic boundary conditions. This is an approximation which is reliable as long as the QM-region is approximately in the center of the box.
 
 The results are shown in table below.
-
-===================  ================================ ================================
-QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per timestep
-===================  ================================ ================================
- MNDO-PM3                        4650                               0.465
- ORCA-PM3                        8949                               0.895
- OM2 or OM3                         X                                  X
- ODM2 or ODM3                         X                                  X
- GFN1-xTB (1 CPU)             6551                               0.655
- GFN1-xTB (8 CPUs)            7194                                  X
- GFN2-XTB                     X                                  X
- GFN0-XTB                     X                                  X
-===================  ================================ ================================
-
-
-
-
-################################################################################
-3. Lysozyme: QM/MM MD using non-hybrid DFT and composite methods
-################################################################################
-
-
-
-################################################################################
-4. Lysozyme: QM/MM MD using hybrid-DFT
-################################################################################
-
-The HF exchange integrals in hybrid-DFT typically dominates the cost of a hybrid-DFT calculation and this makes
-hybrid-DFT ill-suited for dynamics studies as each timestep simply will be too expensive too compute.
-
-However, hybrid-DFT is nevertheless typically the more accurate flavor of DFT and for some systems, 
-hybrid-DFT may be necessary for a correct description.
-We here discuss options for running efficient hybrid-DFT QM/MM simulations.
-
-
-################################################################################
-5. Lysozyme: QM/MM MD using GPU-based DFT-programs
-################################################################################
-
-
-
-
-################################################################################
-6. Lysozyme: QM/MM MD using WFT methods
-################################################################################
-
-Typically QM/MM MD simulations are limited to semi-empirical or DFT-based Hamiltonians.
-MD simultations based on correlated wavefunction methods are typically too expensive and often lack gradients.
-
-We will run the cheapest correlated WF method, MP2, as implemented in ORCA for comparison.
-
-
-################################################################################
-7. Lysozyme: Truncated PC gradient approximation
-################################################################################
-
-
-################################################################################
-8. Lysozyme: QM/MM MD SUMMARY
-################################################################################
-
-
 
 

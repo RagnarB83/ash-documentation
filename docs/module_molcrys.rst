@@ -7,7 +7,7 @@ in articles by Bjornsson et al.
 | 2. R. Bjornsson, manuscript in preparation
 
 The method allows one to easily incorporate solid-state effects into quantum chemical calculations of molecules via an automatic
-QM/MM approach for molecular crystals. The protocol involves read-in of a crystallographic information file (CIF) directly and the
+QM/MM approach for molecular crystals. The protocol involves read-in of crystallographic/periodic information in one of few ways (e.g CIF-file, Vesta XTL-file or XYZ-file) the
 creation of either a spherical cluster or supercell of the molecular crystal. By automatic preparation of a nonbonded forcefield for each
 molecular fragment present in the crystal and division of the system into a central active QM-region and a frozen MM environment,
 a full-fledged forcefield is not required (typically not available for small molecules, especially coordination complexes).
@@ -22,8 +22,6 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 :doc:`QM-interfaces` can be used for geometry optimizations.
 
 
-
-
 .. image:: figures/molcrys-intro-v2a.png
    :align: center
    :width: 1200
@@ -31,8 +29,8 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 **The basic automatic protocol:**
 
 
-| 1. Read CIF-file (or alternative, e.g. Vesta XTL-file) containing fractional coordinates of the cell.
-| 2. Apply symmetry operations to get coordinates for whole unit cell (if needed).
+| 1. Read CIF-file, Vesta XTL-file or XYZ-file containing fractional (for XYZ real-space) coordinates of the cell.
+| 2. For CIF-file: Apply symmetry operations to get coordinates for whole unit cell.
 | 3. Identify the molecular fragments present in cell via connectivity and match with user-input
 | 4. Extend the unit cell and cut out a spherical cluster or supercell with user-defined MM radius (typically 30-50 Å). Only whole molecules included.
 | 5. Define atomic charges of the molecular fragments from QM calculations.
@@ -44,7 +42,7 @@ For the charge-iteration step,  ORCA and xTB are the currently supported QM code
 | 8d. Optional: Molecular property calculation in the solid-state.
 
 
-**Critical features of the implementation:**
+**Features of the implementation:**
 
 | - Handles CIF-files with inconsistent atom ordering by automatic fragment reordering.
 | - Accuracy can be controlled via QM-region expansion (reduces impact of approximate LJ potentials or MM charges).
@@ -78,10 +76,12 @@ MOLCRYS function: Creating a cluster
         supercell_expansion=[3,3,3])
 
 The purpose of the **molcrys** function is to create a cluster fragment (either spherical or supercell) from a file containing periodic information and to define
-a nonbonded MM forcefield for the whole system. The cluster fragment (an ASH fragment) can then be subjected to a QM/MM geometry optimization.
-There are 3 inputfile options: cif_file, xtl_file or xyz_file. The CIF-file and XTL-file (created by VESTA) contain fractional coordinates and the unit-cell shape and this is automatically
-parsed by ASH. If you provide an XYZ-file then the file must contain real-space coordinates in Å for a whole unitcell and additionally the length and angles of the unitcell have to be provide as well,
+a nonbonded MM forcefield for the whole system. The cluster fragment (a regular ASH fragment) can then be subjected to a QM/MM geometry optimization.
+There are 3 inputfile options: cif_file, xtl_file or xyz_file. The CIF-file and XTL-file (created by VESTA) should contain fractional coordinates and the unit-cell shape in the respective format 
+and this is automatically parsed by ASH. If you provide an XYZ-file then the file must contain real-space coordinates in Å for a whole unitcell and additionally the length and angles of the unitcell have to be provide as well,
 using cell_length and cell_angles keywords.
+
+.. warning:: The common CIF-file format standard (used in experimental crystallography) is unfortunately rather complicated and hard to parse correctly.  There are cases that ASH will not handle correctly. It may often be easier to open a CIF-file in a visualization program, inspect the crystal for correctness (all atoms must be present, including H-atoms) and then export a cleaned-up CIF-file or an XYZ-file. The `cif2cell <https://github.com/torbjornbjorkman/cif2cell>`_ program also works well to cleanup CIF-file or convert to XYZ format. 
 
 The following keyword arguments must be provided:
 
@@ -111,7 +111,7 @@ Optional keyword arguments.
     # From XTL-file:
     Cluster = molcrys(xtl_file="xtl_filename.xtl", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
         clusterradius=32, chargemodel='CM5', shortrangemodel='UFF')
-    # From XYZ-file:
+    # From XYZ-file (requires cell-length and cell-angles input also):
     Cluster = molcrys(xyz_file="xyz_filename.xyz", cell_length=[10.1,12.2,10.1], cell_angles=[90,90,90],
         fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
             clusterradius=32, chargemodel='CM5', shortrangemodel='UFF')
@@ -128,6 +128,72 @@ Optional keyword arguments.
     # 3x3x3 Supercell
     Cluster = molcrys(cif_file="cif_filename.cif", fragmentobjects=[mainfrag,counterion], theory=ORCAcalc,
         cluster_type='supercell', supercell_expansion=[3,3,3], chargemodel='CM5', shortrangemodel='UFF_all')
+
+
+################################################################
+Dealing with Molcrys errors 
+################################################################
+
+The most common problem in getting **molcrys** to work is the program failing to assign molecular fragments within a crystal such as this error:
+
+.. code-block:: text
+
+    Number of assigned atoms (231) not matching number of atoms in cell (215).
+    Fragment definition incomplete
+    Fragment assignment failed. for tolerance: 0.7   Trying next Tol parameter.
+    Automatic connectivity failed. Make sure that the fragment definitions are correct, that the cell is not missing atoms or that it contains extra atoms
+    ASH exiting with code: 1
+
+This error could mean multiple things: missing atoms in CIF-file (or XTL/XYZ file), inconsistencies in CIF-file, incorrect parsing of CIF-file (bug) or problems with connectivity etc. If visualization of the CIF-file reveals no missing atoms the problem may lies in the CIF-file.
+This can be dealt with in a few different ways: 
+
+**1.** Clean-up the CIF-file. This may fix either inconsistencies or an ASH-CIF-file parsing bug. The program `cif2cell <https://github.com/torbjornbjorkman/cif2cell>`_  can usually fix this problem in a very easy way.
+The problem just needs to be installed (either on your local computer or cluster) like this:
+
+.. code-block:: shell
+
+    pip install cif2cell
+    
+and then used like this:
+
+.. code-block:: shell
+
+    cif2cell file.cif -p cif #This creates a cleaned-up file file_allatoms.cif
+
+The cleaned up CIF-file (here called file_allatoms.cif) created by **cif2cell** should contain a CIF-file with simpler formatting and all symmetry operations already applied (i.e. all atoms of the unit cell present)
+that ASH may be able to parse without problems instead of the original file.
+
+**2.** Export an XYZ-file of the whole cell. Can be performed using a visualization program (VESTA, Chemcraft, Mercury) or `cif2cell <https://github.com/torbjornbjorkman/cif2cell>`_. 
+The **cif2cell** option can be used like this:
+
+.. code-block:: shell
+
+    cif2cell file.cif -p xyz # This creates XYZ file None.xyz
+
+The XYZ coordinates should be in real-space and in Angstrom coordinates. Then use the **molcrys** xyz_file option like this (change cell_length and cell_angles):
+
+.. code-block:: python
+
+    Cluster = molcrys(xyz_file="file.xyz", cell_length=[10.1,12.2,10.1], cell_angles=[90,90,90])
+
+**3.** Finally it is possible that the fragment assignment fails due to problems with finding molecular fragments due to unusual connectivities (very long bonds).
+While the ASH auto-connectivity usually can deal with this problem, it may fail in some cases.
+The fragment identification works by finding what atoms are connected according to the formula:
+
+.. math::
+
+    r(AtomA,AtomB) < scale*( covrad(AtomA) + covrad(AtomB) ) + tol
+
+The global parameters *scale*, and *tol* as well as the element-specific covalent radius can be modified like below:
+
+.. code-block:: python
+
+    #Modify global connectivity settings (scale and tol keywords)
+    settings_ash.settings_dict["scale"]=1.0
+    settings_ash.settings_dict["tol"]=0.3
+    # Modified radii to assist with connectivity.
+    #Setting radius of Na to almost 0. Na will then not bond
+    eldict_covrad['Na']=0.0001
 
 
 
@@ -326,8 +392,7 @@ In that case, the code below can simply be appended to the previous script.
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', numcores=numcores)
 
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=charge, mult=mult )
-
+    Optimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=charge, mult=mult )
 
 
 We define a variable Centralmainfrag as the list of atoms that should be both described at the QM level (will be passed to qmatoms keyword argument)
@@ -339,11 +404,11 @@ forcefield file, previously created by the **molcrys** function.
 Next we have to define a QM/MM object by combining a QM-theory object (here of class ORCATheory) and an MM theory object (of class NonBondedTheory).
 See QM/MM theory page for more information on this. Note that actatoms is defined here as well as this means that the internal MM energy of the frozen MM region can be skipped.
 
-Finally we call the optimizer program, here the geomeTRICoptimizer:
+Finally we call the optimizer program:
 
 .. code-block:: python
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
+    Optimizer(theory=QMMM_object, fragment=Cluster, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag )
 
 
 We provide a theory argument to the optimizer (our QM/MM object), the Cluster fragment, we specify the coordinate
@@ -384,7 +449,7 @@ This should generally result in a more accurate calculation as the QM-MM boundar
 Hydrogen-bonding between fragments would particularly benefit from this as this is a strong noncovalent interaction.
 
 The qmatoms and actatoms lists (i.e. the values provided to qmatoms and actatoms keyword arguments to QM/MM object or
-geomeTRICOptimizer function can be modified manually, e.g. by visually inspecting an XYZ-file version of the Cluster and
+Optimizer function can be modified manually, e.g. by visually inspecting an XYZ-file version of the Cluster and
 provide the correct list of atom indices (Note: **ASH** counts from zero).
 
 More conveniently, the QMregionfragexpand function can be used to find nearby atoms for an initial list of atoms.
@@ -528,7 +593,7 @@ Optimization of product geometry:
     QMMM_object = QMMMTheory(fragment=Cluster_product, qm_theory=ORCAQMpart, mm_theory=MMpart,
         qmatoms=Centralmainfrag, charges=Cluster.atomcharges, embedding='Elstat', numcores=numcores)
 
-    geomeTRICOptimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1 )
+    Optimizer(theory=QMMM_object, fragment=Cluster_product, maxiter=170, ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1 )
 
 
 **2. Running NEB-CI job.**
@@ -592,15 +657,6 @@ Ash fragment file for saddlepoint (full coordinates):
 Saddlepoint-optimized.ygg
 
 
-**4. Confirm saddlepoint via numerical frequencies. See below.**
-
-
-#########################################
-MOLCRYS: Numerical QM/MM frequencies
-#########################################
-
-Available. Needs to be tested...
-
 
 #####################################################
 MOLCRYS: Fragment identification/Connectivity issues
@@ -620,9 +676,3 @@ Often, modifying the covalent radius of an element (see above example for Na+) w
 
 The auto_connectivity=True feature should usually work.
 
-
-#########################################
-MOLCRYS: Molecular Dynamics
-#########################################
-
-Not yet ready
