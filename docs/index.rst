@@ -114,6 +114,8 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    TeraChem-interface
    Multiwfn-interface
    MNDO-interface
+   MLatom-interface
+   torch_interface
    helper_programs
 
 

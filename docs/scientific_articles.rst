@@ -156,6 +156,10 @@ Broken-symmetry solutions in the QM-part were controlled by the ORCA interface (
 Uncovering primary and secondary coordination sphere effects in S-nitrosylating azurin:
 `2023 JACS article <https://pubs.acs.org/doi/10.1021/jacs.3c07399>`_
 
+Second sphere variants of Type 1 Cu site in azurin:
+`2024 J Phys. Chem. B article <https://pubs.acs.org/doi/full/10.1021/acs.jpcb.3c08194>`_
+
+
 
 ###################################
 Highlevel WFT workflows

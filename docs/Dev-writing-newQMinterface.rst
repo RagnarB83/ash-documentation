@@ -36,19 +36,16 @@ How should I write the interface?
 First create the file interface_DummyQM.py .
 You then need to create a new class inside the file called DummyQMTheory.
 
-The class should have this structure:
+The class should have this structure.
+
+Here we create a subclass of the general Theory class in ASH (this makes sure that the new class will have all necessary attributes and methods to work).
 
 .. code-block:: python
 
-    class DummyQMTheory:
+    class DummyQMTheory(Theory):
         def __init__(self, dummyqmdir=None, executable_name=None, filename='example', printlevel=2, label="DummyQM",numcores=1, 
                     input_option=None):
 
-    #Set numcores method
-    def set_numcores(self,numcores):
-        self.numcores=numcores
-    def cleanup(self):
-        print("cleanup not yet implemented.")
     # Run method. Takes coords, elems etc. arguments and computes E or E+G.
     def run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None, mm_elems=None,
             elems=None, Grad=False, PC=False, numcores=None, restart=False, label=None, charge=None, mult=None):
@@ -57,8 +54,8 @@ The class should have this structure:
 
 The input options to the **__init__** method of DummyQMTheory are flexible but they must contain keyword arguments *filename*, *printlevel*, *label*, *numcores*.
 Other input options are up to you.
-The **set_numcores** and **cleanup* methods must be present. **set_numcores** can often be left as is, while the **cleanup** method has the purpose of cleaning
-up temporary files that ASH may call in some workflows.
+
+ **set_numcores** and **cleanup** methods are optional. **set_numcores** will be inherited from the general Theory class, while the **cleanup** method has the purpose of cleaning up temporary files that ASH may call in some workflows.
 
 The **run** method is the most important method and should contain the options shown as ASH job-functions will try to call the runmethod, via **theory.run(...)**.
 

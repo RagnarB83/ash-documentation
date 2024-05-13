@@ -311,21 +311,106 @@ QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per times
  GFN0-XTB                     X                                  X
 ===================  ================================ ================================
 
+As we can see, going from pure MM to the fastest semi-empirical QM/MM results in a major drop in speed of simulation (~X times slower). 
+The speed of the MNDO program and the PM3 semiempirical method is still quite impressive with each QM/MM step 
+here taking only 0.465 s(465 ms) (really fast for a QM method!).
+Each MNDO step takes approx. 376 ms, the rest is data exchange + MM-step (180 ms). 
+As we will see, this is obviously much faster than what most regular QM-methods (e.g. DFT) will take.
+
+The speed of the GFN-xTB methods is additionally quite good, with each step taking less than a second.
+
+TODO: other DFTB methods
+
+TODO: xTB on GPU ??
+
+xTB via CP2K??
+
+Sparrow?
+
+.. note:: xTB in ASH has 2 runmodes : runmode='library' and runmode='inputfile'. The runmode='inputfile' creates input on disk and calls the xtb binary while runmode='library' calls a Python-C-API and runs calculations as a library. The latter involves no I/O which can make calculations quicker. Unfortunately, pointcharge-embeded xTB calculations are not yet available with this option.
 
 ################################################################################
 3. Lysozyme: QM/MM MD using non-hybrid DFT and composite methods
 ################################################################################
 
+It should be clear by now that the speed of a QM/MM MD simulation is dominated by the QM-step and as we go beyond semi-empirical methods to DFT and others, the speed will drop further.
+The data-exchange and communication between QM-program, MM-program and ASH is usually negligible. Only for the superfast MNDO-AM1 case does it reach ~XX % of the total step-time while it is ~X % for xTB. 
+This does mean that we can freely choose whatever QM-program we want that has an interesting electronic structure method implemented (in terms of speed or accuracy), as long as ASH features an interface to that program.
+
+The disadvantage of semiempirical (SQM) methods in the MNDO and xTB programs is the limited accuracy and they typically struggle with e.g. transition metal chemistry, open-shell electronic structure etc. 
+We now explore how the performance changes as we go to composite methods and non-hybrid DFT methods implemented in other QM programs.
+
+We first consider the "3c composite" methods from the Grimme research group (HF-3c, B97-c, r2SCAN-3c and PBEh-3c).
+These are HF or DFT methods with an accompanying small basis set and featuring some corrections (dispersion, basis set correction). 
+These methods are designed to be fast (enabled by a small tailored basis set) and accurate (achieved by the corrections).
+These methods have perhaps a minor semi-empirical component, however, they do not make any approximations to the 2-electron integrals (like MNDO and xTB) and 
+can thus be expected to be more accurate and also more expensive.
+All the "3c composite" methods are available in the ORCA program and we will use the ORCA interface in ASH to run these simulations.
+
+.. code-block:: python
+    
+    #QM object
+    qm = ORCATheory(orcasimpleinput="! HF-3c tightscf", numcores=numcores)
+
+=========================  ================================ ================================
+QM-method                       Time (sec) (for 10 ps)        Ave. time (sec) per timestep
+=========================  ================================ ================================
+ ORCA-HF-3c   (1 CPU)                       X                               X
+ ORCA-HF-3c   (16 CPU)                 62922                               6.29
+ ORCA-B97-3c (1 CPU)
+ ORCA-r2SCAN-3c (1 CPU)                         X                               X
+ CP2K-PBEh-3c (1 CPU)
+=========================  ================================ ================================
+
+
+If the "3c composite" methods are not a good option for some reason we can of course also simply utilize regular DFT methods, 
+perhaps employing a DFT protocol that is known to be a good compromisite between speed and accuracy.
+DFT programs come in many flavors and can roughly be grouped into programs that utilize local Gaussian-basis sets (e.g. ORCA, Gaussian, NWChem, Q-Chem, Molpro, Psi4 etc.) 
+and programs that utilize plane-wave basis sets (e.g. CP2K, VASP, Quantum Espresso etc.).
+The advantage of ASH is that we can in principle choose any of these programs and run them in a QM/MM simulation.
+ASH at the moment has more interfaces to Gaussian-based DFT-codes (ORCA, pySCF, NWChem, Psi4, Gaussian) than to plane-wave DFT-codes (CP2K, VASP, Quantum Espresso).
+Here we compare 2 diffent QM-codes: a state-of-the-art Gaussian-basis DFT code (ORCA) and a mixed planewave-Gaussian code (CP2K).
+
+=========================  ================================ ================================
+QM-method                       Time (sec) (for 10 ps)        Ave. time (sec) per timestep
+=========================  ================================ ================================
+ ORCA-PBE   (1 CPU)                       X                               X
+ ORCA-TPSS (1 CPU)
+ ORCA-r2SCAN (1 CPU)                         X                               X
+ CP2K-PBE (GPW)
+ CP2K-PBE (GAPW)
+=========================  ================================ ================================
 
 
 ################################################################################
 4. Lysozyme: QM/MM MD using hybrid-DFT
 ################################################################################
 
+The HF exchange integrals in hybrid-DFT typically dominates the cost of a hybrid-DFT calculation and this makes
+hybrid-DFT ill-suited for dynamics studies as each timestep simply will be too expensive too compute.
+
+However, hybrid-DFT is nevertheless typically the more accurate flavor of DFT and for some systems, 
+hybrid-DFT may be necessary for a correct description.
+We here discuss options for running efficient hybrid-DFT QM/MM simulations.
+
+ORCA RIJONX 
+ORCA RIJK 
+ORCA-RIJCOSX, 
+CP2K
+Turbmole ?
+
+
+TODO : Truncated PC gradient approximation
 
 ################################################################################
 5. Lysozyme: QM/MM MD using GPU-based DFT-programs
 ################################################################################
+
+NOTE: CP2K on GPU
+
+While QM-programs are primarily written for the CPU, a few QM programs feature GPU implementation of HF/DFT. 
+We will explore the performance of these here.
+TeraChem, QUICK, pyscf-GPU, CP2K-GPU.
 
 
 ################################################################################
@@ -350,4 +435,31 @@ We will run the cheapest correlated WF method, MP2, as implemented in ORCA for c
 ################################################################################
 9. Lysozyme: QM/MM MD SUMMARY
 ################################################################################
+
+We have now gone through a variety of ways to perform QM/MM MD in ASH. As should be clear, ASH offers obvious advantages to performing these kinds
+of studies as we can utilize a common system setup, common QM/MM coupling and a common dynamics propagation to run the calculations.
+We only have to change the QM-program component to whatever method fits the particular study or what program is available.
+
+The benchmarking numbers on this page should of course be taken with a pinch of salt as the relative performance of methods and programs
+heavily depends on the nature of the system e.g. closed-shell vs. open-shell, the size of QM-region, computer hardware, how the QM-program was compiled/installed etc.
+The speed of the QM-method/QM-program is also not the only variable to consider in a QM/MM MD study.
+
+Nonetheless, the numbers here reveal some generally useful trends that may be worth considering when planning your next QM/MM MD study.
+For example, a semiempirical protocol (using MNDO or xTB) is probably worth considering if your QM-region only contains "organic" elements
+as the computational cost is much lower than for DFT methods.
+The "3c composite" methods perform well and may be more accurate than other DFT/small-basis protocols.
+Running DFT calculations on the GPU may be well worth considering.
+
+Comparison of the most interesting methods from the previous sections:
+
+=========================  ================================ ================================
+QM-method                       Time (sec) (for 10 ps)        Ave. time (sec) per timestep
+=========================  ================================ ================================
+ XX   (1 CPU)                       X                               X
+
+=========================  ================================ ================================
+
+In this tutorial we have until now not considered accuracy.
+
+TODO: Should we do some opt+freq calcs on some of the best methods to check ?
 
