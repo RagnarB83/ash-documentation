@@ -4,11 +4,15 @@ MLatom interface
 `The MLatom program <http://mlatom.com>`_ (see also `XACS_MLatom documentation <https://xacs.xmu.edu.cn/docs/mlatom/>`_) is a program for AI/ML enchanced quantum chemistry, developed by Pavlo Dral's research group at Xiamen university.
 
 Mlatom features various interfaces to machine-learning potentials and QM software and can be used for both training and prediction of molecular energies and properties.
-ASH features a basic interface to the MLatom Python API that allows direct use of various pre-trained models using various ML potentials supported by MLatom.
+ASH features a basic interface to the MLatom Python API that allows direct use of various pre-trained models using the ML potentials supported by MLatom. Some basic training is also supported.
 
-If a valid MLatomTheory object is created using a pretrained model or a model is correctly trained, an *MLatomTheory* object will behave like any other Theory level within ASH.
-That is energies and gradients can be requested (just like a regular QM or MM theory) and so MLatomTheory can be used for single-point energies, geometry optimizations, 
+If a valid *MLatomTheory* object is created using a pretrained model or a model is correctly trained, an *MLatomTheory* object will behave like any other Theory level within ASH.
+That is: energies and gradients can be requested (just like a regular QM or MM theory) and so *MLatomTheory* can be used for single-point energies, geometry optimizations, 
 numerical frequencies, surface scans, NEB , molecular dynamics etc. within ASH. 
+
+It is also possible to use ASH to provide training data (usually energies and gradients) to MLatom and to train a new ML model (even directly within ASH).
+
+WARNING: As the interface to MLatom is new and MLatom is under rapid development, the interface may regularly change.
 
 
 **MLatomTheory class:**
@@ -90,9 +94,9 @@ Examples
 To use MLatom we need to choose to use either a method or a model (MLatom syntax).
 
 - A MLatom-method is a general pretrained ML model and is designed to be general and work outside the box (just like a DFT method). It is specified by the *method* keyword in the ASH interface (a string). Examples of methods are: 'AIQM1' and 'ANI-1x'.
-- A MLatom-model is a ML-model (can be kernel-based, neural-network based etc.) that needs to have a specified form and needs to be trained. It is specified by the *ml_model keyword* in the ASH interface.
+- A MLatom-model is a ML-model that needs to have a specified form can be kernel-based, neural-network based etc.) and needs to be trained or parameters loaded. It is specified by the *ml_model keyword* in the ASH interface.
 
-MLatomTheory requires you to specify either a *method *or a *ml_model*. 
+MLatomTheory requires you to specify either a *method* or a *ml_model* when defining the object.
 
 *Pretrained AIQM1 method example*
 
@@ -123,22 +127,23 @@ See also :doc:`torch_interface` for direct use of TorchANI/PyTorch (without MLat
 
 *Loading and running pretrained model from file*
 
-We next show how to use a *ml_model*. To avoid training we load a pretrained model from a file.
-First we have to choose what type of ML-model form we want to use. The options are: 'ani', 'dpmd', 'gap', 'physnet', 'sgdml', 'mace'.
-Next we must choose the file containing the model. This file often has a .pt suffix (for pytorch models) or a .pkl suffix (for scikit-learn models).
+We next show how to use a ML-model (*ml_model* keyword). If the training has already been performed and available as a file, can we load it.
+First we have to choose what type of ML-model potential we want to use. The options are: 'ani', 'dpmd', 'gap', 'physnet', 'sgdml', 'mace'.
+Next we must choose the file containing the model. This file often has a .pt suffix (for pytorch models) or a .pkl suffix (for scikit-learn models) or various other extensions.
 
 .. code-block:: python
 
     from ash import *
 
     #Here defining a MACE ML-model (requires installing MACE separately) 
-    #And downloading mace.pt from here: https://xacs.xmu.edu.cn/docs/mlatom/tutorial_geomopt.html
+    #And downloading init.xyz and mace.pt from here: https://xacs.xmu.edu.cn/docs/mlatom/tutorial_geomopt.html
     theory = MLatomTheory(ml_model="mace", model_file="mace.pt")
     #theory = MLatomTheory(ml_model="ani", model_file="ani_model.pt")
     #theory = MLatomTheory(ml_model="kreg", model_file="kreg_model.unf")
 
 
     #Defining a molecule Fragment. NOTE: This must match the training data used to train the model (same molecule, same atom-order etc.)
+    #See https://xacs.xmu.edu.cn/docs/mlatom/tutorial_geomopt.html for the init.xyz file
     frag = Fragment(xyzfile="init.xyz")
 
     Singlepoint(theory=theory, fragment=frag)
@@ -146,11 +151,14 @@ Next we must choose the file containing the model. This file often has a .pt suf
 *Training a new model using MLatomTheory*
 
 ASH features a very basic way to train a new ML model using the MLatom API.
-It should be noted that training a new ML model can be a labororious complicated process and it may be better to use MLatom directly (either the PythonAPI or the command-line interface) to have more control over the training process.
+It should be noted that training a new ML model can be a labororious, complicated process and it may be better to use MLatom directly (either the PythonAPI or the command-line interface) to have more control over the training process.
 ASH and it's interfaces to various QM programs can still be used to generate the training data.
 See `MLatom training documentation <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html#training>`_
 
 Currently ASH can be used to train very basic ML-model potentials based on energies and gradients like the following examples.
+
+See also `MLatom Machine learning potentials tutorial <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html>`_ for a tutorial on training machine learning potentials in general,
+as well as links to download training data used below (H2.xyz, H2_HF.en, H2_HF.grad).
 
 **ANI-example**
 
@@ -161,6 +169,7 @@ Currently ASH can be used to train very basic ML-model potentials based on energ
     #Create MLatomTheory model
     theory = MLatomTheory(ml_model="ANI")
     #Train model using 3 databasefiles containing XYZ-coords, energies and gradients
+    #Download from; https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html
     theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en",
                 molDB_xyzvecproperty_file="H2_HF.grad")
     #Model is now trained and can be used directly,
@@ -187,6 +196,7 @@ Currently ASH can be used to train very basic ML-model potentials based on energ
     #Create MLatomTheory model
     theory = MLatomTheory(ml_model="kreg", ml_program='MLatomF')
     #Train model using 3 databasefiles containing XYZ-coords, energies and gradients
+    #Download from; https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html
     theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en",
                 molDB_xyzvecproperty_file="H2_HF.grad")
     #Model is now trained and can be used directly,
