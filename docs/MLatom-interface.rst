@@ -157,8 +157,15 @@ See `MLatom training documentation <https://xacs.xmu.edu.cn/docs/mlatom/tutorial
 
 Currently ASH can be used to train very basic ML-model potentials based on energies and gradients like the following examples.
 
-See also `MLatom Machine learning potentials tutorial <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html>`_ for a tutorial on training machine learning potentials in general,
+See `MLatom Machine learning potentials tutorial <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html>`_ for a tutorial on training machine learning potentials in general,
 as well as links to download training data used below (H2.xyz, H2_HF.en, H2_HF.grad).
+
+What is needed to define the ml_model (here either 'ANI' or 'kreg' is chosen) is defined and then the training data must be provided in the forms of XYZ-coordinates, energies and gradients.
+XYZ-coordinates should be provided as a multi-geometry XYZ-file (a single space separating geometries), energies as a single column file (one energy in Eh per line, corresponding to the geometry in the XYZ-file) 
+and gradients as a file analogous in format to the XYZ-file but with the Cartesian gradient (Eh/Bohr) instead of geometry (and no element-column).
+
+The multigeometry XYZ-file could e.g. come from a molecular dynamics simulation from ASH. 
+Note that for now the energies and gradient files have to be created manually.
 
 **ANI-example**
 
@@ -184,7 +191,6 @@ as well as links to download training data used below (H2.xyz, H2_HF.en, H2_HF.g
     print("Gradient:", result.gradient)
 
     result = Optimizer(theory=theory, fragment=frag, Grad=True)
-
 
 
 **KREG-example**
