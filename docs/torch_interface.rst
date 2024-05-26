@@ -1,14 +1,14 @@
 Torch/TorchANI interface
 ======================================
 
-PyTorch is a general approch to training neural networks in Python.
-TorchANI is 
+PyTorch is a very general and one of the most popular approches to training neural networks in Python.
+TorchANI is a PyTorch-based implementation of the ANI neural network potential for describing potential energy surfaces of molecular systems (and other properties).
 
 ASH features a basic interface to PyTorch and TorchANI that allows easy use of pre-trained neural-network based on
 machine-learning models. This allows the use of such neural network potentials as theory-levels within ASH.
 
-Energies and gradients can be requested (just like a regular QM or MM theory) and so
-for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB and molecular dynamics within ASH. 
+Energies and gradients can be requested (just like a regular QM or MM theory) and so a valid TorchTheory object can be used
+for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH. 
 
 
 **TorchTheory class:**

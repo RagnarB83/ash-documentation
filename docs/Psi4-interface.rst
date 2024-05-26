@@ -100,11 +100,11 @@ Set pe=True and give path to potfile to use.
     #Psi4: Input-file based interface: using psi4dir to set path
     psi4dir='/path/to/psi4_install/bin/psi4'
     Psi4calc = Psi4Theory(psi4settings=psi4settings, psi4method=psi4method, runmode='psithon',
-                                psi4dir=psi4dir, pe=False, outputname='psi4output.dat', label='psi4input',
+                                psi4dir=psi4dir, pe=False, label='psi4input',
                                  psi4memory=3000, prinsetting=False)
     #Psi4: Library-based interface
     Psi4calc = Psi4Theory(psi4settings=psi4settings, psi4method=psi4method, runmode='library',
-                                pe=False, outputname='psi4output.dat', label='psi4input', psi4memory=3000)
+                                pe=False, label='psi4input', psi4memory=3000)
 
     #Run a single-point energy job
     Singlepoint(theory=Psi4calc, fragment=HF_frag)

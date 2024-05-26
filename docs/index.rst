@@ -78,6 +78,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    OpenMM-interface
    module_Hybrid_Theory
    module_QM-MM
+   Machine_learning_in_ASH
 
 .. toctree::
    :maxdepth: 2
