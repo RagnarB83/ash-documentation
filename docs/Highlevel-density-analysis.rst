@@ -13,7 +13,7 @@ Being able to estimate the Full-CI limit, even in a small basis set, can thus gi
 truncated WF approximations.
 If basis set effects can be also be controlled, DFT methods can furthermore be benchmarked against the high-level results.
 
-All ASH scripts are available in the `examples/density-analysis/Tutorial-HLWFT-analysis/CO <https://github.com/RagnarB83/ash/tree/master/ash/examples/density-analysis/Tutorial-HLWFT-analysis/CO>`_ directory of the ASH repository.
+All ASH scripts are available in the `examples/density-analysis/Tutorial-HLWFT-analysis/CO <https://github.com/RagnarB83/ash/tree/master/examples/density-analysis/Tutorial-HLWFT-analysis/CO>`_ directory of the ASH repository.
 Reproducing the calculations in this tutorial requires separate installation of ORCA, MRCC, CFour, pySCF, Dice, DMRG.
 
 ##############################################################################

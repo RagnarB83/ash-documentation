@@ -75,7 +75,7 @@ The ASH interface allows easy creation of a mixed system like this:
 
 .. code-block:: python
 
-    from ash import *#
+    from ash import *
     from openmmml import MLPotential
 
     pdbfile="relaxbox_NPT_lastframe.pdb"
