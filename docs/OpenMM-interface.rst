@@ -1004,12 +1004,20 @@ See also :doc:`protein_ligand_binding` for a demonstration on using the **small_
 Small molecule solvation
 ######################################
 
+ASH features functions to aid in preparing systems consisting of a small molecule in solvent.
+For the case of water solvent one can use the **solvate_small_molecule** function while for other solvents one 
+can use **insert_solute_into_solvent**
+
+------------------------
+solvate_small_molecule
+------------------------
+
 .. code-block:: python
 
   def solvate_small_molecule(fragment=None, charge=None, mult=None, watermodel=None, solvent_boxdims=[70.0, 70.0, 70.0],
                             xmlfile=None):
 
-ASH also features a function to solvate a small molecule automatically. This also makes use of the Modeller functionality of OpenMM but is a bit simpler.
+This function makes use of the Modeller functionality of OpenMM but is a bit simpler.
 It requires reading an ASH fragment, selection of a water model and an XML-file containing the small-molecule forcefield.
 The XML-file can come from either **write_nonbonded_FF_for_ligand** or **small_molecule_parameterizer**
 The size of the solvent box can be modified as required (default 70x70x70 Angstrom).
@@ -1061,3 +1069,48 @@ but would have to be performed in the same script as **solvate_small_molecule**
 
 The OpenMMTheory object can then be used on its own or can be combined with a QM theory to define a QM/MM theory object etc.
 See :doc:`Explicit-solvation` workflow for more information on how to use **solvate_small_molecule** in a multi-step workflow.
+
+
+-------------------------------
+insert_solute_into_solvent
+-------------------------------
+
+.. code-block:: python
+
+  def insert_solute_into_solvent(solute=None, solvent=None, scale=1.0, tol=0.4, write_pdb=False,
+                                       solute_pdb=None, solvent_pdb=None, outputname="solution.pdb"):
+
+The **insert_solute_into_solvent** function works a bit differently.
+First, a solvent simulation box needs to be prepared, this is best done using the interface to the Packmol program, 
+see :doc:`helper_programs`. It may also make sense to run classical simulations on this box so that the solvent box is pre-equilibrated.
+
+Next one uses the **insert_solute_into_solvent** function to overlay the solute geometry and solvent geometry so that the solute ends up in the center of the box.
+Clashing solvent molecules are deleted. To control how many solvent molecules are deleted one can tweak the *tol* keyword
+which defines the connectivity (used here to determine whether solute and solvent are close enough that they should be considered bonded).
+See `connectivity information <https://ash.readthedocs.io/en/latest/coordinate-input.html#calculate-connectivity-of-fragment-object>`_
+
+One can read in ASH fragments for solute and solvent to the function which will print out a final XYZ-file containing the coordinates
+of the new solution system. However, it is usually preferable to instead read in PDB-files of the solute and solvent so that the function
+can create a new PDB-file of the whole solution system which will be used both as initial coordinates but also to define the topology of the new solution system.
+
+See example below.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Solvent PDB-file and XML-file defining solvent forcefield
+  solvent_pdbfile="relaxbox_NPT_lastframe.pdb"
+  solvent_xmlfile="MOL_F57D69.xml"
+
+  #Solute PDB-file and XML-file
+  solute_pdbfile="solute.pdb"
+  solute_xmlfile="solute.xml"
+
+  #Inserting solute into solution and get new solution fragment
+  solution = insert_solute_into_solvent(solvent_pdb=solvent_pdbfile, solute_pdb=solute_pdbfile,
+              write_pdb=True)
+
+  #Creating OpenMMTheory object for solution
+  omm = OpenMMTheory(pdbfile="solution.pdb", xmlfiles=[solvent_xmlfile,solute_xmlfile], constraints=[[0,1]],
+    platform="OpenCL", periodic=True, periodic_cell_dimensions=[50.0,50.0,50.0, 90.0,90.0,90.0])
