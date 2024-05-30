@@ -148,10 +148,10 @@ CHARMM example
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
 
     #Read coordinates from either an XYZ-file, a PDB-file, or an ASH-file (.ygg)
-    frag = Fragment(xyzfile="system.xyz", conncalc=False)
-    #frag = Fragment(pdbfile="system.pdb", conncalc=False)
-    #frag = Fragment(fragfile="system.ygg", conncalc=False)
-    #frag = Fragment(chemshellfile="system.c", conncalc=False)
+    frag = Fragment(xyzfile="system.xyz")
+    #frag = Fragment(pdbfile="system.pdb")
+    #frag = Fragment(fragfile="system.ygg")
+    #frag = Fragment(chemshellfile="system.c")
 
     #Creating OpenMMobject using CHARMM forcefield files
     #Note: Here we need to turn autoconstraints and rigidwater constraints off.
@@ -258,7 +258,7 @@ CHARMM example
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
 
     #Read coordinates from either an XYZ-file, a PDB-file, or an ASH-file (.ygg)
-    frag = Fragment(xyzfile="system.xyz", conncalc=False)
+    frag = Fragment(xyzfile="system.xyz")
 
     #Creating OpenMMobject using CHARMM forcefield files
     #Note: Here we need to turn autoconstraints and rigidwater constraints off.
@@ -384,7 +384,7 @@ For completeness, the inputfile for a QM/MM geometry optimization should look so
     psffile=forcefielddir+"new-XPLOR-psffile.psf"
 
     #Read coordinates from either an XYZ-file, a PDB-file, or an ASH-file (.ygg)
-    frag = Fragment(xyzfile="system.xyz", conncalc=False)
+    frag = Fragment(xyzfile="system.xyz")
 
     #Creating OpenMMobject using CHARMM forcefield files
     #Note: Here we need to turn autoconstraints and rigidwater constraints off.
@@ -566,10 +566,10 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
 
 .. code-block:: python
 
-    fragA = Fragment(xyzfile="minA.xyz", conncalc=False)
-    fragB = Fragment(xyzfile="minB.xyz", conncalc=False)
+    fragA = Fragment(xyzfile="minA.xyz")
+    fragB = Fragment(xyzfile="minB.xyz")
     #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
-    Saddlepoint = interface_knarr.NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
+    Saddlepoint = NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
         ActiveRegion=True, actatoms=qmatomslist, idpp_maxiter=800)
     Saddlepoint.print_system(filename='saddlepoint.ygg')
 

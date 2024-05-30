@@ -463,7 +463,7 @@ Example:
 
     #Defining fragment
     xyzfile=forcefielddir+"file.xyz"
-    frag = Fragment(xyzfile=xyzfile, conncalc=False)
+    frag = Fragment(xyzfile=xyzfile)
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
@@ -497,7 +497,7 @@ General X-H constraints and deuterium-mass example:
 
     #Defining fragment
     xyzfile=forcefielddir+"file.xyz"
-    frag = Fragment(xyzfile=xyzfile, conncalc=False)
+    frag = Fragment(xyzfile=xyzfile)
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,
@@ -598,7 +598,7 @@ Example:
 
     #Defining fragment
     xyzfile=forcefielddir+"file.xyz"
-    frag = Fragment(xyzfile=xyzfile, conncalc=False)
+    frag = Fragment(xyzfile=xyzfile)
 
     #Defining OpenMM theory object: CHARMM forcefield with periodic boundary conditions
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,

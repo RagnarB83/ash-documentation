@@ -604,7 +604,6 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
 .. code-block:: python
 
     from ash import *
-    import interface_knarr
 
     numcores=8
     #Read in reactant and product file, previously optimized.
@@ -625,10 +624,10 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
         qmatoms=Centralmainfrag, charges=Reactant.atomcharges, embedding='Elstat', numcores=numcores)
 
     #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
-    Saddlepoint = interface_knarr.NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
+    Saddlepoint = NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
         ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1)
 
-We import interface_knarr and then call interface_knarr.NEB function. It requires the keyword arguments reactant, product, theory at minimum.
+We call the NEB function. It requires the keyword arguments reactant, product, theory at minimum.
 Number of images should typically be specified (default is 6) and CI=True (for NEB-CI) or CI=False (for plain NEB).
 ActiveRegion keyword should be set to True and actatoms set (typically same as QM-region, can not be larger).
 NEB-CI will return a fragment object for the saddlepoint (if saddlepoint optimization succeeds), here it is named as Saddlepoint.
