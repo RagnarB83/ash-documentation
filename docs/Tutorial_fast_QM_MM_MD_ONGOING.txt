@@ -307,8 +307,8 @@ QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per times
  ODM2 or ODM3                         X                                  X
  GFN1-xTB (1 CPU)             6551                               0.655
  GFN1-xTB (8 CPUs)            7194                                  X
- GFN2-XTB                     X                                  X
- GFN0-XTB                     X                                  X
+ GFN2-XTB  (1 CPU)                    5454                                  0.545
+GFN2-XTB  (8 CPU)                    5454                                  0.545
 ===================  ================================ ================================
 
 As we can see, going from pure MM to the fastest semi-empirical QM/MM results in a major drop in speed of simulation (~X times slower). 
@@ -344,7 +344,7 @@ We first consider the "3c composite" methods from the Grimme research group (HF-
 These are HF or DFT methods with an accompanying small basis set and featuring some corrections (dispersion, basis set correction). 
 These methods are designed to be fast (enabled by a small tailored basis set) and accurate (achieved by the corrections).
 These methods have perhaps a minor semi-empirical component, however, they do not make any approximations to the 2-electron integrals (like MNDO and xTB) and 
-can thus be expected to be more accurate and also more expensive.
+can thus be expected to be more accurate and robust but also considerably more expensive than traditional semiempirical methods.
 All the "3c composite" methods are available in the ORCA program and we will use the ORCA interface in ASH to run these simulations.
 
 .. code-block:: python
@@ -355,16 +355,19 @@ All the "3c composite" methods are available in the ORCA program and we will use
 =========================  ================================ ================================
 QM-method                       Time (sec) (for 10 ps)        Ave. time (sec) per timestep
 =========================  ================================ ================================
- ORCA-HF-3c   (1 CPU)                       X                               X
- ORCA-HF-3c   (16 CPU)                 62922                               6.29
- ORCA-B97-3c (1 CPU)
- ORCA-r2SCAN-3c (1 CPU)                         X                               X
- CP2K-PBEh-3c (1 CPU)
+ ORCA5-HF-3c   (10 CPU)                 49848                               4.98
+ ORCA5-B97-3c (10 CPU)                  164402                              16.4
+ ORCA5-r2SCAN-3c (10 CPU)                185043                               18.5
+ ORCA5-PBEh-3c (10 CPU)
 =========================  ================================ ================================
 
+The results show that there is a considerably time-penalty per timestep now when running these "low-cost" QM calculations.
+Using 10 CPU cores the cheapest HF-3c method has each timestep taking 5 seconds and the cheapest DFT-method taking 16 seconds.
 
-If the "3c composite" methods are not a good option for some reason we can of course also simply utilize regular DFT methods, 
-perhaps employing a DFT protocol that is known to be a good compromisite between speed and accuracy.
+NOTE ON PARALLELIZATION
+
+If the "3c composite" methods are not a good option for some reason we can of course also utilize regular DFT methods, 
+perhaps employing a DFT protocol that is known to be a good compromise between speed and accuracy (often system-dependent).
 DFT programs come in many flavors and can roughly be grouped into programs that utilize local Gaussian-basis sets (e.g. ORCA, Gaussian, NWChem, Q-Chem, Molpro, Psi4 etc.) 
 and programs that utilize plane-wave basis sets (e.g. CP2K, VASP, Quantum Espresso etc.).
 The advantage of ASH is that we can in principle choose any of these programs and run them in a QM/MM simulation.
@@ -389,18 +392,15 @@ QM-method                       Time (sec) (for 10 ps)        Ave. time (sec) pe
 The HF exchange integrals in hybrid-DFT typically dominates the cost of a hybrid-DFT calculation and this makes
 hybrid-DFT ill-suited for dynamics studies as each timestep simply will be too expensive too compute.
 
-However, hybrid-DFT is nevertheless typically the more accurate flavor of DFT and for some systems, 
-hybrid-DFT may be necessary for a correct description.
+However, hybrid-DFT is nevertheless typically the more accurate flavor of DFT (with exceptions) and for some systems, 
+hybrid-DFT may be necessary for even a qualitatively correct description.
 We here discuss options for running efficient hybrid-DFT QM/MM simulations.
 
 ORCA RIJONX 
 ORCA RIJK 
 ORCA-RIJCOSX, 
 CP2K
-Turbmole ?
-
-
-TODO : Truncated PC gradient approximation
+Turbomole ?
 
 ################################################################################
 5. Lysozyme: QM/MM MD using GPU-based DFT-programs

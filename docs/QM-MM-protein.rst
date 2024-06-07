@@ -571,7 +571,6 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
     #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
     Saddlepoint = NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
         ActiveRegion=True, actatoms=qmatomslist, idpp_maxiter=800)
-    Saddlepoint.print_system(filename='saddlepoint.ygg')
 
 
 ####################################################################
