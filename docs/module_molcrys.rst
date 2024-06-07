@@ -623,14 +623,15 @@ While the input for a NEB calculation, basically follows the example in :doc:`jo
     QMMM_xtb = QMMMTheory(qm_theory=xtbcalc, mm_theory=MMpart, fragment=Reactant, actatoms=Centralmainfrag,
         qmatoms=Centralmainfrag, charges=Reactant.atomcharges, embedding='Elstat', numcores=numcores)
 
-    #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
-    Saddlepoint = NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
+    #NEB-CI job. Final saddlepoint structure stored in ASH result object (as saddlepoint_fragment attribute)
+    NEB_result = NEB(reactant=Reactant, product=Product, theory=QMMM_xtb, images=10, CI=True,
         ActiveRegion=True, actatoms=Centralmainfrag, charge=0, mult=1)
+    print(NEB_result)
 
 We call the NEB function. It requires the keyword arguments reactant, product, theory at minimum.
 Number of images should typically be specified (default is 6) and CI=True (for NEB-CI) or CI=False (for plain NEB).
 ActiveRegion keyword should be set to True and actatoms set (typically same as QM-region, can not be larger).
-NEB-CI will return a fragment object for the saddlepoint (if saddlepoint optimization succeeds), here it is named as Saddlepoint.
+NEB-CI will return an ASH Result object (here called NEB_result) and the saddlepoint fragment object can be  accessed like this: NEB_result.saddlepoint_fragment
 
 **3. Visualizing the minimum energy path and saddlepoint mode.**
 
@@ -652,7 +653,7 @@ Total energies of all images of minimum energy path are found in file: knarr.ene
 For a converged CI-NEB job, the highest energy image of the minimum energy path is the energy of the saddlepoint.
 It is found in both knarr.energy, outputfile, header line of knarr_saddle.xyz, Saddlepoint-optimized.ygg, Saddlepoint-optimized.xyz
 
-Ash fragment file for saddlepoint (full coordinates):
+ASH fragment file for saddlepoint (full coordinates):
 Saddlepoint-optimized.ygg
 
 

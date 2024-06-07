@@ -568,8 +568,8 @@ Or a nudged-elastic band job in order to find a minimum energy path and saddlepo
 
     fragA = Fragment(xyzfile="minA.xyz")
     fragB = Fragment(xyzfile="minB.xyz")
-    #NEB-CI job. Final saddlepoint structure stored in new object "Saddlepoint"
-    Saddlepoint = NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
+    #NEB-CI job. Final saddlepoint structure stored in ASH result object (accessed via NEB_result.saddlepoint_fragment)
+    NEB_result = NEB(reactant=fragA, product=fragB, theory=qmmmobject, images=10, CI=True,
         ActiveRegion=True, actatoms=qmatomslist, idpp_maxiter=800)
 
 

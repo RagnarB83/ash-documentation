@@ -161,7 +161,7 @@ Recommendations and how to use
 - It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess.
 - If you already know approximately what the saddlepoint geometry should look like you can provide such a geometry using the TS_guess_file option. The geometry will be used during the interpolation to provide a more accurate guess path. This could also be a previously obtained saddlepoint at another level of theory.
 - In rare cases the IDPP interpolation goes wrong, you can either 1) try modify the idpp_springconst value or 2) switch to a simpler linear Cartesian interpolation (interpolation="linear" option) instead, perhaps in combination with a TS_guess_file (guides the linear interpolation).
-- If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job. NEB returns an ASH Fragment of the saddlepoint geometry as well as an XYZ-file.
+- If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job. NEB returns an ASH Fragment inside the ASH-Results object (saddlepoint_fragment attibute) of the saddlepoint geometry as well as an XYZ-file.
 - Any ASH Theory level can in principle be used (although only ORCA and xTB have been tested). In practice you want to use a QM method and code with an analytical gradient available.
 
 
@@ -186,11 +186,13 @@ Examples
     #Theory to use for NEB. Setting number of cores for xTB.
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=8)
+    #Run NEB to find saddlepoint. Returns ASH Results object.
+    #Note: the saddlepoint fragment
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=8)
+    print(NEB_result) #Printout of the NEB_result object
 
     #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
-    NumFreq(theory=xtbcalc, fragment=SP)
+    NumFreq(theory=xtbcalc, fragment=NEB_result.saddlepoint_fragment)
 
 
 **Restarting a calculation with user-defined path-file.**
@@ -215,8 +217,8 @@ The file can come from a previously unconverged NEB calculation or perhaps a con
     #Theory to use for NEB
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, restart_file="knarr_MEP.xyz")
+    #Run NEB to find saddlepoint. Returns an ASH Results object 
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, restart_file="knarr_MEP.xyz")
 
 
 **A calculation with user-defined guess for the saddlepoint.**
@@ -239,8 +241,9 @@ Here, using the *TS_guess_file* option. This will influence the initial interpol
     #Theory to use for NEB
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library')
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, TS_guess_file="guess_TS_geometry.xyz")
+    #Run NEB to find saddlepoint. Returns an ASH Results object 
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, TS_guess_file="guess_TS_geometry.xyz")
+    print(NEB_result)
 
 ################################################################################
 Controlling printout
@@ -257,8 +260,9 @@ Example:
 
 .. code-block:: python
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, printlevel=1)
+    #Run NEB to find saddlepoint. Returns an ASH Results object (NEB_result.saddlepoint_fragment is the saddlepoint ASH Fragment).
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, printlevel=1)
+    print(NEB_result)
 
 ################################################################################
 Controlling guess orbitals during SCF of Theory level
@@ -300,7 +304,8 @@ This is probably unlikely to be useful though.
   #Calculator object without frag
   calc = ORCATheory(orcasimpleinput="!r2scan-3c tightscf CPCM", numcores=numcores, moreadfile="test.gbw")
 
-  SP = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0)
+  NEB_result = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0)
+  print(NEB_result)
 
 **2. Reading in guess orbitals for each image separately from a directory (ORCATheory):**
 
@@ -328,7 +333,8 @@ directory by your job-submission script.
   #Calculator object without frag
   calc = ORCATheory(orcasimpleinput="!r2scan-3c tightscf CPCM", numcores=numcores)
 
-  SP = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0, mofilesdir="/home/bjornsson/NEBjob1/mofiles_dir")
+  NEB_result = NEB(reactant=Reactant, product=Product, theory=calc, images=10, printlevel=0, mofilesdir="/home/bjornsson/NEBjob1/mofiles_dir")
+  print(NEB_result)
 
 ################################################################################
 Controlling convergence
@@ -417,11 +423,12 @@ If you are calculating 8 images then you should set runmode='parallel' and use n
     #Theory to use for NEB
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numcores)
+    #Run NEB to find saddlepoint. Returns an ASH Results object
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numcores)
+    print(NEB_result)
 
     #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
-    NumFreq(theory=xtbcalc, fragment=SP)
+    NumFreq(theory=xtbcalc, fragment=NEB_result.saddlepoint_fragment)
 
 If you have additional CPU cores available on your computing node that you would like to use to speed up an NEB job you have 2 options:
 
@@ -450,11 +457,12 @@ This job requires 16 available CPU cores.
     #Theory to use for NEB. Parallelizing
     xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=cores_theory)
 
-    #Run NEB to find saddlepoint. Returns saddlepoint as ASH fragment
-    SP = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numimages)
+    #Run NEB to find saddlepoint. Returns an ASH Results object
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numimages)
+    print(NEB_result)
 
-    #Optional NumFreq job on saddlepoint to confirm that a saddlepoint was found.
-    NumFreq(theory=xtbcalc, fragment=SP)
+    #Optional NumFreq job on the NEB saddlepoint to confirm that a saddlepoint was found.
+    NumFreq(theory=xtbcalc, fragment=NEB_result.saddlepoint_fragment)
 
 
 
@@ -473,10 +481,6 @@ but then use the approximate saddlepoint geometry to start an eigenvector-follow
 but can also ensure that a proper 1st-order saddlepoint is located via the use of exact/approximate Hessian information.
 
 In a NEB-TS job in ASH, the Knarr library is used to perform a CI-NEB calculation while the geomeTRIC library is used to perform the eigenvector-following optimization. 
-
-.. note:: Saddlepoint/TS optimizations are currently only available with the development version of geomeTRIC. The dev version be installed like this: "conda install -c veloxchem geometric".
-  This will change with the 1.0 release of geomeTRIC.
-
 
 The NEBTS function is very similar to the NEB function:
 
@@ -533,7 +537,8 @@ If this option fails: 'first' will calculate an exact Hessian in the first step.
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
     #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
-    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0, hessian_for_TS='xtb')
+    NEBTS_result = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0, hessian_for_TS='xtb')
+    print(NEBTS_result)
 
 
 Parallelization of a **NEBTS** job can be controlled by the *numcores* keyword and for the CI-NEB part it will behave like in the **NEB** function.
@@ -556,4 +561,5 @@ This maximizes use of CPU cores during the job.
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf", numcores=cores_theory) #ORCATheory object creation
 
     #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
-    SP = NEBTS(reactant=Reactant, product=Product, theory=calc, numcores=numimages, images=numimages, printlevel=0, hessian_for_TS='xtb')
+    NEBTS_result = NEBTS(reactant=Reactant, product=Product, theory=calc, numcores=numimages, images=numimages, printlevel=0, hessian_for_TS='xtb')
+    print(NEBTS_result)
