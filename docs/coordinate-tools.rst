@@ -271,64 +271,97 @@ There are two options:
 Working with PDB files
 ###########################
 
-WARNING: PDB files are convenient for visualization purposes and for initial reading in of coordinates but are
+WARNING: PDB files are convenient for visualization purposes and for initial reading the initial set of coordinates but are
 generally not a file format to be used (one problem is the limited number of significant digits used
-for coordinates).
+for coordinates in the file).
 
-**Reading in PDB file**
+----------------------
+Reading in PDB file
+----------------------
 
 It is possible to read in coordinates from a PDB file to create an ASH fragment file.
 This functionality is very basic, it will only read in the coordinates, not atom-types
-or residue information. Atomtypes and residue information can be read-in via a PSF-file
-by OpenMMTheory (see :doc:`MM-interfaces`).
-
-This option should thus only be used to provide convenient starting coordinates.
+or residue information. This option is thus only be used to provide convenient starting coordinates.
 
 .. code-block:: python
 
     pdbfrag = Fragment(pdbfile="mol.pdb")
 
-**Writing out PDB file**
+Note that OpenMMTheory objects (see :doc:`OpenMM-interface`) also have a pdbfile option, however, this 
+option is primarily used for reading in topology information (residue information, atom types etc) and not for coordinates.
 
-If you have an ASH fragment file created (loaded into memory), you can request to write out a PDB-file from it via the write_pdbfile function.
+----------------------
+Writing out PDB file
+----------------------
+
+ASH contains a few different options for writing out PDB-files which can be useful for visualization purposes etc.
+
+**Fragment.write_pdbfile_openmm**: 
+
+This writes out a PDB-file from an ASH fragment, using either topology and residue information that was read from original PDB-file.
+If latter is not present(e.g. if an XYZ-file was read-in), a basic topology is automatically defined.
+Routines from OpenMM library are used to read PDB-topology and write out the PDB-file.
+
+.. code-block:: python
+    #Initial fragment from a PDB-file
+    frag = Fragment(pdbfile="initial.pdb")
+    #Define theory
+    theory = xTBTheory()
+    #Geometry optimization, results in updated optimized coordinates in frag object
+    Optimizer(theory=theory, fragment=frag)
+    #Writing out PDB-file with optimized coordinates. Topology and residue information is reused (from initial.pdb)
+    #Note: if a PDB-file was not used to create the fragment, basic topology and residue information will be guessed
+    frag.write_pdbfile_openmm(filename="optimized.pdb")
+
+
+**OpenMMTheory.write_pdbfile**: This is a method of the OpenMMTheory object that writes out a PDB-file based on coordinates, residue and atom information present in the OpenMMTheory object.
+
+.. code-block:: python
+
+    #omm is a predefined OpenMMTheory object
+    omm.write_pdbfile(outputname="ASHfragment")
+
+.. warning:: Make sure the OpenMMTheory object contains the desired coordinates.
+
+**write_pdbfile_openMM**: 
+
+Standalone function writing a PDB-file based on input OpenMM topology, positions and optionally connectivity information.
+Uses OpenMM-library PDB-writing routines (usually pretty robust).
+
+.. code-block:: python
+
+    def write_pdbfile_openMM(topology, positions, filename, connectivity_dict=None):
+
+
+**write_pdbfile**: 
+
+This is a standalone flexible function that writes out a PDB-file based on an ASH fragment and other optional data.
 
 .. code-block:: python
 
     def write_pdbfile(fragment,outputname="ASHfragment", openmmobject=None, atomnames=None,
                     resnames=None,residlabels=None,segmentlabels=None):
 
-An ASH fragment file needs to always be provided, and then optionally the outputname ("ASHfragment.pdb" will be created by default).
 
-
-- Example 1 (dummy):
+An ASH fragment file needs to always be provided.
 
 .. code-block:: python
 
+    #Example 1 (no residue information provided)
+    #All residues will be labelled 'DUM' and segments 'SEG', element information should be correct.
     write_pdbfile(frag)
-
-This will give you a PDB-file with the coordinates taken from inside the ASH fragment (here called frag) but without residue information (since none was provided).
-All residues will be labelled 'DUM' and segments 'SEG', element information should be correct.
-
-- Example 2 (manual correct specification):
-
-.. code-block:: python
-
+    #Example 2 (residue information provided manually, via information from OpenMMTheory object)
     openmmobject = OpenMMTheory(psffile=psffile, CHARMMfiles=True, charmmtopfile=topfile,charmmprmfile=parfile,
                     printlevel=1, platform='CPU' )
     write_pdbfile(frag, outputname="manual", atomnames=openmmobject.atomnames, resnames=openmmobject.resnames,
         residlabels=openmmobject.resids,segmentlabels=openmmobject.segmentnames)
-
-Here the residue information is provided via keyword arguments and the information taken from an ASH OpenMMTheory object, previously created.
-The residue information is present in openmmobject as it was read from the CHARMM PSF-file.
-Could also be done completely manually if desired.
-
-- Example 3 (simple and recommended way):
-
-.. code-block:: python
-
+    #Example 3: usually best way. Information taken from OpenMMTheoryobject
+    #Note: the atomnames column differs from conventional CHARMM usage. Instead OpenMM atomnames are used. Should not matter too much.
     write_pdbfile(frag, outputname="simple",openmmobject=openmmobject)
 
-Here an ASH openMMtheory object is provided to the function (defined like before) and the function will grab the information from it. It should then print a correct PDB-file with the residue, atom and segment information from the ASH OpenMM object. Note: all of this information is currently provided from the CHARMM PSF-file that is read into the ASH openMMtheory object
-Note: the atomnames column differs from conventional CHARMM usage. Instead OpenMM atomnames are used. Should not matter too much.
 
-Note: Only use PDB-files for basic visualization, when you want to be able to visualize the system and use the reside information etc in VMD to be able to select residues. PDB-file is not a good format for other things. We for example do not want to use it as a file format in general because the format only supports a limited number of decimal points for coordinates.
+.. warning:: While this function is flexible it does not always write out PDB-file that is compatible with all visualization programs. 
+
+
+
+

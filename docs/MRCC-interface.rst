@@ -96,7 +96,7 @@ Examples
     from ash import *
 
     #Add coordinates to fragment
-    HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1)
+    frag=Fragment(databasefile="hf.xyz", charge=0, mult=1)
 
     #Defining MRCCTheory object
     mrccinput="""

@@ -346,7 +346,7 @@ Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_V
     frag=Fragment(xyzfile="h2o.xyz",charge=0, mult=1)
     xtbcalc=xTBTheory(xtbmethod='GFN1')
 
-    geomeTRICOptimizer(theory=xtbcalc, fragment=frag, convergence_setting='GAU_TIGHT')
+    Optimizer(theory=xtbcalc, fragment=frag, convergence_setting='GAU_TIGHT')
 
 *Example: Setting convergence criteria manually:*
 
@@ -359,7 +359,7 @@ Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_V
 
     conv_criteria_dict = {'convergence_energy' : 1e-6, 'convergence_grms' : 1e-5, 'convergence_gmax' : 1.5e-5, 
         'convergence_drms' : 4.0e-5, 'convergence_dmax' : 6.0e-5, 'convergence_cmax' : 1.0e-1 }
-    geomeTRICOptimizer(theory=xtbcalc, fragment=frag, conv_criteria=conv_criteria_dict)
+    Optimizer(theory=xtbcalc, fragment=frag, conv_criteria=conv_criteria_dict)
 
 
 geomeTRIC handles constraints a little different than many codes and the constraints are not fully enforced until the end of the constrained optimization.

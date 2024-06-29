@@ -738,7 +738,7 @@ See :doc:`Geometry-optimization` for information on the Optimizer function.
 
 
 This optimization should converge in about 13 optimization steps.
-geomeTRICOptimizer writes out 2 trajectory files that can be visualized: geometric_OPTtraj.xyz (active-region only) geometric_OPTtraj_Full.xyz (full system) using e.g VMD:
+Optimizer writes out 2 trajectory files that can be visualized: geometric_OPTtraj.xyz (active-region only) geometric_OPTtraj_Full.xyz (full system) using e.g VMD:
 See :doc:`Geometry-optimization`
 
 .. code-block:: text
@@ -878,6 +878,6 @@ The number of optimization cycles may be especially large since we are minimizin
     waterconstraints = {'bond': waterconlist}
 
     #Calling geomeTRICOptimizer with defined constraints
-    geomeTRICOptimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints,
+    Optimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=actatoms, maxiter=200, constraints=waterconstraints,
         charge=-1, mult=6)
 

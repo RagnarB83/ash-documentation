@@ -105,7 +105,7 @@ This will also add the Numpy and geometric dependency.
     #Install the NEW (development) branch of ASH. Approx. 390 MB
     python -m pip install git+https://github.com/RagnarB83/ash.git@NEW
 
-*Option 2:* (if you want to help develop ASH. Don't use if you already did Option 1).
+*Option 2:* (if you want to help develop ASH).
 
 Download ASH from Github and set PYTHONPATH.
 (Don't do this if you did Option 1 above!)
@@ -119,7 +119,7 @@ Download ASH from Github and set PYTHONPATH.
     export PYTHONPATH=/path/to/ash:$PYTHONPATH   (where /path/to/ash is the directory containing README.md)
 
 
-Test ASH immediately by launching: 
+After that (either Option 1 or 2 above), you can test ASH immediately by launching: 
 
 .. code-block:: shell
     
@@ -149,14 +149,16 @@ C. Semi-Automatic Miniconda setup (recommended)
 
 This is the recommended way for a fully functioning ASH. 
 Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/mamba).
-If you already completed section A and B above, you can skip ahead to step 5.
+If you already completed section A and B above, and the Miniforge/Miniconda environment is loaded, 
+you can skip ahead to step 5.
 
 1. Install Miniforge or Miniconda (see section A above).  Install it in a location where your user has access (e.g. your home-directory)
-2. Create new environment (recommended): **mamba create --name ASH** (you can also use conda)
-3. Load environment: **mamba activate ASH** #IMPORTANT
-4. python -m pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your environment
+2. Create new environment named e.g. ASH (recommended): **mamba create --name ASH** (you can also use conda)
+3. Load the environment: **mamba activate ASH** #IMPORTANT
+4. python -m pip install git+https://github.com/RagnarB83/ash.git #This installs ASH in your Python environment (inside ~/miniforge3 directory or equivalent)
 5. Install some of the desired packages listed in: `ASH-packages.sh <https://github.com/RagnarB83/ash/blob/master/ASH-packages.sh>`_ (inside ASH source code directory) via conda or pip.
    You can always come back to this step (just remember to do **mamba activate ASH** first).
+   OpenMM is the most important recommended package (required for MM, QM/MM and MD in ASH).
 
 Test ASH immediately (with **mamba activate ASH**  activated) by launching in the same shell session: **python**  and then do: 
 
@@ -177,7 +179,7 @@ See :doc:`basics` for information on how to use ASH, including how to submit ASH
 
 Only if molecular crystal QM/MM feature is needed:
 
-- Optional: Make sure the Python-Julia interface works (only needed for MolCrys QM/MM functionality). PythonCall/JuliaCall is recommended. See section F for problems.
+- Optional: Make sure the Python-Julia interface works (only needed for Molcrys QM/MM functionality). PythonCall/JuliaCall is recommended. See section F for problems.
 
 
 #########################################
@@ -240,7 +242,7 @@ first-ash-job.py:
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput)
 
     #Geometry optimization
-    geomeTRICOptimizer(fragment=H2O, theory=ORCAcalc, coordsystem='tric')
+    Optimizer(fragment=H2O, theory=ORCAcalc, coordsystem='tric')
 
 This will only work if ORCA is available in the shell session. It is usually best to add PATH and LD_LIBRARY_PATH definitions for ORCA to your *~/set_environment_ash.sh* file.
 

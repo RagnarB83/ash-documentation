@@ -81,7 +81,7 @@ To save the output it is better to redirect the output to a file.
     python3 ashtest.py >& ashtest.out
 
 For a really long job you would typically submit a jobscript to a queuing system instead.
-See discussion about the **`subash <https://github.com/RagnarB83/ash/raw/master/scripts/subash.sh>`_** submission script
+See discussion about the `subash <https://github.com/RagnarB83/ash/raw/master/scripts/subash.sh>`_ submission script
 at the bottom of this page.
 
 #####################################################

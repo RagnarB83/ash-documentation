@@ -112,7 +112,7 @@ Geometry optimization example using GFN1-xTB and DFT:
     dualcalc = DualTheory(theory1=xtb, theory2=orca, update_freq=15)
 
     #Calling the Optimizer function using the DualTheory object
-    geomeTRICOptimizer(theory=dualcalc, fragment=frag, maxiter=250)
+    Optimizer(theory=dualcalc, fragment=frag, maxiter=250)
 
 
 ----------------------------------------------------------------------

@@ -335,7 +335,7 @@ The files for this example are available in the `examples/QM-MM-examples/QM-MM-O
     print("Single-point QM/MM energy:", result.energy)
 
     #Geometry optimization of QM/MM object (this may not converge)
-    result2 = geomeTRICOptimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8], charge=0, mult=1)
+    result2 = Optimizer(fragment=H2O_MeOH, theory=QMMMobject, coordsystem='tric', ActiveRegion=True, actatoms=[3,4,5,6,7,8], charge=0, mult=1)
     print("Optimized QM/MM energy:", result2.energy)
 
 
@@ -391,7 +391,7 @@ The files for this example (DHFR protein) are available in the `examples/QM-MM-e
                           fragment=frag, embedding="Elstat", qmatoms=qmatoms)
 
   #Run geometry optimization using geomeTRIC optimizer and HDLC coordinates. Using active region.
-  geomeTRICOptimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
+  Optimizer(theory=qmmmobject, fragment=frag, ActiveRegion=True, actatoms=actatoms,
                       maxiter=500, coordsystem='hdlc', charge=0,mult=1)
 
 

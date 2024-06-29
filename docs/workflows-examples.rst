@@ -57,7 +57,7 @@ But you could of course also write this kind of simple workflow manually, allowi
     ORCAcalc = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf", orcablocks="", numcores=numcores)
 
     #Geometry optimization of molecule and ORCAcalc theory object.
-    geomeTRICOptimizer(theory=ORCAcalc,fragment=molecule)
+    Optimizer(theory=ORCAcalc,fragment=molecule)
 
     #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.
     thermochem = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
@@ -606,7 +606,7 @@ Such an example can be written in ASH like this in a rather verbose manner:
     for index,conformer in enumerate(list_conformer_frags):
         print("")
         print("Performing DFT Geometry Optimization for Conformer ", index)
-        geomeTRICOptimizer(fragment=conformer, theory=MLORCATheory, coordsystem='tric', charge=charge, mult=mult)
+        Optimizer(fragment=conformer, theory=MLORCATheory, coordsystem='tric', charge=charge, mult=mult)
         DFT_energies.append(conformer.energy)
         #Saving ASH fragment and XYZ file for each DFT-optimized conformer
         os.rename('Fragment-optimized.ygg', 'Conformer{}_DFT.ygg'.format(index))
