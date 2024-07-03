@@ -155,6 +155,34 @@ If you are unsure what the Results object contains you can simply print it out a
   [-6.66989696e-10 -3.31567055e-09  9.24960145e-01]]
   
 
+**Using ASH_Results object:**
+
+The ASH_results object can also be used for your own workflows
+
+.. code-block:: python
+
+  result = ASH_Results(label="MyLabel", energy=-100.354499689476)
+
+**Writing ASH_Results object to disk:**
+
+You can write the ASH_Results object to disk using a JSON format. Note that ASH usually does this automatically for all major jobtypes
+
+.. code-block:: python
+
+  result = ASH_Results(label="MyWorkflow", energy=-100.354499689476)
+  result.write_to_disk(filename="ASH_myworkflow.result")
+
+**Reading ASH_Results file :**
+
+You can also read a previously written ASH_Results file back into a ASH_Results dataclass object.
+This is a convenient option for reusing results from previous calculations.
+
+.. code-block:: python
+
+  result = ASH_Results(label="MyWorkflow", energy=-100.354499689476)
+  result.write_to_disk(filename="ASH_myworkflow.result")
+  read_result = read_results_from_file(filename="ASH_myworkflow.result")
+
 
 ###########################
 Single-point calculation

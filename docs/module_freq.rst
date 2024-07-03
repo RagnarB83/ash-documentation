@@ -414,3 +414,67 @@ providing the frequencies and intensities from the Results object as x- and y-va
 .. image:: figures/IR_spectrum_acetone.png
    :align: center
    :width: 600
+
+
+#########################################
+Modifying masses 
+#########################################
+
+If specific masses (isotopes) are wanted when calculating vibrational frequencies, then this can be done by providing a list of masses (hessatoms_masses keyword) to the **NumFreq** function.
+If you have already performed a NumFreq calculation and want to see the effect of mass-change/isotope substitution then this can be performed by reading in the ASH_Results object from a file,
+grabbing the data needed, changing masses and then re-diagonalize a Hessian with new masses.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag = Fragment(databasefile="h2o.xyz")
+
+  #Assuming previous calculation run like the commented-out lines below
+  #theory = PySCFTheory(scf_type="RHF",basis="def2-SVP", printlevel=1)
+  # NumFreq
+  #result = NumFreq(theory=theory,fragment=frag, Raman=True)
+  #Writing Result object to disk (nowadays default)
+  #result.write_to_disk(filename="ASH.result")
+
+  #Read Result-file from disk (shown as this can be used to avoid repeating the above Numfreq calculation)
+  result = read_results_from_file(filename="ASH_NumFreq.result")
+  print(result)
+
+  #Print the previous masses (for comparison)
+  print("Current Hessian masses:", result.freq_masses)
+
+  #Defining new masses
+  hessmasses= [25.9994, 1.00794, 1.00794]
+
+  #Grabbing previous data from ASH-Results object (Polarizability data can be skipped if not available)
+  hessian=result.hessian
+  hesselems=result.freq_elems
+  hessatoms=result.freq_atoms
+  hesscoords=result.freq_coords
+  TRmodenum=result.freq_TRmodenum
+  projection=result.freq_projection
+  scaling_factor=result.freq_scaling_factor
+  dipole_derivs=result.freq_dipole_derivs
+  polarizability_derivs=result.freq_polarizability_derivs
+  polarizability_derivs = [np.array(i) for i in polarizability_derivs]
+  Raman=result.freq_Raman
+
+  #Diagonalize Hessian
+  frequencies, nmodes, evectors, mode_order = ash.modules.module_freq.diagonalizeHessian(hesscoords,hessian,hessmasses,hesselems,TRmodenum=TRmodenum,projection=projection)
+  print("Diagonalization of frequencies complete")
+  print("Now scaling frequencies by scaling factor:", scaling_factor)
+  frequencies = scaling_factor * np.array(frequencies)
+
+  # IR intensities if dipoles available
+  IR_intens_values = ash.modules.module_freq.calc_IR_Intensities(hessmasses,evectors,dipole_derivs)
+
+  # Raman activities if polarizabilities available
+  Raman_activities, depolarization_ratios = ash.modules.module_freq.calc_Raman_activities(hessmasses,evectors,polarizability_derivs)
+
+  # Print out Freq output.
+  ash.modules.module_freq.printfreqs(frequencies,len(hessatoms),TRmodenum=TRmodenum, intensities=IR_intens_values,
+                Raman_activities=Raman_activities)
+
+  # Print thermochemistry for new vibrational frequencies
+  thermodict = ash.modules.module_freq.thermochemcalc(frequencies,hessatoms, frag, frag.mult)
