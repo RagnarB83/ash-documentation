@@ -434,7 +434,7 @@ grabbing the data needed, changing masses and then re-diagonalize a Hessian with
   #theory = PySCFTheory(scf_type="RHF",basis="def2-SVP", printlevel=1)
   # NumFreq
   #result = NumFreq(theory=theory,fragment=frag, Raman=True)
-  #Writing Result object to disk (nowadays default)
+  #Writing Result object to disk (nowadays this is default)
   #result.write_to_disk(filename="ASH.result")
 
   #Read Result-file from disk (shown as this can be used to avoid repeating the above Numfreq calculation)
@@ -445,7 +445,7 @@ grabbing the data needed, changing masses and then re-diagonalize a Hessian with
   print("Current Hessian masses:", result.freq_masses)
 
   #Defining new masses
-  hessmasses= [25.9994, 1.00794, 1.00794]
+  hessmasses= [18.0, 1.0, 1.0]
 
   #Grabbing previous data from ASH-Results object (Polarizability data can be skipped if not available)
   hessian=result.hessian

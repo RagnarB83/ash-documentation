@@ -131,14 +131,14 @@ After that (either Option 1 or 2 above), you can test ASH immediately by launchi
     from ash import *
     create_ash_env_file()  #This creates a file: set_environment_ash.sh
 
-You can then do the following to activate the ASH environment for future shell sessions:
+You can then do the following to activate the ASH environment for future shell sessions (this is easier than loading conda/mamba environment each time):
 
 .. code-block:: shell
 
     source ~/set_environment_ash.sh 
 
 .. note:: ASH will complain when you try to use features that require additional installations (e.g. OpenMM, julia, etc). You then have to install them via conda/mamba or pip. 
-    Note that OpenMM requires a conda/mamba environment. See below.
+    Note that OpenMM installation requires a conda/mamba environment. See below.
 
 
 See :doc:`basics` for information on how to use ASH, including how to submit ASH jobs to a cluster (e.g. using the **subash** submission script).
@@ -147,8 +147,8 @@ See :doc:`basics` for information on how to use ASH, including how to submit ASH
 C. Semi-Automatic Miniconda setup (recommended)
 *****************************************************
 
-This is the recommended way for a fully functioning ASH. 
-Required if you intend to do MM or QM/MM using the OpenMM package (as OpenMM has to be installed via conda/mamba).
+This is the recommended way for a mostly fully functioning ASH. 
+Required if you intend to do MM, QM/MM or MD (as OpenMM has to be installed via conda/mamba).
 If you already completed section A and B above, and the Miniforge/Miniconda environment is loaded, 
 you can skip ahead to step 5.
 
@@ -177,10 +177,17 @@ See :doc:`basics` for information on how to use ASH, including how to submit ASH
 .. note:: If you want to add packages (using mamba/conda or pip) to your ASH environment (i.e. go back to step 5 above), always make sure you have activated the ASH environment first: **mamba activate ASH**. Otherwise the packages will be added to your base environment instead.
     Do **mamba info --envs** to see your environments and which one is active.
 
-Only if molecular crystal QM/MM feature is needed:
+A Julia-interface is required for the molecular crystal QM/MM feature or for fast execution of NonbondedTheory Coulomb-LJ routines.
+The `PythonCall.jl <https://github.com/JuliaPy/PythonCall.jl>`_ is the only one supported by ASH.
+To install, it is easiest to use the `pyjuliacall <https://anaconda.org/conda-forge/pyjuliacall>`_ conda-forge package (`some info on this package <https://discourse.julialang.org/t/ann-pyjuliacall-and-pyjuliapkg-packaged-on-conda-forge/109849>`_)
 
-- Optional: Make sure the Python-Julia interface works (only needed for Molcrys QM/MM functionality). PythonCall/JuliaCall is recommended. See section F for problems.
+.. code-block:: shell
 
+    mamba install conda-forge::pyjuliacall
+
+.. note:: This package will automatically try to find a Julia installation in path, if not found, it will proceed to download one when first initialized. 
+    If this is not desired or not possible on the computer/cluster, then you can `download and install Julia manually <https://julialang.org/downloads/>`_ , set the necessary environment in your shell-config file and submissions script.
+    An easier solution is to install Julia via conda-forge: `mamba install -c conda-forge julia`
 
 #########################################
 D. Install External Programs

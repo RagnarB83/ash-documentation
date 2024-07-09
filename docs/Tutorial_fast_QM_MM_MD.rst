@@ -1,5 +1,5 @@
 Tutorial: Running fast protein QM/MM MD simulations in ASH
-=========================================================
+==================================================================
 
 In many research projects the question sometimes arises whether it might be feasible to
 perform a long enough MD simulation (and perhaps enhanced sampling MD) of the system at some kind of quantum level of theory. 
@@ -188,7 +188,7 @@ additional procedure during each timestep may strongly affect the performance by
 Here we show how the act of writing the geometry to a trajectory file after each timestep, affects the overall speed.
 Trajectory-writing is always active but the frequency of writing is controlled by the *traj_frequency* keyword.
 If *traj_frequency=1* then we write a frame to trajectory every single step (this is slow would produces very large trajectory files, possibly filling up the scratch),
- while if *traj_frequency=10000* we write to the trajectory every 10000 steps (little cost and smaller files).
+while if *traj_frequency=10000* we write to the trajectory every 10000 steps (little cost and smaller files).
 
 The table below shows that as long as *traj_frequency* is 1000 or larger then no severe speed-penalty is encountered.
 Calculations used Amber forcefield and ran on the GPU(CUDA).

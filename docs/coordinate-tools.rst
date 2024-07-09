@@ -303,6 +303,7 @@ If latter is not present(e.g. if an XYZ-file was read-in), a basic topology is a
 Routines from OpenMM library are used to read PDB-topology and write out the PDB-file.
 
 .. code-block:: python
+    
     #Initial fragment from a PDB-file
     frag = Fragment(pdbfile="initial.pdb")
     #Define theory

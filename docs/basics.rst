@@ -81,7 +81,7 @@ To save the output it is better to redirect the output to a file.
     python3 ashtest.py >& ashtest.out
 
 For a really long job you would typically submit a jobscript to a queuing system instead.
-See discussion about the `subash <https://github.com/RagnarB83/ash/raw/master/scripts/subash.sh>`_ submission script
+See discussion about the `subash <https://github.com/RagnarB83/ash/raw/master/scripts/subash.sh>`__ submission script
 at the bottom of this page.
 
 #####################################################
@@ -183,11 +183,11 @@ Once you start using ASH in general you would of course want to submit jobs to a
 Then it is best to have a submission script that sets up the ASH-Python environment, 
 copies inputfiles to local scratch on the computing node, runs the ASH-Python script and copies results back from scratch to submission directory.
 
-A submission script,  `subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_ ,  
+A submission script,  `subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`__ ,  
 has been created for this purpose which can be found in the scripts directory of the ASH source code.
 It assumes the Slurm queuing system but should be fairly easily adaptable to other systems.
 
-Simply `download subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_  or copy/paste the script into a file called e.g. subash.sh or subash:
+Simply `download subash <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`__  or copy/paste the script into a file called e.g. subash.sh or subash:
 
 .. code-block:: text
 
