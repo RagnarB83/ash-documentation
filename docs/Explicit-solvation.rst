@@ -290,7 +290,8 @@ See :doc:`helper_programs` for information on the Packmol interface.
     packmol_solvate(inputfiles=["acetonitrile.pdb"], density=0.786,
         min_coordinates=[0,0,0], max_coordinates=[50,50,50])
 
-Inserting the solute into the box of solvent. See documentation of `insert_solute_into_solvent ` at :doc:`OpenMM-interface` for more details.
+Inserting the solute into the box of solvent. See documentation of *insert_solute_into_solvent* at 
+:doc:`OpenMM-interface` for more details.
 
 .. code-block:: python
 
