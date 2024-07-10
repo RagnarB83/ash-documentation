@@ -1111,6 +1111,9 @@ See example below.
   solution = insert_solute_into_solvent(solvent_pdb=solvent_pdbfile, solute_pdb=solute_pdbfile,
               write_pdb=True)
 
-  #Creating OpenMMTheory object for solution
-  omm = OpenMMTheory(pdbfile="solution.pdb", xmlfiles=[solvent_xmlfile,solute_xmlfile], constraints=[[0,1]],
+  #Example: Creating an OpenMMTheory object for solution
+  omm = OpenMMTheory(pdbfile="solution.pdb", xmlfiles=[solvent_xmlfile,solute_xmlfile],
     platform="OpenCL", periodic=True, periodic_cell_dimensions=[50.0,50.0,50.0, 90.0,90.0,90.0])
+  
+  #Example 5 ps MD
+  MolecularDynamics(theory=omm, fragment=solution, timestep=0.001, simulation_time=5, traj_frequency=100, temperature=300)

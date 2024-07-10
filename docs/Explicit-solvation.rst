@@ -4,27 +4,26 @@ Explicit solvation (small molecule)
 ASH allows you to easily create explicit solvation models for small molecules that can then be either
 used either for classical MD simulations or QM/MM MD simulations.
 
-Current limitations:
-
-- Only water solvent possible for now
 
 ################################################################################################
 Creating a small-molecule forcefield
 ################################################################################################
 
-The initial step will be to acquire a forcefield for the small molecule of interest.
-ASH features 2 main options:
+An important step is to acquire a forcefield for the small molecule of interest.
+Ideally we want a forcefield in the OpenMM XML format that can be easily used to define an OpenMMTheory object.
+
+There are 2 approaches possible, a nonbonded-only forcefield and full-fledged forcefield.
 
 **write_nonbonded_FF_for_ligand**
 
-Creates a simple nonbonded forcefield. Useful for inorganic molecules (e.g. metal complexes) where a full
-forcefield is hard to create. Good option for QM/MM MD simulations. Classical MD simulations will require the internal
-degrees of freedom of the molecule to be constrained.
+This function can create a simple nonbonded forcefield. This is seful for inorganic molecules (e.g. metal complexes) where a full
+forcefield is hard to create. Typically the best option if the goal is to perform QM/MM MD simulations. 
+Note that for a classical MD simulation with a nonbonded forcefield, the internal degrees of freedom of the molecule to be constrained (either by freezing atoms or constraining internal coordinates).
 
 **small_molecule_parameterizer**
 
-Creates a full forcefield of the molecule with bonded and nonbonded parameters. Works when molecule is organic or drug-like.
-Can either use a GAFF or OpenFF forcefield.
+This function is capable of creating/deriving a full forcefield of an organic molecule with both bonded and nonbonded parameters. 
+Only available for molecules with common light maingroup elements. Options are the GAFF or OpenFF forcefields.
 
 
 See :doc:`OpenMM-interface` for more details on how to use these functions.
@@ -168,8 +167,8 @@ create an OpenMM XML-file. The molecule will be an FeCl4- complex (S=5/2).
     write_nonbonded_FF_for_ligand(fragment=frag, resname="LIG", theory=orca_theory,
             coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA")
 
-The function will create a file, here called: "LIG.xml". By default it uses the ff_type to be "CHARMM" which means that the XML-file will
-use a form of the nonbonded potential that is compatible with CHARMM protein forcefield in general. This can be changed to "AMBER" or "None" if required.
+The function will create a file, here called: "LIG.xml". By default it uses the ff_type to be "AMBER". This means the XML-file will
+use a form of the nonbonded potential that is compatible with Amber-style forcefield. This is recommended im general but can be changed to "CHARMM" or "None" if required.
 
 
 2. Solvate the system
@@ -276,8 +275,28 @@ This is required for the QM/MM MD.
     
 
 
+#########################################################################################################
+Example 3. Setting up an explicit non-aqueous solution system (with an inorganic solute)
+#########################################################################################################
 
+UNFINISHED
 
+Creating a solvation box with a non-aqueous solvent via Packmol interface:
+See :doc:`helper_programs` for information on the Packmol interface.
+
+.. code-block:: python
+
+    #Create a 50 Å cubic box of acetonitrile molecules corresponding to a density of 0.786 g/ml
+    packmol_solvate(inputfiles=["acetonitrile.pdb"], density=0.786,
+        min_coordinates=[0,0,0], max_coordinates=[50,50,50])
+
+Inserting the solute into the box of solvent. See documentation of `insert_solute_into_solvent ` at :doc:`OpenMM-interface` for more details.
+
+.. code-block:: python
+
+    #Inserting solute into solution and get new solution fragment
+    solution = insert_solute_into_solvent(solvent_pdb=solvent_pdbfile, solute_pdb=solute_pdbfile,
+                write_pdb=True)
 
 
 

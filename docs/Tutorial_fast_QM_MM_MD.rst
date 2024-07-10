@@ -413,6 +413,10 @@ It is designed to scale up to a large number of CPU cores.
 ===========================================  ================================ ================================
 QM-method                                        Time (sec) (for 10 ps)        Ave. time (sec) per timestep
 ===========================================  ================================ ================================
+ CP2K-PBE/GPW (1 CPU,MPI)                                   (not completed)                   32.996 
+ CP2K-PBE/GPW (4 CPU,MPI)                                   (not completed)                   12.451 
+ CP2K-PBE/GPW (8 CPU,MPI)                                   (not completed)                   XX 
+ CP2K-PBE/GPW (10 CPU,MPI)                                    81790.886                         8.2 
  CP2K-PBE/GPW (10 CPU,MPI)                                    81790.886                         8.2 
  CP2K-PBE/GPW (12 CPU,MPI)                                    76127.111                         7.6
  CP2K-PBE/GPW (24 CPU,MPI)                                    70305.023                         7.0
