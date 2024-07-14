@@ -225,7 +225,7 @@ The OpenMMTheory class:
      - Boolean
      - False
      - | If True, OpenMM will set up a dummy MM system based on provided fragment
-       | (see below). Used for QM dynamics option in OpenMM_MD.
+       | (see below). Used for QM dynamics option in MolecularDynamics.
    * - ``fragment``
      - ASH Fragment
      - None
@@ -305,151 +305,23 @@ Any Openmmtheory object can used to create a QM/MM theory object. See :doc:`modu
 - The box dimensions can also be modified by PBCvectors= keyword argument:
     Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]] with values in Å.
 
-######################################
-Molecular Dynamics via OpenMM
-######################################
+##################################################
+Molecular Dynamics of an OpenMMTheory object 
+##################################################
 
-It is possible to run molecular dynamics of an ASH system using the MD algorithms present in the OpenMM library.
-The OpenMM_MD function takes as argument an ASH fragment, a theory object and the user then selects an integrator of choice, simulation temperature, simulation length, timestep, optional additional thermostat, barostat etc.
-The theory level can be OpenMMTheory, QMMMTheory or even a simple QMTheory.
-Some options are only available for OpenMMTheory.
+Molecular Dynamics in ASH is performed using the MD algorithms present in the OpenMM library.
+The MD functionality is designed to be agnostic to theory level, i.e. it can be used for running MD on any Theory-level (OpenMMTheory object, a QMTheory object, QMMMTheory object etc.).
+See  :doc:`module_dynamics` for documentation and details on the **MolecularDynamics** function.
 
-See `OpenMM documentation page <http://docs.openmm.org/latest/userguide/application.html#integrators>`_  for details about the integrators, thermostats, barostats etc.
+Note that **MolecularDynamics** and **OpenMM_MD** are aliases for the same function.
+Below we show example use of doing MD using an OpenMMTheory object.
 
-- Available Integrators: Langevin, LangevinMiddleIntegrator, NoseHooverIntegrator, VerletIntegrator, VariableLangevinIntegrator, VariableVerletIntegrator
-- Available Barostat: MonteCarloBarostat
-- Optional additional thermostat: Anderson
-
-.. code-block:: python
-
-    def OpenMM_MD(fragment=None, theory=None, timestep=0.004, simulation_steps=None, simulation_time=None,
-                traj_frequency=1000, temperature=300, integrator='LangevinMiddleIntegrator',
-                barostat=None, pressure=1, trajectory_file_option='DCD', trajfilename='trajectory',
-                coupling_frequency=1, charge=None, mult=None,
-                anderson_thermostat=False,
-                enforcePeriodicBox=True, dummyatomrestraint=False, center_on_atoms=None, solute_indices=None,
-                datafilename=None, dummy_MM=False, plumed_object=None, add_center_force=False,
-                center_force_atoms=None, centerforce_constant=1.0, barostat_frequency=25, specialbox=False):
+For MD on an **OpenMMTheory** object it is important to note that autoconstraints and frozen_atoms 
+should usually be defined in the **OpenMMTheory** object before, while constraints and restraints can be defined
+in the **MolecularDynamics** function.
 
 
-**OpenMM_MD** options:
-
-.. list-table::
-   :widths: 15 15 15 60
-   :header-rows: 1
-
-   * - Keyword
-     - Type
-     - Default value
-     - Details
-   * - ``fragment``
-     - ASH Fragment
-     - None
-     - The ASH fragment.
-   * - ``theory``
-     - ASH Theory
-     - None
-     - The ASH Theory object.
-   * - ``timestep``
-     - float
-     - 0.004
-     - | The timestep . Default: 0.004 ps (suitable for LangevinMiddleIntegrator 
-       | dynamics with frozen X-H bonds)
-   * - ``simulation_steps``
-     - integer
-     - None
-     - Number of simulation steps to take. Alternative to simulation_time below
-   * - ``simulation_time``
-     - float
-     - None
-     - Length of simulation in picoseconds. Alternative to simulation_time above.
-   * - ``temperature``
-     - integer
-     - 300
-     - The temperature in Kelvin.
-   * - ``integrator``
-     - string
-     - LangevinMiddleIntegrator
-     - | The integrator to use. Options: 'Langevin', 'LangevinMiddleIntegrator', 
-       | 'NoseHooverIntegrator', 'VerletIntegrator', 'VariableLangevinIntegrator',
-       | 'VariableVerletIntegrator'
-   * - ``coupling_frequency``
-     - integer
-     - 1
-     - The coupling frequency of thermostat (in ps^-1 for Nosé-Hoover and Langevin-type)
-   * - ``barostat``
-     - string
-     - None
-     - Barostat to use for NPT simulations. Options: 'MonteCarloBarostat'
-   * - ``barostat_frequency``
-     - int
-     - 25
-     - Frequency of barostat update.
-   * - ``pressure``
-     - int
-     - 1
-     - Pressure to enforce by barostat
-   * - ``anderson_thermostat``
-     - Boolean
-     - False
-     - Whether to use Andersen Thermostat
-   * - ``trajectory_file_option``
-     - string
-     - 'DCD'
-     - | Type of trajectory file. Options: 'DCD' (compressed), 'PDB', 'NetCDFReporter' 
-       | (compressed), 'HDF5Reporter' (compressed). Applies only to pure MM simulations.
-   * - ``traj_frequency``
-     - integer
-     - 1000
-     - Frequency of writing trajectory (every Xth timestep).
-   * - ``trajfilename``
-     - string
-     - None
-     - Name of trajectory file (without suffix).
-   * - ``enforcePeriodicBox``
-     - Boolean
-     - True
-     - Enforce PBC image during simulation. Fixes PBC-image artifacts in trajectory.
-   * - ``center_on_atoms``
-     - list
-     - None
-     - Expert options: Center system on these atoms.
-   * - ``dummyatomrestraint``
-     - Boolean
-     - False
-     - Expert options: Dummy atom restraints.
-   * - ``solute_indices``
-     - list
-     - None
-     - Expert options: solute_indices
-   * - ``add_center_force``
-     - Boolean
-     - False
-     - Whether to add a spherical force that pushes atoms to the center.
-   * - ``center_force_atoms``
-     - list
-     - None
-     - List of atom indices that the center force acts on.
-   * - ``centerforce_constant``
-     - float
-     - None
-     - Value of the spherical center force in kcal/mol/Ang^2.
-   * - ``specialbox``
-     - Boolean
-     - False
-     - Expert option: Special box for QM/MM.
-   * - ``plumed_object``
-     - ASH-Plumed object
-     - None
-     - Expert option: Plumed object for biased dynamics.
-
-
-
-Note that constraints, autoconstraints, restraints and frozen_atoms must be defined in the OpenMMTHeory object before.
-
-
-
-Example:
+Basic example:
 
 .. code-block:: python
 
@@ -472,16 +344,14 @@ Example:
         PMEparameters=[1.0/0.34, 90, 90, 90])
 
     #Launching a molecular dynamics simulation
-    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
+    MolecularDynamics(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
-**General constraints or H-mass modification:**
+**General constraints or H-mass modification in classical MD**
 
-- In order to allow shorter timesteps in MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the autoconstraints option (NOTE: an option to OpenMMTheory). autoconstraints can be set to: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default)
-- An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to OpenMMTheory. hydrogenmass keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. hydrogenmass=1.5 is default (default in OpenMM) .
-
-
+- In order to allow shorter timesteps in classical MD simulations it is common to utilize some general constraints in biomolecular simulations, e.g. all X-H bonds, all bonds or even all-bond and some angles. This can be accomplished  via the *autoconstraints* option (NOTE: an option to **OpenMMTheory**).  *autoconstraints* can be set to: 'HBonds' (X-H bonds constrained), 'AllBonds' (all bonds constrained), 'HAngles' (all bonds and H-X-H and H-O-X angles constrained) or None (default)
+- An alternative (or addition) is to change the masses of the hydrogen atoms (fastest-moving atoms). This is also an option to **OpenMMTheory**. *hydrogenmass* keyword takes an integer and can e.g. be 2 (mass of deuterium) or heavier. *hydrogenmass* = 1.5 is default (default in OpenMM) .
 
 General X-H constraints and deuterium-mass example:
 
@@ -504,9 +374,8 @@ General X-H constraints and deuterium-mass example:
         charmmprmfile=prmfile, periodic=True, periodic_cell_dimensions=[80, 80, 80, 90, 90, 90], autoconstraints='HBonds', hydrogenmass=2)
 
     #Launching a molecular dynamics simulation
-    OpenMM_MD(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
+    MolecularDynamics(fragment=frag, theory=openmmobject, timestep=0.001, simulation_steps=20, traj_frequency=1, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
-
 
 
 Dealing with PBC image problems in trajectory. See `OpenMM FAQ <https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work>`_
@@ -532,7 +401,7 @@ PBC box relaxation via NPT
 
 This function allows one to conveniently run multiple NPT simulations (constant pressure and temperature) in order to converge the periodic box dimensions
 of the system.
-Note: OpenMM_box_relaxation is an alias for penMM_box_equilibration
+Note: OpenMM_box_relaxation is an alias for OpenMM_box_equilibration
 
 .. code-block:: python
 
@@ -641,7 +510,7 @@ Note: all constraints in the OpenMM object needs to be turned off for (autoconst
 ######################################
 Gentle WarmupMD
 ######################################
-A function to gently warm up a newly setup system to a target temperature. 
+A function to gently warm up a newly setup MM system to a target temperature. 
 Can also be used to help diagnose why an MD simulation crashes (reports initial high atomic forces as well as root-mean-square fluctuations).
 
 .. code-block:: python
@@ -741,7 +610,7 @@ Lysozyme example (simple, no modifications required):
     OpenMM_Opt(fragment=ashfragment, theory=openmmobject, maxiter=100, tolerance=1)
 
     #Classical MD simulation for 10 ps
-    OpenMM_MD(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
+    MolecularDynamics(fragment=ashfragment, theory=openmmobject, timestep=0.001, simulation_time=10, traj_frequency=100, temperature=300,
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
@@ -849,7 +718,7 @@ Additionally periodicity will not be assumed during the creation of the files as
       periodic=False, platform='OpenCL', nonbondedMethod_noPBC='CutoffNonPeriodic', nonbonded_cutoff_noPBC=20)
 
   #NVT MD simulation for 1000 ps = 1 ns
-  OpenMM_MD(fragment=frag, theory=omm, timestep=0.004, simulation_time=10, traj_frequency=100, temperature=300,
+  MolecularDynamics(fragment=frag, theory=omm, timestep=0.004, simulation_time=10, traj_frequency=100, temperature=300,
       integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajfilename='NVTtrajectory',trajectory_file_option='DCD')
 
 MD simulations with an implicit solvation model can have their advantages as they should run considerably quicker.

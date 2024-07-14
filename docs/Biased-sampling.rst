@@ -2,7 +2,8 @@ Biased sampling MD & Free energy simulations
 ===============================================
 
 Biased sampling or free-energy simulations are possible in ASH via the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`).
-Umbrella sampling could in principle be performed by adding restraint potentials to the OpenMMTheory object before running MD. Convenient workflows in ASH for umbrella sampling are currently missing, however.
+Umbrella sampling could in principle be performed by adding restraint potentials to the OpenMMTheory object before running MD. 
+Convenient workflows in ASH for umbrella sampling are currently missing, however.
 
 Metadynamics has become a very popular biased sampling / free energy simulation method due to its ease-of-use and handy parallelization strategy.
 It is possible to perform metadynamics simulations in ASH using essentially any theory-level, including an OpenMMTheory level, any type of QMTheory level and a QMMMTheory level.
@@ -275,3 +276,12 @@ to use the **MTD_analyze** function to analyze the results and plot the data.
      - list of integers
      - None
      - List of integers defining CV2.
+
+######################################################
+Umbrella sampling in ASH
+######################################################
+
+ASH can be used for umbrella sampling simulations by adding a restraint potential to the system
+before running MD.
+
+A workflow for running umbrella sampling is currently missing.

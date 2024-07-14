@@ -1,23 +1,23 @@
 Hybrid Theory
 ==========================
 
-Hybrid Theories are multi-level ASH theories that combine multiple theory level objects to give some kind of combined theory description of the system.
-The different theories might be used for different parts of the system (here called **Multilevel Theory methods** , e.g. QM/MM) or on the same part of the system (examples are **WrapTheory** and **DualTheory methods**)
-
+Hybrid Theories in ASH are multi-level theories that combine multiple theory-level objects to give some kind of combined theory description of the system.
+The different theories might be used for different parts of the system,then called **Multilevel Theory methods**  (e.g. QMMMTheory or ONIOMTheory) or on the same part of the system, then called **ComboTheory** (examples are **WrapTheory** and **DualTheory**)
 
 
 ######################################################
 Multilevel Theory Methods
 ######################################################
 
-The **QMMMTheory** class in ASH (:doc:`module_QM-MM`) is considered a special type of a multilevel method where a QMTheory is combined with an MMTheory to describe different parts of the system.
-QM/MM is typically used when the system can naturally be divided up into a local important part (described by a QM method) and an environment part (described by a classical MM method).
+The **QMMMTheory** class in ASH (:doc:`module_QM-MM`) is a special type of a multilevel method where 1 single QMTheory is combined with 1 single MMTheory (usually OpenMMTheory) to describe different parts of the system.
+QM/MM as a method is typically used when the system can naturally be divided up into a local important part (described by a QM method) and an environment part (described by a classical MM method).
+The coupling between QM and MM system is usually performed using electrostatic embedding.
+QM/MM is typically described as an additive energy expression: E_QM/MM = E_QM + E_MM + E_coupling where E_coupling is the interaction between the QM and MM parts.
 
-ASH will at some point feature also ONIOM multilevel methods that are similar to QM/MM but have a different philosophy.
-
+An alternative to the additive QM/MM expression is the subtractive ONIOM expression.
 
 ######################################################
-WrapTheory methods
+ComboTheory methods
 ######################################################
 
 **WrapTheory** is an ASH Theory class that wraps two different theory objects to get a combined theory description. It is assumed that the energy and gradient from each theory is completely additive.
@@ -36,7 +36,7 @@ WrapTheory methods
 
 
 **WrapTheory** was created for the purpose of allowing one to combine a regular theory-level with a correction (both energy and gradient) from another source.
-Specifically, it was created to allow one to easily add dispersion corrections using DFTD4Theory to a regular DFT calculation (without dispersion).
+Originally it was created to allow one to easily add a dispersion correction using DFTD4Theory to a regular DFT calculation (without dispersion).
 
 Example:
 
@@ -60,6 +60,7 @@ Example:
 
 WrapTheory could be used for many other purposes, one would simply have to make sure that the 2 theories are compatible and that the sum of the 2 theory-description does not result in double-counting of any similar physical energy terms.
 A regular DFT calculation (barely describes dispersion) + an atom pairwise dispersion correction (DFT-D4) is a good example of this.
+A delta-machine-learning correction would be another example where WrapTheory would be convenient for combining Theory-levels.
 
 See DFTD4 section in :doc:`helper_programs` for more information on the DFTD4Theory object.
 
