@@ -317,10 +317,11 @@ Common waterforcefields (e.g. TIP3P) are typically designed to be completely rig
 
 Constraints during MD can be implemented in a few ways:
 
-**Automatic XH constraints with rigidwater in OpenMMTHeory **
+**Automatic XH constraints with rigidwater in OpenMMTHeory**
 
-By using the autoconstraints keyword (options: 'HBonds', 'AllBonds', 'HAngles') in **OpenMMTheory** one can constrain the XH-bonds ('HBonds'), all bonds ('AllBonds') or all-bonds and all angles ('HAngles').
-Furthermore the rigidwater keyword (True or False) sets the constraints for water molecules if present in the system.
+By using the autoconstraints keyword (options: 'HBonds', 'AllBonds', 'HAngles') in **OpenMMTheory** one can constrain the XH-bonds ('HBonds'), all bonds ('AllBonds') or all-bonds + all angles ('HAngles').
+Furthermore the rigidwater keyword (True or False) sets the constraints for water molecules if present in the system. The autoconstraints keyword should work to add constraints for many forcefields but may fail to
+work for some manually defined forcefields.
 
 .. code-block:: python
 
