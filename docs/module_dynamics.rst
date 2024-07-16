@@ -151,22 +151,31 @@ The theory level can be **OpenMMTheory**, **QMMMTheory** or even a **QMTheory**.
      - Expert option: Plumed object for biased dynamics.
 
 
-**Defing an object from class instead of using the function**
+######################################################
+Examples: how to use
+######################################################
 
-The **OpenMM_MD** function is actually a wrapper around a class named **OpenMM_MDclass**.
-Sometimes more flexiblity can be achieved by using the class instead of calling the function and this can be useful when developing
-more complex MD-based workflows in ASH.
-
-Below we see a comparison between calling **MolecularDynamics** directly vs. creating an MD-object and running it.
-The 2 approaches are equivalent, the former is simpler and typically recommended, the latter is more explicit and can be useful (see use-case later in restraints section).
-**OpenMM_MDclass** 
+The simplest way to run MD is to simply call the **OpenMM_MD** function, also named **MolecularDynamics**.
 
 .. code-block:: python
   
   #Fragment and Theory object creation not shown here
-  #Function-call
+  #OpenMM_MD(fragment=frag, theory=theory, timestep=0.001, simulation_time=2)
   MolecularDynamics(fragment=frag, theory=theory, timestep=0.001, simulation_time=2)
 
+
+**Defing an object from class instead of using the function**
+
+The **OpenMM_MD** (MolecularDynamics) function is actually a wrapper around a class named **OpenMM_MDclass**.
+Sometimes more flexiblity can be achieved by using the class instead of calling the function and this can be useful when developing
+more complex MD-based workflows in ASH.
+
+Below we see create an MD-object and run it using the run method instead of calling **MolecularDynamics**.
+The 2 approaches are equivalent, the simple functiona-call approach is simpler and typically recommended, the latter is more explicit and can be useful (see use-case later in restraints section).
+
+.. code-block:: python
+  
+  #Fragment and Theory object creation not shown here
   #Alternative: Creating object from class and running
   md_object = OpenMM_MDclass(fragment=frag, theory=theory, timestep=0.001)
   md_object.mdobj.run(simulation_time=2.0)
@@ -299,6 +308,52 @@ which corresponds to a leap-frog Verlet algorithm (instead of the default Langev
   MolecularDynamics(fragment=butane, theory=xtbcalc, timestep=0.001, simulation_time=2, 
         integrator='VerletIntegrator')
 
+######################################################
+Using general constraints in MD simulations
+######################################################
+
+For classical MD simulations as well as QM/MM MD simulation it is common to use bond constraints during the simulation.
+Common waterforcefields (e.g. TIP3P) are typically designed to be completely rigid and it is common in biomolecular simulations to contrains all X-H bonds (where X is a heavy atom like e.g. C).
+
+Constraints during MD can be implemented in a few ways:
+
+**Automatic XH constraints with rigidwater in OpenMMTHeory **
+
+By using the autoconstraints keyword (options: 'HBonds', 'AllBonds', 'HAngles') in **OpenMMTheory** one can constrain the XH-bonds ('HBonds'), all bonds ('AllBonds') or all-bonds and all angles ('HAngles').
+Furthermore the rigidwater keyword (True or False) sets the constraints for water molecules if present in the system.
+
+.. code-block:: python
+
+  #OpenMMTheory object with constraints enabled.
+  openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"],
+                    autoconstraints='HBonds', rigidwater=True)
+
+**Defining constraints manually or semi-automatically**
+
+OpenMMTheory also allows bond-constraints to be added manually by providing a list of lists of pairs of atomindices.
+
+.. code-block:: python
+
+  #Manual definition of the constraints list-of-lists: here constraining bond between atoms 17 & 18 as well as 235 & 236
+  con_list = [[17,18], [235,236]]
+  #OpenMMTheory object with constraints enabled.
+  openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"],
+                    bondconstraints=con_list)
+
+To avoid manually defining a long list of constraints for a large system it is possible to use the **define_XH_constraints** function
+to conveniently generate this list of constraints for either the full system or a subset of it (e.g. an active-region). 
+
+.. code-block:: python
+
+  frag = Fragment(pdbfile="system.pdb")
+  # Automatically define a list of lists of all X-H constraints (constraints for all bonds involving H atoms) for all system atoms (actatoms=frag.allatoms)
+  con_list = define_XH_constraints(frag, actatoms=frag.allatoms)
+  # Same but with the option of avoiding constraints for a group of atoms (e.g. a QM-region)
+  qmatoms= [17,18,19,20]
+  con_list = define_XH_constraints(frag, actatoms=frag.allatoms, excludeatoms=qmatoms)
+  #OpenMMTheory object with constraints enabled.
+  openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"],
+                    bondconstraints=con_list)
 
 ######################################################
 Adding custom forces to MD simulation
