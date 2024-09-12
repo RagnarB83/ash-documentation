@@ -58,7 +58,7 @@ ONIOMTheory
     def __init__(self, theories_N=None, regions_N=None, regions_chargemult=None,
                  embedding="mechanical", full_pointcharges=None, chargemodel="CM5", dipole_correction=False,
                  fullregion_charge=None, fullregion_mult=None, fragment=None, label=None, 
-                 chargeboundary_method="chargeshift",
+                 chargeboundary_method="shift",
                  linkatom_method='ratio', linkatom_simple_distance=None, linkatom_forceproj_method="adv",
                  linkatom_ratio=0.723, printlevel=2, numcores=1):
 

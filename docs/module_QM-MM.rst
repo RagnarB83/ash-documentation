@@ -38,7 +38,7 @@ QMMMTheory class
       def __init__(self, qm_theory=None, qmatoms=None, fragment=None, mm_theory=None, charges=None,
                   embedding="elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
                   unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50,
-                  qm_charge=None, qm_mult=None, chargeboundary_method="chargeshift",
+                  qm_charge=None, qm_mult=None, chargeboundary_method="shift",
                   dipole_correction=True, linkatom_method='simple', linkatom_simple_distance=None,
                   linkatom_forceproj_method="adv", linkatom_ratio=0.723):
 
@@ -132,7 +132,7 @@ QMMMTheory class
        | NOTE: Only compatible if mm_theory is of NonBondedTheory class.
    * - ``chargeboundary_method``
      - string
-     - chargeshift
+     - shift
      - | What chargeboundary method to use for covalent QM-MM boundary. 
        | Default option: shift' . Other option: 'rcd'
    * - ``dipole_correction``
@@ -358,8 +358,8 @@ ASH includes 2 different chargeboundary-methods for preventing overpolarization 
 
 **Charge-shift method**
 
-The *chargeboundary_method* = 'chargeshift' option employs the popular charge-shifting strategy by Paul Sherwood and coworkers. See de Vries et al. J. Phys. Chem. B 1999, 103, 6133-6141.
-The 'chargeshift' method is used by default in ASH when electrostatic embedding is chosen.
+The *chargeboundary_method* = 'shift' option employs the popular charge-shifting strategy by Paul Sherwood and coworkers. See de Vries et al. J. Phys. Chem. B 1999, 103, 6133-6141.
+This method is the default in ASH when electrostatic embedding is chosen.
 
 The charge of the MM1 atom is set to 0.0 and is shifted towards the MM2 atoms. Effectively, the original charge-value of the MM1 is divided by the number of MM2 atoms bonded to the MM1 atom and each
 MM2 atom receives a fraction of the original MM1 charge. This charge-shifting has the effect of avoiding the overpolarization that would have occured in the QM1-L and MM1 region while maintaining the overall charge of the system.
@@ -370,7 +370,7 @@ In ASH the dipole correction is applied automatically by default but can be turn
 
 The *chargeboundary_method* = 'rcd' option employs the RCD method by Donald Truhlar and coworkers. See Lin et al. J. Phys. Chem. A 2005, 109, 3991-4004.
 
-The RCD method is similar to the 'chargeshift' method but has some additional flexibility and can sometimes give better results.
+The RCD method is similar to the chargeshift method above but has some additional flexibility and can sometimes give better results.
 It also involves setting the charge of the MM1 pointcharge to 0.0 and redistributing the charge away. 
 However, instead of placing a fraction of the MM1 charge on the MM2 atoms the charges are instead placed along the MM1-MM2 bond midpoints. This defines the RC (redistributed charge) method.
 The RCD method involves in addition, changing the values of the charges placed on the MM1-MM2 bond midpoints to be twice as large as the divided MM1 charge-fraction. 
