@@ -1,7 +1,7 @@
 QM Interfaces
 ==========================
 
-Quantum chemistry codes that you can currently use with ASH are: ORCA, xTB, PySCF, Psi4, Dalton, CFour, MRCC, NWChem, TeraChem, QUICK, CP2K.
+Quantum chemistry codes that you can currently use with ASH are: ORCA, xTB, PySCF, Psi4, Dalton, CFour, ccpy, MRCC, NWChem, TeraChem, QUICK, CP2K.
 Additionally codes like Dice and Block2 have interfaces in ASH, which requires PySCF installed as well.
 
 To use the interfaces you define a QMtheory object of the appropriate Class.
@@ -20,6 +20,7 @@ The QM-interface Classes are:
 - CP2KTheory (:doc:`CP2K-interface`)
 - DiceTheory (:doc:`Dice-interface`)
 - BlockTheory (:doc:`Block-interface`)
+- ccpyTheory (:doc:`ccpy-interface`)
 
 
 When defining a QMtheory object you are creating an instance of one of the QMTheory classes.

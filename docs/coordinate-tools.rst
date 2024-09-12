@@ -3,6 +3,54 @@ Coordinates and fragment tools
 
 
 ############################################
+Calculate RMSD
+############################################
+
+It can be useful to compare the similarity of 2 molecular geometries. Calculating the root-mean-square deviation of atomic positions is one suitable way of doing this.
+This requires first superimposition or alignment of the 2 structures as they may be in different parts of Cartesian space. This is accomplished using the Kabsch algorithm.
+The 2 structure generally must contain the same number of atoms and the atoms must be in the same order. However, a subset RMSD can be calculated by providing a subset of atom indices for both structures.
+If the subsets for both fragments match then the RMSD will be calculated.
+
+.. code-block:: python
+
+    def calculate_RMSD(fragmentA, fragmentB, subset=None, heavyatomsonly=False, printlevel=2):
+
+
+Examples on how to use the function:
+
+.. code-block:: python
+
+    #Calculate the RMSD (in Å) between 2 ASH fragments. All atoms used to calculate RMSD.
+    rmsd_val = calculate_RMSD(reference_frag, frag)
+    # Calculate the RMSD but using only heavy atoms (no hydrogens) included
+    rmsd_val = calculate_RMSD(reference_frag, frag, heavyatomsonly=True)
+    # Calculate the RMSD but using a subset of atom indices. Note: The 2 fragments must have exactly the same atom-order
+    rmsd_val = calculate_RMSD(reference_frag, frag, subset=[5,6,7])
+    # Calculate the RMSD but using a  list-of-lists definition of subset of atom indices (first list for first fragment etc.)
+    rmsd_val = calculate_RMSD(reference_frag, frag, subset=[[5,6,7],[1,2,3]])
+
+############################################
+flexible_align
+############################################
+
+Sometimes it is useful to align a molecular geometry so that it is as similar as possible to another geometry. This is often performed for the purpose of calculating the RMSD (see above) but often
+the purpose is the aligned geometry itself, the 2 structure might not fully match and one might even want the structure reoriented or even reorderered as much as possible for the purpose of maximum alignment.
+
+The **flexible_align** function allows one to align a structure (fragmentA below) onto another fragment (fragmentB). One can choose to only allow rotation of the structure (rotate_only=True), 
+only allow translation (translate_only=True) or allow both (default). One can also allow reordering which would use the Hungarian algorithm to reorder the atoms of fragmentA to match fragmentB as much as possible.
+The subset option allows one to use in the comparison only a subset of atom indices (i.e. the atoms that fragmentA and fragmentB have in common). The resulting aligned fragmentA, however, will contain all atoms aligned.
+
+.. code-block:: python
+
+    def flexible_align(fragmentA, fragmentB, rotate_only=False, translate_only=False, reordering=False, reorder_method='brute', subset=None):
+
+    # Versions that takes PDB-files or XYZ-files as input and outputs an aligned XYZ/PDB file
+    def flexible_align_xyz(xyzfileA, xyzfileB, rotate_only=False, translate_only=False, reordering=False, reorder_method='brute', subset=None):
+
+    def flexible_align_pdb(pdbfileA, pdbfileB, rotate_only=False, translate_only=False, reordering=False, reorder_method='brute', subset=None):
+
+
+############################################
 Modifying coordinates in ASH calculations
 ############################################
 
@@ -136,7 +184,7 @@ The file can be manually modified if required. The ActiveRegion.xyz file should 
 .. warning:: There are cases where an MM system might be set up in such a way that a residue definition can apply to multiple molecules/fragments in space.
     The actregiondefine function may not handle all such cases.
 
-**VDM alternative**
+**VMD alternative**
 
 An alternative to the actregiondefine function is to do the visualization in VMD which allows you to both 
 visually create a suitable active-region and get a list of atom indices (VMD also counts from zero) that can be copy-pasted into ASH.
@@ -299,7 +347,7 @@ ASH contains a few different options for writing out PDB-files which can be usef
 **Fragment.write_pdbfile_openmm**: 
 
 This writes out a PDB-file from an ASH fragment, using either topology and residue information that was read from original PDB-file.
-If latter is not present(e.g. if an XYZ-file was read-in), a basic topology is automatically defined.
+If latter is not present (e.g. if an XYZ-file was read-in), a basic topology is automatically defined.
 Routines from OpenMM library are used to read PDB-topology and write out the PDB-file.
 
 .. code-block:: python
@@ -315,7 +363,8 @@ Routines from OpenMM library are used to read PDB-topology and write out the PDB
     frag.write_pdbfile_openmm(filename="optimized.pdb")
 
 
-**OpenMMTheory.write_pdbfile**: This is a method of the OpenMMTheory object that writes out a PDB-file based on coordinates, residue and atom information present in the OpenMMTheory object.
+**OpenMMTheory.write_pdbfile**: This is a method inside the OpenMMTheory object that writes out a PDB-file based on coordinates, residue and atom information present in the OpenMMTheory object.
+Requires an OpenMMTheory object.
 
 .. code-block:: python
 

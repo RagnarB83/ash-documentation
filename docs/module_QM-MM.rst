@@ -1,12 +1,31 @@
 QM/MM Theory
 ==========================
 
-QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH (that supports pointcharge embedding) with an MMTheory object of class NonbondedTheory (see :doc:`MM-interfaces`) or OpenMMTheory (see :doc:`OpenMM-interface`).
+.. image:: figures/qm_mm_more.png
+   :align: center
+   :width: 600
 
-To do QM/MM, one combines a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object in QMMMTheory object
-and then specifies which atoms are QM and which are MM and the type of QM-MM coupling (typically electrostating embedding).
-Note that in contrast to a QMtheory object or an MMtheory object, we also pass a fragment object to a QMMMTheory object so that
-the QMMMTheory object can define the division of QM-region and MM-regions.
+QM/MM is a type of multilevel method (see :doc:`module_Hybrid_Theory`) where a QM theory-level and an MM-theory level are used for different parts of the system to give a combined description of the system. 
+The purpose is usually to approximate the QM-theory description of the whole system (usually out of reach) by replacing most of the system by a classical MM-theory while retaining a quantum description of the important part of the system.
+
+
+
+
+The method can be described by the equations:
+
+.. math::
+
+    E_{QM/MM} = E_{QM} + E_{MM} + E_{coupling} 
+
+    E_{coupling} = E_{elstat} + E_{vdW} + E_{covalent}
+
+where :math:`E_{QM}` is the QM-energy of the QM-region, :math:`E_{MM}` is the MM-energy of the MM-region and  :math:`E_{coupling}` is the interaction between the QM and MM region. The coupling terms account for electrostatic, vdW and covalent (bonded) interactions between the QM and MM regions.
+
+
+QM/MM in ASH is highly flexible as one can combine any QM-theory in ASH with an MMTheory object of class NonbondedTheory (see :doc:`MM-interfaces`) or OpenMMTheory (see :doc:`OpenMM-interface`).
+One simply needs to combine a defined QMtheory object (:doc:`QM-interfaces`) and an MMtheory object (usually OpenMMTheory, see :doc:`OpenMM-interface`) within a QMMMTheory object.
+Additionally one specifies which atoms are QM and which are MM and the type of QM-MM coupling (either mechanical or electrostating embedding).
+Note that in contrast to a QMtheory object or an MMtheory object, we also pass a fragment object to a QMMMTheory object as the atom-information is needed for defining the division of QM-region and MM-regions.
 
 
 ######################################
@@ -17,9 +36,11 @@ QMMMTheory class
  
   class QMMMTheory:
       def __init__(self, qm_theory=None, qmatoms=None, fragment=None, mm_theory=None, charges=None,
-                  embedding="Elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
+                  embedding="elstat", printlevel=2, numcores=1, actatoms=None, frozenatoms=None, excludeboundaryatomlist=None,
                   unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50,
-                  qm_charge=None, qm_mult=None):
+                  qm_charge=None, qm_mult=None, chargeboundary_method="chargeshift",
+                  dipole_correction=True, linkatom_method='simple', linkatom_simple_distance=None,
+                  linkatom_forceproj_method="adv", linkatom_ratio=0.723):
 
 **QMMMTheory** options:
 
@@ -109,6 +130,31 @@ QMMMTheory class
      - None
      - | Optional: List of frozen atoms in QM/MM, alternative to actatoms. 
        | NOTE: Only compatible if mm_theory is of NonBondedTheory class.
+   * - ``chargeboundary_method``
+     - string
+     - chargeshift
+     - | What chargeboundary method to use for covalent QM-MM boundary. 
+       | Default option: shift' . Other option: 'rcd'
+   * - ``dipole_correction``
+     - Boolean
+     - True
+     - | For chargeboundary='shift', whether to add additional charges to preserve dipole
+   * - ``linkatom_method``
+     - string
+     - 'simple'
+     - | What linkatom method to use. Options: 'simple', 'ratio'
+   * - ``linkatom_simple_distance``
+     - float
+     - None
+     - | For linkatom_method='simple', what QM1-L linkatom distance to use. Default setting is 1.09 Å.
+   * - ``linkatom_ratio``
+     - float
+     - 0.723
+     - | For linkatom_method='ratio', what ratio to use. Default is 0.723.
+   * - ``linkatom_forceproj_method``
+     - string
+     - 'adv'
+     - | What linkatom force projection method to use. Options: 'adv', 'lever'
 
 
 Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMTheory object:
@@ -123,7 +169,7 @@ Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMT
               periodic=True, platform='CPU', numcores=numcores, autoconstraints=None, rigidwater=False)
 
     #QM/MM theory object. QM-region defined as atom indices 500,501,502 and 503
-    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=fragment, embedding="Elstat", 
+    qmmm = QMMMTheory(qm_theory=qm, mm_theory=omm, fragment=fragment, embedding="elstat", 
               qmatoms=[500,501,502,503], printlevel=2, qm_charge=-1, qm_mult=6)
 
 
@@ -168,11 +214,13 @@ The QM-region needs to be defined in the QMMMTheory object by specifying which a
               qmatoms=[500,501,502,503], qm_charge=-1, qm_mult=6)
 
 Similarly the active-region (when performing a geometry optimization) needs to be defined by specifying which atoms are allowed to move.
-This information should be provided to the Optimizer.
+This information should be provided to the Optimizer instead (not the QMMMTheory object). 
 
 .. code-block:: python
 
     Optimizer(fragment=fragment, theory=QMMMobject, ActiveRegion=True, actatoms=[400,450,500,501,502,503,550,600,700])
+
+Note that for MD simulations one should use the frozenatoms option instead of actatoms.
 
 Both the QM-region and Active regions are thus defined as simple Python lists of integers (corresponding to atom indices).
 This approach allows you considerable flexibility in defining the QM/MM job. The QM-regions and active regions can be the same or different (quite common).
@@ -198,17 +246,77 @@ The file should contain integers separated by spaces or newlines.
                 qmatoms=qmatoms, qm_charge=-1, qm_mult=6)
     Optimizer(fragment=fragment, theory=QMMMobject, ActiveRegion=True, actatoms=actatoms)
 
+.. note::  Note that if one wants to use an active region in MD simulations at the QM/MM level one would have to define frozenatoms inside the OpenMMTheory object.
+
+####################################################################
+QM/MM coupling: mechanical vs. electrostatic embedding
+####################################################################
+
+QM/MM typically comes in 2 flavours: mechanical embedding and electrostatic embedding. The approaches differ in how the the QM/MM energy expression is actually constructed:
+
+.. math::
+
+    E_{QM/MM} = E_{QM} + E_{MM} + E_{coupling} 
+
+    E_{coupling} = E_{elstat} + E_{vdW} + E_{covalent}
+
+Mechanical embedding is the simplest QM/MM coupling scheme where the  :math:`E_{elstat}` term is calculated at the MM-level as a classical Coulomb term of pointcharge interactions between the QM and MM regions.
+Choose *embedding* = 'mechanical' when defining the QMMMTheory object to use mechanical embedding.
+Mechanical embedding requires pointcharges to be defined for each atom inside the QM-region which can introduce problem if the QM-region contains exotic entities such as metal complexes or clusters, and the QM-region atom charge definitions will requires some care.
+The main drawback of mechanical embedding is that the QM-energy of the QM-region (:math:`E_{QM}`) is calculated entirely without any environment present. For systems with strong polarization effects between regions this can be a major drawback.
+
+.. image:: figures/ash_mech_vs_elstat_embedding.png
+   :align: center
+   :width: 400
+
+
+Electrostatic embedding is a more sophisticated QM/MM coupling scheme where the :math:`E_{elstat}` term is calculated at the QM-level, by calculating it at the same time as the (:math:`E_{QM}`) term via the QM-program.
+Choose *embedding* = 'elstat' when defining the QMMMTheory object to use electrostatic embedding (it is the default).
+By including all MM pointcharges as additional nuclei-like terms in the 1-electron Hamiltonian of the QM-energy expression, the QM-energy is calculated in a field of the MM pointcharges, i.e. the QM electron density is polarized by the environment.
+The :math:`E_{vdW}` is in contrast calculated at the MM-level as a classical Lennard-Jones term between the QM and MM regions and is calculated at the same time as the MM-energy of the MM-region. The covalent bonded term (:math:`E_{covalent}`) also gets incorporated in the MM-energy calculation (though the linkatom part is handled by the QM-part).
+This means that in electrostatic embedding the QM/MM energy expression is actually calculated like this:
+
+.. math::
+
+    E_{QM/MM} = (E_{QM} + E_{elstat}) + (E_{MM} + E_{vdW} + E_{covalent}) = E_{QM}^{pol} + E_{MM}^{mod}
+
+
+where the :math:`E_{QM}^{pol} = (E_{QM} + E_{elstat})` term is calculated simultaneously as one term by the QM-program while the :math:`E_{MM}^{mod} = (E_{MM} + E_{vdW} + E_{covalent})` term is calculated as one term by the MM-program. 
+The presence of the MM pointcharges during the QM-calculation has the effect of the QM-calculation sensing the electrostatic part of the environment, the QM-density will be (mostly) correctly polarized and hence QM properties will also be more realistic.
+Electrostatic embedding is considered the standard QM/MM coupling scheme and is the default in ASH. It is more sophisticated than mechanical embedding and is usually the preferred choice for QM/MM calculations.
+The drawbacks of electrostatic embedding are :
+
+- It can only be used if the QM-program supports pointcharge embedding (including gradients on pointcharges). ASH currently supports pointcharge embedding for programs: ORCA, CFour, MRCC, xTB, pySCF, NWChem, QUICK, CP2K, MNDO, TeraChem.
+- The presence of a large number of MM pointcharges in the QM-calculation can slow down the QM-calculation considerably. Especially the QM-pointcharge gradient can be slow to calculate. See the *TruncatedPC* option below for a way to deal with this issue.
+- It requires some care in the handling of the covalent QM/MM boundary (see next sections on linkatoms, charge-shifting etc.)
+
+More sophisticated polarized embedding approaches are not yet available in ASH.
+
 ######################################
-QM/MM boundary treatment
+QM/MM boundary treatment: linkatoms
 ######################################
 
-If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied.
-In ASH this is treated by the popular linkatom method, combined with charge-shifting.
-A hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory.
-Additionally to prevent overpolarization, the atom charge of the MMatom is shifted towards its neighbours and a dipole correction
-applied by adding additional pointcharges (can be turned off by dipole_correction=False). These pointcharges are only visible to the QM theory.
+If the QMregion-MMregion boundary is between two bonded atoms, then a boundary correction needs to be applied as the QM-region will otherwise have a dangling bond, which would result in artifacts.
+In ASH this is treated by the popular linkatom method where a hydrogen-linkatom is added to cap the QM-subsystem. The hydrogen linkatoms are only visible to the QM theory, not the MM theory. The linkatoms are only used temporarily (automatically created and deleted) during the calculation of the QM-part and are never part of the system.
 
-The recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
+The need for a linkatom is automatically detected by ASH by noticing that 2 boundary atoms (QM1 and MM1) are bonded to each other according to connectivity information (determined by distances).
+ASH next places a hydrogen atom (H) along the bond axis between QM1 and MM1. The linkatom distance is determined according to which *linkatom_method* has been chosen.
+The standard *linkatom_method* = 'simple' option uses a fixed linkatom distance which is by default 1.09 Å (corresponds to a C-H bond length). The default distance can be changed by setting the *linkatom_simple_distance* keyword in the QMMMTheory object.
+This simple fixed-linkatom distance method is simplistic but works well in most cases as long as the QM-MM boundary is chosen well, i.e. the QM-MM boundary is not through a polar bond but rather a nonpolar C-C bond.
+See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary for proteins.
+
+An alternative *linkatom_method* option is *linkatom_method* = 'ratio' which calculates the linkatom position by scaling the difference between the QM1 and MM1 positions:
+ 
+ :math:`r_{L} = r_{QM1} + ratio*(r_{MM1}-r_{QM1})`
+
+The *linkatom_ratio* is by default 0.723 but can be changed (*linkatom_ratio* keyword).
+
+Finally, during a QM/MM gradient calculation there will be a gradient/force calculated on the (fictious) linkatom. This force is projected onto the QM1 and MM1 atoms to give the correct gradient for the QM/MM system.
+Two different forceprojections are available in ASH, controlled by the *linkatom_forceproj_method* keyword. The default is *linkatom_forceproj_method* = 'adv' 
+which is an advanced projection of the linkatom force onto the QM and MM atoms while the alternative is *linkatom_forceproj_method* = 'lever' utilizes the simple lever rule to determine how the force should be projected onto QM1 and MM1.
+Both approaches give similar results.
+
+Overall, the recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).
 By default ASH will exit if you try to define a QM-MM covalent boundary between two atoms that are not carbon atoms (since this is almost never desired). 
 To override this behaviour add "unusualboundary=True" as keyword argument when creating QMMMTheory object.
@@ -223,9 +331,9 @@ This can be accomplished like below. Note, however, that the QM-MM bonded terms 
             qmatoms=qmatoms, excludeboundaryatomlist=[5785])
 
 
-Special care should be taken when defining a QM-region for a biomolecular system
+**General recommendations for biomolecular systems:**
 
-**General recommendations:**
+Special care should be taken when defining a QM-region for a biomolecular system
 
 - Always cut a C-C bond that is as nonpolar as possible.
 - Focus on including nearby sidechains of residues that are charged (e.g. Arg, LYS, ASP, GLU) or are involved in important hydrogen bonding. 
@@ -234,6 +342,40 @@ Special care should be taken when defining a QM-region for a biomolecular system
 
 
 See :doc:`QM-MM-boundary_tutorial` for more information on how to define a good QM/MM boundary for proteins.
+
+
+####################################################################
+QM/MM boundary treatment: mechanical vs. electrostatic embedding
+####################################################################
+
+The chosen coupling scheme (mechanical vs. electrostatic) influences the treatment of the QM/MM boundary, including the linkatom handling.
+For mechanical embedding there is nothing besides the linkatom-treatment (see above) that needs to be done: the linkatoms are present during the QM-calculation but invisible to the MM-part and the linkatom force is projected onto the QM1 and MM1 atoms.
+
+However, in electrostatic embedding, the presence of the linkatom, as well as a bonded MM atom being so close, created problems, that if not treated this would lead to some artifical overpolarization.
+To prevent this overpolarization, the atom charge of the MMatom is traditionally shifted towards its bonded neighbours (MM2 atoms) with a possible dipole correction also applied.
+
+ASH includes 2 different chargeboundary-methods for preventing overpolarization at the QM-MM boundary which are controlled by the *chargeboundary_method* keyword in the QMMMTheory object:
+
+**Charge-shift method**
+
+The *chargeboundary_method* = 'chargeshift' option employs the popular charge-shifting strategy by Paul Sherwood and coworkers. See de Vries et al. J. Phys. Chem. B 1999, 103, 6133-6141.
+The 'chargeshift' method is used by default in ASH when electrostatic embedding is chosen.
+
+The charge of the MM1 atom is set to 0.0 and is shifted towards the MM2 atoms. Effectively, the original charge-value of the MM1 is divided by the number of MM2 atoms bonded to the MM1 atom and each
+MM2 atom receives a fraction of the original MM1 charge. This charge-shifting has the effect of avoiding the overpolarization that would have occured in the QM1-L and MM1 region while maintaining the overall charge of the system.
+The drawback, however, is that the MM1-MM2 dipole is no longer correct which is why a dipole correction is also applied. The dipole correction adds extra pointcharges around the MM2 atom to compensate. 
+In ASH the dipole correction is applied automatically by default but can be turned off ( dipole_correction=False).
+
+**RCD: Redistributed charge and Dipole scheme**
+
+The *chargeboundary_method* = 'rcd' option employs the RCD method by Donald Truhlar and coworkers. See Lin et al. J. Phys. Chem. A 2005, 109, 3991-4004.
+
+The RCD method is similar to the 'chargeshift' method but has some additional flexibility and can sometimes give better results.
+It also involves setting the charge of the MM1 pointcharge to 0.0 and redistributing the charge away. 
+However, instead of placing a fraction of the MM1 charge on the MM2 atoms the charges are instead placed along the MM1-MM2 bond midpoints. This defines the RC (redistributed charge) method.
+The RCD method involves in addition, changing the values of the charges placed on the MM1-MM2 bond midpoints to be twice as large as the divided MM1 charge-fraction. 
+Additionally the pointcharge on each MM2 atom is reduced by the same amount as the original MM1 charge-fraction. This redistribution in the RCD method has the effect of preserving the MM1-MM2 bond dipoles.
+
 
 ############################################
 How QM/MM works behind the scenes in ASH
@@ -345,7 +487,7 @@ Example: QM/MM with ORCA and OpenMMTheory
 
 See also :doc:`QM-MM-protein`.
 
-The files for this example (DHFR protein) are available in the `examples/QM-MM-examples/QM-MM-CHARMM-example <https://github.com/RagnarB83/ash/tree/master/ash/examples/QM-MM-examples/QM-MM-CHARMM-example>`_ directory of the ASH repository.  
+The files for this example (DHFR protein) are available in the `examples/QM-MM-examples/QM-MM-CHARMM-example <https://github.com/RagnarB83/ash/blob/master/examples/QM-MM-examples/QM-MM-CHARMM-example>`_ directory of the ASH repository.  
 
 
 .. code-block:: python

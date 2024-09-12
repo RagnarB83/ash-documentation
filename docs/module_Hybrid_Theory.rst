@@ -2,19 +2,49 @@ Hybrid Theory
 ==========================
 
 Hybrid Theories in ASH are multi-level theories that combine multiple theory-level objects to give some kind of combined theory description of the system.
-The different theories might be used for different parts of the system,then called **Multilevel Theory methods**  (e.g. QMMMTheory or ONIOMTheory) or on the same part of the system, then called **ComboTheory** (examples are **WrapTheory** and **DualTheory**)
+The different theories might be used for different parts of the system, then called **Multilevel Theory methods**  (e.g. **QMMMTheory** or **ONIOMTheory**) or on the same part of the system, then called **ComboTheory** (examples are **WrapTheory** and **DualTheory**)
+
+The strength of performing hybrid calculations in ASH is that in principle any level of theory in any QM or MM program interface can be combined with any other level of theory in any other QM or MM program interface
+to perform these hybrid-theory calculations.
+
+.. image:: figures/hybridtheory.png
+   :align: center
+   :width: 700
 
 
 ######################################################
 Multilevel Theory Methods
 ######################################################
 
-The **QMMMTheory** class in ASH (:doc:`module_QM-MM`) is a special type of a multilevel method where 1 single QMTheory is combined with 1 single MMTheory (usually OpenMMTheory) to describe different parts of the system.
+
+**QM/MM**
+
+The **QMMMTheory** class in ASH (:doc:`module_QM-MM`) is a special type of a multilevel method where 1 single QMTheory is combined with 1 single MMTheory (usually OpenMMTheory, see :doc:`OpenMM-interface`) to describe different parts of the system.
 QM/MM as a method is typically used when the system can naturally be divided up into a local important part (described by a QM method) and an environment part (described by a classical MM method).
 The coupling between QM and MM system is usually performed using electrostatic embedding.
-QM/MM is typically described as an additive energy expression: E_QM/MM = E_QM + E_MM + E_coupling where E_coupling is the interaction between the QM and MM parts.
+QM/MM is typically described as an additive energy expression: 
 
-An alternative to the additive QM/MM expression is the subtractive ONIOM expression.
+
+.. math::
+
+    E_{QM/MM} = E_{QM} + E_{MM} + E_{coupling} 
+
+    E_{coupling} = E_{elstat} + E_{vdW} + E_{covalent}
+
+where :math:`E_{QM}` is the QM-energy of the QM-region, :math:`E_{MM}` is the MM-energy of the MM-region and  :math:`E_{coupling}` is the interaction between the QM and MM region. The coupling terms account for electrostatic, vdW and covalent (bonded) interactions between the QM and MM regions
+and can be done using mechanical embedding, electrostatic embedding or polarized embedding (not yet in ASH). See :doc:`module_QM-MM` for information on how to perform QM/MM calculations in ASH.
+
+An alternative to the additive QM/MM expression is the subtractive ONIOM expression, here shown as a 2-layer ONIOM description:
+
+**2-layer ONIOM**
+
+.. math::
+
+    E_{ONIOM} = E^{LL}_{12} + E^{HL}_{1} - E^{LL}_{1}
+
+The ONIOM method requires a low-level theory energy evaluation for the full system, a high-level theory (HL) calculation of the important part of the system and a low-level theory (LL) calculation 
+of the environment part of the system. ONIOM is an interesting alternative to QM/MM because the low-level theory does not have to be an MM theory but can be a lower-level QM theory (e.g. semi-empirical QM or a cheap DFT description). See :doc:`module_ONIOM` for information on how to perform ONIOM calculations in ASH.
+
 
 ######################################################
 ComboTheory methods
@@ -65,9 +95,6 @@ A delta-machine-learning correction would be another example where WrapTheory wo
 See DFTD4 section in :doc:`helper_programs` for more information on the DFTD4Theory object.
 
 
-######################################################
-DualTheory methods
-######################################################
 
 **DualTheory** is an experimental ASH Theory that combines two different theory objects, e.g. a low-level QM theory and a high-level QM theory in a specific way in order to speed up an otherwise expensive high-level calculation.
 This only makes sense for an expensive multi-iteration job where the Theory object is called multiple times, e.g. a geometry optimization or NEB calculation (not a single-point calculation).

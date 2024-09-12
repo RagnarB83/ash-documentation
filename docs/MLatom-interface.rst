@@ -38,7 +38,7 @@ WARNING: As the interface to MLatom is new and MLatom is under rapid development
    * - ``ml_model``
      - string
      - None
-     - Name of ML model to use. Options: 'ani', 'dpmd', 'gap', 'physnet', 'sgdml', 'mace'.
+     - Name of ML model to use. Options: 'ani', 'dpmd', 'gap', 'kreg', 'physnet', 'sgdml', 'mace'.
    * - ``ml_program``
      - string
      - None
@@ -128,7 +128,7 @@ See also :doc:`torch_interface` for direct use of TorchANI/PyTorch (without MLat
 *Loading and running pretrained model from file*
 
 We next show how to use a ML-model (*ml_model* keyword). If the training has already been performed and available as a file, can we load it.
-First we have to choose what type of ML-model potential we want to use. The options are: 'ani', 'dpmd', 'gap', 'physnet', 'sgdml', 'mace'.
+First we have to choose what type of ML-model potential we want to use. The options are: 'ani', 'dpmd', 'gap', 'kreg', 'physnet', 'sgdml', 'mace'.
 Next we must choose the file containing the model. This file often has a .pt suffix (for pytorch models) or a .pkl suffix (for scikit-learn models) or various other extensions.
 
 .. code-block:: python

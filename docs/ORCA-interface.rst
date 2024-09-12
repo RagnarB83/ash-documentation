@@ -291,6 +291,94 @@ This could be utilized to make a more accurate guess of the whole system.
 
 
 ################################################################################
+ORCA_JSON 
+################################################################################
+
+Since ORCA 6.0, ORCA-JSON feature has become more powerful, allowing for extracting MOs and all integrals from an ORCA GBW-file.
+ASH features a few functions for conveniently creating or reading ORCA-JSON files.
+
+.. code-block:: python
+
+  #Wrapper around orca_2json to create JSON file from ORCA GBW file
+  def create_ORCA_json_file(file, orcadir=None, format="json", basis_set=True, mo_coeffs=True, one_el_integrals=True,
+                            two_el_integrals=False, two_el_integrals_type="ALL", dipole_integrals=False, full_int_transform=False):
+
+  #Read ORCA json file: MO-coefficients, MO-energies, basis set, H,S,T matrices, 2-electron ints, densities etc.
+  #Returns a dictionary with all information
+  def read_ORCA_json_file(file):
+
+  #Read ORCA MSPack (JSON-like binary format) file
+  #Returns a dictionary with all information
+  def read_ORCA_msgpack_file(file):
+
+  #Read ORCA BSON (JSON-like binary format) file
+  #Returns a dictionary with all information
+  def read_ORCA_bson_file(file):
+
+  #Get densities from data dictionary (from read_ORCA_json_file)
+  def get_densities_from_ORCA_json(data):
+
+  #Grab ORCA wfn from jsonfile or data-dictionary
+  def grab_ORCA_wfn(data=None, jsonfile=None, density=None):
+
+  #Reverse JSON to GBW
+  def create_GBW_from_json_file(jsonfile, orcadir=None):
+
+.. warning::  Do note that if the GBW-file contains a ROHF wavefunction then this will most likely not work due to the lack of ORCA-JSON handling for ROHF.
+
+################################################################################
+Creating FCIDUMP file from ORCA
+################################################################################
+
+The ORCA-JSON functionality can be utilized to create FCIDUMP files using the function **create_ORCA_FCIDUMP**.
+
+.. code-block:: python
+
+  def create_ORCA_FCIDUMP(gbwfile, header_format="FCIDUMP", filename="FCIDUMP_ORCA", orca_json_format="msgpack",
+                          int_threshold=1e-16,  mult=1, full_int_transform=False,
+                          convert_UHF_to_ROHF=True):
+
+Examples:
+
+.. code-block:: python
+
+  # Create standard FCIDUMP file from ORCA GBW-file
+  create_ORCA_FCIDUMP("orca.gbw", header_format="FCIDUMP", filename="FCIDUMP_ORCA",
+                        int_threshold=1e-16, scf_type="RHF", mult=1)
+  # Create MRCC-style FCIDUMP-file (fort.55) from ORCA GBW-file
+  create_ORCA_FCIDUMP("orca.gbw", header_format="MRCC", int_threshold=1e-16, scf_type="RHF", mult=1)
+
+.. warning::  Do note that if the GBW-file contains a ROHF wavefunction then this will most likely not work due to the lack of ORCA-JSON handling for ROHF.
+
+.. warning:: If a UHF/UKS WF is found, then this is currently not handled. However, the convert_UHF_to_ROHF keyword can be set to True to make a naive conversion of UHF/UKS to ROHF.
+  
+################################################################################
+Workflow to automate ORCA-orbital creation
+################################################################################
+
+ORCA is capable of producing various type of orbitals such as SCF-orbitals (RHF,UHF,ROHF etc.), MP2 natural orbitals, CC natural orbitals,
+MRCI natural orbitals. The latter type of orbitals require a bit of know-how.
+To automate the creation of these orbitals, ASH features a function called **ORCA_orbital_setup**.
+
+.. code-block:: python
+
+  #Function to prepare ORCA orbitals for another ORCA calculation
+  def ORCA_orbital_setup(orbitals_option=None, fragment=None, basis=None, basisblock="", extrablock="", extrainput="", label="frag",
+          MP2_density=None, MDCI_density=None, memory=10000, numcores=1, charge=None, mult=None, moreadfile=None,
+          gtol=2.50e-04, nmin=1.98, nmax=0.02, CAS_nel=None, CAS_norb=None,CASCI=False, natorb_iterations=None,
+          FOBO_excitation_options=None, MRCI_natorbiterations=0, MRCI_tsel=1e-6,
+          ROHF=False, ROHF_case=None, MP2_nat_step=False, MREOMtype="MR-EOM",
+          NMF=False, NMF_sigma=None):
+
+Example on how to get CCSD natural orbitals from an unrelaxed CCSD density:
+
+.. code-block:: python
+
+  newmofile, nat_occupations = ORCA_orbital_setup(orbitals_option="CCSD", fragment=frag, label="CCSD" 
+                basis="def2-SVP", MDCI_density="unrelaxed", charge=0, mult=1)
+  # Returns name of the MO-file (here called CCSD_orca.mdci.nat)
+
+################################################################################
 Useful ORCA functions
 ################################################################################
 

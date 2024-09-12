@@ -96,14 +96,12 @@ Supporting analytic Hessian
 ################################################
 
 If the QM-program allows the calculation of an analytic Hessian then this can be added to the interface.
+Analytical Hessian calculations use the **AnFreq** function.
 
-In this case the theory.run method should request the analytic Hessian to be calculated when the Hessian Boolean keyword (passed to theory.run method)
+If you want to add analytical-frequency option, the theory.run method should request the analytic Hessian to be calculated when the Hessian Boolean keyword (passed to theory.run method)
 is True. 
-Additionally the AnFreq ASH function (see ash/modules/module_freq.py) need a minor modification.
 
-See ORCATheory and CFourTheory as examples.
-
-
+See ORCATheory and CFourTheory as examples of interfaces.
 
 ################################################
 How should I deal with QM/MM ?
@@ -130,4 +128,5 @@ How do I make my new interface part of ASH?
 ################################################
 
 Fork a version of ASH, add the file and necessary code changes (ideally nothing should change in any other files) and make a pull request.
+Ask the main author to review.
 

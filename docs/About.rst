@@ -15,7 +15,7 @@ The program allows for convenient ways of doing single-point calculations, geome
 nudged elastic band optimizations, molecular dynamics and numerical frequencies using any MM or QM method in a program for which there is an interface.
 MM and QM objects are easily combined into QM/MM objects.
 ASH is a great solution for automating workflows and performing multi-scale and multi-theory calculations.
-Interfaces are available to various popular QM codes, such as ORCA, xTB, CP2K, Psi4, PySCF, Dalton, MRCC, CFour, MNDO, Terachem, QUICK, Gaussian, NWChem. 
+Interfaces are available to various popular QM codes, such as ORCA, xTB, CP2K, Psi4, PySCF, ccpy, Dalton, MRCC, CFour, MNDO, Terachem, QUICK, Gaussian, NWChem. 
 Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
 
 The code is free and open-source and available on `Github <https://github.com/RagnarB83/ash>`_
@@ -50,18 +50,19 @@ Features
 
 **Interfaces to various QM codes:**
 
-- ORCA (inputfile-based). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding.
-- xTB (both as Python library and inputfile-based). OpenMP parallelization
-- Psi4 (both as Python library and inputfile-based). Threaded parallelization.
-- PySCF (as Python library). OpenMP parallelization.
-- CFour
-- MRCC
-- Dalton
-- Dice
-- NWChem
-- TeraChem
-- QUICK
-- CP2K
+- ORCA (general QM-program). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding.
+- xTB (semi-empirical QM (DFTB). OpenMP parallelization
+- Psi4 (general QM-program, Python library. Threaded parallelization.
+- PySCF (general QM library in Python, OpenMP parallelization.
+- ccpy (coupled cluster code in PYthon)
+- CFour (WFT and CC program)
+- MRCC (general QM-program and CC code)
+- Dalton (general QM program)
+- Dice (a selected CI code)
+- NWChem (general QM program)
+- TeraChem (GPU-based QM code)
+- QUICK (GPU-based QM code)
+- CP2K (Periodic Gaussian-planewave DFT)
 
 **Parallelization :**
 
