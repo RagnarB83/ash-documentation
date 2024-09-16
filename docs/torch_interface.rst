@@ -1,11 +1,16 @@
-Torch/TorchANI interface
+Torch interface
 ======================================
 
-PyTorch is a very general and one of the most popular approches to training neural networks in Python.
+PyTorch is a very general deep-learning framework and one of the most popular approches to training neural networks in Python.
 TorchANI is a PyTorch-based implementation of the ANI neural network potential for describing potential energy surfaces of molecular systems (and other properties).
+AIMNet2 is another newer neural network potential, also implemented using PyTorch, capable of unprecedented accuracy for up to 14 chemical elements, 
+support for charged systems and is capable of describing long-range interactions and dispersion.
+AIMNet2 paper: https://doi.org/10.26434/chemrxiv-2023-296ch-v2
 
-ASH features a basic interface to PyTorch and TorchANI that allows easy use of pre-trained neural-network based on
-machine-learning models. This allows the use of such neural network potentials as theory-levels within ASH.
+
+ASH features a basic interface to PyTorch that furthermore supports both TorchANI and AIMNet2 neural network models,
+that allows easy use of pre-trained neural network potentials and even training of new models. 
+This allows the use of such neural network potentials as any other theory-level within ASH.
 
 Energies and gradients can be requested (just like a regular QM or MM theory) and so a valid TorchTheory object can be used
 for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH. 
@@ -35,7 +40,7 @@ for single-point energies, geometry optimizations, numerical frequencies, surfac
    * - ``model_name``
      - string
      - None
-     - Name of pretrained model to use. Options: 'ANI1x', 'ANI2x', 'ANI1ccx' (requires TorchANI)
+     - Name of pretrained model to use. Options: 'AIMNet2','ANI1x', 'ANI2x', 'ANI1ccx' (requires TorchANI or AIMNet2)
    * - ``model_object``
      - PyTorch NN model object
      - None
@@ -66,7 +71,7 @@ for single-point energies, geometry optimizations, numerical frequencies, surfac
      - Whether to create a TorchTheory object that will be used for training.
 
 ################################################################################
-Torch/TorchANI installation
+Torch/TorchANI/AIMNet2 installation
 ################################################################################
 
 
@@ -84,14 +89,48 @@ Torchani can be installed via pip:
 
     pip install torchani
 
+To use AIMNet2 follow the installation instructions at https://github.com/isayevlab/AIMNet2
+We installed it like this in a conda environment where Pytorch and ASH had already been installed:
+
+.. code-block:: shell
+
+  git clone https://github.com/isayevlab/AIMNet2.git
+  cd AIMNet2
+  python setup.py install
 
 ################################################################################
-Examples
+AIMNet2 Examples
+################################################################################
+
+*Basic AIMNet2 example*
+
+It is easy to use the AIMNet2 neural network potential with TorchTheory.
+The available models are: 'AIMNet2', and it is available for elements: 'H', 'C', 'N', 'O', 'F', 'Cl', 'S', 'Si', 'B', 'P', 'Br', 'As', 'I', 'Se'
+
+.. code-block:: python
+
+    from ash import *
+
+    #H2O fragment
+    frag = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+  
+    # Create a TorchTheory object using the AIMNet2 neural network potential
+    theory = TorchTheory(model_name="AIMNet2", platform="cpu")
+    
+    #Run a single-point energy+gradient calculation
+    #Optimizer,NumFreq, MolecularDynamics etc. should also work
+    result = Singlepoint(theory=theory, fragment=frag, Grad=True)
+
+    print(result.energy)
+    print(result.gradient)
+
+################################################################################
+TorchANI Examples
 ################################################################################
 
 *Basic TorchANI example*
 
-The easiest way to use a PyTorch-based neural network within ASH is to use a pretrained ANI-based model using the TorchANI library.
+A pretrained ANI-based model using the TorchANI library can easily be used as well.
 The available models are: 'ANI1x', 'ANI1ccx', 'ANI2x' and they are available for elements: 'H', 'C', 'N', 'O'
 
 .. code-block:: python
