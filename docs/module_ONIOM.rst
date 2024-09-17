@@ -27,7 +27,7 @@ The simplest 2-layer ONIOM description looks like this
 The 2-layer ONIOM method requires a low-level theory (LL) energy evaluation for the full system (labeled 12), a high-level theory (HL) calculation of the important part of the system (region 1) and a low-level theory (LL) calculation of the same region 1 (to avoid double-counting).
 While this is very similar to QM/MM there are some differences:
 
-- A full LL description of the whole system is required (if LL is MM then MM parameters for the core region is required).
+- A full LL description of the whole system is required (if LL is MM then MM parameters for the core region are required).
 - The LL theory does not have to be MM but can also be a lower-level QM theory (e.g. semi-empirical QM or a cheap DFT treatment).
 - The coupling between HL and LL works a little differently than in QM/MM.
 

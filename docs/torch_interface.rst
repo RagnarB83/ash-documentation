@@ -1,9 +1,9 @@
 Torch interface
 ======================================
 
-PyTorch is a very general deep-learning framework and one of the most popular approches to training neural networks in Python.
+PyTorch is a very general deep-learning framework within the Python ecosystem and one of the most popular approches to training neural networks.
 TorchANI is a PyTorch-based implementation of the ANI neural network potential for describing potential energy surfaces of molecular systems (and other properties).
-AIMNet2 is another newer neural network potential, also implemented using PyTorch, capable of unprecedented accuracy for up to 14 chemical elements, 
+AIMNet2 is another even newer neural network potential, also implemented using PyTorch, capable of unprecedented accuracy for up to 14 chemical elements, 
 support for charged systems and is capable of describing long-range interactions and dispersion.
 AIMNet2 paper: https://doi.org/10.26434/chemrxiv-2023-296ch-v2
 
@@ -13,7 +13,8 @@ that allows easy use of pre-trained neural network potentials and even training 
 This allows the use of such neural network potentials as any other theory-level within ASH.
 
 Energies and gradients can be requested (just like a regular QM or MM theory) and so a valid TorchTheory object can be used
-for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH. 
+for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
+Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 
 
 **TorchTheory class:**
@@ -74,12 +75,15 @@ for single-point energies, geometry optimizations, numerical frequencies, surfac
 Torch/TorchANI/AIMNet2 installation
 ################################################################################
 
+*PyTorch*
 
- `PyTorch <pytorch.org>`_  needs to be installed on your system. The easiest way to install PyTorch is via pip:
+ `PyTorch <pytorch.org>`_  needs to be installed on your system to use TorchTheory. The easiest way to install PyTorch is via pip:
 
 .. code-block:: python
 
     pip install torch
+
+*TorchANI*
 
 To use pre-trained ANI neural network potentials you need to install TorchANI.
 See `TorchANI documentation <https://aiqm.github.io/torchani/>`_ and `TorchANI repository <https://github.com/aiqm/torchani>`_
@@ -88,6 +92,8 @@ Torchani can be installed via pip:
 .. code-block:: python
 
     pip install torchani
+
+*AIMNet2*
 
 To use AIMNet2 follow the installation instructions at https://github.com/isayevlab/AIMNet2
 We installed it like this in a conda environment where Pytorch and ASH had already been installed:

@@ -1,12 +1,12 @@
 Machine learning in ASH
 =========================================================
 
-ASH is a well-suited program for utilizing machine-learning within computational chemistry,
+ASH is well-suited for utilizing machine-learning within computational chemistry,
 being a scriptable Python library with interfaces to various quantum chemistry codes and the OpenMM molecular mechanics code.
 This makes ASH convenient for generating training data for machine-learning potentials.
-Additionally, as the ASH job-types are theory-agnostic, ML-potentials are just as valid as input to computational chemistry jobs within ASH.
+Additionally, as almost all ASH job-types are theory-agnostic, ML-potentials are just as valid as input to computational chemistry jobs within ASH (as long as an interface to that ML-potential is available).
 Thanks to interfaces to PyTorch, MLatom and other machine learning libraries, 
-the training can also be performed within the ASH environment and pre-trained models can be utilized
+the training of ML-potentials can also be performed within the ASH environment and pre-trained models can be utilized
 directly in ASH just as easily as any other Theory object.
 
 Machine learning capabilities of ASH are expected to grow in the future.
@@ -16,7 +16,8 @@ Creating training data for machine-learning potentials or Δ-learning
 ################################################################################
 
 ASH features a function **create_ML_training_data** that can be used to generate energy or energy+gradient data,
-suitable for training machine-learning potentials or Δ-learning corrections. Other properties are currently not supported, a manual workflow is needed for those.
+suitable for training machine-learning potentials or Δ-learning corrections. 
+Other properties are currently not supported, a manual workflow is needed for those.
 
 .. code-block:: python
         
@@ -70,7 +71,7 @@ The latter can e.g. come from a molecular dynamics simulation.
     #produces files: train_data.xyz, train_data.energies, train_data.gradients
 
 Now that the training data has been created it can be used as input to a machine-learning training library.
-Below we show as an example how to use the ASH interface to the MLatom library to train a Δ-learning correction potential
+Below we show as an example how to use the ASH interface to the MLatom library to train a Δ-learning correction potential:
 
 .. code-block:: python
 
@@ -85,10 +86,8 @@ Below we show as an example how to use the ASH interface to the MLatom library t
 Interface to Torch and TorchANI
 ################################################################################
 
-The interface to  `PyTorch <pytorch.org>`_ and `TorchANI <https://aiqm.github.io/torchani/>`_ 
-is documented at :doc:`torch_interface`.
-
-It allows easy use of Torch-based machine-learning potentials in ASH.
+The interface to  `PyTorch <pytorch.org>`_ is documented at :doc:`torch_interface` that can be used for both ANI-style and AIMNet2 potentials.
+This interface allows easy use of Torch-based machine-learning potentials in ASH.
 
 .. code-block:: python
 
@@ -102,6 +101,14 @@ It allows easy use of Torch-based machine-learning potentials in ASH.
     
     #Run a geometry optimization
     Optimizer(theory=theory, fragment=frag)
+
+################################################################################
+Interface to MLatom
+################################################################################
+
+MLatom is a library for training and using ML potentials in computational chemistry.
+The ASH interface can be used for both training and using ML-atom potentials.
+See :doc:`MLatom-interface` for more.
 
 ################################################################################
 Using machine-learning potentials in OpenMMTheory
@@ -124,7 +131,7 @@ If OpenMM-Torch is installed then a ML-force can be loaded and added to an OpenM
     #Fragment
     frag = Fragment(pdbfile="file.pdb")
 
-    #Load a Torch model using OpenMM-Torch to get an OpenMM-compatible force
+    #Load a Torch model from file using OpenMM-Torch to get an OpenMM-compatible force
     force = TorchForce('model.pt')
 
     #Create the ASH OpenMMTheory object without any force
@@ -160,12 +167,3 @@ The ASH interface allows easy creation of a mixed system like this:
 
     # Run a simulation
     MolecularDynamics(theory=omm, fragment=frag, simulation_steps=1000, timestep=0.001)
-
-
-################################################################################
-Interface to MLatom
-################################################################################
-
-MLatom is a library for training and using ML potentials in computational chemistry.
-The ASH interface can be used for both training and using ML-atom potentials.
-See :doc:`MLatom-interface` for more.
