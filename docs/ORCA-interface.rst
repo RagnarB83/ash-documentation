@@ -243,6 +243,9 @@ While this could in principle simply be specified by the user in the orcablocks 
 attempting a broken-symmetry search everytime the program is called, e.g. in every ASH optimization step or an ASH MD run. 
 This is almost never what we want since we simply want to find the broken-symmetry SCF solution once and then reuse those orbitals in a subsequent step (and so on).
 This is why ASH features a way to control the broken-symmetry search by the *brokensym* keyword in the ORCATheory object as shown below.
+In addition to the *brokensym* keyword we have to specify the high-spin multiplicity and which atom indices to flip as a list(atomstoflip) in the molecule.
+Do note that *atomstoflip* should always be a list of atom indices referring to the whole system. 
+If the ORCATheory object is used to make a QMMMTheory object, the atom indices are automatically converted into QM-region indices by ASH.
 
 .. code-block:: python
 
@@ -257,7 +260,7 @@ This is why ASH features a way to control the broken-symmetry search by the *bro
     #Run a broken-symmetry DFT geometry optimization
     Optimizer(theory=ORCAcalc, fragment=frag)
 
-Running this job would have the effect of ASH initially writing an ORCA inputfile containing broken-symmetry settings (Flipspin and FinalMS keywords, high-spin multiplicity etc.)
+Running the above job would have the effect of ASH initially writing an ORCA inputfile containing broken-symmetry settings (Flipspin and FinalMS keywords, high-spin multiplicity etc.)
 but this would only apply to the first step of the geometry optimization. 
 Once the ORCATheory object has been run once with broken-symmetry settings, the broken-symmetry feature is automatically turned off.
 The next time the ORCATheory object is run (the next geometry optimization step of the above example), ASH creates an ORCA inputfile
