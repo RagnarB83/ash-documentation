@@ -158,6 +158,24 @@ ASH can find the ORCA program in a few different ways.
 
 
 ################################################################################
+Parallelization
+################################################################################
+
+ORCA parallelization is handled by OpenMPI. By specifying the numcores=X as a keyword when creating the ORCATheory object,
+a *%pal numcores X end block* will be added to the ORCA inputfile that ASH creates. ORCA then handles its own parallelization, 
+will call the OpenMPI mpirun binary when needed which does requires the correct OpenMPI version to be installed and available in PATH.
+Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires
+setting (in the shell or jobscript):
+
+.. code-block:: text
+
+  export PATH=/path/to/openmpi/bin:$PATH
+  export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH
+
+or alternatively loading the appropriate module (if the computer is using modules). 
+Set these variables in the job-script (see :doc:`basics`) that you are using.
+
+################################################################################
 Examples
 ################################################################################
 
@@ -192,7 +210,6 @@ Note that ASH handles aspects such as telling ORCA what orbitals to read as well
     Singlepoint(theory=ORCAcalc, fragment=HF_frag, Grad=True)
 
 
-
 Here a fragment (here called HF_frag with a defined charge and multiplicity) is defined (from an XYZ file) and passed to the Singlepoint function along with an ORCAtheory object (called ORCAcalc). The input, and blocks string variables are defined and passed onto the ORCA object via keyword arguments. 
 By default, the ORCA autostart feature is active, meaning that if an inputfile with name "orca-input.inp" is run, ORCA will
 try to read orbitals from "orca-input.gbw" file if present. This is utilized automatically during geometry optimizations, numerical frequencies as well
@@ -216,24 +233,37 @@ Once the ORCA calculation is done the outputfile (or other files) is read for in
 and ASH will continue. The ORCA inputfile , "orca-input.inp" may be replaced later (e.g. if an optimization job" and ORCA
 will be run again.
 
-
 ################################################################################
-Parallelization
+Broken-symmetry DFT example
 ################################################################################
 
-ORCA parallelization is handled by OpenMPI. By specifying the numcores=X, a *%pal numcores X end block* will be added to the
-ORCA inputfile created by Ash. ORCA will then call the OpenMPI mpirun binary when needed and this requires the
-correct OpenMPI version to be available.
-Make sure the recommended OpenMPI version for the ORCA version you are using is available. This typically requires
-setting (in the shell or jobscript):
+ORCA is quite a convenient program for finding broken-symmetry SCF solutions and within an ORCA inputfile one can 
+easily tell ORCA to find a broken-symmetry solution within the %scf block (Flipspin or Brokensym options). 
+While this could in principle simply be specified by the user in the orcablocks variable, this would have the drawback of ORCA
+attempting a broken-symmetry search everytime the program is called, e.g. in every ASH optimization step or an ASH MD run. 
+This is almost never what we want since we simply want to find the broken-symmetry SCF solution once and then reuse those orbitals in a subsequent step (and so on).
+This is why ASH features a way to control the broken-symmetry search by the *brokensym* keyword in the ORCATheory object as shown below.
 
-.. code-block:: text
+.. code-block:: python
 
-  export PATH=/path/to/openmpi/bin:$PATH
-  export LD_LIBRARY_PATH=/path/to/openmpi/lib:$LD_LIBRARY_PATH
+    #Create fragment object from XYZ-file. Here a hypothetical Fe dimer complex
+    frag=Fragment(xyzfile='fedimer.xyz', charge=0, mult=1)
+    
+    #ORCA settings
+    inputline="! BP86 def2-SVP tightscf"
+    #Here we specify a broken-symmetry solution with a high-spin multiplicity of 11 and flipping atoms no. 0
+    ORCAcalc = ORCATheory(orcasimpleinput=inputline, brokensym=True, HSmult=11, atomstoflip=[0])
 
-or alternatively loading the appropriate module (if the computer is using modules). 
-Set these variables in the job-script (see :doc:`basics`) that you are using.
+    #Run a broken-symmetry DFT geometry optimization
+    Optimizer(theory=ORCAcalc, fragment=frag)
+
+Running this job would have the effect of ASH initially writing an ORCA inputfile containing broken-symmetry settings (Flipspin and FinalMS keywords, high-spin multiplicity etc.)
+but this would only apply to the first step of the geometry optimization. 
+Once the ORCATheory object has been run once with broken-symmetry settings, the broken-symmetry feature is automatically turned off.
+The next time the ORCATheory object is run (the next geometry optimization step of the above example), ASH creates an ORCA inputfile
+with regular SCF inputsettings with the spin multiplicity being the low-spin BS multiplicity. 
+Since the broken-symmetry SCF orbitals are available in the GBW file they are automatically loaded.
+
 
 
 ################################################################################

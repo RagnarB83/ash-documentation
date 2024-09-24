@@ -172,7 +172,8 @@ Molecular symmetry information can be provided to the PySCFTheory object and thi
 
 **via ORCATheory or ORCA GBW-file**
 
-By providing a :doc:`ORCA-interface` object when creating the ccpyTheory object, an ORCA calculation will first be run (a HF/DFT RHF/ROHF SCF). Once the ORCA run is complete, the ORCA GBW file is automatically converted into a JSON-file, containing MOs and integrals. 
+By providing a :doc:`ORCA-interface` object when creating the ccpyTheory object, an ORCA calculation will first be run (a HF/DFT RHF/ROHF SCF). 
+Once the ORCA run is complete, the ORCA GBW file is automatically converted into a JSON-file, containing MOs and integrals. 
 The JSON-file contents are processed and used to setup the ccpy calculation before running the ccpy coupled cluster job.
 Because of the  GBW->JSON conversion and integral processing, using ORCATheory will take quite a bit longer than using PySCFTheory (above).
 ASH supports reading ORCA-created JSON files in regular ASCII JSON, BSON and MSGPack formats. The MSGPack format is particularly fast and space-efficient.
@@ -270,7 +271,7 @@ Unfortunately the ORCA GBW->JSON conversion that **create_ORCA_FCIDUMP** uses, d
   orcatheory = ORCATheory(orcasimpleinput="! RHF def2-SVP")
   Singlepoint(theory=orcatheory, fragment=frag)
   create_ORCA_FCIDUMP(orcatheory.filename+'.gbw', header_format="FCIDUMP", filename="FCIDUMP_ORCA",
-                          int_threshold=1e-16, scf_type="RHF", mult=1)
+                          int_threshold=1e-16, mult=1)
 
 
 It is also possible to use the ASH function **ORCA_orbital_setup** to conveniently create reference orbitals for ccpy from ORCA
@@ -286,7 +287,7 @@ that can then be used to create a FCIDUMP file.
 
   #Create FCIDUMP file from MP2 natural orbital GBW-file
   create_ORCA_FCIDUMP(newmofile, header_format="FCIDUMP", filename="FCIDUMP_ORCA",
-                          int_threshold=1e-16, scf_type="RHF", mult=1)
+                          int_threshold=1e-16, mult=1)
 
 ################################
 Calculate natural orbitals
@@ -356,7 +357,7 @@ Example using ORCA as reference:
 
   #Create FCIDUMP file
   create_ORCA_FCIDUMP(orcatheory.filename+'.gbw', header_format="FCIDUMP", filename="FCIDUMP_ORCA",
-                          int_threshold=1e-16, scf_type="RHF", mult=1)
+                          int_threshold=1e-16, mult=1)
   #ccpy
   theory = ccpyTheory(method="CCSD(T)", fcidumpfile="FCIDUMP_ORCA", frozencore=True, 
               cc_tol=1e-10, numcores=1, cc_maxiter=300)
