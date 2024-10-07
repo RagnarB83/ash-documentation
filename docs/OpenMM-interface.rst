@@ -6,6 +6,41 @@ OpenMM has been designed to run on both CPU and GPU codes with the GPU code bein
 
 ASH features a flexible interface to the Python API of the OpenMM library. 
 
+######################################
+Installing OpenMM
+######################################
+
+OpenMM is quite easy to install within a conda environment.
+See official `OpenMM installation instructions <http://docs.openmm.org/latest/userguide/application/01_getting_started.html>`_
+For ASH it is important to install OpenMM within the same conda environment that ASH is using, it must be using the same Python.
+
+.. code-block:: shell
+
+  #Activate your ASH conda environment using conda or mamba
+  conda activate ASHenv
+  # Install OpenMM
+  conda install -c conda-forge openmm
+
+
+#############################################
+Checking OpenMM for CPU and GPU execution
+#############################################
+
+Once installed you can check the OpenMM installation by running the following shell command:
+
+.. code-block:: shell
+
+  #Make sure that your Python environment is active
+  python -m openmm.testInstallation
+
+The command will check for available platforms that OpenMM can run on.
+The possible platforms are: 'Reference', 'CPU', 'OpenCL', 'CUDA'.
+Reference and CPU platforms are for CPU execution and should always be available, 
+while OpenCL and CUDA are GPU-platforms and will only work if the computer has a GPU.
+The CUDA platform additionally will only work if the GPU is by Nvidia and has the CUDA toolkit installed.
+
+.. warning:: When testing for GPU platforms using the command above, the command will only show you platforms for the computer that it is executed on. If you are on a computing cluster, you should first ssh to the node and then run the command. Otherwise, only 'Reference' and 'CPU' platforms will show up.
+
 
 ######################################
 The OpenMMTheory class 
@@ -253,6 +288,9 @@ The OpenMMTheory class:
      - | Change masses for selected indices. Should be a dict of ={atomindex: mass} 
 
 
+######################################
+OpenMMTheory examples 
+######################################
 
 It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or an OpenMM XML forcefieldfile.
 Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed (pip install parmed).
@@ -292,9 +330,35 @@ Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly
 
 
 
-Any Openmmtheory object can used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
+Any OpenMMTheory object can used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
 
-**Periodic boundary conditions:**
+######################################
+Executing OpenMM on the GPU
+######################################
+
+One of the main advantages of the OpenMM library is its ability to run on both CPU and GPU.
+In ASH this is controlled by the platform keyword in the OpenMMTheory object.
+
+.. code-block:: python
+
+    #Running on the CPU (default)
+    openmmobject = OpenMMTheory(xmlfiles=["example.xml"], platform="CPU") 
+
+    #Running on the GPU via OpenCL (simplest)
+    openmmobject = OpenMMTheory(xmlfiles=["example.xml"], platform="OpenCL") 
+
+    #Running on the GPU via CUDA (requires Nvidia GPU and CUDA toolkit installed)
+    openmmobject = OpenMMTheory(xmlfiles=["example.xml"], platform="CUDA") 
+
+Normally, this is the only thing that needs to be changed in the OpenMMTheory object for OpenMM to run on the GPU (when ASH tells OpenMM to run).
+This will fail if the computer/computing-node does not have a GPU, or if selecting CUDA and CUDA toolkit not available or the wrong version.
+Consult OpenMM manual for issues with the CUDA platform.
+
+
+######################################
+Periodic boundary conditions
+######################################
+
 
 - If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile. Somtimes they have to be provided by periodic_cell_dimensions
 - The Ewald error tolerance (ewalderrortolerance) can be modified (default: 5e-4)
