@@ -7,10 +7,11 @@
 Setup
 ======================================
 
-To install/setup ASH you need to download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository or alternatively install via pip (see later).
+To install/setup ASH you can either download the code from the `Github <https://github.com/RagnarB83/ash>`_ repository or alternatively install via pip (see later).
 
 ASH is 99% Python with 1 % Julia.
 A Python distribution (version >= 3.7 or higher) is required and you need to be able to install Python packages via package managers such as mamba/conda or pip.
+While primarily intended for Linux, macOS it can also run on Windows to some extent.
 
 It is recommended to use a Miniforge/Minconda package manager to install Python and the required packages (OpenMM in particular)
 Some functionality (primarily the molecular crystal QM/MM part) require a Julia installation (as the Python routines will be too slow).
@@ -53,10 +54,9 @@ Useful libraries for specific functionality:
 A. Python environment setup
 ##################################################
 
-Installing `Miniforge <https://github.com/conda-forge/miniforge>`_ is recommended to handle Python and package installations (openMM in particular).
+Installing Miniforge <https://github.com/conda-forge/miniforge>`_ , see also `Conda-Forge downloads page <https://conda-forge.org/download/>`_ is strongly recommended to handle Python and package installations (openMM in particular).
 This installs both the `mamba <https://github.com/mamba-org/mamba>`_ and conda package manager and sets it up for use with `conda-forge <https://conda-forge.org>`_ 
 collection of repositories.
-Another option is: `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_  or some conda setup on a cluster.
 
 
 Here is a simple setup for a Linux x86_64 (most HPC clusters) system that you can copy-paste into your shell:

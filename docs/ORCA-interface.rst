@@ -253,7 +253,7 @@ If the ORCATheory object is used to make a QMMMTheory object, the atom indices a
     frag=Fragment(xyzfile='fedimer.xyz', charge=0, mult=1)
     
     #ORCA settings
-    inputline="! BP86 def2-SVP tightscf"
+    inputline="! BP86 def2-SVP tightscf UKS "
     #Here we specify a broken-symmetry solution with a high-spin multiplicity of 11 and flipping atoms no. 0
     ORCAcalc = ORCATheory(orcasimpleinput=inputline, brokensym=True, HSmult=11, atomstoflip=[0])
 
@@ -266,6 +266,8 @@ Once the ORCATheory object has been run once with broken-symmetry settings, the 
 The next time the ORCATheory object is run (the next geometry optimization step of the above example), ASH creates an ORCA inputfile
 with regular SCF inputsettings with the spin multiplicity being the low-spin BS multiplicity. 
 Since the broken-symmetry SCF orbitals are available in the GBW file they are automatically loaded.
+
+.. warning::  Do note that when finding broken-symmetry singlets it is important to use the UKS keyword in the ORCA inputfile when performing a job other than a single-point job (e.g. optimization.). This is because to stay on the broken-symmetry surface, ORCA will read in the GBW file from the previous broken-symmetry GBW file and then it is important for an unrestricted SCF to be performed. The default for singlets in ORCA is to run a RKS closed-shell SCF. 
 
 
 
@@ -390,7 +392,7 @@ Workflow to automate ORCA-orbital creation
 ################################################################################
 
 ORCA is capable of producing various type of orbitals such as SCF-orbitals (RHF,UHF,ROHF etc.), MP2 natural orbitals, CC natural orbitals,
-MRCI natural orbitals. The latter type of orbitals require a bit of know-how.
+MRCI natural orbitals. The natural orbitals from WFT require a bit of know-how.
 To automate the creation of these orbitals, ASH features a function called **ORCA_orbital_setup**.
 
 .. code-block:: python
