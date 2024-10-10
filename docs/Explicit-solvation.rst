@@ -132,7 +132,7 @@ This is also required for QM/MM MD simulation (where the molecule must be in the
     #Run a NVT MD simulation (NPT could also be performed if you add a barostat)
     #Note: timesteps for QM/MM must be much smaller than in MM
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=10, 
-        temperature=300, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+        temperature=300, integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 
@@ -269,7 +269,7 @@ This is required for the QM/MM MD.
     #Run a NVT MD simulation (NPT could also be performed if you add a barostat)
     #Note: timesteps for QM/MM must be much smaller than in MM
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=10, 
-        temperature=300, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
+        temperature=300, integrator='LangevinMiddleIntegrator', coupling_frequency=1, 
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 
@@ -319,7 +319,7 @@ Here we specify the minimum and maximum coordinates of the box to be [0,0,0] and
     #NPT equilibration. Note: platform='OpenCL' (or CUDA if NVIDIA GPU) runs OpenMM on GPU, should run quite fast even on laptop. 
     #Use platform='CPU' if no GPU available
     OpenMM_box_equilibration(fragment=fragment, theory=omm, datafilename="nptsim.csv", timestep=0.001, 
-                                    platform="OpenCL",numsteps_per_NPT=10000,max_NPT_cycles=10,traj_frequency=100,
+                                    numsteps_per_NPT=10000,max_NPT_cycles=10,traj_frequency=100,
                                     volume_threshold=1.0, density_threshold=0.01, temperature=300)
 
 **packmol_solvate** will create a PDB-file called "final_withcon.pdb" containing coordinates for a 50 Å cubic box of acetonitrile molecules.
@@ -409,7 +409,7 @@ We can now in principle run a QM/MM MD simulation of the system.
 
     #Run a NVT QM/MM MD simulation
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=1,
-        temperature=30, platform='OpenCL', integrator='LangevinMiddleIntegrator', coupling_frequency=1,
+        temperature=30, integrator='LangevinMiddleIntegrator', coupling_frequency=1,
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 .. note:: Rather than starting QM/MM MD directly like above, it may also be a good idea to equilibrate the system after insertion by e.g.
