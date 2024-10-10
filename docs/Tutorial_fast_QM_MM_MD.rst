@@ -214,7 +214,7 @@ Finally we note that in pure MM MD simulations it is easy to use larger timestep
 as long as appropriate constraints are employed at the MM level.
 We can typically gain a speed-up of approx. 3-4 by going from a 1 fs timestep to a 3-4 fs timestep.
 This is essentially without loss in accuracy as long as the water model is rigid (rigidwater=True) and 
-all X-H bonds are constrained (autoconstraints='HBonds') and HMR (incrased hydrogen mass) is being utilized.
+all X-H bonds are constrained (autoconstraints='HBonds') and HMR (increased hydrogen mass) is being utilized.
 These tricks are typically not possible at the QM/MM level.
 
 ===================  ================================
@@ -235,7 +235,7 @@ Calculations in table used Amber forcefield and ran on the GPU(CUDA).
 When you switch from MM to QM/MM you should expect a massive drop in speed. This is because of 2 factors:
 
 A. The slower speed of the QM energy+gradient calculation that has to be performed in each simulation step.
-B. A regular MM simulation keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
+B. A regular MM simulation in ASH keeps positions and velocities in memory while running efficient C++/OpenCl/CUDA code; meanwhile a QM/MM simulation will by necessity do the simulation step-by-step, with data exchange in each step, calling the QM and MM program and even having some I/O (reading and writing to disk).
 
 We can see some of this speed-drop from factor B that occurs if we switch from running a regular MM MD (with all positions and velocities in memory
 and simulation proceeding by the compiled code) to a simulation where each simulation step is iterated at the Python-level and each MM-call is performed explicitly by ASH.
@@ -250,10 +250,10 @@ QM-method             Time (sec) (for 10 ps)           Time (sec) (for 100 ps)  
 
 
 This speed-penalty factor of ~5 (going from 0.35 ms 1.92 ms, per step) is caused by the need for data-exchange between the Python, 
-C++ and CUDA/OpenCL layers of OpenMM and ASH. While this looks at first glance like an issue, it is actually a very small penalty compared to the cost of the QM-step that will be added on top of this cost.
+C++ and CUDA/OpenCL layers of OpenMM and ASH. While this looks at first glance like an issue, it is actually a very small penalty compared to the cost of the QM-step (factor A) that will be added on top of this cost.
 
 The fastest way to run a QM step in QM/MM is using a semi-empirical QM Hamiltonian that avoids calculating all the expensive 
-2-electron integrals that are otherwise present in regular HF or DFT theory. Here we compare the old-school semi-empirical AM1 method from 1985 (using the fast MNDO code)
+2-electron integrals that are otherwise present in regular HF or DFT theory. Here we compare the old-school semi-empirical AM1 method from 1985 (using the fast MNDO code), PM3
 and the tightbinding GFN1-xTB method (using the xTB code).
 
 Switching from an MM simulation to a QM/MM simulation is very simple in ASH. 

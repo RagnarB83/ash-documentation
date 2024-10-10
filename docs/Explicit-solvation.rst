@@ -44,7 +44,7 @@ Example 1. Modelling of an organic molecule in explicit water with a ligand forc
     from ash import *
 
     #Parameterize small molecule using OpenFF
-    small_molecule_parameterizer(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF")
+    small_molecule_parameterizer(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF", charge=0)
 
 The function will create a file, called openff_LIG.xml.
 
@@ -318,8 +318,8 @@ Here we specify the minimum and maximum coordinates of the box to be [0,0,0] and
                 periodic=True, autoconstraints='HBonds', periodic_cell_dimensions=[55.0,55.0,55.0,90.0,90.0,90.0])
     #NPT equilibration. Note: platform='OpenCL' (or CUDA if NVIDIA GPU) runs OpenMM on GPU, should run quite fast even on laptop. 
     #Use platform='CPU' if no GPU available
-    OpenMM_box_equilibration(fragment=fragment, theory=omm, datafilename="nptsim.csv", timestep=0.001, platform="OpenCL"
-                                    numsteps_per_NPT=10000,max_NPT_cycles=10,traj_frequency=100,
+    OpenMM_box_equilibration(fragment=fragment, theory=omm, datafilename="nptsim.csv", timestep=0.001, 
+                                    platform="OpenCL",numsteps_per_NPT=10000,max_NPT_cycles=10,traj_frequency=100,
                                     volume_threshold=1.0, density_threshold=0.01, temperature=300)
 
 **packmol_solvate** will create a PDB-file called "final_withcon.pdb" containing coordinates for a 50 Å cubic box of acetonitrile molecules.

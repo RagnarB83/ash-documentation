@@ -1,7 +1,7 @@
 Hybrid Theory
 ==========================
 
-Hybrid Theories in ASH are multi-level theories that combine multiple theory-level objects to give some kind of combined theory description of the system.
+Hybrid Theories in ASH are theories that combine multiple theory objects to give some kind of combined theory description of the system.
 The different theories might be used for different parts of the system, then called **Multilevel Theory methods**  (e.g. **QMMMTheory** or **ONIOMTheory**) or on the same part of the system, then called **ComboTheory** (examples are **WrapTheory** and **DualTheory**)
 
 The strength of performing hybrid calculations in ASH is that in principle any level of theory in any QM or MM program interface can be combined with any other level of theory in any other QM or MM program interface
