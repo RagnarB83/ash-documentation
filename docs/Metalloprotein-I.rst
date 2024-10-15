@@ -5,12 +5,22 @@ How to set up an MM and QM/MM model from scratch using the ASH-OpenMM interface.
 
 **Test system:** rubredoxin using CHARMM36 protein forcefield.
 
-This tutorial shows how to set up a classical model of the rubredoxin metalloprotein in ASH using the CHARMM36 forcefield.
-Rubredoxin is one of the simplest metalloproteins having only a single metal-ion (Fe), bound to the protein via 4 cysteine residues but that makes
-the system a good first test system to demonstrate how to set up a relatively simple metalloprotein using the ASH-OpenMM interface with minimal modifications.
+This tutorial shows how to set up a classical model of a protein from scratch, taking as an example the rubredoxin metalloprotein in ASH.
+We will use the CHARMM36 forcefield, without using CHARMM files but instead set up the system using  the OpenMM XML forcefield files. 
+The CHARMM36 forcefield is already built-in to OpenMM and we will only have to deal with the special case of the Fe ion in the protein.
+Note that we could also easily use the Amber forcefield (e.g. Amber14), it is also built into OpenMM (in XML format).
+
+Rubredoxin is one of the simplest metalloproteins as it only has single metal-ion (Fe), bound to the protein via 4 cysteine residues.
+That, however, makes it a good test system to demonstrate how to set up a relatively simple protein using the ASH-OpenMM interface while still learning 
+how to deal with a non-biomolecular residue (the Fe ion).
+
+Once you have finished this tutorial, you can also try out the ferredoxin tutorial (:doc:`Metalloprotein-II` ) where you will
+learn how to deal with more complicated issues.
 
 The files for this tutorial can be found in the ASH source code directory under $ASHDIR/examples/OpenMM_Modeller-setups/rubredoxin or 
 `Github-repository <https://github.com/RagnarB83/ash/tree/master/examples/OpenMM_Modeller-setups/rubredoxin>`_
+
+
 
 ######################################################
 **1. Use OpenMM_Modeller to set up the system**

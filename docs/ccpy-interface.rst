@@ -307,17 +307,17 @@ Example:
   theory = ccpyTheory(pyscftheoryobject=pyscfobj, filename='input.dat', printlevel=2, label="ccpy",
                 frozencore=True, cc_tol=1e-10, numcores=1,
                 cc_maxiter=300, method="ccsd")
-    #Run regular single-point energy
-    Singlepoint(theory=theory, fragment=frag)
-    # Run Hbar (similarity transformation) and LeftCC equations
-    theory.driver.run_hbar(method="ccsd")
-    theory.driver.run_leftcc(method="left_ccsd", state_index=[0])
-    #Run density calculation
-    rdm_matrix = theory.run_density()
-    #Diagonalizes rdm to get natural orbitals (requires previous MO coefficients)
-    natocc, natorb = theory.get_natural_orbitals(rdm_matrix, mo_coeffs=pyscfobj.mf.mf_coeff)
-    #Write out Molden file of the natural orbitals
-    theory.write_molden_file(natocc,natorb,mo_energies=None,label="CCSD")
+  #Run regular single-point energy
+  Singlepoint(theory=theory, fragment=frag)
+  # Run Hbar (similarity transformation) and LeftCC equations
+  theory.driver.run_hbar(method="ccsd")
+  theory.driver.run_leftcc(method="left_ccsd", state_index=[0])
+  #Run density calculation
+  rdm_matrix = theory.run_density()
+  #Diagonalizes rdm to get natural orbitals (requires previous MO coefficients)
+  natocc, natorb = theory.get_natural_orbitals(rdm_matrix, mo_coeffs=pyscfobj.mf.mf_coeff)
+  #Write out Molden file of the natural orbitals
+  theory.write_molden_file(natocc,natorb,mo_energies=None,label="CCSD")
 
 
 ################################

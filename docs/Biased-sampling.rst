@@ -173,23 +173,6 @@ so that if the CV1 takes a value above 5.0 Angstrom, it will feel a restraining 
 
 This type of restraint is currently only possible for 'bond'/'distance' and 'rmsd' restraints.
 
-######################################################
-Parallelization of metadynamics
-######################################################
-
-One can of course control the number of CPU-cores in the ASHTheory level as usual which will affect how long each timestep will take.
-For an MM simulation, it is best to run OpenMM on the GPU instead of CPU (platform='CUDA' or 'OpenCL').
-
-However, it is even better to parallelize a metadynamics simulation via the multiwalker strategy:
-
-By launching equivalent metadynamics simulation jobs (either simultaneously or at different times) but choosing a common biasdirectory 
-that the different simulations will both read and write biasfiles from and to, one can extensive speed-up the exploration of the free-energy surface
-and aid convergence.
-Make sure to select a global biasdirectory that is available to all computing nodes  and then launch as many ASH-metadynamics jobs 
-(e.g. using the **subash** submission script, see :doc:`basics`) as desired. 
-Each "walker" simulation will write its bias-files to the common biasdirectory (according to the savefrequency keyword) and during each write-step
-it will also read all bias-files and update the bias-potential. This will then influence the trajectory of each simulation and speed-up the build-up of the bias-potential.
-
 
 ######################################################
 Examples:
@@ -220,8 +203,85 @@ See also :doc:`mtd_tutorial` for working examples.
                 coupling_frequency=1, traj_frequency=1, 
                 CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
                 biasfactor=6, height=1,
-                frequency=1, savefrequency=1, biasdir=biasdir)
+                frequency=1, savefrequency=10, biasdir=biasdir)
 
+
+######################################################
+Running multiple walker metadynamics simulations
+######################################################
+
+In order to parallelize metadynamics simulations, one can of course control the number of CPU-cores in the ASHTheory level 
+as usual which will affect how long each timestep will take. For an MM simulation, it is always best to run OpenMM on the 
+GPU instead of CPU (platform='CUDA' or 'OpenCL'). However, the multiple walker strategy works even better.
+
+As shown in the :doc:`mtd_tutorial` tutorial, it is highly convenient to run multiple walker metadynamics simulations in order to 
+reduce the sampling error and converge the free energy simulations evenquicker.
+This can be accomplished in a very simple way, one simply has to launch multiple simulations at the same time, while making sure
+that each simulation uses the same shared biasdirectory, allowing information about the continuously built-up biasing potential
+to be shared among each simulation.
+
+In the example below, we use the same input as above but change the biasdirectory to a global directory accessible by all nodes.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Name of a globally shared biasdirectory (must be accessible by all nodes)
+  # Best to use something that exists in e.g. your /home or /work directory if you are on a cluster
+  biasdir="/home/username/metadynamics_simulations/biasdirectory"
+
+  #Creation of the ASH fragment
+  frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
+
+  #Create theory level. Here xTB using the in-memory library approach (no disk-based input or output)
+  theory = xTBTheory(runmode='library')
+
+  #Call the OpenMM metadynamics for 10K steps (each step being 0.001 ps = 1 fs)
+  OpenMM_metadynamics(fragment=frag, theory=theory, timestep=0.001,
+                simulation_steps=10000,
+                temperature=300, integrator='LangevinMiddleIntegrator',
+                coupling_frequency=1, traj_frequency=1, 
+                CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
+                biasfactor=6, height=1,
+                frequency=1, savefrequency=10, biasdir=biasdir)
+
+We could then go ahead and submit this script to a cluster multiple times.
+In order for each job to write to a unique outputfile, it might be best to create copies of the ASH inputscript, 
+and then submit like this (here using the **subash** (see :doc:`basics` ) submission script):
+
+.. code-block:: shell
+  
+  subash mtd_sim1.py # Here assuming numcores variable has been set in script
+  subash mtd_sim2.py -p 1 #Here requesting 1 CPU core
+  subash mtd_sim3.py -p 2 #Here requesting 2 CPU cores
+
+Each job will probably end up on a different node, writing most temporary files to its own local scratch but will 
+read and write bias-potential information on the shared biasdirectory. Pay attention to the *savefrequency* variable of **OpenMM_metadynamics** as it controls
+how often the bias is read and written to disk. The more often, the more up-to-date the bias-potential will be but this may read to excessive read/write operations that will 
+slow down the simulation and may lead to excessive network traffic on the cluster (especially if you are running MM metadynamics).
+
+The advantage of the approach above is that you can submit multiple walker-jobs, 
+perhaps using different CPU cores for each simulation (to speed up the theory energy+gradient step), 
+depending on the resources that are available. You can submit jobs whenever you want, even after all other jobs have finished and continue a previous metadynamics simulation.
+
+Another scenario might come up where you might want to submit to a single computing node that has e.g. 24 cores and you wish to run 24 walkers on that node automatically.
+Here we assume each walker will run with 1 CPU core.
+
+The **subash** script (see :doc:`basics` ) has an option to automatically submit multiple-walker ASH jobs on a single node.
+
+.. code-block:: shell
+  
+  subash mtd_sim.py -mw -p 24 # mw will launch multiple walkers on a single node, -p 24 will request 24 CPU cores
+
+
+If you inspect the `subash script <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_  (search for multiwalker) 
+you can see the logic of what will be done on the node.
+Briefly: before launching ASH, a separate directory will be created for each walker (here 24 in total), named walkersim1, walkersim2, etc...
+All files originally copied to local scratch will be copied into each directory and then an ASH-Python job will start inside each directory simultaneously.
+Once each simulation has finished, the job ends and all contents are copied back to the submission directory.
+This is a highly convenient way of launching multiple walkers on the same single node.
+
+.. note:: Running as many multiple walkers as possible should generally be preferable to speeding up the energy+gradient step of the Theory level.
 
 ######################################################
 MTD_analyze (for Plumed run): Analyze the results
