@@ -93,7 +93,8 @@ As shown, a 1 ps simulation gives a qualitatively wrong energy surface, while 10
 The 100 ps simulation is qualitatively correct but breaks symmetry a little bit and obviously these simulations are still far from being converged.
 
 To reduce the sampling error, we could continue to increase the simulation time beyond 100 ps.
-However, an even better approach is to utilize multi-walker metadynamics. By simply running multiple metadynamics simulations (each simulation being a walker) with a shared
+However, an even better approach is to utilize multi-walker metadynamics (see :doc:`Biased-sampling` for more information). 
+By simply running multiple metadynamics simulations (each simulation being a walker) with a shared
 biasdirectory, the different walkers will more quickly sample the free-energy surface. Multiple walkers is more efficient as we can e.g. use 10 CPU cores to run 10
 metadynamics simulations for a tenfold improvement in sampling. This is more efficient than using the CPU cores to speed-up the speed of the Hamiltonian in each timestep 
 (i.e. speeding up xTB by its own parallelization). Multiple-walker metadynamics only requires one to launch multiple ASH metadynamics jobs where the biasdirectory variable points to a shared, globally available biasdirectory.
@@ -199,30 +200,63 @@ mechanically so we do QM/MM.
 1. Setting up the QM/MM system.
    
 To conveniently create an explicitly solvated system we can use the **solvate_small_molecule** function (documented at :doc:`OpenMM-interface`).
+First, however, we need to define a forcefield for the solute which typically will not be present in any built-in forcefield inside OpenMM.
+The :doc:`Explicit-solvation` tutorial describes the options available for creating a bonded or nonbonded forcefield for the solute as well as how to 
+create the solvated system.
+
+For 3F-GABA we have 2 options to create the solute forcefield, we can use the **small_molecule_parameterizer** function to parameterize the molecule 
+using OpenFF or we can use the **write_nonbonded_FF_for_ligand** function to create a simpler nonbonded forcefield for the solute.
+
+.. code-block:: python
+
+   from ash import *
+
+   mol = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
+
+   #OPTION 1
+   #Parameterize small molecule using OpenFF (only for simple, usually organics-only molecules)
+   small_molecule_parameterizer(xyzfile="3fgaba.xyz", forcefield_option="OpenFF", charge=0)
+   # Creates file: openff_LIG.xml
+
+   # OPTION 2:
+   #Defining QM-theory to be used for charge calculation
+   theory = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
+   write_nonbonded_FF_for_ligand(fragment=mol, resname="LIG", theory=theory, 
+      charge_model="CM5_ORCA", LJ_model="UFF")
+   # Creates file : LIG.xml
+
+Option 1 above creates a full-fledged forcefield for 3F-GABA and is convenient for small organic molecules where all elements are compatible with the OpenFF procedure.
+This allows classical simulations to be carried out as well as QM/MM simulations.
+Option 2 above will create a nonbonded forcefield instead, which only allows QM/MM simulations.
+The charge_model="CM5_ORCA" specifies the charge-model (CM5 charges via ORCA, this requires also the theory option ot be an ORCATheory object), 
+the Lennard-Jones parameter option (simple element-specific UFF parameters).
+Note that for QM/MM, only the Lennard-Jones parameters are strictly needed while for MM simulations (solute must also be frozen, however, if using a nonbonded FF), 
+the atom charges are needed.
+
+The parameters inside the XML-file created can also be modified if needed.
+
+Once the OpenMM-style XML forcefield file has been created, we can use the **solvate_small_molecule** function to create the solvated system.
+In this tutorial we use the nonbonded forcefield file, LIG.xml.
 
 .. code-block:: python
 
    from ash import *
    numcores=1
    #Defining solute and theory
-   frag = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
+   mol = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
    theory = xTBTheory(runmode='library', solvent="H2O")
    #Call solvate_small_molecule with frag as input, choosing TIP3P water molecule 
    #and box dimensions of 70x70x70 Angstrom
-   solvate_small_molecule(fragment=frag, watermodel='tip3p', solvent_boxdims=[70.0,70.0,70.0],
-                              nonbonded_pars="CM5_UFF", orcatheory=None, numcores=numcores)
+   solvate_small_molecule(fragment=mol, xmlfile="LIG.xml", watermodel='tip3p', solvent_boxdims=[70,70,70])
+
 
 This simple function creates a 70x70x70 Angstrom cubic box full of TIP3P water molecule with the solute in the middle of the box.
-The nonbonded_pars="CM5_UFF" option automatically creates nonbonded MM parameters for the solute molecule: atom charges for the solute and defines Lennard-Jones parameters (here UFF).
-For QM/MM only the Lennard-Jones parameters are strictly needed while for MM simulations (with solute frozen), the atom charges are needed.
-**solvate_small_molecule** automatically calls ORCA to do a single-point DFT calculation at the r2SCAN/def2-SVP level of theory with Hirshfeld population analysis from which CM5 atom charges
-are derived. Alternatively an ORCATheory object with another level of theory can be read into orcatheory.
 
 The function creates the following files:
 
-- newfragment.xyz # An XYZ-file containing the full 33799 atom system.
+- system_aftersolvent.xyz # An XYZ-file of the whole system.
 - system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
-- solute.xml # An OpenMM XML forcefield file defining the solute nonbonded parameters
+- smallmol.pdb # A PDB-file of the solute only
 
 2. Defining the QM/MM metadynamics simulation
 
@@ -242,14 +276,14 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
    biasdir="/home/rb269145/CALCDIR/ASH-metadynamics/3fgaba/tutorial/QM-MM/test1/biasdirectory"
 
    #System
-   xyzfile="newfragment.xyz"
+   xyzfile="system_aftersolvent.xyz"
    pdbfile="system_aftersolvent.pdb"
    frag = Fragment(xyzfile=xyzfile, charge=0, mult=1)
    qmatoms = list(range(0,16)) # A list of atom indices that are in the QM-region. Here the solute atoms.
 
    #Define QM, MM and QM/MM Theory
    qm_theory = xTBTheory(runmode='inputfile') #QM-level of theory
-   mm_theory = OpenMMTheory(xmlfiles=[f"{ashpath}/databases/forcefields/tip3p_water_ions.xml", "solute.xml"], 
+   mm_theory = OpenMMTheory(xmlfiles=[f"{ashpath}/databases/forcefields/tip3p_water_ions.xml", "LIG.xml"], 
       pdbfile=pdbfile, rigidwater=True, periodic=True, platform='CPU') #The MM-level of theory
    qm_mm_theory = QMMMTheory(qm_theory=qm_theory, mm_theory = mm_theory, qmatoms=qmatoms, fragment=frag) # The QM/MM object
 

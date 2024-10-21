@@ -211,8 +211,8 @@ Running multiple walker metadynamics simulations
 ######################################################
 
 In order to parallelize metadynamics simulations, one can of course control the number of CPU-cores in the ASHTheory level 
-as usual which will affect how long each timestep will take. For an MM simulation, it is always best to run OpenMM on the 
-GPU instead of CPU (platform='CUDA' or 'OpenCL'). However, the multiple walker strategy works even better.
+as usual which will affect how long each timestep will take (note that MM simulations, running on the GPU (platform='CUDA' or 'OpenCL') is much preferable to the CPU).
+However, the multiple walker strategy works even better than the Theory parallelization.
 
 As shown in the :doc:`mtd_tutorial` tutorial, it is highly convenient to run multiple walker metadynamics simulations in order to 
 reduce the sampling error and converge the free energy simulations evenquicker.
@@ -267,7 +267,7 @@ depending on the resources that are available. You can submit jobs whenever you 
 Another scenario might come up where you might want to submit to a single computing node that has e.g. 24 cores and you wish to run 24 walkers on that node automatically.
 Here we assume each walker will run with 1 CPU core.
 
-The **subash** script (see :doc:`basics` ) has an option to automatically submit multiple-walker ASH jobs on a single node.
+The **subash** script (see :doc:`basics` ) has an option to automatically submit multiple-walker ASH calculations on a single node, using a single job submissions.
 
 .. code-block:: shell
   
@@ -276,8 +276,10 @@ The **subash** script (see :doc:`basics` ) has an option to automatically submit
 
 If you inspect the `subash script <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_  (search for multiwalker) 
 you can see the logic of what will be done on the node.
-Briefly: before launching ASH, a separate directory will be created for each walker (here 24 in total), named walkersim1, walkersim2, etc...
-All files originally copied to local scratch will be copied into each directory and then an ASH-Python job will start inside each directory simultaneously.
+Briefly: upon submission of a job to the queuing system (subash assumes SLURM), before launching ASH, a separate directory will be 
+created for each walker (here 24 in total), named walkersim1, walkersim2, etc...
+All files originally copied to local scratch will be copied into each directory and then an ASH calculation will start inside each directory 
+simultaneously (24 in total in this example). Note that only a single job will be submitted to the queuing system, however, but 24 Python processes will be running on the node.
 Once each simulation has finished, the job ends and all contents are copied back to the submission directory.
 This is a highly convenient way of launching multiple walkers on the same single node.
 
