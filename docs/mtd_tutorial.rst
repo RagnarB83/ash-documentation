@@ -32,6 +32,7 @@ This relaxed surface-scan was performed using the **calc_surface function**  (se
 
 .. code-block:: python
 
+    from ash import *
     #Creating the ASH fragment 
     frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
     #Defining the xTB theory (GFN1-xTB)
@@ -211,29 +212,31 @@ using OpenFF or we can use the **write_nonbonded_FF_for_ligand** function to cre
 
    from ash import *
 
+   # Defining fragment
    mol = Fragment(xyzfile="3fgaba.xyz", charge=0, mult=1)
 
-   #OPTION 1
-   #Parameterize small molecule using OpenFF (only for simple, usually organics-only molecules)
+   # OPTION 1: Full FF (light elements only)
+   # Parameterize small molecule using OpenFF (only for simple, usually organics-only molecules)
    small_molecule_parameterizer(xyzfile="3fgaba.xyz", forcefield_option="OpenFF", charge=0)
    # Creates file: openff_LIG.xml
 
-   # OPTION 2:
-   #Defining QM-theory to be used for charge calculation
+   # OPTION 2: Nonbonded FF
+   # Defining QM-theory to be used for charge calculation
    theory = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
-   write_nonbonded_FF_for_ligand(fragment=mol, resname="LIG", theory=theory, 
+   # Calling write_nonbonded_FF_for_ligand to create a simple nonbonded FF
+   write_nonbonded_FF_for_ligand(fragment=mol, resname="LIG", theory=theory,
       charge_model="CM5_ORCA", LJ_model="UFF")
    # Creates file : LIG.xml
 
 Option 1 above creates a full-fledged forcefield for 3F-GABA and is convenient for small organic molecules where all elements are compatible with the OpenFF procedure.
 This allows classical simulations to be carried out as well as QM/MM simulations.
 Option 2 above will create a nonbonded forcefield instead, which only allows QM/MM simulations.
-The charge_model="CM5_ORCA" specifies the charge-model (CM5 charges via ORCA, this requires also the theory option ot be an ORCATheory object), 
+The charge_model="CM5_ORCA" specifies the charge-model (CM5 charges via ORCA, this requires also the theory option to be an ORCATheory object), 
 the Lennard-Jones parameter option (simple element-specific UFF parameters).
-Note that for QM/MM, only the Lennard-Jones parameters are strictly needed while for MM simulations (solute must also be frozen, however, if using a nonbonded FF), 
-the atom charges are needed.
-
-The parameters inside the XML-file created can also be modified if needed.
+Note that for typical electrostatic embedding QM/MM, only the Lennard-Jones parameters are strictly needed (charges will be ignored).
+In MM simulations with a nonbonded forcefield, the charges would be used, but then would require the solute to be frozen, which is incompatible with the current conformational problem we wish to study.
+Finally, we note that the parameters inside the XML-file created (either by **write_nonbonded_FF_for_ligand** or **small_molecule_parameterizer**)
+can also be modified if needed.
 
 Once the OpenMM-style XML forcefield file has been created, we can use the **solvate_small_molecule** function to create the solvated system.
 In this tutorial we use the nonbonded forcefield file, LIG.xml.
@@ -251,6 +254,7 @@ In this tutorial we use the nonbonded forcefield file, LIG.xml.
 
 
 This simple function creates a 70x70x70 Angstrom cubic box full of TIP3P water molecule with the solute in the middle of the box.
+Do note that **solvate_small_molecule** will recognize  the syntax of the XML-file and will suggest a compatible built-in solvent XML-file to use.
 
 The function creates the following files:
 
@@ -261,11 +265,15 @@ The function creates the following files:
 2. Defining the QM/MM metadynamics simulation
 
 Now we can define our QM/MM metadynamics simulation. 
-We need to read in the full fragment and define which atoms should be in the QM-region.
-We also need to create an OpenMMTheory object and define the forcefield by pointing to a TIP3P XML forcefield file (found in the ASH database dir), the solute XML file
-and point to the PDB-file for topology, additionally we want the water model to be fully rigid so we specify rigidwater=True. Finally we need to define a QM/MM theory object that combines a QM-theory object and an MM-theory object.
-The metadynamics function call is otherwise the same, we just need to point to the QM/MM object instead of the QM-object. As the solute coordinates are in the beginning
-of the solvated-system file, the atom indices defining the CVs will be the same. 
+
+- First we read in the full fragment and define a list of which atoms should be in the QM-region.
+- Next we create an OpenMMTheory object and define the forcefield by pointing to the solute XML file and a compatible TIP3P XML forcefield file (found in the ASH database dir)þ
+- In the OpenMMTheory object definition we also need to point to a compatible PDB-file of the full system that defines the topology (this PDB-file should have been created by the solvation procedure).
+- Additionally we want the water model to be fully rigid so we specify rigidwater=True and we enable periodic boundary conditions by setting periodic=True.
+- Finally we need to define a QM/MM theory object that combines a QM-theory object and an MM-theory object.
+
+The metadynamics function call is otherwise the same as before, we just need to point to the QM/MM object instead of the QM-object. 
+As the solute coordinates are in the beginning of the solvated-system file, the atom indices defining the CVs should be the same. 
 
 
 .. code-block:: python
@@ -283,8 +291,11 @@ of the solvated-system file, the atom indices defining the CVs will be the same.
 
    #Define QM, MM and QM/MM Theory
    qm_theory = xTBTheory(runmode='inputfile') #QM-level of theory
-   mm_theory = OpenMMTheory(xmlfiles=[f"{ashpath}/databases/forcefields/tip3p_water_ions.xml", "LIG.xml"], 
-      pdbfile=pdbfile, rigidwater=True, periodic=True, platform='CPU') #The MM-level of theory
+   # Defining OpenMMTheory object using compatible solute and solvent XML-files
+   # Warning: selecting an incompatible solvent XML-file (e.g. a CHARMM-style XML file) will give an error:
+   # ValueError: Found multiple NonbondedForce tags with different 1-4 scales
+   mm_theory = OpenMMTheory(xmlfiles=["LIG.xml", "amber/tip3p_standard.xml"],
+    pdbfile=pdbfile, periodic=True, rigidwater=True, platform="CPU")
    qm_mm_theory = QMMMTheory(qm_theory=qm_theory, mm_theory = mm_theory, qmatoms=qmatoms, fragment=frag) # The QM/MM object
 
    #Call metadynamics. Everything is the same, we just specify the theory as the QM/MM object instead
@@ -306,7 +317,6 @@ at the QM/MM level:
    :align: center
    :width: 400
 
-**NOTE: NOT YET FINISHED**
 
 The results reveal a considerably different free energy surface than previously found, demonstrating that the explicit solvation environment has a strong effect on the conformational
 properties of this zwitterion. The results reveal that conformer **A** (-80°,+80° ) and **F** (+180°,-180°) now have similar energies in sharp contrast

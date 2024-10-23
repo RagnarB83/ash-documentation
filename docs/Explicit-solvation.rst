@@ -43,7 +43,8 @@ Example 1. Modelling of an organic molecule in explicit water with a ligand forc
         
     from ash import *
 
-    #Parameterize small molecule using OpenFF
+    #Parameterize small molecule using OpenFF using an XYZ-file present in current directory
+    #Note that isobutyraldehyde.xyz can be found in ASH database (change xyzfile to databasefile below)
     small_molecule_parameterizer(xyzfile="isobutyraldehyde.xyz", forcefield_option="OpenFF", charge=0)
 
 The function will create a file, called openff_LIG.xml.
@@ -167,7 +168,9 @@ create an OpenMM XML-file. The molecule will be an FeCl4- complex (S=5/2).
             coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA")
 
 The function will create a file, here called: "LIG.xml". By default it uses the ff_type to be "AMBER". This means the XML-file will
-use a form of the nonbonded potential that is compatible with Amber-style forcefield. This is recommended im general but can be changed to "CHARMM" or "None" if required.
+use a form of the nonbonded potential that is compatible with Amber-style forcefield. 
+This is recommended im general but can be changed to "CHARMM" or "None" if required.
+Do note that in this case, the XML-file will be in CHARMM-format which will require a CHARMM-style water XML-file to be used later.
 
 
 2. Solvate the system
@@ -207,7 +210,7 @@ Additional angle constraints or dihedral constraints may also be required for ot
     bondconstraints = [[0,1],[0,2],[0,3],[0,4]]
 
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["LIG.xml", "charmm36/water.xml"],
+    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds',
                 constraints=bondconstraints)
 
@@ -256,7 +259,7 @@ This is required for the QM/MM MD.
     #No constraints necessary anymore as the solute will be in the QM-region
     
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["LIG.xml", "charmm36/water.xml"],
+    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
     #Create a QM/MM object
     qm = xTBTheory(xtbmethod='GFN2')
@@ -463,10 +466,12 @@ If you get an error like this from OpenMM:
     ValueError: Found multiple NonbondedForce tags with different 1-4 scales
 
 This indicates that there is an incompatibility between the small-molecule XML-file and the water-forcefield XML-file.
-Most likely you have selected the wrong XML-file for your solvent in OpenMMTheory. For GAFF and OpenFF you typically want to select the Amber water XML-file:
-"amber/tip3p_standard.xml" . For nonbondedFF-only XML-files in CHARMM-style you typically want "charmm36/water.xml".
+Most likely you have selected the wrong XML-file for your solvent in OpenMMTheory. For GAFF and OpenFF (created by small_molecule_parameterizer ) you typically want to select the Amber water XML-file:
+"amber/tip3p_standard.xml" . For nonbondedFF-only XML-files (created by write_nonbonded_FF_for_ligand), by default the files 
+are in Amber-style format and you should select: "amber/tip3p_standard.xml"
+If for some reason CHARMM-style format was selected (not recommended usually) you then should select "charmm36/water.xml".
 These files are available globally (if OpenMM is installed) and can be inspected :
-dirname $(which python3)
+dirname $(which python3) # This shows where the Python3 interpreter is
 /Users/rb269145/miniconda3/envs/ASH_openmm/lib/python3.11/site-packages/openmm/app/data/
 
 For CHARMM and normal OpenMM XML-files the NonbondedForce line should look like this:
