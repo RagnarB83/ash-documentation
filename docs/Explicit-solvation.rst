@@ -75,7 +75,7 @@ This creates files: system_aftersolvent.xyz and system_aftersolvent.pdb
     pdbfile="system_aftersolvent.pdb"
     fragment = Fragment(pdbfile=pdbfile)
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber14/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
 
     #Gently warms up the system
@@ -120,7 +120,7 @@ This is also required for QM/MM MD simulation (where the molecule must be in the
     pdbfile="equilibration_NPT_imaged.pdb"
     fragment = Fragment(pdbfile=pdbfile)
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["openff_LIG.xml", "amber14/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
     #Create a QM/MM object
     qm = xTBTheory(xtbmethod='GFN2')
@@ -170,7 +170,8 @@ create an OpenMM XML-file. The molecule will be an FeCl4- complex (S=5/2).
 The function will create a file, here called: "LIG.xml". By default it uses the ff_type to be "AMBER". This means the XML-file will
 use a form of the nonbonded potential that is compatible with Amber-style forcefield. 
 This is recommended im general but can be changed to "CHARMM" or "None" if required.
-Do note that in this case, the XML-file will be in CHARMM-format which will require a CHARMM-style water XML-file to be used later.
+Do note that if you choose CHARMM option, the XML-file will be in CHARMM-format (includes both NonbondedForce and LennardJonesForce definitions),
+which will require a CHARMM-style water XML-file to be used later.
 
 
 2. Solvate the system
@@ -210,7 +211,7 @@ Additional angle constraints or dihedral constraints may also be required for ot
     bondconstraints = [[0,1],[0,2],[0,3],[0,4]]
 
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber14/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds',
                 constraints=bondconstraints)
 
@@ -259,7 +260,7 @@ This is required for the QM/MM MD.
     #No constraints necessary anymore as the solute will be in the QM-region
     
     #Create an OpenMMTheory object based on PDB-file and XML-files for water and small-molecule
-    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber/tip3p_standard.xml"],
+    omm =OpenMMTheory(xmlfiles=["LIG.xml", "amber14/tip3p_standard.xml"],
                 pdbfile=pdbfile, periodic=True, rigidwater=True, autoconstraints='HBonds')
     #Create a QM/MM object
     qm = xTBTheory(xtbmethod='GFN2')
@@ -465,14 +466,32 @@ If you get an error like this from OpenMM:
 
     ValueError: Found multiple NonbondedForce tags with different 1-4 scales
 
-This indicates that there is an incompatibility between the small-molecule XML-file and the water-forcefield XML-file.
-Most likely you have selected the wrong XML-file for your solvent in OpenMMTheory. For GAFF and OpenFF (created by small_molecule_parameterizer ) you typically want to select the Amber water XML-file:
-"amber/tip3p_standard.xml" . For nonbondedFF-only XML-files (created by write_nonbonded_FF_for_ligand), by default the files 
-are in Amber-style format and you should select: "amber/tip3p_standard.xml"
-If for some reason CHARMM-style format was selected (not recommended usually) you then should select "charmm36/water.xml".
-These files are available globally (if OpenMM is installed) and can be inspected :
-dirname $(which python3) # This shows where the Python3 interpreter is
-/Users/rb269145/miniconda3/envs/ASH_openmm/lib/python3.11/site-packages/openmm/app/data/
+This indicates that there is an incompatibility between the small-molecule XML-file and the solvent forcefield XML-file.
+Most likely you have selected the wrong XML-file for your solvent in OpenMMTheory. 
+For XML-files created for the GAFF and OpenFF forcesfield (created by **small_molecule_parameterizer** ) you typically want to select the Amber water XML-file: e.g. for TIP3P
+"amber14/tip3p_standard.xml" . For nonbondedFF XML-files (created by **write_nonbonded_FF_for_ligand**), by default the files 
+are also in Amber-style format and you should select: "amber14/tip3p_standard.xml"
+
+If for some reason CHARMM-style format was selected (not recommended usually for explicit solvation) you then should select "charmm36/water.xml".
+
+The OpenMM built-in Amber and CHARMM XML forcefield files are available in your environment and will be automatically found by ASH (if OpenMM was installed correctly) when you select:
+"amber14/tip3p_standard.xml" or "charmm36/water.xml" . These files can also be found and inspected on your system like this:
+
+.. code-block:: shell
+
+    # Go into OpenMM data directory within conda environment (make sure the environment is loaded)
+    cd $(dirname $(which test-openmm-platforms))/../lib/python3.11/site-packages/openmm/app/data/
+    ls
+    # Result:
+    DLPC.pdb              amber03.xml           amber99Test.xml       amoeba2013.xml        glycam-hydrogens.xml  spce.pdb              tip4pew.pdb
+    DLPE.pdb              amber03_obc.xml       amber99_obc.xml       amoeba2013_gk.xml     hydrogens.xml         spce.xml              tip4pew.xml
+    DMPC.pdb              amber10.xml           amber99sb.xml         amoeba2018.xml        iamoeba.xml           swm4ndp.pdb           tip4pfb.xml
+    DOPC.pdb              amber10_obc.xml       amber99sbildn.xml     amoeba2018_gk.xml     implicit              swm4ndp.xml           tip5p.pdb
+    DPPC.pdb              amber14               amber99sbnmr.xml      charmm36              opc.xml               test.pdb              tip5p.xml
+    POPC.pdb              amber14-all.xml       amberfb15.xml         charmm36.xml          opc3.xml              tip3p.pdb
+    POPE.pdb              amber96.xml           amoeba2009.xml        charmm_polar_2013.xml pdbNames.xml          tip3p.xml
+    absinth.xml           amber96_obc.xml       amoeba2009_gk.xml     charmm_polar_2019.xml residues.xml          tip3pfb.xml
+
 
 For CHARMM and normal OpenMM XML-files the NonbondedForce line should look like this:
 

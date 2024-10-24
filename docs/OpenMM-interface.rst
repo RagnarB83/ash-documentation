@@ -293,7 +293,7 @@ OpenMMTheory examples
 ######################################
 
 It is possible to read in multiple types of forcefield files: AmberFiles, CHARMMFiles, GROMACSFiles or an OpenMM XML forcefieldfile.
-Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed (pip install parmed).
+Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly. In those cases the Parmed library may be more successful (use_parmed=True). Requires ParMed to be installed first (e.g. by pip install parmed).
 
 *Example creation of an OpenMMtheory object with CHARMM-files:*
 
@@ -326,11 +326,44 @@ Note: In rare cases OpenMM fails to read in Amber/CHARMM/GROMACS files correctly
     openmmobject = OpenMMTheory(xmlfiles=["example.xml"]) #File example.xml should be in dir
     #or
     openmmobject = OpenMMTheory(xmlfiles=["charmm36.xml", "charmm36/water.xml", "specialresidue.xml"]) 
-    #Here the "charmm36.xml" and "charmm36/water.xml" files are found in the OpenMM library.
-
+    #Here the "charmm36.xml" and "charmm36/water.xml" files are found in the OpenMM library (see below)
 
 
 Any OpenMMTheory object can used to create a QM/MM theory object. See :doc:`module_QM-MM` page.
+
+
+######################################
+OpenMM built-in forcefield XML-files
+######################################
+
+OpenMM has built-in various forcefields in XML format, for proteins, nucleic acids, solvents, ions etc.
+Inspecting these files can be helpful when creating your own XML-files for small molecules or when you want to know what parameters are available or what OpenMM actually is using.
+The OpenMM built-in Amber and CHARMM XML forcefield files are available in your environment and will be automatically found by ASH (if OpenMM was installed correctly) when you select e.g.:
+
+.. code-block:: python
+
+  OpenMMTheory(...,xmlfiles=["amber14/tip3p_standard.xml"])
+  OpenMMTheory(...,xmlfiles=["charmm36/water.xml"])
+  OpenMMTheory(...,xmlfiles=["charmm36.xml", "charmm36/water.xml"])
+  OpenMMTheory(...,xmlfiles=["amber14-all.xml", "implicit/obc2.xml", "gaff_ligand.xml"])
+
+All of these files and others can also be inspected on your system like this:
+
+.. code-block:: shell
+
+    # Go into OpenMM data directory within conda environment (make sure the environment is loaded)
+    cd $(dirname $(which test-openmm-platforms))/../lib/python3.11/site-packages/openmm/app/data/
+    ls
+    # Result:
+    DLPC.pdb              amber03.xml           amber99Test.xml       amoeba2013.xml        glycam-hydrogens.xml  spce.pdb              tip4pew.pdb
+    DLPE.pdb              amber03_obc.xml       amber99_obc.xml       amoeba2013_gk.xml     hydrogens.xml         spce.xml              tip4pew.xml
+    DMPC.pdb              amber10.xml           amber99sb.xml         amoeba2018.xml        iamoeba.xml           swm4ndp.pdb           tip4pfb.xml
+    DOPC.pdb              amber10_obc.xml       amber99sbildn.xml     amoeba2018_gk.xml     implicit              swm4ndp.xml           tip5p.pdb
+    DPPC.pdb              amber14               amber99sbnmr.xml      charmm36              opc.xml               test.pdb              tip5p.xml
+    POPC.pdb              amber14-all.xml       amberfb15.xml         charmm36.xml          opc3.xml              tip3p.pdb
+    POPE.pdb              amber96.xml           amoeba2009.xml        charmm_polar_2013.xml pdbNames.xml          tip3p.xml
+    absinth.xml           amber96_obc.xml       amoeba2009_gk.xml     charmm_polar_2019.xml residues.xml          tip3pfb.xml
+
 
 ######################################
 Executing OpenMM on the GPU
@@ -360,14 +393,17 @@ Periodic boundary conditions
 ######################################
 
 
-- If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile. Somtimes they have to be provided by periodic_cell_dimensions
-- The Ewald error tolerance (ewalderrortolerance) can be modified (default: 5e-4)
-- PME parameters can be modified: PMEparameters=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
-- The periodic nonbonded cutoff can be modified. Default: 12 Å
-- Long-range dispersion correction can be turned on or off. Default: True
-- The switching function distance can be changed. Default: 10 Å. Used for CHARMM and XML files.
-- The box dimensions can also be modified by PBCvectors= keyword argument:
-    Example: PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]] with values in Å.
+- If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile. Somtimes they have to be provided by *periodic_cell_dimensions*
+- The Ewald error tolerance (*ewalderrortolerance*) can be modified (default: 5e-4)
+- PME parameters can be modified: *PMEparameters*=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
+- The periodic nonbonded cutoff can be modified (*periodic_nonbonded_cutoff*). Default: 12 Å
+- Long-range dispersion correction (*dispersion_correction*) can be turned on or off. Default: True
+- The switching function distance (*switching_function_distance*) can be changed. Default: 10 Å. Used for CHARMM and XML files.
+- The box dimensions can also be modified by *PBCvectors* keyword argument, e.g. 
+
+.. code-block:: python
+
+    PBCvectors=[[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]] # with values in Å.
 
 ##################################################
 Molecular Dynamics of an OpenMMTheory object 
@@ -380,8 +416,8 @@ See  :doc:`module_dynamics` for documentation and details on the **MolecularDyna
 Note that **MolecularDynamics** and **OpenMM_MD** are aliases for the same function.
 Below we show example use of doing MD using an OpenMMTheory object.
 
-For MD on an **OpenMMTheory** object it is important to note that autoconstraints and frozen_atoms 
-should usually be defined in the **OpenMMTheory** object before, while constraints and restraints can be defined
+For MD on an **OpenMMTheory** object it is important to note that *autoconstraints* and *frozen_atoms*
+should usually be defined in the **OpenMMTheory** object before, while *constraints* and *restraints* can be defined
 in the **MolecularDynamics** function.
 
 
@@ -442,7 +478,9 @@ General X-H constraints and deuterium-mass example:
         integrator='LangevinMiddleIntegrator', coupling_frequency=1, trajectory_file_option='DCD')
 
 
-Dealing with PBC image problems in trajectory. See `OpenMM FAQ <https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work>`_
+**Dealing with PBC image problems in trajectory**
+
+See `OpenMM FAQ <https://github.com/openmm/openmm/wiki/Frequently-Asked-Questions#how-do-periodic-boundary-conditions-work>`_
 To obtain a more pleasing visualization of the trajectory you can "reimage" the trajectory afterwards using the program mdtraj (requires installation of mdtraj: pip install mdtraj).
 See :doc:`module_dynamics`  for more details on the mdtraj interface.
 
@@ -1050,3 +1088,4 @@ See example below.
   
   #Example 5 ps MD
   MolecularDynamics(theory=omm, fragment=solution, timestep=0.001, simulation_time=5, traj_frequency=100, temperature=300)
+
