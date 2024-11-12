@@ -342,7 +342,7 @@ See :doc:`neb` for documentation on the NEB-TS function.
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
     #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(TSOpt=True) job.
-    result = NEBTS(reactant=Reactant, product=Product, theory=calc, images=12, printlevel=0)
+    result = NEBTS(reactant=Reactant, product=Product, theory=ORCAcalc, images=12, printlevel=0)
 
 
 ###########################
