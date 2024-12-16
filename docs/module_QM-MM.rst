@@ -290,6 +290,8 @@ The drawbacks of electrostatic embedding are :
 - The presence of a large number of MM pointcharges in the QM-calculation can slow down the QM-calculation considerably. Especially the QM-pointcharge gradient can be slow to calculate. See the *TruncatedPC* option below for a way to deal with this issue.
 - It requires some care in the handling of the covalent QM/MM boundary (see next sections on linkatoms, charge-shifting etc.)
 
+See later one this page how to do further decomposition of the QM/MM energy.
+
 More sophisticated polarized embedding approaches are not yet available in ASH.
 
 ######################################
@@ -396,6 +398,69 @@ During a QM/MM energy+gradient calculation in ASH the following steps take place
 11. or: if part of a dynamics simulation is taken according to Newton‘s equations  (the QM/MM gradient or force is used to calculate an acceleration which results in a change in velocity and positions of all the (real) atoms).
 
 .. note:: Neither the geometry optimization or dynamics algorithms see or experience any linkatoms, only real atoms of the system.
+
+
+######################################
+Doing QM/MM energy decomposition
+######################################
+
+As outlined earlier a general additive QM/MM energy expression is written as:
+
+.. math::
+
+    E_{QM/MM} = E_{QM} + E_{MM} + E_{coupling} 
+
+    E_{coupling} = E_{elstat} + E_{vdW} + E_{covalent}
+
+however, when we do electrostatic embedding QM/MM we write the expression as:
+
+.. math::
+
+    E_{QM/MM} = (E_{QM} + E_{elstat}) + (E_{MM} + E_{vdW} + E_{covalent}) = E_{QM}^{pol} + E_{MM}^{mod}
+
+where :math:`E_{QM}^{pol}` is the polarized QM energy and :math:`E_{MM}^{mod}` incorporates the QM-MM vdW coupling term. 
+When you perform an ASH QM/MM calculation (e.g. using *Singlepoint* or *Optimizer* functions) with electrostatic embedding enabled, ASH will automatically print the 
+:math:`E_{QM}^{pol}` and :math:`E_{MM}^{mod}` terms in addition to :math:`E_{QM/MM}` (make sure printlevel of the QMMMTheory object is at least 2).
+The QM-code calculates the :math:`E_{QM}^{pol}` term while the MM-code calculates the :math:`E_{MM}^{mod}` term.
+
+Further decomposition of these 2 terms is possible, but it is not done automatically. This is because decomposition requires additional calculations to be performed.
+If you want to get further decomposition you can use the *compute_decomposed_QM_MM_energy* function:
+
+.. code-block:: python
+
+  # A single-point energy function to 
+  compute_decomposed_QM_MM_energy(fragment=None, theory=None):
+
+The function:
+
+- runs the QM-part both with and without the MM pointhcharges in order to separate the :math:`E_{QM}` and :math:`E_{elstat}` terms
+- runs the MM part with and without the LJ-epsilon of each QM-atoms set to zero to get :math:`E_{vdw}`.
+- runs the MM part with and without modified QM-MM bonded terms at boundary to get :math:`E_{covalent}`.
+
+We note that decomposition into the :math:`E_{covalent}` term is a bit more approximate.
+
+Running the function above will give the following output:
+
+.. code-block:: text
+
+  ======================================================================
+  The standard QM/MM energy terms that ASH always prints:
+  ----------------------------------------------------------------------
+  E_QM/MM (Total QM/MM energy): -115.81618377958931
+  E_QM^pol (polarized QM-energy): -115.49500923449936
+  E_MM^mod (MM-energy with QM-MM vdw contribution) -0.3211745450899459
+  ----------------------------------------------------------------------
+  The decomposed terms:
+  ----------------------------------------------------------------------
+  E_QM/MM (Total QM/MM energy): -115.81618377958931
+  E_QM (The pure QM energy) -115.48674231434218
+  E_MM (The pure MM energy) -0.3226951819929531
+  E_coupling (QM-MM total coupling energy) -0.006746283254176033
+  E_QM-MM_elstat (QM-MM elstat coupling energy) -0.008266920157183222
+  E_QM-MM_vdw (the QM-MM vdw coupling energy) 0.0015206369030071887
+  E_QM_MM_bond (the QM-MM covalent coupling energy) 0.0
+  ======================================================================
+
 
 
 ######################################

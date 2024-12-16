@@ -395,7 +395,7 @@ Periodic boundary conditions
 
 - If periodic boundary conditions are chosen (periodic=True) then the PBC box parameters are automatically found in the Amber PRMTOP file or the GROMACS Grofile. Somtimes they have to be provided by *periodic_cell_dimensions*
 - The Ewald error tolerance (*ewalderrortolerance*) can be modified (default: 5e-4)
-- PME parameters can be modified: *PMEparameters*=[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
+- PME parameters can be modified: *PMEparameters* =[alpha_separation,numgridpoints_X,numgridpoints_Y,numgridpoints_Z] 
 - The periodic nonbonded cutoff can be modified (*periodic_nonbonded_cutoff*). Default: 12 Å
 - Long-range dispersion correction (*dispersion_correction*) can be turned on or off. Default: True
 - The switching function distance (*switching_function_distance*) can be changed. Default: 10 Å. Used for CHARMM and XML files.
