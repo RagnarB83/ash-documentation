@@ -86,7 +86,7 @@ at various levels of theory.
     ML_B3LYP = ORCATheory(orcasimpleinput=MLsimpleinput, orcablocks=MLblockinput, numcores=numcores)
     #Defining HLTheory: DLPNO-CCSD(T)/CBS
     HL_CC = ORCA_CC_CBS_Theory(elements=frag.elems, cardinals = [2,3], basisfamily="def2", DLPNO=True, 
-        pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
+        pnosetting='extrapolation', pnoextrapolation=[1e-6,3.33e-7,2.38,'NormalPNO'], numcores=numcores)
 
     #Call confsampler_protocol
     confsampler_protocol(fragment=frag, crestdir=crestdir, xtbmethod='GFN2-xTB', MLtheory=ML_B3LYP,

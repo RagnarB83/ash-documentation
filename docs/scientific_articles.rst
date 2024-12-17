@@ -165,6 +165,22 @@ Second sphere variants of Type 1 Cu site in azurin:
 Highlevel WFT workflows
 ###################################
 
+**High-level correlated WF density and ELF analysis using many ASH interfaces**
+
+`Paper: The diradicaloid electronic structure of dialumenes: a benchmark study at the Full-CI limit <https://pubs.rsc.org/en/content/articlelanding/2024/cp/d4cp03005b>`_ 
+
+In this article we performed high-level WFT calculations using both single-reference (MP2, CC) and multi-reference methods (CASSCF, MRCI)
+as well as near-Full-CI calculations on a small dialumene, Al2H2.
+ASH interfaces to ORCA, MRCC, CFour, pySCF, Dice (SHCI) and Block2 (DMRG) were used to conveniently carry out the calculations.
+Energy calculations were carried out but also CCSD(T) and CCSDT geometry optimizations (using CFour and MRCC interfaces),
+and difference density and ELF analysis was carried out using various correlated WF methods.
+ASH was used to conveniently creating Molden files of the natural orbitals (derived from the correlated 1-particle density matrix) 
+and an interfaces to Multiwfn was used to carry out the density and ELF analysis.
+
+Note that a tutorial on high-level density analysis can be found here which covers most of the functionality used in the article:
+:doc:`Highlevel-density-analysis`
+
+
 **Multistep DLPNO-CCSD(T)/CBS workflow for a transition metal complex**
 
 `2023 PCCP article <https://pubs.rsc.org/en/content/articlelanding/2023/cp/d2cp04715b>`_ 

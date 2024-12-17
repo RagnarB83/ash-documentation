@@ -117,7 +117,7 @@ See :doc:`module_highlevel_workflows`
 
     #Running the benchmark with a workflow
     DLPNO_CC_calc = ORCA_CC_CBS_Theory(elements=['C','H','F','Cl','Br','I'], cardinals = [2,3], basisfamily="def2", DLPNO=True,
-                pnosetting='extrapolation', pnoextrapolation=[6,7], numcores=numcores)
+                pnosetting='extrapolation', pnoextrapolation=[1e-6,3.33e-7,2.38,'NormalPNO'], numcores=numcores)
     run_benchmark(set="IE-benzenes", theory=DLPNO_CC_calc)
 
 

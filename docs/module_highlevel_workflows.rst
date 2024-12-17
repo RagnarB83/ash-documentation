@@ -359,7 +359,7 @@ We also choose the regular triples approximation (DLPNO-CCSD(T0) by setting T1 t
 
     ferrocene=Fragment(xyzfile='ferrocene.xyz')
     cc = ORCA_CC_CBS_Theory(elements=ferrocene.elems, cardinals = [3,4], basisfamily="cc-CV_3dTM-cc_L", relativity='DKH', numcores=1, 
-        DLPNO=True, pnosetting="extrapolation", pnoextrapolation=[6,7] T1=True)
+        DLPNO=True, pnosetting="extrapolation", pnoextrapolation=[1e-6,3.33e-7,2.38,'NormalPNO'] T1=True)
     Singlepoint(theory=cc, fragment=ferrocene)
 
 Finally we crank up the accuracy even further by choosing cardinals=[3,4], switch to the basisfamily="cc-CV_3dTM-cc_L and activate the 'DKH' relativistic approximation.
