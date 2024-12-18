@@ -1,6 +1,48 @@
 Coordinates and fragment tools
 ======================================
 
+############################################
+Read in a multi-XYZ or trajectory file
+############################################
+
+XMol-style XYZ-files can contain multiple geometries, which might come from a MD trajectory, optimization trajectory, NEB path or perhaps a collection
+of lowest-energy conformers from e.g. a CREST calculation (see :doc:`crest-interface`). 
+Such files might be created by ASH or by another program.
+
+ASH can conveniently read-in such files using the *get_molecules_from_trajectory* function:
+
+.. code-block:: python
+
+    def get_molecules_from_trajectory(file, writexyz=False, skipindex=1, conncalc=False):
+
+One simply has to provide the name of the multi-molecule XYZ-file but there are also options to write out each 
+individual geometry as its own XYZ-file (i.e. split it) or skip geometries (e.g. every 2nd geometry by setting skipindex to 2).
+
+Examples shown below:
+
+.. code-block:: python
+
+    # Read-in the MD trajectory from an ASH MD run (written in XYZ-format)
+    Opt_traj_fragments = get_molecules_from_trajectory("OpenMMMD_traj.xyz")
+
+    # Read-in the optimization trajectory from an ASH Optimization
+    Opt_traj_fragments = get_molecules_from_trajectory("geometric_OPTtraj_optim.xyz")
+
+    # Read-in the lowest-energy conformers predicted by CREST
+    CREST_fragments = get_molecules_from_trajectory("crest_conformers.xyz")
+
+    # Read-in the minimum energy path from an NEB calculation 
+    NEB_fragments = get_molecules_from_trajectory("knarr_MEP.xyz")
+
+    # Read in the Wigner ensemble 
+    Wigner_fragments = get_molecules_from_trajectory("Wigner_traj.xyz")
+
+
+While molecular dynamics trajectories are sometime written in XYZ format, it is inconvenient for large systems or long trajectories.
+Instead it is more common to utilize a compressed format such as DCD for such trajectories.
+To read in DCD files it is best to use the *mdtraj* library, either on its own or the ASH wrapper interface.
+See :doc:`module_dynamics` for information on the *mdtraj* library info on how to read in DCD-files e.g. using the *MDtraj_slice* function.
+
 
 ############################################
 Calculate RMSD

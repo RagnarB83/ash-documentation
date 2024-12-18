@@ -1,6 +1,9 @@
 Coordinates and fragments
 ==========================
 
+The ASH Fragment is the primary object-type that one works with in ASH.
+Generally one creates a Fragment object, in one of several ways, and then passes it to a Job-function
+along with a Theory object.
 
 ######################################################
 The Fragment class
@@ -457,3 +460,4 @@ Examples:
     #Dihedral angle between atoms 3,0,7,8
     dihedral = dihedral_between_atoms(fragment=ethanol, atoms=[3,0,7,8])
     print(f"Dihedral between atoms 3,0,7,8 is {dihedral} °")
+
