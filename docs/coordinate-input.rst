@@ -5,6 +5,11 @@ The ASH Fragment is the primary object-type that one works with in ASH.
 Generally one creates a Fragment object, in one of several ways, and then passes it to a Job-function
 along with a Theory object.
 
+This page primarily describes how the ASH Fragment class works.
+Also note that the page :doc:`coordinate-tools` contains descriptions of various helper-tools related to coordinates e.g.
+on how to create a list of ASH fragments from an XYZ-directory (*read_xyzfiles*) or from a multi-structure XYZ-file or trajectory (*get_molecules_from_trajectory*).
+
+
 ######################################################
 The Fragment class
 ######################################################

@@ -2,6 +2,46 @@ Coordinates and fragment tools
 ======================================
 
 ############################################
+Read in XYZ-files from a directory
+############################################
+
+It can be convenient to read in multiple molecular structures at the same time to an ASH script, by pointing to a directory 
+with multiple XYZ files present.
+The *read_xyzfiles* function can be use for this purpose. One simply has to provide the path to the directory and ASH will then 
+attempt to read all XYZ-files present in the directory (each file has to have a .xyz suffix), 
+create an ASH fragment for each XYZ-file and then return a list of the ASH fragments
+
+.. code-block:: python
+
+    def read_xyzfiles(xyzdir,readchargemult=False, label_from_filename=True):
+
+Additional options include the *readchargemult* option which if set to True then ASH will try to read charge/mult information (space-separated) from the 2nd-line of the XYZ-file (needs to be present).
+Note that otherwise charge/mult information has to be provided in some other way when Fragment is used for a calculation (either by setting the charge/mult attribute to each Fragment or provide the info to the job-function).
+The *label_from_filename* option is automatically set to True which ensures that each ASH fragment created will have a unique label (corresponding to orginal XYZ filename).
+The label can be changed by changing the Fragment.label attribute if desired.
+
+Example:
+
+.. code-block:: python
+
+    # Create ASH fragments from all XYZ-files in a directory.
+    fragments = read_xyzfiles(xyzdir,readchargemult=False, label_from_filename=True)
+
+    #Example: Loop over each fragment in the list of ASH fragments
+    for frag in fragments:
+        #Print info on each fragment
+        print(frag)
+        #Set charge/mult for each fragment 
+        frag.charge=0; frag.mult=1
+        #Do something with each fragment, e.g. run a single-point energy job
+        #Note: theory object needs to first be defined.
+        #charge and mult keywords can also be provided to Singlepoint if desired
+        Singlepoint(fragment=frag, theory=theory)
+
+.. note:: When reading the XYZ-files in the directory, ASH automatically sorts the filenames by `natural sort order <https://en.wikipedia.org/wiki/Natural_sort_order>`_. This ensures that XYZ-files labelled e.g. mol1.xyz, mol2.xyz, mol11.xyz are read in that order.
+
+
+############################################
 Read in a multi-XYZ or trajectory file
 ############################################
 
