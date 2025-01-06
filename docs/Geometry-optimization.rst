@@ -177,6 +177,31 @@ Examples
     Optimizer(fragment=fragment, theory=qmmm, ActiveRegion=True, actatoms=qmatoms, maxiter=200, charge=-1, mult=6)
 
 ######################################################
+Files created
+######################################################
+
+Once the Optimizer is done, the coordinates in the Fragment object are automatically updated (to be the optimized coordinates) so the Fragment could be immediately used for another job (e.g. a NumFreq job).
+
+During the geometry optimization the following files are created and updated:
+
+.. code-block:: text
+
+  - initialxyzfiletric.xyz: The initial XYZ coordinates read into the geomeTRIC optimizer
+  - geometric_OPTtraj.log : A logfile containing the optimizer settings and also the data for each Step (RMS/Max Gradient and Displacement values and Energy)
+  - geometric_OPTtraj_optim.xyz: An XYZ trajectory containing the geometry of each optimization step. Can be visualized using e.g. VMD/Chemcraft.
+  - Fragment-currentgeo.xyz: An XYZ-file containing the coordinates of the current optimization step.
+
+If the geometry optimization converges without problems, the 'Fragment-optimized.xyz' file is available, which is an XYZ-file containing the optimized coordinates.
+
+If the theory level is a QMMMTheory object then additional files are created for convenience:
+
+.. code-block:: text
+
+  - geometric_OPTtraj_Full.xyz : An XYZ trajectory file containing the full system (not just the active region).
+  - geometric_OPTtraj_QMregion.xyz:  An XYZ trajectory file containing the QM-region only.
+  - optimization_energies.log: A logfile containing the QM-energy, MM-energy and QM/MM-energy for each optimization step.
+
+######################################################
 Constraints
 ######################################################
 
