@@ -413,7 +413,7 @@ We can now in principle run a QM/MM MD simulation of the system.
 
     #Run a NVT QM/MM MD simulation
     OpenMM_MD(fragment=fragment, theory=qm_mm, timestep=0.001, simulation_time=10, traj_frequency=1,
-        temperature=30, integrator='LangevinMiddleIntegrator', coupling_frequency=1,
+        temperature=300, integrator='LangevinMiddleIntegrator', coupling_frequency=1,
         trajfilename='QM_MM_NVT-MD',trajectory_file_option='DCD')
     
 .. note:: Rather than starting QM/MM MD directly like above, it may also be a good idea to equilibrate the system after insertion by e.g.
