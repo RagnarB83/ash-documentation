@@ -377,7 +377,7 @@ ASH allows a few different ways of adding additional forces to a system.
 Internal-coordinate restraint potentials are e.g. used in umbrella sampling simulations.
 
 It is easy to add internal-coordinate restraints to an MD simulation and can be accomplished in 2 ways:
-i ) by providing list of restraing to the **MolecularDynamics** function or ii) by calling the 
+i ) by providing list of restraints to the **MolecularDynamics** function or ii) by calling the 
 **add_custom_bond_force**, **add_custom_angle_force** or **add_custom_torsion_force** methods of the OpenMMTheory object.
 
 
@@ -530,7 +530,7 @@ In certain cases it can also be desirable to restrain the molecule to a specific
     centerforce_center=[11.0,11.0,11.0],
 
 
-Choosing the value of the *centerforce_constant* as well as the *centerforce_distance* required may require some experimentation.
+Choosing the value of the *centerforce_constant* as well as the *centerforce_distance*, may require some experimentation.
 
 
 **Adding any custom OpenMM force to an OpenMMTheory object**

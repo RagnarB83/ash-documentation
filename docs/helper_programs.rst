@@ -19,10 +19,13 @@ ASH has a simple interface to Packmol that allows one to easily use the program 
                     min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[40.0, 40.0, 40.0],density=None):
 
 
-Packmol needs to be downloaded and compiled. See `Packmol releases <https://github.com/m3g/packmol/releases>`_ for the latest version.
-Once the archive has been downloaded and extracted, you have to compile the program which should be as simply as entering the directory and typing 'make' (requires Fortran compiler on system).
-For compilation problems, see the Packmol documentation.
-Once compiled, you can either add the directory to the PATH environment variable or specify the directory when calling the ASH function.
+Packmol needs to be either downloaded and compiled (see `Packmol releases <https://github.com/m3g/packmol/releases>`_ ) or installed via conda/mamba (see `conda-forge packmol package <https://anaconda.org/conda-forge/packmol>`_). 
+
+.. note::
+
+    Packmol compilation: Once the archive has been downloaded and extracted, you have to compile the program which should be as simply as entering the directory and typing 'make' (requires Fortran compiler on system).
+    For compilation problems, see the Packmol documentation.
+    Once compiled, you can either add the directory to the PATH environment variable or specify the directory when calling the ASH function.
 
 To use the program you have to specify input-coordinate files containing a single molecule each 
 (e.g. water.pdb and ethanol.pdb) and the number of molecules of each type that you want in the final box. Alternatively to the number of molecules it is possible to specify the density of the system.
