@@ -231,3 +231,86 @@ Theory level has to be ORCATheory. Difference density is written to disk as a Cu
     #Create difference density for 2 calculations differing in either fragment or theory-level
     def difference_density_ORCA(fragment_A=None, fragment_B=None, theory_A=None, theory_B=None, 
         griddensity=80, cubefilename='difference_density'):
+
+######################################################
+Density sensitivity metric
+######################################################
+
+A common problem in computational chemistry is DFT-method sensitivity and this is a particular problem in transition metal chemistry.
+In addition to energies changing there are cases where there are non-negligible changes in the electron density.
+Martin-Fernández and Harvey proposed an interesting normalized density sensitivity metric in 2021: `see article <https://pubs.acs.org/doi/10.1021/acs.jpca.1c01290>`_
+
+
+ASH has an implementation of this metric that allows one to easily check whether a particular molecule or system suffers from density sensitivity which would generally suggest
+that any DFT calculation on such a system should be carefully evaluated.
+
+The ASH function *density_sensitivity_metric* performs DFT calculations of a system (an input fragment) with 2 different 
+functionals, first in a regular self-consistent way, and then using the density of the second functional to calculate the energy with the 
+former. Since modifying the HF Exchange frequently is the source of the most sensitivity, we choose 2 functionals with different amount of HF Exchange.
+Martin-Fernández and Harvey chose in their paper to use B3LYP with either 20 % or 25 % HF exchange. 
+The ASH function allows one to choose a different hybrid functional form (e.g. PBE0) as well as changing the 2 HF Exchange percentages used.
+The function is hard-coded to perform these calculations using ORCA (ORCA must be in the environment PATH).
+
+After the calculations are done we derive an energy-change due to density, E_D, and the energy-change due to functional, E_F,
+then the eps_D metric and finally the S_rho metric.
+
+.. code-block:: python
+
+	def density_sensitivity_metric(fragment=None, functional="B3LYP", basis="def2-TZVP", percentages=[0.20,0.25], numcores=1):
+
+
+Example below shows how the metric is evaluated on 2 simple molecule using B3LYP functional, varying the HF exchange from 20 % to 25 % (as used in the paper).
+
+.. code-block:: python
+
+	from ash import *
+
+	#Molecules
+	H2O=Fragment(databasefile="h2o", charge=0, mult=1)
+	FeCO5=Fragment(xyzfile="feco5.xyz", charge=0, mult=1)
+
+	print("Calculating density_sensitivity_metric for H2O")
+	density_sensitivity_metric(fragment=H2O, functional="B3LYP/G", basis="def2-TZVP", percentages=[0.20, 0.25], numcores=4)
+	print("Calculating density_sensitivity_metric for Fe(CO)5")
+	density_sensitivity_metric(fragment=FeCO5, functional="B3LYP/G", basis="def2-TZVP", percentages=[0.20, 0.25], numcores=4)
+
+.. code-block:: text
+
+
+	This results in the output:
+
+	# For H2O
+
+	Density sensitivity metrics
+	------------------------------
+	delta_E: -25.661 kcal/mol
+	delta_E_F: -25.675  kcal/mol
+	delta_E_D:   0.014  kcal/mol
+	eps_D:   0.054 %
+	S_rho:    2.15
+
+	# For Fe(CO)5
+
+	Density sensitivity metrics
+	------------------------------
+	delta_E: -284.224 kcal/mol
+	delta_E_F: -284.685  kcal/mol
+	delta_E_D:   0.461  kcal/mol
+	eps_D:   0.162 %
+	S_rho:    6.49
+
+As the results reveal there is clearly a much larger density sensitivity associated with the organometallic Fe(CO)5 compared to a plain water molecule,
+both according to the normalized S_rho metric, the eps_D metric and the delta_E_D metric.
+
+As discussed in the original article, molecules can be roughly grouped into categories of density sensitivity based
+on the metrics above. Note that some of the metrics will be more sensitive to the precise protocol used (i.e. functional and HF exchange amounts used).
+
++---------------------+------------+-----------+------------+--------------+
+| group               | delta_E_D  | eps_D (%) | S_rho      | examples     |
++=====================+============+===========+============+==============+
+| less sensitive      | <0.5       | <0.150    | <5.0       | alkanes      |
++---------------------+------------+-----------+------------+--------------+
+| sensitive           | 0.5-2.0    | 0.15-0.20 | 4.0-8.0    | TM complexes |
++---------------------+------------+-----------+------------+--------------+
+| extremely sensitive | >3.5       | >0.20     |       >8.5 | FeMoco       |
++---------------------+------------+-----------+------------+--------------+
