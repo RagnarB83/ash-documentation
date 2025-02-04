@@ -79,6 +79,10 @@ See also :doc:`mtd_tutorial` for working examples on how to perform metadynamics
      - string
      - None
      - Biaswidth for CV2 (sigma) in CV units. CV-unit is Angstrom for 'bond' and 'rmsd' but radians for 'angle' and 'dihedral'.
+   * - ``reference_xyzfile``
+     - string
+     - None
+     - The reference structure (path to XYZ-file) to use when CV is 'rmsd'. If not set then initial coordinates are used as reference.
    * - ``biasfactor``
      - int
      - 6
@@ -140,12 +144,13 @@ Distance, angle and torsion CV definitions:
   CV1_atoms=[0,1,2,3], CV1_type='torsion', CV1_biaswidth=0.5,
 
 The 'rmsd' option uses the RMS-difference between the current structure and a reference structure as a CV.
-Currently this option is limited to using the starting structure as the reference structure.
+One should point *reference_xyzfile* keyword to an XYZ-file in this case.
+If *reference_xyzfile* is not set, then the starting structure is used as reference structure instead.
 
 .. code-block:: python
 
   #Defining an RMSD CV, using atoms 0,2,5,7 . Biaswidth 0.01 Ang
-  CV1_atoms=[0,2,5,7], CV1_type='rmsd', CV1_biaswidth=0.01,
+  CV1_atoms=[0,2,5,7], CV1_type='rmsd', CV1_biaswidth=0.01, reference_xyzfile="ref.xyz"
 
 
 The 'cn' option defines a coordination number CV that can be highly useful, e.g. for protonation reactions.
