@@ -116,6 +116,116 @@ See also :doc:`mtd_tutorial` for working examples on how to perform metadynamics
      - None
      - List of parameters (max value in Ang unit and force constant in kcal/mol/Ang^2) for an optional flatbottom restraint (only for bond and rmsd) for CV2 that prevents the simulation from straying too far from a max value.
 
+-----------------
+Defining CVs
+-----------------
+
+The *CV1_type* and *CV2_type* keyword should specify the type of CV as a string.
+The built-in options are: 'bond' (a.k.a. 'distance'), 'angle', 'dihedral' (a.k.a. 'torsion'), 'rmsd' and 'cn'. And 'custom' allows specifying your own CV.
+
+Depending on the CV-type you then must specify the atoms that define that geometric variable 
+The biaswidth for the CV must also be chosen and it is important to note that an appropriate value depends very much on the CV-type.
+The unit for the biaswidth is Angstrom for 'bond' and 'rmsd' CVs, but radians for 'angle' and 'dihedral'. 
+The *CV1_range* and *CV2_range* keywords define the min-to-max range that the CV can take (same unit as biaswidth).
+
+Distance, angle and torsion CV definitions:
+
+.. code-block:: python
+
+  #Defining a distance CV between atom 0 and 1. Biaswidth 0.01 Ang
+  CV1_atoms=[0,1], CV1_type='distance', CV1_biaswidth=0.01,
+  #Defining an angle CV between atom 0, 1 and 2. Biaswidth 0.5 radians
+  CV1_atoms=[0,1,2], CV1_type='angle', CV1_biaswidth=0.5,
+  #Defining a torsion CV between atom 0 and 1. Biaswidth 0.5 radians
+  CV1_atoms=[0,1,2,3], CV1_type='torsion', CV1_biaswidth=0.5,
+
+The 'rmsd' option uses the RMS-difference between the current structure and a reference structure as a CV.
+Currently this option is limited to using the starting structure as the reference structure.
+
+.. code-block:: python
+
+  #Defining an RMSD CV, using atoms 0,2,5,7 . Biaswidth 0.01 Ang
+  CV1_atoms=[0,2,5,7], CV1_type='rmsd', CV1_biaswidth=0.01,
+
+
+The 'cn' option defines a coordination number CV that can be highly useful, e.g. for protonation reactions.
+In example below, we define a CN-CV for e.g. a nitrogen group that can be either R-NH3+ or R-NH2.
+We define bonds between the nitrogen (index 6 below) and all acidic hydrogens (13,14,15).
+
+.. code-block:: python
+
+  #Defining a CN-CV, defining bonds between atoms (6,13),(6,14),(6,15). Biaswidth 0.01 (unitless)
+  CV1_atoms=[[6,13],[6,14],[6,15]], CV1_type='cn', CV1_biaswidth=0.01, CV1_parameters=[2.0],
+
+If all H-atoms are close to N, the CN will be close to 3 while if one of the hydrogens transfer to another site, the CN will be closer to 2.
+A threshold value (r0 in equation below) needs to also be passed (roughly defines when the distance is no longer a bond). Here we do this using the CV1_parameters list.
+The mathematical expression used to define the coordination number: 
+
+.. math::
+
+   N(r) = \Sigma_{i \in g_{1}} \Sigma_{j \in g_{2}} S ( \frac{|| r_{j} - r_{i} ||} {r_{0}})  
+
+where S is a simplification of the common step function used for CNs:
+
+.. math::
+
+   S = \frac{1-x^{6}} {1-x^{12}} = \frac{1}{1+x^{6}}
+
+
+Finally, the 'custom' option allows the user to define their own CV by utilizing the powerful Custom-force options inside the OpenMM Library.
+First an OpenMM Force object must be created (using an appropriate OpenMM CustomForce and energy expression) and appropriate atoms or groups added to the Force.
+See `OpenMM Custom Forces <http://docs.openmm.org/latest/userguide/theory/03_custom_forces.html>`_ for more information.
+The OpenMM BiasVariable should then be defined: see `BiasVariable documentation <http://docs.openmm.org/latest/api-python/generated/openmm.app.metadynamics.BiasVariable.html?highlight=biasvariable>`_
+Both the CV-force created and the biasvariable-object should then be passed as arguments to *user_cvforce1* and  *user_biasvar1* (or *user_cvforce2* and  *user_biasvar2*).
+
+Example below shows how to define the coordination number CV as a custom-force instead of the built-in option.
+This is just one example, the OpenMM CustomForces are flexible enough to allow definitions of highly complex CVs.
+
+.. code-block:: python
+
+  import openmm
+  #Defining custom cvforce
+  energy_expression="1/(1+x^6) ; x=r/threshold"
+  cvforce = openmm.CustomBondForce(energy_expression)
+  #Threshold that defines when a bond is present
+  cvforce.addGlobalParameter("threshold", 2.0*openmm.unit.angstrom)
+
+  #Adding the atoms that define each bonds
+  cvforce.addBond(6,13)
+  cvforce.addBond(6,14)
+  cvforce.addBond(6,15)
+
+  #Creating Biasvariable: forceobj, minval, maxval, biaswidth
+  biasvar=openmm.app.BiasVariable(cvforce, 00, 5, 0.05, periodic=False)
+
+  # Choosing custom CV option and and specifying the CV-force and Biasvariable
+  OpenMM_metadynamics(...,CV1_type='custom', user_cvforce1=cvforce, user_biasvar1=biasvar)
+
+
+-----------------
+Restraining CVs
+-----------------
+
+For CVs such as 'bond'/'distance' or 'rmsd' it is possible for the metadynamics simulations to wander too far off the region of interest
+and furthermore if the simulation involves a reaction where a substrate/product is dissociated from a fragment this may cause problems in sampling the region of primary importance.
+For dealing with such scenarios it is possible to add a flatbottom restraining potential that pushes the system away from such bad regions by a harmonic resraint.
+
+To use, you simply add a flatbottom_restraint_CV1 or flatbottom_restraint_CV2 keyword to the OpenMM_metadynamics function, specifying the max value that the CV
+can take and the force-constant of the restraint.
+Example:
+
+.. code-block:: python
+
+
+  OpenMM_metadynamics(..., CV1_atoms=[0,10], CV1_type='distance', CV1_biaswidth=0.5, flatbottom_restraint_CV1=[5.0, 7.0])
+
+This example adds a 'distance' CV between atom 0 and atom 10, with a biaswidth of 0.5 Angstrom and a restraint has been added
+so that if the CV1 takes a value above 5.0 Angstrom, it will feel a restraining potential of 7.0 kcal/mol/Angstrom^2 that will push it back.
+
+This type of restraint is currently only possible for 'bond'/'distance' and 'rmsd' restraints.
+
+
+
 
 ######################################################
 OpenMM_MD_plumed 
@@ -138,9 +248,7 @@ This means that in principle some other enhanced sampling (not just metadynamics
                 datafilename=None, dummy_MM=False, add_centerforce=False,
                 centerforce_atoms=None, centerforce_distance=10.0, centerforce_constant=1.0, centerforce_center=None,
                 barostat_frequency=25, specialbox=False,
-                plumed_input_string=None,
-                frequency=1, savefrequency=10, printlevel=2,
-                biasdir='.', numcores=1):
+                plumed_input_string=None, printlevel=2, numcores=1):
 
 The *plumed_input_string* variable should define a multiline-string, this will be written to disk as a *plumedinput.in* file and the information is passed to the Plumed library.
 The information in this string should define the desired collective variables as well as define all metadynamics options. Note also that the update frequency of the bias-potential and print-out (PACE and STRIDE options) should be defined here.
@@ -155,27 +263,6 @@ Plumed additionally will write the information about the bias-potential and curr
 .. warning:: Be aware that unlike ASH and OpenMM (where atom indices are counted from zero), PLUMED atom indices start from 1. This needs to be taken into account when defining CVs by atom indices. 
 
 
-######################################################
-Restraining CVs
-######################################################
-
-For CVs such as 'bond'/'distance' or 'rmsd' it is possible for the metadynamics simulations to wander too far off the region of interest
-and furthermore if the simulation involves a reaction where a substrate/product is dissociated from a fragment this may cause problems in sampling the region of primary importance.
-For dealing with such scenarios it is possible to add a flatbottom restraining potential that pushes the system away from such bad regions by a harmonic resraint.
-
-To use, you simply add a flatbottom_restraint_CV1 or flatbottom_restraint_CV2 keyword to the OpenMM_metadynamics function, specifying the max value that the CV
-can take and the force-constant of the restraint.
-Example:
-
-.. code-block:: python
-
-
-  OpenMM_metadynamics(..., CV1_atoms=[0,10], CV1_type='distance', CV1_biaswidth=0.5, flatbottom_restraint_CV1=[5.0, 7.0])
-
-This example adds a 'distance' CV between atom 0 and atom 10, with a biaswidth of 0.5 Angstrom and a restraint has been added
-so that if the CV1 takes a value above 5.0 Angstrom, it will feel a restraining potential of 7.0 kcal/mol/Angstrom^2 that will push it back.
-
-This type of restraint is currently only possible for 'bond'/'distance' and 'rmsd' restraints.
 
 
 ######################################################
@@ -224,6 +311,7 @@ Note that here we perform an identical MTD simulation on butane with the same th
   #Create theory level. Here xTB using the in-memory library approach (no disk-based input or output)
   theory = xTBTheory(runmode='library')
 
+  # Warning: atom indices inside plumed-string start from 1 (not 0 like in ASH)
   plumedstring="""
   # set up two variables for Phi and Psi dihedral angles
   phi: TORSION ATOMS=1,2,3,4
@@ -245,13 +333,13 @@ Note that here we perform an identical MTD simulation on butane with the same th
                 coupling_frequency=1, traj_frequency=1,
                 plumed_input_string=plumedstring)
 
-######################################################
-Running multiple walker metadynamics simulations
-######################################################
+###########################################################
+Parallelization: Running multiple walker MTD simulations
+###########################################################
 
 In order to parallelize metadynamics simulations, one can of course control the number of CPU-cores in the ASHTheory level 
 as usual which will affect how long each timestep will take (note that MM simulations, running on the GPU (platform='CUDA' or 'OpenCL') is much preferable to the CPU).
-However, the multiple walker strategy works even better than the Theory parallelization.
+However, the multiple walker strategy works much better than the Theory parallelization.
 
 As shown in the :doc:`mtd_tutorial` tutorial, it is highly convenient to run multiple walker metadynamics simulations in order to 
 reduce the sampling error and converge the free energy simulations evenquicker.
@@ -290,14 +378,15 @@ and then submit like this (here using the **subash** (see :doc:`basics` ) submis
 
 .. code-block:: shell
   
-  subash mtd_sim1.py # Here assuming numcores variable has been set in script
-  subash mtd_sim2.py -p 1 #Here requesting 1 CPU core
-  subash mtd_sim3.py -p 2 #Here requesting 2 CPU cores
+  subash mtd_sim1.py -p 1 # Here requesting 1 CPU core
 
 Each job will probably end up on a different node, writing most temporary files to its own local scratch but will 
 read and write bias-potential information on the shared biasdirectory. Pay attention to the *savefrequency* variable of **OpenMM_metadynamics** as it controls
 how often the bias is read and written to disk. The more often, the more up-to-date the bias-potential will be but this may read to excessive read/write operations that will 
 slow down the simulation and may lead to excessive network traffic on the cluster (especially if you are running MM metadynamics).
+
+.. note:: The multiple-walker approach should also work for OpenMM_MD_plumed jobs but requires more setup. 
+  The biasdirector should be set by PLUMED keyword WALKERS_DIR, the number of walkers by WALKERS_N etc. See Plumed documentation.
 
 The advantage of the approach above is that you can submit multiple walker-jobs, 
 perhaps using different CPU cores for each simulation (to speed up the theory energy+gradient step), 
@@ -326,9 +415,13 @@ This is a highly convenient way of launching multiple walkers on the same single
 
 
 ######################################################
-metadynamics_plot_data
+Plotting the results
 ######################################################
 
+
+------------------------
+metadynamics_plot_data
+------------------------
 If using the native metadynamics implementation inside OpenMM then it is convenient to use the **metadynamics_plot_data** 
 function to analyze the bias-files (after or during simulation), get the free-energy surface and plot the data. 
 Plotting requires a Matplotlib installation.
@@ -354,9 +447,9 @@ The script will write the following files that can be used on their own:
 - MTD_CV1.png/MTD_CV1_CV2.png # Image containing the final plot (requires Matplotlib)
 
 
-##########################################################
+------------------------------------------------------------
 plumed_MTD_analyze (for Plumed run): Analyze the results
-##########################################################
+------------------------------------------------------------
 
 For metadynamics simulations utilizing the Plumed plugin, where the metadynamics results are available in the form of HILLS and COLVAR files it is possible
 to use the **MTD_analyze** function to analyze the results and plot the data.
@@ -412,7 +505,55 @@ to use the **MTD_analyze** function to analyze the results and plot the data.
 Umbrella sampling in ASH
 ######################################################
 
-ASH can be used for umbrella sampling simulations by adding a restraint potential to the system
-before running MD.
+ASH can also be used for umbrella sampling simulations by adding a restraint potential to the system
+before running MD. See section "Adding custom forces to MD simulation" in  :doc:`module_dynamics` for more information.
 
-A workflow for running umbrella sampling is currently missing.
+
+A workflow and tutorial for running umbrella sampling is currently missing but a basic example is shown below.
+The post-processing could then in principle be performed by a method such as MBAR or WHAM using a program such as `FastMBAR <https://fastmbar.readthedocs.io>`_
+
+.. code-block:: shell
+
+  from ash import *
+  import os
+  import math
+
+  # Example script for performing a basic umbrella sampling simulation using ASH
+  # Note:
+  # System: Butane torsion using GFN1-XTB
+
+  ####################################################################
+  # Creating the ASH fragment
+  frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
+  # Defining the xTB theory (GFN1-xTB)
+  theory = xTBTheory(runmode='library')
+  ####################################################################
+
+  # US restraint potential settings
+  RC_atoms=[0,1,2,3]
+  RC_FC=2000 #Unit?
+  traj_frequency=10 #Frames saved to trajectory and used in US
+  filename_prefix="US_window" # Used for created files
+  M = 20 # M centers of harmonic biasing potentials
+  theta0 = np.linspace(-math.pi, math.pi, M, endpoint = False) # array of values
+
+  # Save US settings to parameterfile
+  import json
+  json.dump({'M':M, 'RC_atoms':RC_atoms,'RC_FC':RC_FC, 'traj_frequency':traj_frequency,
+            'theta0':list(theta0), 'filename_prefix':filename_prefix}, open(f"ASH_US_parameters.txt",'w'))
+
+  # Loop over windows and run biased simulation in each
+  # Note: More efficient to run these as independent simulations in parallel
+  for ind,RC_val in enumerate(theta0):
+      print("="*50)
+      print(f"NEW UMBRELLA WINDOW. Value: {RC_val}")
+      print("="*50)
+      # Setting restraint potential as a list: [atom_indices, value, force constant]
+      restraint=RC_atoms+[RC_val]+[RC_FC] # Combining into 1 list
+
+      # Calling OpenMM_MD with a restraint potential
+      OpenMM_MD(fragment=frag, theory=theory,
+              timestep=0.001, simulation_time=1, traj_frequency=traj_frequency,
+              temperature=300, restraints=[restraint])
+
+      os.rename("trajectory.dcd", f"{filename_prefix}_{ind}.dcd")
