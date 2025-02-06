@@ -353,7 +353,7 @@ QM/MM boundary treatment: mechanical vs. electrostatic embedding
 The chosen coupling scheme (mechanical vs. electrostatic) influences the treatment of the QM/MM boundary, including the linkatom handling.
 For mechanical embedding there is nothing besides the linkatom-treatment (see above) that needs to be done: the linkatoms are present during the QM-calculation but invisible to the MM-part and the linkatom force is projected onto the QM1 and MM1 atoms.
 
-However, in electrostatic embedding, the presence of the linkatom, as well as a bonded MM atom being so close, created problems, that if not treated this would lead to some artifical overpolarization.
+However, in electrostatic embedding, the presence of the linkatom, as well as a bonded MM atom being so close, creates problems, that if not treated this would lead to some artifical overpolarization.
 To prevent this overpolarization, the atom charge of the MMatom is traditionally shifted towards its bonded neighbours (MM2 atoms) with a possible dipole correction also applied.
 
 ASH includes 2 different chargeboundary-methods for preventing overpolarization at the QM-MM boundary which are controlled by the *chargeboundary_method* keyword in the QMMMTheory object:

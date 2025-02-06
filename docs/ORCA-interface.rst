@@ -297,6 +297,22 @@ ASH features wrappers around useful ORCA programs such as orca_plot, orca_mapspc
   # Simple Wrapper around orca_plot for creating Cube-files of MOs or densitities.
   def run_orca_plot(filename, option, orcadir=None, gridvalue=40,densityfilename=None, mo_operator=0, mo_number=None):
 
+Filename should be the name of the ORCA-GBW file (e.g. file.gbw, file.loc, file.qro etc.).
+Option should be either 'density', 'mo', 'cisdensity', 'spindensity', 'cisspindensity'.
+Gridvalue is by default 40 (same as in orca_plot). 
+The orcadir keyword is optional, ASH will try to find orca_plot in your PATH environment if not present.
+
+For option='mo' you should also provide mo_number (valid integer) and mo_operator (0 or 1 for alpha and beta respectively): e.g. mo_number=17 and mo_operator=1 to plot beta-MO no. 17
+For the density-options you should also provide the name of the density file.
+Example:
+
+  .. code-block:: python
+
+    #Example on how to plot multiple MO's
+    for mo_index in [17,20,25,30]:
+      run_orca_plot("file.gbw", 'mo', gridvalue=50, mo_operator=mo_index, mo_number=0)
+
+
 **run_orca_mapspc**
   
   .. code-block:: python
