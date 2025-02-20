@@ -54,7 +54,7 @@ A NEB-TS implementation is also available.
    * - ``interpolation``
      - string
      - 'IDPP'
-     - The type of interpolation used. Default: 'IDPP'. Other options: 'linear'
+     - The type of interpolation used. Default: 'IDPP'. Other options: 'linear', 'geodesic'
    * - ``CI``
      - Boolean
      - True
@@ -161,6 +161,7 @@ Recommendations and how to use
 - It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess.
 - If you already know approximately what the saddlepoint geometry should look like you can provide such a geometry using the TS_guess_file option. The geometry will be used during the interpolation to provide a more accurate guess path. This could also be a previously obtained saddlepoint at another level of theory.
 - In rare cases the IDPP interpolation goes wrong, you can either 1) try modify the idpp_springconst value or 2) switch to a simpler linear Cartesian interpolation (interpolation="linear" option) instead, perhaps in combination with a TS_guess_file (guides the linear interpolation).
+- There is now also the option of using the 'GEODESIC' option which uses the geodesic_interpolate library to perform the interpolation.
 - If a CI-NEB calculation converges, the saddlepoint geometry can be confirmed as a saddlepoint via a NumFreq job. NEB returns an ASH Fragment inside the ASH-Results object (saddlepoint_fragment attibute) of the saddlepoint geometry as well as an XYZ-file.
 - Any ASH Theory level can in principle be used (although only ORCA and xTB have been tested). In practice you want to use a QM method and code with an analytical gradient available.
 
@@ -244,6 +245,30 @@ Here, using the *TS_guess_file* option. This will influence the initial interpol
     #Run NEB to find saddlepoint. Returns an ASH Results object 
     NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, TS_guess_file="guess_TS_geometry.xyz")
     print(NEB_result)
+
+################################################################################
+Guess pathway and Interpolation
+################################################################################
+
+The initial guess pathway plays an important role in NEB calculations.
+If you end up with NEB convergence problems that are never resolved or perhaps even SCF convergence problems in the very first NEB iteration,
+it is likely that there is something wrong with the initial guess pathway.
+Visualizing the guess pathway, present in the file initial_guess_path.xyz may reveal the problem.
+A common issue is that the reactant and product geometries do not have atoms ordered in a consistent way which will lead to a problematic pathway.
+
+However, it is also possible that the default IDPP interpolation fails to produce a good enough pathway for your system.
+The problem can potentially be fixed by tweaking the idpp_maxiter (default value 700 )and idpp_springconst (default 5.0) parameters.
+But there is also an alternative guess-option in ASH now, the 'GEODESIC' option which is based on geodesic interpolation by Todd Martínez and coworkers.
+The algorithm is described in :
+Xiaolei Zhu, Keiran C. Thompson, Todd J. Martínez, J. Chem. Phys. 2019, 150, 164103. `Article <https://pubs.aip.org/aip/jcp/article/150/16/164103/198363/Geodesic-interpolation-for-reaction-pathways>`_ 
+
+In initial tests GEODESIC seems to improve upon IDPP for molecular reactions and maybe become the default in NEB and NEBTS jobs in ASH in the future
+
+Use like this:
+
+.. code-block:: python
+
+    NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=10, interpolation="GEODESIC")
 
 ################################################################################
 Controlling printout
