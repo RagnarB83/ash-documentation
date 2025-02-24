@@ -18,11 +18,11 @@ A NEB-TS implementation is also available.
 
 .. code-block:: python
 
-  def NEB(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, 
+  def NEB(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, maxiter=100,
           conv_type="ALL", tol_scale=10, tol_max_fci=0.026, tol_rms_fci=0.013, tol_max_f=0.26, tol_rms_f=0.13,
-          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, 
-          charge=None, mult=None,printlevel=0, ActiveRegion=False, actatoms=None,
-          interpolation="IDPP", idpp_maxiter=300, 
+          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, Singleiter=False,
+          charge=None, mult=None,printlevel=1, ActiveRegion=False, actatoms=None,
+          interpolation="IDPP", idpp_maxiter=700, idpp_springconst=5.0, zoom=False,
           restart_file=None, TS_guess_file=None, mofilesdir=None):
 
 .. list-table::
@@ -511,12 +511,12 @@ The NEBTS function is very similar to the NEB function:
 
 .. code-block:: python
 
-  def NEBTS(reactant=None, product=None, theory=None, images=8, CI=True, OptTS=True, free_end=False, maxiter=100,
+  def NEBTS(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, maxiter=100, Singleiter=False,
           conv_type="ALL", tol_scale=10, tol_max_fci=0.10, tol_rms_fci=0.05, tol_max_f=1.03, tol_rms_f=0.51,
-          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, charge=None, mult=None, printlevel=0, ActiveRegion=False, actatoms=None,
-          interpolation="IDPP", idpp_maxiter=300, restart_file=None, TS_guess_file=None, mofilesdir=None, 
+          tol_turn_on_ci=1.0,  runmode='serial', numcores=1, charge=None, mult=None, printlevel=1, ActiveRegion=False, actatoms=None,
+          interpolation="IDPP", idpp_maxiter=700, idpp_springconst=5.0, restart_file=None, TS_guess_file=None, mofilesdir=None,
           OptTS_maxiter=100, OptTS_print_atoms_list=None, OptTS_convergence_setting=None, OptTS_conv_criteria=None, OptTS_coordsystem='tric',
-          hessian_for_TS=None, modelhessian='unit', tsmode_tangent_threshold=0.1):
+          hessian_for_TS=None, modelhessian='unit', tsmode_tangent_threshold=0.1, subfrctor=1):
 
 with additional keywords: *OptTS_maxiter*, *OptTS_print_atoms_list*, *OptTS_convergence_setting*, *OptTS_conv_criteria* and *OptTS_coordsystem*  being keywords that belong to the Optimizer.
 See :doc:`Geometry-optimization` for explanations.
@@ -531,6 +531,10 @@ Options to *hessian_for_TS* are:
 
    * - hessian_for_TS value
      - Description
+   * - ``1point``
+     - Calculate a 1-point numerical Hessian by the ASH NumFreq function.
+   * - ``2point``
+     - Calculate a 2-point numerical Hessian by the ASH NumFreq function.
    * - ``first``
      - Optimizer calculates exact Hessian in the first step of the OptTS procedure.
    * - ``each``
@@ -545,10 +549,11 @@ Options to *hessian_for_TS* are:
        | Use *tsmode_tangent_threshold* to control the size of the partial Hessian.
        | Rest is approximated by a model Hessian or unit atrix. *modelhessian* options: 'unit','Almloef', 'Lindh', 'Schegel'  
 
-*hessian_for_TS* ='xtb' is the currently recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
+*hessian_for_TS* ='xtb' is an often recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
 as an initial Hessian in the eigenvector-following minimization. Unless the system is very large, this option is the most cost-effective. 
 This requires an active xTB interface (xTB needs to installed on the computer).
-If this option fails: 'first' will calculate an exact Hessian in the first step. A safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
+The default option is currently set to be '1point'. This is a safe but relatively expensive option.
+A very safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
 
 
 **Example:**
@@ -566,7 +571,7 @@ If this option fails: 'first' will calculate an exact Hessian in the first step.
     print(NEBTS_result)
 
 
-Parallelization of a **NEBTS** job can be controlled by the *numcores* keyword and for the CI-NEB part it will behave like in the **NEB** function.
+Parallelization of a **NEBTS** job can be controlled by the *numcores* keyword and for the CI-NEB part it will behave like in the .
 However, once the CI-NEB part is complete, and the NEBTS job switches to performing the eigenvector-following minimization, ASH will automatically
 change the number of cores available to the Theory object to use the maximum number of CPU cores provided to either NEBTS or the Theory object. 
 This maximizes use of CPU cores during the job.
@@ -588,3 +593,38 @@ This maximizes use of CPU cores during the job.
     #NEB-TS combines a CI-NEB job (note: looser thresholds than default CI-NEB) and a Optimizer(OptTS=True) job.
     NEBTS_result = NEBTS(reactant=Reactant, product=Product, theory=calc, numcores=numimages, images=numimages, printlevel=0, hessian_for_TS='xtb')
     print(NEBTS_result)
+
+
+################################################################################
+Single-iteration NEB-TS (a.k.a. Fast NEB-TS)
+################################################################################
+
+The expensive part of an NEB-TS job is the CI-NEB part that requires many iterations to 
+converge (each iteration calculates multiple images) with the cost going up with the number of images.
+As was shown in the paper describing the NEB implementation in ORCA and the NEB-TS method:
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+DOI: 10.1021/acs.jctc.1c00462
+what can work remarkably well in some cases is to just perform the guess interpolation step,  then calculate the energy+gradient for each image (i.e. perform a single NEB iteration),
+then select the highest energy image and use as a saddlepoint guess for an eigenvector-following algorithm optimization. This was called IDPP-TS in the paper.
+While this does not result in a method capable of ~100 % success rate (for the test set used in the paper), like the NEB-CI and NEB-TS methods,
+this still results in a method capable of almost 97 % accuracy for the same test set. This means that some robustness is sacrificed for speed.
+In practice, for real systems 
+
+If this kind of single-iteration NEB-TS is combined with a good interpolation method (e.g. geodesic) as well as an accurate Hessian approximation,
+then this can be very useful for many cases. The geodesic interpolation works particularly well we find.
+
+.. code-block:: python
+
+    from ash import *
+
+    R = Fragment(xyzfile="reactant.xyz", charge=0, mult=1)
+    P = Fragment(xyzfile="product.xyz", charge=0, mult=1)
+    theory = xTBTheory()
+
+    # Calling NEBTS with geodesic interpolation and Singleiter=True. 
+    NEBTS(reactant=R, product=P, theory=theory, interpolation="geodesic", Singleiter=True,
+          hessian_for_TS="1point")
+
+
+The *Singleiter=True* option can also be used for the **NEB** function (i.e. regular climbing-image NEB) but this is less useful.
+
