@@ -35,14 +35,16 @@ See also ORCA forum `ORCA forum <https://orcaforum.kofo.mpg.de/index.php>`_ .
 .. code-block:: python
     
   class ORCATheory:
-      def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, extrabasisatoms=None, extrabasis=None, 
-                  TDDFT=False, TDDFTroots=5, FollowRoot=1,
-                  orcablocks='', extraline='', first_iteration_input=None, 
-                  brokensym=None, HSmult=None, atomstoflip=None, numcores=1, nprocs=None, label=None, 
-                  moreadfile=None,moreadfile_always=False, autostart=True,
-                  propertyblock=None, keep_each_run_output=False, print_population_analysis=False, 
-                  filename="orca", check_for_errors=True, check_for_warnings=True,
-                  fragment_indices=None):
+      def __init__(self, orcadir=None, orcasimpleinput='', printlevel=2, basis_per_element=None, extrabasisatoms=None, 
+                  extrabasis=None, atom_specific_basis_dict=None, ecp_dict=None, TDDFT=False, TDDFTroots=5, FollowRoot=1,
+                  orcablocks='', extraline='', first_iteration_input=None, brokensym=None, HSmult=None, atomstoflip=None, 
+                  numcores=1, nprocs=None, label="ORCA",
+                  moreadfile=None, moreadfile_always=False, bind_to_core_option=True, ignore_ORCA_error=False,
+                  autostart=True, propertyblock=None, save_output_with_label=False, keep_each_run_output=False, 
+                  print_population_analysis=False, filename="orca", check_for_errors=True, check_for_warnings=True,
+                  fragment_indices=None, xdm=False, xdm_a1=None, xdm_a2=None, xdm_func=None, NMF=False, NMF_sigma=None,
+                  cpcm_radii=None, ROHF_UHF_swap=False,
+                  deltaSCF=False, deltaSCF_PMOM=False, deltaSCF_confline=None, deltaSCF_turn_off_automatically=True):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -400,7 +402,7 @@ ASH features a few functions for conveniently creating or reading ORCA-JSON file
   #Get densities from data dictionary (from read_ORCA_json_file)
   def get_densities_from_ORCA_json(data):
 
-  #Grab ORCA wfn from jsonfile or data-dictionary
+  #Grab ORCA wfn from jsonfile or data-dictionary. Returns DM_AO,C,S, MO_occs, MO_energies, AO_basis, AO_order
   def grab_ORCA_wfn(data=None, jsonfile=None, density=None):
 
   #Reverse JSON to GBW
@@ -409,7 +411,7 @@ ASH features a few functions for conveniently creating or reading ORCA-JSON file
 .. warning::  Do note that if the GBW-file contains a ROHF wavefunction then this will most likely not work due to the lack of ORCA-JSON handling for ROHF.
 
 ################################################################################
-Example: grabbing integrals and MO's
+Example: grabbing integrals and MOs
 ################################################################################
 
 Below is an example of how to grab the kinetic energy matrix and the MO-information (MO coefficients, MO-energies)
@@ -433,6 +435,7 @@ Below is an example of how to grab the kinetic energy matrix and the MO-informat
   print(data["T-Matrix"])
   print("\nTHe MO information:\n")
   print(data["MolecularOrbitals"])
+
 
 ################################################################################
 Creating FCIDUMP file from ORCA
