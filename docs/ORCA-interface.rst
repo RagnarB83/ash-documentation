@@ -1,7 +1,36 @@
 ORCA interface
 ======================================
 
-ORCATheory class:
+
+`ORCA <https://www.kofo.mpg.de/en/research/services/orca>`_  is a general quantum chemistry program written and developed by Prof. Dr. Frank Neese and coworkers at the MPI für Kohlenforschung in Mülheim, Germany.
+The program is free for academic use, very easy to install (binary download only), one of the fastest GTO-based QM programs and is full of advanced methods, both DFT-based and WFT-based.
+
+ASH features a highly flexible interface to ORCA and is in fact the earliest interface written, due to our long experience with the program.
+Energies and gradients are available in the interface so ORCATHeory in ASH can be used for single-point energies, geometry optimizations, 
+numerical frequencies, surface scans, NEB and molecular dynamics within ASH (without relying on any of the algorithms within ORCA).
+Additionally, ASH can call on ORCA to calculate a TDDFT or deltaSCF gradient which enables excited-state optimizations/MD. 
+Full QM/MM pointcharge-support is available so the interface can be used fully in QM/MM jobs.
+ASH can call on ORCA to calculate an analytic Hessian. 
+
+Since the arrival of the JSON interface in ORCA 6.0 ASH now also supports various ways of conveniently reading WF data from ORCA via the JSON-file (created from a GBW file).
+This means that one can get easy access to the 1-electron/2-electron integrals, MO coefficients, densities etc. directly within the ASH-ORCA interface. 
+
+Other features of the interface:
+
+- Convenient ways of specifying convergence to a broken-symmetry state
+- Specifying of atom-specific basis sets
+- Flexible options to specify guess orbitals
+- Automatic grabbing of ORCA errors and warnings
+- Printing of population analysis in each Opt/MD step.
+- Definitions of fragments
+
+
+See `ORCA manual <https://www.faccts.de/docs/orca/6.0/manual/>`_  .
+See also ORCA forum `ORCA forum <https://orcaforum.kofo.mpg.de/index.php>`_ .
+
+
+
+**ORCATheory class:**
 
 .. code-block:: python
     
@@ -149,7 +178,9 @@ ASH can find the ORCA program in a few different ways.
 
 - ASH will first check if the orcadir argument has been set which should be a string that points to the directory where the orca program is located, e.g. "orcadir=/path/to/orca_5_0_2". This option takes precedence.
 - If the orcadir argument has not been provided ASH will next see if orcadir has been provided in the ASH settings (~/ash_user_settings.ini file): See :doc:`basics`
-- If orcadir has also not been defined at all, ASH will next search the operating systems's PATH environment variable for an executable "orca" and if found, will set the orcadir accordingly and use that ORCA version.  This can be a convenient option if you make sure to define your shell environments carefully in your jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.
+- If orcadir has also not been defined at all, ASH will next search the operating systems's PATH environment variable for an executable "orca" and if found, will set the orcadir accordingly and use that ORCA version.  
+
+The latter is the most convenient option, but does require you to have already defined your shell environments correctly in the jobscript or shell-startup file. Be careful, however, if you have multiple versions of the program available.
 
 
 .. warning:: The ORCA program binaries are nowadays often provided as a small-size shared version (has dynamically linked binaries). This means that for ORCA to run using the shared-library version, both the PATH and LD_LIBRARY_PATH needs to be set in the shell environment (should point to the ORCA directory).
@@ -179,13 +210,13 @@ Set these variables in the job-script (see :doc:`basics`) that you are using.
 Examples
 ################################################################################
 
-The ORCA interface is quite flexible. orcasimpleinput and orcablocks keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. 
+The ORCA interface is very flexible. *orcasimpleinput* and *orcablocks* keyword arguments (accepts single or multi-line strings) have to be provided and these keywords define what the ORCA-inputfile looks like. 
 This means that you can completely control what type of electronic structure method should be used by ORCA including choosing aspects such as basis set, convergence and grid settings etc.
 The geometry block will be added to the inputfile by ASH.
 Note that ASH handles aspects such as telling ORCA what orbitals to read as well as parallelization.
 
 .. warning:: Do not put parallelization information (! Pal4 or %pal nprocs 4 end)or job-type keywords such as "! Opt" "!Freq" to the orcasimpleinput and orcablocks variables. 
-  Such functionality is handled by ASH separately.
+  Both parallelization and  jobtype-functionality must be handled by ASH.
 
 .. code-block:: python
 
@@ -267,7 +298,7 @@ The next time the ORCATheory object is run (the next geometry optimization step 
 with regular SCF inputsettings with the spin multiplicity being the low-spin BS multiplicity. 
 Since the broken-symmetry SCF orbitals are available in the GBW file they are automatically loaded.
 
-.. warning::  Do note that when finding broken-symmetry singlets it is important to use the UKS keyword in the ORCA inputfile when performing a job other than a single-point job (e.g. optimization.). This is because to stay on the broken-symmetry surface, ORCA will read in the GBW file from the previous broken-symmetry GBW file and then it is important for an unrestricted SCF to be performed. The default for singlets in ORCA is to run a RKS closed-shell SCF. 
+.. warning::  Do note that when finding broken-symmetry singlets it is important to use the UKS keyword in the ORCA inputfile when performing a job other than a single-point job (e.g. optimization). This is because to stay on the broken-symmetry surface, ORCA will read in the GBW file from the previous broken-symmetry GBW file and then it is important for an unrestricted SCF to be performed. The default for singlets in ORCA is to run a RKS closed-shell SCF. 
 
 
 
@@ -285,10 +316,10 @@ This functionality has not been tested much.
 
 
 ################################################################################
-Wrapper around ORCA helper programs.
+Wrapper around ORCA helper programs
 ################################################################################
 
-ASH features wrappers around useful ORCA programs such as orca_plot, orca_mapspc and orca_2mkl.
+ASH features wrappers around useful ORCA programs such as orca_plot, orca_mapspc and orca_2mkl. This allows you to conveniently use these sub-programs within a Python script and as part of an ASH workflow.
 
 **run_orca_plot**
 
@@ -378,10 +409,36 @@ ASH features a few functions for conveniently creating or reading ORCA-JSON file
 .. warning::  Do note that if the GBW-file contains a ROHF wavefunction then this will most likely not work due to the lack of ORCA-JSON handling for ROHF.
 
 ################################################################################
+Example: grabbing integrals and MO's
+################################################################################
+
+Below is an example of how to grab the kinetic energy matrix and the MO-information (MO coefficients, MO-energies)
+
+.. code-block:: python
+
+  from ash import *
+
+  #Create fragment and ORCA-THeory
+  frag = Fragment(diatomic="HHe", bondlength=1.3, charge=1, mult=1)
+  theory = ORCATheory(orcasimpleinput="! RHF STO-3G tightscf")
+  #Run singlepoint calculation
+  Singlepoint(theory=theory, fragment=frag)
+  #Create the JSON-file from the ORCA-created GBW-file, specifying what we want ORCA to print in the JSON-file
+  jsonfile = create_ORCA_json_file(theory.filename+'.gbw', format="json", basis_set=True, mo_coeffs=True, one_el_integrals=True,
+                            two_el_integrals=True)
+  #Read the JSON-file
+  data = read_ORCA_json_file(jsonfile)
+  print("The available objects in the data dictionary:", data.keys())
+  print("\nT-Matrix:\n")
+  print(data["T-Matrix"])
+  print("\nTHe MO information:\n")
+  print(data["MolecularOrbitals"])
+
+################################################################################
 Creating FCIDUMP file from ORCA
 ################################################################################
 
-The ORCA-JSON functionality can be utilized to create FCIDUMP files using the function **create_ORCA_FCIDUMP**.
+The ORCA-JSON functionality can also be utilized to create FCIDUMP files using the function **create_ORCA_FCIDUMP**.
 
 .. code-block:: python
 
@@ -407,7 +464,7 @@ Examples:
 Workflow to automate ORCA-orbital creation
 ################################################################################
 
-ORCA is capable of producing various type of orbitals such as SCF-orbitals (RHF,UHF,ROHF etc.), MP2 natural orbitals, CC natural orbitals,
+ORCA is capable of producing various types of orbitals such as SCF-orbitals (RHF,UHF,ROHF etc.), MP2 natural orbitals, CC natural orbitals,
 MRCI natural orbitals. The natural orbitals from WFT require a bit of know-how.
 To automate the creation of these orbitals, ASH features a function called **ORCA_orbital_setup**.
 
@@ -433,7 +490,7 @@ Example on how to get CCSD natural orbitals from an unrelaxed CCSD density:
 Useful ORCA functions
 ################################################################################
 
-In addition to the ORCATheory class, there are a number of built-in functions in ASH that are useful for ORCA functionlaity.
+In addition to the ORCATheory class, there are a number of built-in functions in ASH that are useful for ORCA functionality.
 For example functions to grab specific information from an ORCA outputfile etc.
 To use most these functions, the module has to be loaded first: 
 
@@ -577,6 +634,8 @@ Functions for other ORCA functionality:
 
   #Print gradient in ORCA format to disk
   def print_gradient_in_ORCAformat(energy,gradient,basename):
+
+
 
 
 ################################################################################
