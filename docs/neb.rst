@@ -516,7 +516,7 @@ The NEBTS function is very similar to the NEB function:
           tol_turn_on_ci=1.0,  runmode='serial', numcores=1, charge=None, mult=None, printlevel=1, ActiveRegion=False, actatoms=None,
           interpolation="IDPP", idpp_maxiter=700, idpp_springconst=5.0, restart_file=None, TS_guess_file=None, mofilesdir=None,
           OptTS_maxiter=100, OptTS_print_atoms_list=None, OptTS_convergence_setting=None, OptTS_conv_criteria=None, OptTS_coordsystem='tric',
-          hessian_for_TS=None, modelhessian='unit', tsmode_tangent_threshold=0.1, subfrctor=1):
+          hessian_for_TS=None, modelhessian='unit', tsmode_tangent_threshold=0.1, subfrctor=1, partial_hessian_atoms=None, partial_npoint_choice=2):
 
 with additional keywords: *OptTS_maxiter*, *OptTS_print_atoms_list*, *OptTS_convergence_setting*, *OptTS_conv_criteria* and *OptTS_coordsystem*  being keywords that belong to the Optimizer.
 See :doc:`Geometry-optimization` for explanations.
@@ -536,24 +536,34 @@ Options to *hessian_for_TS* are:
    * - ``2point``
      - Calculate a 2-point numerical Hessian by the ASH NumFreq function.
    * - ``first``
-     - Optimizer calculates exact Hessian in the first step of the OptTS procedure.
+     - Optimizer calculates exact Hessian in the first step of the OptTS procedure (algorithm inside geometric library).
    * - ``each``
-     - Optimizer calculates exact Hessian in each step of the OptTS procedure (expensive).
-   * - ``xtb``
+     - Optimizer calculates exact Hessian in each step of the OptTS procedure (expensive)  (algorithm inside geometric library).
+   * - ``GFN1-xTB``
      - Calculate an exact Hessian but at the cheap GFN1-xTB level of theory.
+   * - ``GFN2-xTB``
+     - Calculate an exact Hessian but at the cheap GFN2-xTB level of theory.
    * - ``model``
      - | Calculate a model Hessian (default: *modelhessian* ='unit') to be used as approximation to the exact Hessian. Requires ORCA.
        | *modelhessian* options: 'unit', 'Almloef', 'Lindh', 'Schegel'  
    * - ``partial``
      - | Calculate a partial exact Hessian using only the atoms that contribute the most to approximate TS-mode (from CI-NEB job).
+       | Note: Either choose atoms explicitly using *partial_hessian_atoms* keyword (list) or have ASH estimate atoms based on CI tangent.
        | Use *tsmode_tangent_threshold* to control the size of the partial Hessian.
-       | Rest is approximated by a model Hessian or unit atrix. *modelhessian* options: 'unit','Almloef', 'Lindh', 'Schegel'  
+       | Rest of Hesian is approximated by a model Hessian or unit matrix. *modelhessian* options: 'unit','Almloef', 'Lindh', 'Schegel'  
 
-*hessian_for_TS* ='xtb' is an often recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
+The default *hessian_for_TS* option is currently set to be '1point' (1-point numerical Hessian). This is a safe and robust choice but is quite expensive for large systems.
+A very safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
+
+*hessian_for_TS* ='GFN1-xTB' (or GFN2-xTB) is an often recommended option. This will do an xTB NumFreq calculation at the saddlepoint geometry and this Hessian will then be used
 as an initial Hessian in the eigenvector-following minimization. Unless the system is very large, this option is the most cost-effective. 
 This requires an active xTB interface (xTB needs to installed on the computer).
-The default option is currently set to be '1point'. This is a safe but relatively expensive option.
-A very safe but very expensive option is to use 'each' (exact Hessian in every Opt step).
+
+
+The option *hessian_for_TS* ='partial' is a particularly useful options for large systems where the atoms contributing to the TS-mode might be relatively few compared to the size of the system.
+ASH will in this case calculate a smaller partial numerical Hessian using either a 1-point or 2-point formula (*partial_npoint_choice* keyword) but only for a subset of atoms.
+The atoms included in the partial Hessian can be specified by *partial_hessian_atoms* as a list of atom indices or the atoms can be automatically guessed based on information available from the CI-tangent.
+The latter will only work for a partially converged NEB-TS job (note: this excludes Single-iter NEBTS jobs).
 
 
 **Example:**
