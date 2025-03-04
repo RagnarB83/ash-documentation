@@ -19,7 +19,7 @@ A NEB-TS implementation is also available.
 .. code-block:: python
 
   def NEB(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, maxiter=100,
-          conv_type="ALL", tol_scale=10, tol_max_fci=0.026, tol_rms_fci=0.013, tol_max_f=0.26, tol_rms_f=0.13,
+          conv_type="ALL", tol_scale=10, tol_max_fci=0.026, tol_rms_fci=0.013,
           tol_turn_on_ci=1.0,  runmode='serial', numcores=1, Singleiter=False,
           charge=None, mult=None,printlevel=1, ActiveRegion=False, actatoms=None,
           interpolation="IDPP", idpp_maxiter=700, idpp_springconst=5.0, zoom=False,
@@ -94,14 +94,6 @@ A NEB-TS implementation is also available.
      - float
      - 0.013
      - The RMS Force convergence tolerance for the Climbing IMage. Units: eV/Å
-   * - ``tol_max_f``
-     - float
-     - 0.26
-     - The Max Force convergence tolerance for all other images except CI. Units: eV/Å
-   * - ``tol_rms_f``
-     - float
-     - 0.13
-     - The RMS Force convergence tolerance for all other images except CI. Units: eV/Å
    * - ``tol_turn_on_ci``
      - float
      - 1.0
@@ -262,7 +254,7 @@ But there is also an alternative guess-option in ASH now, the 'GEODESIC' option 
 The algorithm is described in :
 Xiaolei Zhu, Keiran C. Thompson, Todd J. Martínez, J. Chem. Phys. 2019, 150, 164103. `Article <https://pubs.aip.org/aip/jcp/article/150/16/164103/198363/Geodesic-interpolation-for-reaction-pathways>`_ 
 
-In initial tests GEODESIC seems to improve upon IDPP for molecular reactions and maybe become the default in NEB and NEBTS jobs in ASH in the future
+In initial tests GEODESIC seems to improve upon IDPP for molecular reactions and maybe become the default in NEB and NEBTS jobs in ASH in the future.
 
 Use like this:
 
@@ -365,36 +357,33 @@ directory by your job-submission script.
 Controlling convergence
 ################################################################################
 
-NEB convergence is controlled by a number of thresholds. Note that Knarr internally utilizes units of Å (distances and coordinates), eV (energies), eV/Å (forces), eV/Å^2 (force constants).
-For now, the interface requires you to specify convergence tolerances in these units as well.
+The convergence of the NEB job (or NEB-TS) is controlled by a few thresholds. Note that Knarr internally utilizes units of Å (distances and coordinates), eV (energies), eV/Å (forces), eV/Å^2 (force constants).
+For now, the Knarr-ASH interface requires you to specify convergence tolerances in these units as well.
 
-conv_type: 'ALL' or 'CIONLY' options specifies whether the NEB job should end when all the tolerances of the images have been met ('ALL') or only on the CI ('CIONLY')
-The default is 'ALL' and is recommended. All 4 threshold belows have to be met in this case (only the first 2 in the case of 'CIONLY').
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
+| **Tolerance**    | **Default**                    | **Description**                                                                                    |
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
+| tol_max_fci      | 0.026 eV/Å (0.0018 Eh/Bohr)    | when Max Force on the CI is met.                                                                   |
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
+| tol_rms_fci      | 0.013 eV/Å (0.0009 Eh/Bohr)    | when RMS Force on the CI is met                                                                    |           
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
+| tol_scale        | 10                             |  Specifies the force-threshold on the other images are by scaling the fci thresholds by constant   |           
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
+| tol_turn_on_ci   | 1.0 eV/Å  (0.069 Eh/Bohr)      |  Specifies at which MaxF value, the CI is turned on                                                |
++------------------+--------------------------------+----------------------------------------------------------------------------------------------------+
 
-**Convergence tolerances:**
+Controlling convergence is performed by specifying the RMS and Max thresholds on the climbing image (*tol_max_fci* and *tol_rms_fci*) and then utilizing the
+*tol_scale* parameter to control the tolerance for the other images. By default *tol_scale* is 10 which means that if *tol_max_fci* = 0.026 eV/Å and *tol_rms_fci* = 0.013 eV/Å (default values) then the Max-Force and RMS-Force thresholds on the other images will be 0.26 eV/Å and 0.13 eV/Å respectively.
+This type of convergence-strategy focuses the effort on converging the climbing image (i.e. the saddlepoint) while still maintaining reasonable
+convergence on the other images (10 times larger thresholds by default). In rare cases you may want to apply the same thresholds to all images (i.e. converge the whole band consistently) in which case you simply set *tol_scale* = 1.
 
-+------------------+---------------+-------------------------------------------------+
-| **Tolerance**    | **Default**   | **Description**                                 |
-+------------------+---------------+-------------------------------------------------+
-| tol_max_fci      | 0.026 eV/Å    | when Max Force on the CI is met.                |
-+------------------+---------------+-------------------------------------------------+
-| tol_rms_fci      | 0.013 eV/Å    | when RMS Force on the CI is met                 |           
-+------------------+---------------+-------------------------------------------------+
-| tol_max_f        | 0.26 eV/Å     | when Max Force on all other images is met.      |
-+------------------+---------------+-------------------------------------------------+
-| tol_rms_f        | 0.13 eV/Å     | when RMS Force on all other images is met.      |           
-+------------------+---------------+-------------------------------------------------+
+In climbing-image NEB, the highest energy image is treated differently as it is pushed uphill according to the component of the atom force acting parallel to the path while being pushed downhill
+by the force acting perpendicular to the path and does not experience the spring forces. Due to this special behaviour of the climbing image, it has been found advantageous
+to not turn on CI-behaviour until a somewhat loosely converged path has been achieved. In ASH-Knarr this is controlled by the *tol_turn_on_ci* parameter. The default value of 1.0 eV/Å 
+means that the CI is not activated until the MaxF is lower than 1.0 eV/Å . If set to a large value like 100 then the CI is turned on immediately while if set to a very small value the CI is never turned on.
 
-**Other thresholds:**
-
-
-+------------------+---------------+------------------------------------------------------+
-| **Tolerance**    | **Default**   | **Description**                                      |
-+------------------+---------------+------------------------------------------------------+
-| tol_turn_on_ci   | 1.0 eV/Å      |  Specifies at which MaxF value, the CI is turned on  |
-+------------------+---------------+------------------------------------------------------+
-| tol_scale        | 10            |                                                      |           
-+------------------+---------------+------------------------------------------------------+
+.. note:: Another convergence parameter is conv_type: with options 'ALL' or 'CIONLY' . This specifies whether the NEB job should end when all the tolerances of the images have been met ('ALL') or only on the CI ('CIONLY')
+  The default is 'ALL' and is recommended. All convergence threshold have to be met in this case or only the first 2 in the case of 'CIONLY'.
 
 ################################################################################
 Free-end NEB calculations
@@ -403,7 +392,7 @@ Free-end NEB calculations
 A recommended NEB job has endpoints (reactant and product) previously optimized at the same level of theory and are then kept frozen during the NEB job.
 This usually results in a more efficient NEB job as it constrains the possibilities for the minimum energy path and saddlepoint search.
 
-A free_end = True option where the endpoints are also minimized during the NEB is also possible but as there are more degrees of freedom, it can be trickier to converge.
+A *free_end* = True option where the endpoints are also minimized during the NEB is also possible but as there are more degrees of freedom, it can be trickier to converge.
 This may be a good option when the endpoints have deliberately not been minimized in an effort to explore multiple potential reaction pathways.
 
 
@@ -497,7 +486,7 @@ NEB-TS : combining CI-NEB with TS-optimization
 
 As discussed in the article:
 
-V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, *J. Chem. Theory Comput.* **2021**, *17*, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462
 
 a CI-NEB calculation is well suited to be combined with an eigenvector-following method for improved efficiency of a saddlepoint search.
@@ -512,7 +501,7 @@ The NEBTS function is very similar to the NEB function:
 .. code-block:: python
 
   def NEBTS(reactant=None, product=None, theory=None, images=8, CI=True, free_end=False, maxiter=100, Singleiter=False,
-          conv_type="ALL", tol_scale=10, tol_max_fci=0.10, tol_rms_fci=0.05, tol_max_f=1.03, tol_rms_f=0.51,
+          conv_type="ALL", tol_scale=10, tol_max_fci=0.10, tol_rms_fci=0.05, 
           tol_turn_on_ci=1.0,  runmode='serial', numcores=1, charge=None, mult=None, printlevel=1, ActiveRegion=False, actatoms=None,
           interpolation="IDPP", idpp_maxiter=700, idpp_springconst=5.0, restart_file=None, TS_guess_file=None, mofilesdir=None,
           OptTS_maxiter=100, OptTS_print_atoms_list=None, OptTS_convergence_setting=None, OptTS_conv_criteria=None, OptTS_coordsystem='tric',
@@ -612,16 +601,16 @@ Single-iteration NEB-TS (a.k.a. Fast NEB-TS)
 The expensive part of an NEB-TS job is the CI-NEB part that requires many iterations to 
 converge (each iteration calculates multiple images) with the cost going up with the number of images.
 As was shown in the paper describing the NEB implementation in ORCA and the NEB-TS method:
-V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
+V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, *J. Chem. Theory Comput.* **2021**, *17*, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462
 what can work remarkably well in some cases is to just perform the guess interpolation step,  then calculate the energy+gradient for each image (i.e. perform a single NEB iteration),
 then select the highest energy image and use as a saddlepoint guess for an eigenvector-following algorithm optimization. This was called IDPP-TS in the paper.
 While this does not result in a method capable of ~100 % success rate (for the test set used in the paper), like the NEB-CI and NEB-TS methods,
-this still results in a method capable of almost 97 % accuracy for the same test set. This means that some robustness is sacrificed for speed.
-In practice, for real systems 
+this still results in a method capable of almost 97 % accuracy for that same test set. This means that some robustness is sacrificed for speed.
 
 If this kind of single-iteration NEB-TS is combined with a good interpolation method (e.g. geodesic) as well as an accurate Hessian approximation,
-then this can be very useful for many cases. The geodesic interpolation works particularly well we find.
+then this strategy can be very useful for quickly finding saddlepoints, especially for systems that are so large that NEB iterations are very expensive.
+In practice, for real-world systems this strategy ranges from working very well for some systems to not working very well at all for other systems.
 
 .. code-block:: python
 
@@ -634,7 +623,3 @@ then this can be very useful for many cases. The geodesic interpolation works pa
     # Calling NEBTS with geodesic interpolation and Singleiter=True. 
     NEBTS(reactant=R, product=P, theory=theory, interpolation="geodesic", Singleiter=True,
           hessian_for_TS="1point")
-
-
-The *Singleiter=True* option can also be used for the **NEB** function (i.e. regular climbing-image NEB) but this is less useful.
-
