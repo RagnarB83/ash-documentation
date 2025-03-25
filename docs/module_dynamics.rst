@@ -171,14 +171,14 @@ Sometimes more flexiblity can be achieved by using the class instead of calling 
 more complex MD-based workflows in ASH.
 
 Below we see create an MD-object and run it using the run method instead of calling **MolecularDynamics**.
-The 2 approaches are equivalent, the simple functiona-call approach is simpler and typically recommended, the latter is more explicit and can be useful (see use-case later in restraints section).
+The 2 approaches are equivalent, the simple function-call approach is simpler and typically recommended, the latter is more explicit and can be useful (see use-case later in restraints section).
 
 .. code-block:: python
   
   #Fragment and Theory object creation not shown here
   #Alternative: Creating object from class and running
   md_object = OpenMM_MDclass(fragment=frag, theory=theory, timestep=0.001)
-  md_object.mdobj.run(simulation_time=2.0)
+  md_object.run(simulation_time=2.0)
 
 **Pure MM example:**
 
@@ -446,6 +446,40 @@ We can then use the **add_custom_bond_force** method inside to directly define t
   mdobj.openmmobject.add_custom_bond_force(0,3,2.5,100.0)
   #Then run the simulation
   mdobj.run(simulation_time=2.0)
+
+**Steered MD: Adding a centroid bondforce between 2 fragments**
+
+Sometimes we may seek to run a simulation for the purpose of pushing or pulling 2 fragments closer to each other, e.g. for finding possible interaction geometries or binding sites of a ligand or guest to a protein or host.
+In ASH this could be accomplished e.g. by adding a CustomCentroidBondforce that would push together the centroid of 2 fragments (instead of individual atoms).
+This is typically called steered MD which is presented in a simplistic form here (note: this is not the constant-velocity steered MD).
+
+The example below shows how this can be accomplished for a simple system of an HF molecule and HCl molecule initially separated by 30 Å but rapidly pushed together by the added CustomcentroidBOndroce
+
+.. code-block:: python
+
+  from ash import *
+
+  #Define fragment coordinates as strings
+  hfstring="""H 0 0 0
+  F 0 0 1"""
+  hclstring="""H 0 0 30
+  Cl 0 0 32
+  """
+  #Create fragments
+  hf = Fragment(coordsstring=hfstring, charge=0, mult=1)
+  hcl = Fragment(coordsstring=hclstring, charge=0, mult=1)
+  #Combine fragments into one
+  combined = Fragment(elems=hf.elems+hcl.elems, coords = np.vstack((hf.coords,hcl.coords)), charge=0, mult=1)
+
+  theory = xTBTheory() # Simple xTB Theory
+  #Define MD object that a force will be added to
+  md_object = OpenMM_MDclass(fragment=combined, theory=theory, timestep=0.001, traj_frequency=10)
+  #Define force
+  host=[0,1] # molecule1 indices
+  guest=[2,3] #molecule2 indices
+  k=0.5 # Forceconstant in kcal/mol/Å^2
+  md_object.openmmobject.add_custom_centroidbond_force(host, guest, forceconstant=k)
+
 
 **Adding a funnel restraint**
 

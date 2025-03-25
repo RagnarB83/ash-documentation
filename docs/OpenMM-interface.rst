@@ -498,7 +498,7 @@ Example:
     MDtraj_imagetraj("output_traj.dcd","final_MDfrag_laststep.pdb", solute_anchor=True)
 
 ######################################
-PBC box relaxation via NPT 
+PBC box equilibration via NPT 
 ######################################
 
 This function allows one to conveniently run multiple NPT simulations (constant pressure and temperature) in order to converge the periodic box dimensions
