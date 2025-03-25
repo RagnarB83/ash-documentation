@@ -427,6 +427,8 @@ If an OpenMMTheory object is already defined then we can add a restraint potenti
   #Adding a torsion restraint between atoms 5,11,12,13
   #equilibrium torsion of 3.3 radians and a force-constant of 3.0 kcal/mol/Å^2
   omm.add_custom_torsion_force(5,11,12,13,3.0,3.0)
+  #Customcentroidbondforce between groups of atoms. force-constant of 0.5 kcal/mol/Å^2
+  omm.openmmobject.add_custom_centroidbond_force([0,1,2], [3,4,5], forceconstant=0.5)
 
 
 Below is an example for a QMTheory where we first define the OpenMM_MD object (instead of calling MolecularDynamics/OpenMM_MD ) 
@@ -452,8 +454,9 @@ We can then use the **add_custom_bond_force** method inside to directly define t
 Sometimes we may seek to run a simulation for the purpose of pushing or pulling 2 fragments closer to each other, e.g. for finding possible interaction geometries or binding sites of a ligand or guest to a protein or host.
 In ASH this could be accomplished e.g. by adding a CustomCentroidBondforce that would push together the centroid of 2 fragments (instead of individual atoms).
 This is typically called steered MD which is presented in a simplistic form here (note: this is not the constant-velocity steered MD).
+Such simulations are rarely realistic (non-equilibrium) but can be useful for exploration purposes.
 
-The example below shows how this can be accomplished for a simple system of an HF molecule and HCl molecule initially separated by 30 Å but rapidly pushed together by the added CustomcentroidBOndroce
+The example below shows how this can be accomplished for a simple system of an HF molecule and HCl molecule initially separated by 30 Å but rapidly pushed together by the added CustomcentroidBondForce
 
 .. code-block:: python
 
