@@ -3,6 +3,7 @@ Helper-programs interfaces
 
 ASH contains simple interfaces to various little helper programs that are documented below.
 
+
 ####################################################################
 Packmol
 ####################################################################
@@ -125,14 +126,53 @@ to make sure the new radii are being used.
 
 
 ####################################################################
+Basis Set Exchange
+####################################################################
+
+The `Basis Set Exchange website <http://basissetexchange.org>`_ website is well-known in the community as a database of Gaussian basis sets
+that can be downloaded for various elements and is exportable in various formats.
+Perhaps less known is that a Python API is also available that allows one to extract the basis set via a Python-library.
+See `basis_set_exchange repository <https://github.com/MolSSI-BSE/basis_set_exchange>` for details but in short the library can be installed using pip: pip install basis_set_exchange
+
+It can then be used like this in an ASH Python script.
+
+.. code-block:: python
+    
+    from ash import *
+
+    # Fragment to be calculcated
+    frag = Fragment(databasefile="acetone.xyz")
+
+    #import basis_set exchange
+    import basis_set_exchange as bse
+    #Getting the def2-mTZVPP basis set and def2-mTZVPP J auxiliary basis set
+    basisname='def2-mTZVPP'
+    auxbasisname='def2-mTZVPP-RIJ'
+    # Getting the basis and aux bases in NWChem format (used by NWChem and pySCF) for the desired elements
+    basis = bse.get_basis(basisname, elements=frag.elems, fmt='nwchem')
+    auxbasis= bse.get_basis(auxbasisname, elements=frag.elems, fmt='nwchem')
+    #Writing basis set strings to files
+    with open(basisname,'w') as f: f.write(basis)
+    with open(auxbasisname,'w') as f: f.write(auxbasis)
+
+The basis-set files can then be used in the respective QM-program interface (assuming the ASH interface supports reading the basis set from file).
+Below we show how the basis-set files created above can be read into the ASH PySCF interface.
+
+.. code-block:: python
+
+    pyscf_r2scan = PySCFTheory(scf_type="RKS", functional="r2scan", basis_file=basisname, 
+                    densityfit=True, auxbasis_file=auxbasisname)
+
+
+####################################################################
 DFT-D4 dispersion correction
 ####################################################################
 
-It is usually convenient to utilize dispersion corrections as they have been implemented in the respective QM-programs (e.g. specify the ORCA built-in dispersion correction when defining the ORCATheory) but
-sometimes the respective QM program has not implemented any dispersion corrections. 
-Or perhaps more flexibility in the choice of dispersion correction is desired. 
+It is usually the most convenient to utilize dispersion corrections as they are implemented in the respective QM-programs (e.g. specify the ORCA built-in dispersion correction when defining the ORCATheory) but
+sometimes the respective QM program has not implemented dispersion corrections, or perhaps more flexibility in the choice of dispersion correction is desired. 
 
 ASH features a simple interface to the `DFT-D4 program <https://github.com/dftd4/dftd4>`_ by the Grimme group for such cases.
+The interface is based on the Python API and so should have no execution drawbacks due to I/O.
 To install, see the Github page. Best option is probably to install via conda/mamba like this:
 
 .. code-block:: bash
@@ -157,7 +197,8 @@ then, it is necessary to use the DFTD4Theory class and then to combine it with t
         def __init__(self, functional=None, printlevel=2, numcores=1):
 
 
-Example below shows how to perform a geometry optimization using an ORCATheory object (defining a PBE calculation without dispersion correction) and the DFTD4 dispersion correction via the DFTD4 program.
+Example below shows how to perform a geometry optimization using an ORCATheory object (defining a PBE calculation without dispersion correction) and the DFTD4 dispersion correction via the DFTD4 program
+by combining it into a WrapTheory object.
 
 .. code-block:: python
 
@@ -177,3 +218,134 @@ Example below shows how to perform a geometry optimization using an ORCATheory o
     Optimizer(theory=dft_plus_dftd4_theory, fragment=frag)
 
 
+####################################################################
+Geometrical Counter-Poise correction (gCP)
+####################################################################
+
+The geometrical counterpoise correction by Grimme and coworkers has been found to be useful for reducing the basis set superposition error (BSSE)
+in small-basis DFT calculations. 
+Unlike the regular counterpoise correction (CP) that requires multiple DFT calculations and ghost atoms (see),
+the gCP correction, depending only on geometry, has effectively no computational cost and is thus highly cost-effective for combining with small DFT-basis protocols.
+The gCP correction is part of composite methods such as HF-3c, PBEh-3c, r2SCAN-3c.
+
+ASH features a basic interface to the gCP (see https://github.com/grimme-lab/gcp). A Python API is not yet available and so the interface does have some I/O.
+To install, see the Github page for latest instructions. Best option is probably to install via conda/mamba like this:
+
+.. code-block:: bash
+
+    mamba install gcp-correction
+
+
+Once installed in the ASH Python environment you can either use the **calc_gcp** function or the gcpTheory class.
+
+.. code-block:: python
+
+    def calc_gcp(fragment=None, xyzfile=None, current_coords=None, elems=None, functional=None, Grad=True):
+
+The function **calc_gcp** takes an ASH fragment as input (or xyzfile or coordinates-array) and the functional name (string) 
+that needs of course to match the functional used by the QM_program.
+It returns the gCP energy and gradient.
+
+If one, however, wants to use the gCP interface to correct a QM-calculation that will be used for geometry optimization, frequencies, molecular dynamics etc. (i.e. anything beyond a single-point calculation)
+then, it is necessary to use the gcpTheory class and then to combine it with the QM-theory using the WrapTheory class, see :doc:`module_Hybrid_Theory`.
+
+.. code-block:: python
+
+    class gcpTheory:
+        def __init__(self, functional=None, printlevel=2, numcores=1):
+
+
+Example below shows how to perform a geometry optimization using an ORCATheory object (defining a plan PBE) and the gcp correction via the gcp program
+by combining it into a WrapTheory object.
+
+Counter-poise corrected PBE/def2-SVP:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Glycine fragment from database
+    frag = Fragment(databasefile="glycine.xyz")
+
+    #PBE/def2-SVP via ORCA (no dispersion correction)
+    orca = ORCATheory(orcasimpleinput="! PBE def2-SVP tightscf")
+    #gcp correction
+    gcp_corr = gcpTheory(functional="PBE")
+    #Combining the two theories using WrapTheory
+    dft_plus_gcp = WrapTheory(theory1=orca, theory2=gcp_corr)
+
+    #Calling the Optimizer function using the WrapTheory object as theory 
+    Optimizer(theory=dft_plus_gcp, fragment=frag)
+
+####################################################################
+Combining DFT with both D4 dispersion and gCP correction
+####################################################################
+
+Sometimes one would of course like to include both D4 dispersion and gCP correction.
+This can also be accomplished in ASH using WrapTheory which is convenient if the QM-code does not have an implementation of neither D4 or gCP.
+
+The example below shows how the r2SCAN-3c method (contains both D4 and gCP corrections) can be defined by WrapTheory 
+where the pure DFT-part is calculated using either ORCATheory or PySCFTheory but the D4 and gCP corrections via DFTD4 and gcp interfaces.
+
+Importantly, a WrapTheory object can be used as input to almost any ASH job-type, including Optimizer, NumFreq, MolecularDynamics etc.
+
+*Manual r2SCAN-3c via ORCA, D4 and gCP interfaces*
+
+Here we show how we can combine an ORCATheory DFT calculation-object with the DFTD4Theory and gCPTheory objects using WrapTheory.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Acetone fragment from database
+    frag = Fragment(databasefile="acetone.xyz")
+
+    #r2SCAN/def2-mTZVPP via ORCA
+    orca_r2scan = ORCATheory(orcasimpleinput="! r2SCAN def2-mTZVPP def2-mTZVPP/J printbasis tightscf noautostart")
+    # gcp correction
+    gcp_corr = gcpTheory(functional="r2SCAN-3c", printlevel=3)
+    # D4 correction
+    d4_corr = DFTD4Theory(functional="r2SCAN-3c", printlevel=3)
+
+    #Combining the 3 theories using WrapTheory
+    r2scan3c = WrapTheory(theories=[orca_r2scan, gcp_corr,d4_corr])
+
+.. note:: Normally it would of course be easier to use ORCA to do the whole r2SCAN-3c calculation using the built-in r2SCAN-3c keyword.
+
+
+*Manual r2SCAN-3c definition via pySCF, D4 and gCP interfaces*
+
+Since the basis and auxiliary basis set used in the r2SCAN-3c method (def2-mTZVPP and def2-mTZVPP/J) is not yet built into pySCF,
+we first have to get the basis set. Here we show how this can be accomplished using the basis-set-exchange Python API.
+We then combine the PySCFTheory object with DFTD4Theory and gcpTheory objects like before.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Acetone fragment from database
+    frag = Fragment(databasefile="acetone.xyz")
+
+    #Getting the basis set used by the r2SCAN-3c method
+    import basis_set_exchange as bse
+    basisname='def2-mTZVPP'
+    auxbasisname='def2-mTZVPP-RIJ'
+    basis = bse.get_basis(basisname, elements=frag.elems, fmt='nwchem')
+    auxbasis= bse.get_basis(auxbasisname, elements=frag.elems, fmt='nwchem')
+    with open(basisname,'w') as f: f.write(basis)
+    with open(auxbasisname,'w') as f: f.write(auxbasis)
+
+    #Defining a pySCF r2SCAN calculation with density fitting and the basis sets above
+    pyscf_r2scan = PySCFTheory(scf_type="RKS", functional="r2scan", basis_file=basisname, densityfit=True, auxbasis_file=auxbasisname)
+
+    # gcp correction
+    gcp_corr = gcpTheory(functional="r2SCAN-3c")
+    # D4 correction
+    d4_corr = DFTD4Theory(functional="r2SCAN-3c")
+
+    #Combining the 3 theories using WrapTheory
+    r2scan3c = WrapTheory(theories=[pyscf_r2scan, gcp_corr,d4_corr])
+
+    #Calling the Singlepoint function using the WrapTheory object as theory
+    res = Singlepoint(theory=r2scan3c, fragment=frag, Grad=True)
+    #Or you can do:  Optimizer(theory=r2scan3c, fragment=frag)

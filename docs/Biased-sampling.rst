@@ -1,25 +1,27 @@
 Biased sampling MD & Free energy simulations
 ===============================================
 
-Biased sampling or free-energy simulations are possible in ASH via the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`).
-Umbrella sampling could in principle be performed by adding restraint potentials to the OpenMMTheory object before running MD. 
-Convenient workflows in ASH for umbrella sampling are currently missing, however.
+Biased/enhanced sampling or free-energy simulations are possible in ASH via the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`).
 
 Metadynamics has become a very popular biased sampling / free energy simulation method due to its ease-of-use and handy parallelization strategy.
 It is possible to perform metadynamics simulations in ASH using essentially any theory-level, including an OpenMMTheory level, any type of QMTheory level and a QMMMTheory level.
-The OpenMM routines are used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
+The OpenMM native metadynamics routines are used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
 
 The **OpenMM_metadynamics** function can be used to start a metadynamics simulation from an ASH Fragment and ASH Theory level and some collective variable information, using the metadynamics functionality inside the OpenMM library.
 See `OpenMM implementation <http://docs.openmm.org/development/api-python/generated/openmm.app.metadynamics.Metadynamics.html>`_ .
 The function sets up the necessary collective-variable bias potentials before launching an MD simulation using the **OpenMM_MD** class.
-Two different metadynamics modes are available using this function:
 
-Using the **OpenMM_MD_plumed** function is another option. Here we utilize the interface between OpenMM and the powerful `Plumed library <https://www.plumed.org>`_ .
+Umbrella sampling simulations in ASH can be performed by adding restraint potentials to the OpenMMTheory object before running MD. 
+
+Additionally ASH features an interface (via OpenMM) to the popular enhanced-sampling library PLUMED that has extensive support for various algorithms, free-energy methods, analyzis tools etc.
+Plumed-based simulations use the  **OpenMM_MD_plumed** function which activates the interface between OpenMM and the powerful `Plumed library <https://www.plumed.org>`_ .
 This option requires the installation of the `OpenMM PLUMED plugin <https://github.com/openmm/openmm-plumed>`_ and also `Plumed <https://www.plumed.org>`_ .
 
-The first option is generally recommended when possible, as it is faster (no OpenMM-Plumed communication per timestep required) and the most useful collective variable options are available (distances, angles, torsion, RMSD, coordination-number).
+The first option is generally recommended when possible, as it is faster (no OpenMM-Plumed communication per timestep required) and does not require additional software.
+The most useful collective variable options are available (distances, angles, torsion, RMSD, coordination-number).
 In addition it is possible to define your own collective variables (see later on this page) by the useful Custom-forces options inside OpenMM.
-However, the PLUMED-OpenMM option offers more flexiblity as in principle all collective variables inside the Plumed library can be used (as long as they depend only on geometric information). Additionally, other enhanced sampling methods inside Plumed could in principle also be used.
+However, the PLUMED-OpenMM option offers even more flexiblity as in principle all collective variables inside the Plumed library can be used 
+(as long as they depend only on geometric information). Additionally, other enhanced sampling methods inside Plumed can in principle also be used.
 
 ######################################################
 OpenMM_metadynamics 
@@ -260,10 +262,9 @@ The information in this string should define the desired collective variables as
 Information about coordinates should generally not be present here (an exception is when defining a reference geometry such as when using the RMSD CV).
 In short: everything to do with the CVs and bias-potential needs to be defined in the Plumed input-string. Bias-widths and heights etc. will of course use Plumed units so the Plumed documentation should be used for help in defining things correctly.
 
-During each step MD simulation step information about coordinates and velocities is passed to Plumed that in turn passes information about the bias potential back.
+During each MD simulation step information about coordinates and velocities is passed to Plumed that in turn passes information about the bias potential back.
 Plumed additionally will write the information about the bias-potential and current CV-values to disk using it's own syntax (typically the files are called HILLS and COLVAR). These files can be used for deriving and plotting the free-energy surface, see later.
 
-**IMPORTANT**
 
 .. warning:: Be aware that unlike ASH and OpenMM (where atom indices are counted from zero), PLUMED atom indices start from 1. This needs to be taken into account when defining CVs by atom indices. 
 
@@ -346,8 +347,8 @@ In order to parallelize metadynamics simulations, one can of course control the 
 as usual which will affect how long each timestep will take (note that MM simulations, running on the GPU (platform='CUDA' or 'OpenCL') is much preferable to the CPU).
 However, the multiple walker strategy works much better than the Theory parallelization.
 
-As shown in the :doc:`mtd_tutorial` tutorial, it is highly convenient to run multiple walker metadynamics simulations in order to 
-reduce the sampling error and converge the free energy simulations evenquicker.
+As shown in the :doc:`mtd_tutorial` tutorial, running multiple walker metadynamics simulations quickly reduces the sampling error and 
+allows faster convergence of the free energy surface.
 This can be accomplished in a very simple way, one simply has to launch multiple simulations at the same time, while making sure
 that each simulation uses the same shared biasdirectory, allowing information about the continuously built-up biasing potential
 to be shared among each simulation.
@@ -391,7 +392,7 @@ how often the bias is read and written to disk. The more often, the more up-to-d
 slow down the simulation and may lead to excessive network traffic on the cluster (especially if you are running MM metadynamics).
 
 .. note:: The multiple-walker approach should also work for OpenMM_MD_plumed jobs but requires more setup. 
-  The biasdirector should be set by PLUMED keyword WALKERS_DIR, the number of walkers by WALKERS_N etc. See Plumed documentation.
+  The biasdirectory should be set by PLUMED keyword WALKERS_DIR, the number of walkers by WALKERS_N etc. See Plumed documentation.
 
 The advantage of the approach above is that you can submit multiple walker-jobs, 
 perhaps using different CPU cores for each simulation (to speed up the theory energy+gradient step), 
@@ -457,7 +458,7 @@ plumed_MTD_analyze (for Plumed run): Analyze the results
 ------------------------------------------------------------
 
 For metadynamics simulations utilizing the Plumed plugin, where the metadynamics results are available in the form of HILLS and COLVAR files it is possible
-to use the **MTD_analyze** function to analyze the results and plot the data.
+to use the **plumed_MTD_analyze** function to analyze the results and plot the data.
 
 .. code-block:: python
 
