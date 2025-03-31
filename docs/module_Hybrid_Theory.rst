@@ -50,7 +50,7 @@ of the environment part of the system. ONIOM is an interesting alternative to QM
 ComboTheory methods
 ######################################################
 
-**WrapTheory** is an ASH Theory class that wraps two different theory objects to get a combined theory description. It is assumed that the energy and gradient from each theory is completely additive.
+**WrapTheory** is an ASH Theory class that wraps 2 ore more different theory objects to get a combined theory description. It is assumed that the energy and gradient from each theory is completely additive.
 
 .. code-block:: python
 
@@ -58,7 +58,7 @@ ComboTheory methods
         """ASH WrapTheory theory.
         Combines 2 theories to give a modified energy and modified gradient
         """
-        def __init__(self, theory1=None, theory2=None, printlevel=1, label=None):
+        def __init__(self, theory1=None, theory2=None, theories=None, printlevel=1, label=None):
 
         def run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None, mm_elems=None,
         elems=None, Grad=False, PC=False, numcores=None, restart=False, label=None,
@@ -88,11 +88,36 @@ Example:
     Optimizer(theory=dft_plus_dftd4_theory, fragment=frag)
 
 
-WrapTheory could be used for many other purposes, one would simply have to make sure that the 2 theories are compatible and that the sum of the 2 theory-description does not result in double-counting of any similar physical energy terms.
+WrapTheory could be used for many other purposes, one would simply have to make sure that the theories used are compatible and that the sum of the theory-description does not result in double-counting of any similar physical energy terms.
 A regular DFT calculation (barely describes dispersion) + an atom pairwise dispersion correction (DFT-D4) is a good example of this.
+
+Composite methods such as r2SCAN-3c is another example where the energy of the method is a sum of 3 different contributions: A regular DFT-energy, a dispersion correction and a gCP (geometric counterpoise) correction.
+A WrapTheory object can easily be created that defines r2SCAN-3c in this way.
+
+.. code-block:: python
+
+    from ash import *
+
+    #Acetone fragment from database
+    frag = Fragment(databasefile="acetone.xyz")
+
+    #r2SCAN/def2-mTZVPP via ORCA
+    orca_r2scan = ORCATheory(orcasimpleinput="! r2SCAN def2-mTZVPP def2-mTZVPP/J printbasis tightscf noautostart")
+    # gcp correction
+    gcp_corr = gcpTheory(functional="r2SCAN-3c", printlevel=3)
+    # D4 correction
+    d4_corr = DFTD4Theory(functional="r2SCAN-3c", printlevel=3)
+
+    #Combining the 3 theories using WrapTheory
+    r2scan3c = WrapTheory(theories=[orca_r2scan, gcp_corr,d4_corr])
+
+    #Calling the Optimizer function using the WrapTheory object as theory 
+    Optimizer(theory=r2scan3c, fragment=frag)
+
+
 A delta-machine-learning correction would be another example where WrapTheory would be convenient for combining Theory-levels.
 
-See DFTD4 section in :doc:`helper_programs` for more information on the DFTD4Theory object.
+See DFTD4 and gCP sections in :doc:`helper_programs` for more information on the dispersion and gcp corrections.
 
 
 
