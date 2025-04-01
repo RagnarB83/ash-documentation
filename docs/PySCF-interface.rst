@@ -22,7 +22,7 @@ If the use of special features inside PySCF are desired, you may have to use PyS
 - Read and write checkpointfiles, Molden files and Cubefiles
 - PySCFTheory interface compatible with BlockTheory and DiceTheory interfaces for DMRG and stochastic heat-bath CI calculations.
 - Support for `LOSC PySCF plugin <https://github.com/Yang-Laboratory/losc>`_ and MCPDFT
-- Dispersion corrections (D3, D4, TS and MBD) via  `vdw-wrapper <https://github.com/ajz34/vdw>`_
+- Dispersion corrections via either pyscf-dispersion library (D3,D4) or via `vdw-wrapper <https://github.com/ajz34/vdw>`_ (D3, D4, TS and MBD).
 - Electrostatically embedded QM/MM including pointcharge gradient is enabled
 - Support for GPU4PYSCF: running HF/DFT on the GPU instead of CPU.
 
@@ -738,6 +738,54 @@ Typical Examples
     CCmethod='CCSD(T)', memory=3000, filename='pyscf', printsetting=False)
 
   Singlepoint(theory=PySCFcalc, fragment=o2_triplet)
+
+################################################################################
+Dispersion corrected DFT in pySCF
+################################################################################
+
+The ASH interface to pySCF features 3 different ways of including a dispersion correction,
+utilizing different wrapper libraries to dispersion corrections: either `pyscf-dispersion <https://github.com/pyscf/dispersion>`_ or 
+`pyvdw <https://github.com/ajz34/vdw>`_ or ASH's own interface to the DFTD4 library.
+It is important to be aware that all dispersion corrections need to be tuned for each density functional and this present possibilities for things to go wrong.
+
+**Option 1.** 
+The easiest and recommended option is to directly use the correct functional keyword that includes the dispersion-part.
+This option requires first installation of the pyscf-dispersion library: pip install pyscf-dispersion which is the recommended D3/D4 dispersion option for the pySCF object.
+Example valid *functional* keywords are: 
+
+- 'wb97x-d4' (i.e. wB97X-V functional with D4 dispersion correction)
+- 'wb97m-d4' (i.e. wB97M-V functional with D4 dispersion correction)
+- 'b3lyp-d3bj' (i.e. B3LYP with the D3BJ dispersion correction, the recommended D3 version)
+- 'b3lyp-d3zero' (i.e. B3LYP with the older D3Zero dispersion correction)
+
+One can also use the much more expensive nonlocal dispersion correlation functionals based on VV10 (built-into pyscf):
+
+- 'wb97x-v' (i.e. wB97X-V functional)
+- 'wb97m-v' (i.e. wB97M-V functional)
+
+**Option 2.**
+This option makes use of the `pyvdw <https://github.com/ajz34/vdw>`_ library which supports additional dispersion options.
+To use this option, the dispersion keyword must be set to either: 'D3', 'D4', 'TS' or 'MBD'.
+A few libraries must first be installed: 
+
+.. code-block:: shell
+
+  pip install pyvdw
+  pip install toml
+  mamba install simple-dftd3
+  mamba install dftd3-python
+  mamba install libmd
+
+This option is less recommended since it relies on more third-party libraries, and is primarily useful for supporting the specific TS or MBD dispersion corrections.
+This option will only work for some supported functionals and one should specify the functional name without dispersion-part, i.e. functional='b3lyp' instead of 'b3lyp-d3'.
+
+**Option 3.**
+
+Since ASH features it's own interface to DFTD4, see :doc:`helper_programs` it is also possible to combine a PySCFTheory object defining a DFT calculation without dispersion with a DFTD4Theory object
+in a WrapTheory object, see :doc:`module_Hybrid_Theory`. 
+This is useful for flexibility in defining e.g. composite methods (such as r2SCAN-3c) but is a more manual approach and offers more possibilities of selecting the wrong method.
+It is thus only recommended if you carefully check the correctness of the results.
+
 
 ################################################################################
 Natural orbital calculations from various WF methods

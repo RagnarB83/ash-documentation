@@ -58,7 +58,7 @@ ONIOMTheory
     def __init__(self, theories_N=None, regions_N=None, regions_chargemult=None,
                  embedding="mechanical", full_pointcharges=None, chargemodel="CM5", dipole_correction=False,
                  fullregion_charge=None, fullregion_mult=None, fragment=None, label=None, 
-                 chargeboundary_method="shift",
+                 chargeboundary_method="shift", excludeboundaryatomlist=None,
                  linkatom_method='ratio', linkatom_simple_distance=None, linkatom_forceproj_method="adv",
                  linkatom_ratio=0.723, printlevel=2, numcores=1):
 
@@ -104,6 +104,10 @@ ONIOMTheory
      - string
      - 'CM5'
      - | For embedding='elstat', if full_pointcharges not defined, how to define atomic charges from Full-system using ORCATheory.
+   * - ``excludeboundaryatomlist``
+     - list
+     - None
+     - Optional: List of atoms that are excluded from adding linkatoms to.
    * - ``chargeboundary_method``
      - string
      - chargeshift
@@ -115,7 +119,7 @@ ONIOMTheory
      - | For chargeboundary='shift', whether to add additional charges to preserve dipole
    * - ``linkatom_method``
      - string
-     - 'simple'
+     - 'ratio'
      - | What linkatom method to use. Options: 'simple', 'ratio'
    * - ``linkatom_simple_distance``
      - float
@@ -162,7 +166,6 @@ The :math:`E^{HL}_{1} - E^{LL}_{1}` terms in 2-layer ONIOM can be viewed as a hi
 As discussed above this correction is calculated without the environment present which could result in artifacts.
 It is possible to include electrostatic embedding in the ONIOM calculation to allow for some region polarization effects to be present during the calculation of the correction.
 This requires MM pointcharges to be defined for the full system, regardless of whether the LL theory is an MM-theory or not.
-
 To use electrostatic embedding within ONIOM in ASH, one sets *embedding*='elstat' and additionally the charges of the whole system have to be specified.
 ASH allows 2 ways to define these charges:
 
