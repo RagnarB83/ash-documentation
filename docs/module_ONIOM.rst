@@ -9,7 +9,11 @@ Overall, this is similar to QM/MM methodology (see :doc:`module_QM-MM`) but work
    :align: center
    :width: 700
 
-
+In particular the ability to combine 2 (or potentially more) QM-levels of theory (such as DFT and semi-empirical or WFT and DFT) offers particularly interesting 
+multilevel method strategies.
+The advantage of using a program like ASH for ONIOM unlike QM-programs with built-in ONIOM capability, 
+is that ASH offers the ability to perfrom ONIOM calculations by combining 
+QM-levels of theory from multiple QM programs, as long as interfaces are available.
 
 ######################################################
 The basics of ONIOM
