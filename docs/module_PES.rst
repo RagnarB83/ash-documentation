@@ -1,12 +1,12 @@
 PES: PhotoElectron/PhotoEmission Spectrum
 =================================================
 
-Workflow to calculate photoelectron/photoemission spectra of molecules using either TDDFT, CASSCF, MRCI+Q or EOM-IP-CCSD state energies combined
+Workflow to calculate photoelectron/photoemission spectra of molecules using either TDDFT, CASSCF, MRCI or EOM-IP-CCSD state energies combined
 with a Dyson-orbital norm approach for intensities.
 
 - The TDDFT workflow combines an SCF-calculation of the initial state and an SCF+TDDFT calculation of the first ionized state (of each ionized-state multiplicity) to get the full ionization energy spectrum for each spin multiplicity. Dyson orbital norms are then calculated as approximate intensities for both SCF-type and TDDFT-type states by parsing theORCA TDDFT output files.
 - The CASSCF workflow performs a CASSCF calculation of the initial state and the uses the initial-state orbitals in a CAS-CI calculation of the ionized states of both spin multiplicities. Both regular CASSCF and ICE-CASSCF in ORCA is possible.
-- The MRCI+Q workflow is similar to the CASSCF workflow but on top of the CASSCF orbital optimization of the initial state an MRCI+Q calculation is performed and for the ionized state the initial-state orbitals are used as before. For CASSCF and MRCI+Q, determinant-printing of the wavefunction is requested (printed in the output) which is parsed by the code and fed to the Wfoverlap program.
+- The MRCI workflow is similar to the CASSCF workflow but on top of the CASSCF orbital optimization of the initial state an MRCI calculation is performed and for the ionized state the initial-state orbitals are used as before. For CASSCF and MRCI, determinant-printing of the wavefunction is requested (printed in the output) which is parsed by the code and fed to the Wfoverlap program.
 - The IP-EOM-CCSD approach calculates the ionized states directly via the IP-EOM approach from the CCSD wavefunction of the initial state. Approximate Dyson norms are used here, i.e. the dominant coefficient of the singles eigenvector.
 
 
@@ -26,16 +26,17 @@ libraries is in your LD_LIBRARY_PATH.
    :width: 600
    :alt: alternate text
 
-   Figure 1. PES-spectrum via MRCI+Q using ASH and ORCA
+   Figure 1. PES-spectrum via MRCI using ASH and ORCA
 
 ######################################################
-PhotoElectronSpectrum function
+PhotoElectron function
 ######################################################
 
-The PES.PhotoElectronSpectrum function takes the following keyword arguments:
+The PhotoElectron function takes the following keyword arguments:
 
 **Necessary:**
 
+- method: Options are "TDDFT", "OODFT", "EOM", "CAS-CI", "CASSCF", "NEVPT2", "NEVPT2-F12" "MRCI", "MREOM"
 - theory: An ASH Theory object (only ORCATheory supported at the moment)
 - fragment: An ASH fragment object
 - Initialstate_charge : integer
@@ -77,7 +78,7 @@ For IP-EOM-CCSD, use EOM=True and provide a basis set keyword in the ORCA object
 
 The output of the function are lists of IPs, Dyson-norms. MO energies are also printed.
 
-To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF (in CASSCF and MRCI+Q jobs ) calculations converge to the desired initial state or final state one can:
+To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF (in CASSCF and MRCI jobs ) calculations converge to the desired initial state or final state one can:
 - request a stability analysis. Add %scf stabperform true end in the ORCA-object.
 - read in previously converged orbital files for each state: initialorbitalfiles keyword.
 - read in a previously converged orbital file. Provide a "orca-input.gbw" file in the same dir as the inputfile (and make sure it gets copied to scratch).
@@ -89,8 +90,8 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
 
     from ash import *
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms
+    IPs, dysonnorms = PhotoElectron(method="TDDFT", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
@@ -100,20 +101,20 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
 
     from ash import *
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms
+    IPs, dysonnorms = PhotoElectron(method="CASSCF", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                               CAS=True, CAS_Initial=(17,11), CAS_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
-**MRCI+Q**
+**MRCI**
 
 .. code-block:: python
 
     from ash import *
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms
+    IPs, dysonnorms = PhotoElectron(method="MRCI", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                               MRCI=True, MRCI_Initial=(17,11), MRCI_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
@@ -124,18 +125,18 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
 
     from ash import *
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms
+    IPs, dysonnorms = PhotoElectron(method="EOM", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6], EOM=True)
 
 ######################################################
 Plot spectrum
 ######################################################
 
-To plot the spectrum one can use the plotting.plot_Spectrum function (see :doc:`module_plotting`)
+To plot the spectrum one can use the plot_Spectrum function (see :doc:`module_plotting`)
 
 Just provide as x and y values the list of ionization energies (in eVs) and the list of dysonnorms and the function will create broadened
-spectra. Typically you would run this in th same job as the PES.PhotoElectronSpectrum function, using the respective output as input.
+spectra. Typically you would run this in th same job as the PhotoElectron function, using the respective output as input.
 
 The ionization energy range can be controlled (via the range keyword, provide a list of start and end values),
 number of points and broadening factor (eV) and the name of the plot. A PNG image file of the broadened spectrum and a stick-spectrum is created as well
@@ -144,21 +145,21 @@ as files contained broadened spectrum (.dat files) and stick-spectrum (.stk file
 .. code-block:: python
 
     #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_B3LYP', range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_B3LYP', range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
-The plot_Spectrum function can be run on its own or as part of the PhotoElectronSpectrum job.
-If a previous PES.PhotoElectronSpectrum job is available, the respective Results file ("PES-Results.txt") can be conveniently read in like below.
+The plot_Spectrum function can be run on its own or as part of the PhotoElectron job.
+If a previous PhotoElectron job is available, the respective Results file ("PES-Results.txt") can be conveniently read in like below.
 Make sure the PES-Results.txt is available in the same directory.
 
 
 .. code-block:: python
 
     #Read in old results
-    IPs, dysonnorms, mos_alpha, mos_beta = PES.Read_old_results()
+    IPs, dysonnorms,  = Read_old_PES_results()
 
     #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_TPSSh', range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_TPSSh', range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
 
@@ -172,7 +173,6 @@ Example: TDDFT on H\ :sub:`2`\ O
 .. code-block:: python
 
     from ash import *
-    import PES
 
     h2ostring="""
     O        0.222646668      0.000000000     -0.752205128
@@ -191,20 +191,20 @@ Example: TDDFT on H\ :sub:`2`\ O
     #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=1)
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=h2o, Initialstate_charge=0, Initialstate_mult=1,
+    #Calling PhotoElectron to get IPs, dysonnorms and MO-spectrum
+    IPs, dysonnorms = PhotoElectron(method="TDDFT", theory=ORCAcalc, fragment=h2o, Initialstate_charge=0, Initialstate_mult=1,
                               Ionizedstate_charge=1, Ionizedstate_mult=2, numionstates=50,
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
     #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_B3LYP', range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_B3LYP', range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
 
 
 
 ##########################################################################################################
-Example: FeS\ :sub:`2` :sup:`-`\  : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI+Q
+Example: FeS\ :sub:`2` :sup:`-`\  : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI
 ##########################################################################################################
 This example of the FeS\ :sub:`2` :sup:`-`\ - anion accounts for multiple Finalstate spin-multiplicities as we go from:
 
@@ -216,7 +216,6 @@ Here we show how results with multiple functionals can be obtained at the same t
 .. code-block:: python
 
     from ash import *
-    import PES
 
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
 
@@ -236,16 +235,15 @@ Here we show how results with multiple functionals can be obtained at the same t
         #Define ORCA theory.
         ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
-        #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-        IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
+        #Calling PhotoElectron to get IPs, dysonnorms and MO-spectrum
+        IPs, dysonnorms =PhotoElectron(method="TDDFT", theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                               Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=30, numcores=numcores,
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
         #Plotting TDDFT-IP spectrum with Dysonnorm-intensities as well as MO-spectrum.
-        plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+functional, range=[0,10], unit='eV',
+        plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+functional, range=[0,10], unit='eV',
             broadening=0.1, points=10000, imageformat='png', dpi=200)
 
-        PES.cleanup()
         print("=================================")
 
 
@@ -331,7 +329,6 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
 .. code-block:: python
 
     from ash import *
-    import PES
 
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
     joblabel="FeS2min-IPEOMCCSD"
@@ -350,16 +347,15 @@ Warning: Dysonnorms are approximate as they are simply the dominant coefficient 
     #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms and MO-spectrum
+    IPs, dysonnorms = PhotoElectron(method="EOM", theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=30, EOM=True, numcores=numcores,
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
     #Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
-    PES.cleanup()
     print("=================================")
 
 **CASSCF**
@@ -372,7 +368,6 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
 .. code-block:: python
 
     from ash import *
-    import PES
 
     numcores=6
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
@@ -391,22 +386,21 @@ Below we use the ICE-CI CASSCF variant and we switch from the default convergers
     #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms and MO-spectrum
+    IPs, dysonnorms = PhotoElectron(method="CASSCF", theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=[11,6], numcores=numcores,
                             CAS=True, CAS_Initial=(17,11), CAS_Final = (16,11),
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
     #Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
-    PES.cleanup()
     print("=================================")
 
-**MRCI+Q**
+**MRCI**
 
-For MRCI+Q one neads to provide the MRCI, MRCI_Initial and MRCI_Final keywords.
+For MRCI one neads to provide the MRCI, MRCI_Initial and MRCI_Final keywords.
 It is possible to provide a %casscf block in the ORCA-object-blocks in order to control the default settings of the CASSCF-orbital optimization
 performed for the initial state.
 Below we switch from the default convergers to DIIS in order to preserve the chosen active space.
@@ -414,11 +408,10 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
 .. code-block:: python
 
     from ash import *
-    import PES
 
     numcores=6
     molecule=Fragment(xyzfile="FeS2-tpssh-opt.xyz")
-    joblabel="FeS2min-MRCI+Q"
+    joblabel="FeS2min-MRCI"
 
     input="! def2-TZVP tightscf "
     blocks="""
@@ -429,15 +422,14 @@ Below we switch from the default convergers to DIIS in order to preserve the cho
     #Define ORCA theory.
     ORCAcalc = ORCATheory(orcasimpleinput=input, orcablocks=blocks, numcores=4)
 
-    #Calling PhotoElectronSpectrum to get IPs, dysonnorms and MO-spectrum
-    IPs, dysonnorms = PES.PhotoElectronSpectrum(theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
+    #Calling PhotoElectron to get IPs, dysonnorms and MO-spectrum
+    IPs, dysonnorms = PhotoElectron(method="MRCI", theory=ORCAcalc, fragment=molecule, Initialstate_charge=-1, Initialstate_mult=6,
                           Ionizedstate_charge=0, Ionizedstate_mult=[5,7], numionstates=[11,6], numcores=numcores,
                             MRCI=True, MRCI_Initial=(17,11), MRCI_Final = (16,11),
                             path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
     #Plotting spectrum with approximate Dysonnorm-intensities as well as MO-spectrum.
-    plotting.plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
+    plot_Spectrum(xvalues=IPs, yvalues=dysonnorms, plotname='PES_spectrum_'+joblabel, range=[0,10], unit='eV',
         broadening=0.1, points=10000, imageformat='png', dpi=200)
 
-    PES.cleanup()
     print("=================================")

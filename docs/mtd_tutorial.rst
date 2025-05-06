@@ -53,24 +53,24 @@ A metadynamics simulation at the same level of theory is straightforward to set 
 
 .. code-block:: python
 
-    from ash import *
+   from ash import *
 
-    #Creating the ASH fragment 
-    frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
-    #Defining the xTB theory (GFN1-xTB)
-    theory = xTBTheory(runmode='library')
+   #Creating the ASH fragment 
+   frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
+   #Defining the xTB theory (GFN1-xTB)
+   theory = xTBTheory(runmode='library')
 
-    #The name and path of the biasdirectory
-    biasdir="./biasdirectory"
+   #The name and path of the biasdirectory
+   biasdir="./biasdirectory"
 
-    #Calling the OpenMM_metadynamics function with a time of 1 ps
-    OpenMM_metadynamics(fragment=frag, theory=theory, 
-                timestep=0.001, simulation_time=1, traj_frequency=1, 
-                temperature=300,
-                CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
-                biasfactor=6, height=1,
-                frequency=100, savefrequency=100,
-                biasdir=biasdir)
+   #Calling the OpenMM_metadynamics function with a time of 1 ps
+   OpenMM_metadynamics(fragment=frag, theory=theory, 
+         timestep=0.001, simulation_time=1, traj_frequency=1, 
+         temperature=300,
+         CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
+         biasfactor=6, height=1,
+         frequency=100, savefrequency=100,
+         biasdir=biasdir)
 
    #Plot the final (this function can be called outside this script)
    metadynamics_plot_data(biasdir=biasdir, dpi=200, imageformat='png')
@@ -146,7 +146,9 @@ The conformational energy surface of the zwitterion 3F-GABA molecule in aqueous 
 Previous studies have indicated that zwitterions like 3F-GABA require careful consideration of solvent effects to give a qualitative correct description, with QM/MM being required
 for quantitative results. See for example this `QM/MM study <https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/chem.201101674>`_
 
-*Metadynamics in continuum solvent*
+Metadynamics in continuum solvent
+######################################################
+
 
 Here we first study the zwitterion at the GFN1-xTB level of theory in solution using the built-in xTB polarizable continuum model (ALPB).
 Like before, we define our fragment and theory and then call the **OpenMM_metadynamics** function, this time specifying 2 dihedral angles (C1,C3,C4,C5 and C3,C4,C5,N6) as collective variables
@@ -187,7 +189,8 @@ As in the original study, there is a strong tendency to prefer the hydrogen-bond
 with dihedral angles of -80°,+80° **A**) and +80°,-80° (**B**) and not conformers like **F** (+180°,-180°) which NMR experiments indicate is likely dominant in solution.
 This is most likely due to the continuum solvation description of the environment.
 
-*Metadynamics in QM/MM explicit solvent*
+Metadynamics in QM/MM explicit solvent
+######################################################
 
 We need to go beyond continuum solvation and so we turn to explicit solvation. Explicit solvation requires many more water molecules than can be handled quantum
 mechanically so we do QM/MM.
@@ -197,8 +200,9 @@ mechanically so we do QM/MM.
    :width: 400
 
 
-
+-------------------------------------------------
 1. Setting up the QM/MM system.
+-------------------------------------------------
    
 To conveniently create an explicitly solvated system we can use the **solvate_small_molecule** function (documented at :doc:`OpenMM-interface`).
 First, however, we need to define a forcefield for the solute which typically will not be present in any built-in forcefield inside OpenMM.
@@ -262,12 +266,14 @@ The function creates the following files:
 - system_aftersolvent.pdb # A PDB-file of the whole system. Defines the topology
 - smallmol.pdb # A PDB-file of the solute only
 
+-------------------------------------------------
 2. Defining the QM/MM metadynamics simulation
+-------------------------------------------------
 
 Now we can define our QM/MM metadynamics simulation. 
 
 - First we read in the full fragment and define a list of which atoms should be in the QM-region.
-- Next we create an OpenMMTheory object and define the forcefield by pointing to the solute XML file and a compatible TIP3P XML forcefield file (found in the ASH database dir)þ
+- Next we create an OpenMMTheory object and define the forcefield by pointing to the solute XML file and a compatible TIP3P XML forcefield file (found in the ASH database dir)
 - In the OpenMMTheory object definition we also need to point to a compatible PDB-file of the full system that defines the topology (this PDB-file should have been created by the solvation procedure).
 - Additionally we want the water model to be fully rigid so we specify rigidwater=True and we enable periodic boundary conditions by setting periodic=True.
 - Finally we need to define a QM/MM theory object that combines a QM-theory object and an MM-theory object.
