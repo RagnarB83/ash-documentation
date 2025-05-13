@@ -435,7 +435,7 @@ If you are calculating 8 images then you should set runmode='parallel' and use n
     prod=Fragment(xyzfile="prod.xyz", charge=0, mult=1)
 
     #Theory to use for NEB
-    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=numcores)
+    xtbcalc = xTBTheory(xtbmethod='GFN2', runmode='library', numcores=1)
 
     #Run NEB to find saddlepoint. Returns an ASH Results object
     NEB_result = NEB(reactant=react, product=prod, theory=xtbcalc, images=numimages, runmode='parallel', numcores=numcores)

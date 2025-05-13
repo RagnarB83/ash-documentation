@@ -305,6 +305,7 @@ QM-method             Time (sec) (for 10 ps)           Ave. time (sec) per times
  ORCA-PM3                        8949                               0.895
  OM2 or OM3                         X                                  X
  ODM2 or ODM3                         X                                  X
+ GFN0-xTB (1 CPU)             X                                  0.311
  GFN1-xTB (1 CPU)             6551                               0.655
  GFN1-xTB (8 CPUs)            7194                                  X
  GFN2-XTB  (1 CPU)                    5454                                  0.545
