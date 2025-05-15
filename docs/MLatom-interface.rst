@@ -19,9 +19,9 @@ WARNING: As the interface to MLatom is new and MLatom is under rapid development
 
 .. code-block:: python
     
-    class MLatomTheory:
-        def __init__(self, method=None, ml_model=None, model_file=None, qm_program=None, ml_program=None,
-                    printlevel=2, numcores=1, label="mlatom"):
+  class MLatomTheory(Theory):
+      def __init__(self, printlevel=2, numcores=1, label="mlatom", method=None, ml_model=None, model_file=None, 
+                    qm_program=None, ml_program=None, device='cpu', verbose=2):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -63,6 +63,23 @@ WARNING: As the interface to MLatom is new and MLatom is under rapid development
      - integer
      - 1
      - Number of cores. 
+
+
+A MlatomTheory object can be used as a Theory object within ASH is general (as long as the object contains a pre-trained or user-trained model).
+The MlatomTheory class also features a train method as shown below.
+
+.. code-block:: python
+    
+    def train(self, molDB_xyzfile=None, molDB_scalarproperty_file=None,
+              molDB_xyzvecproperty_file=None, split_fraction=[0.9, 0.1],
+              property_to_learn='energy', xyz_derivative_property_to_learn='energy_gradients',
+              hyperparameters={}):
+
+This method can be used to train a chosen ML-model (*ml_model* keyword, e.g. 'ANI') by providing a training set in the form of a multi-geometry XYZ-file (*molDB_xyzfile*),
+a file containing the property to be trained for each geometry, usually energy (*molDB_scalarproperty_file*) and file containing the derivative for each geometry, usually gradient (*molDB_xyzvecproperty_file*).
+The keyword *split_fraction* specifies how the training should be split into a sub-training set and a validation set, by default fraction of 0.9 and 0.1 are used).
+Currently, only training of energies and gradients are supported (property_to_learn='energy', xyz_derivative_property_to_learn='energy_gradients').
+Hyperparameters can be provided as a dictionary.
 
 ################################################################################
 MLatom installation
@@ -150,12 +167,14 @@ Next we must choose the file containing the model. This file often has a .pt suf
 
 *Training a new model using MLatomTheory*
 
-ASH features a very basic way to train a new ML model using the MLatom API.
-It should be noted that training a new ML model can be a labororious, complicated process and it may be better to use MLatom directly (either the PythonAPI or the command-line interface) to have more control over the training process.
+ASH features a basic way to train a new ML model using the MLatom API.
+It should be noted that training a new ML model is a process requiring some know-how and if you are new to the field it may be better to learn 
+by using MLatom directly (either the PythonAPI or the command-line interface) and by reading the MLatom tutorials, also giving you more control over the training process.
+ASH may at some point feature a tutorial on this.
 ASH and it's interfaces to various QM programs can still be used to generate the training data.
 See `MLatom training documentation <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html#training>`_
 
-Currently ASH can be used to train very basic ML-model potentials based on energies and gradients like the following examples.
+Currently ASH can be used to train basic ML-model potentials based on energies and gradients like the following examples.
 
 See `MLatom Machine learning potentials tutorial <https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html>`_ for a tutorial on training machine learning potentials in general,
 as well as links to download training data used below (H2.xyz, H2_HF.en, H2_HF.grad).
@@ -169,6 +188,9 @@ Note that for now the energies and gradient files have to be created manually.
 
 **ANI-example**
 
+For ANI-training it can be useful to change the number of max epochs in the training.
+This can be done by adding max_epochs as a key-value pair in the hypersparameters dictionary (see example below).
+
 .. code-block:: python
 
     from ash import *
@@ -177,10 +199,12 @@ Note that for now the energies and gradient files have to be created manually.
     theory = MLatomTheory(ml_model="ANI")
     #Train model using 3 databasefiles containing XYZ-coords, energies and gradients
     #Download from; https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html
+    # Energy-only training
+    #theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en")
+    # Energy+gradient training
     theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en",
-                molDB_xyzvecproperty_file="H2_HF.grad")
+                molDB_xyzvecproperty_file="H2_HF.grad", hyperparameters={'max_epochs':2000})
     #Model is now trained and can be used directly,
-
 
     #Molecule Fragment to use for simulation (needs to be compatible with training data)
     frag = Fragment(diatomic="H2", bondlength=1.0, charge=0, mult=1)
@@ -203,10 +227,12 @@ Note that for now the energies and gradient files have to be created manually.
     theory = MLatomTheory(ml_model="kreg", ml_program='MLatomF')
     #Train model using 3 databasefiles containing XYZ-coords, energies and gradients
     #Download from; https://xacs.xmu.edu.cn/docs/mlatom/tutorial_mlp.html
+    # Energy-only training
+    #theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en")
+    # Energy+gradient training
     theory.train(molDB_xyzfile="H2.xyz", molDB_scalarproperty_file="H2_HF.en",
                 molDB_xyzvecproperty_file="H2_HF.grad")
     #Model is now trained and can be used directly,
-
 
     #Molecule Fragment to use for simulation (needs to be compatible with training data)
     frag = Fragment(diatomic="H2", bondlength=1.0, charge=0, mult=1)
