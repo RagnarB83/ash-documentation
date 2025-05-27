@@ -429,7 +429,7 @@ If you want to get further decomposition you can use the *compute_decomposed_QM_
 .. code-block:: python
 
   # A single-point energy function to 
-  compute_decomposed_QM_MM_energy(fragment=None, theory=None):
+  compute_decomposed_QM_MM_energy(fragment=None, theory=None)
 
 The function:
 

@@ -209,12 +209,12 @@ Examples
     pyscfobject = PySCFTheory(basis="cc-pVTZ", numcores=numcores, scf_type='RHF', conv_tol=1e-9,memory=50000)
     
     #Block2 DMRG calculation
-      blockcalc = BlockTheory(pyscftheoryobject=pyscfobject, cas_nmin=1.999, cas_nmax=0.0, macroiter=0,
+    blockcalc = BlockTheory(pyscftheoryobject=pyscfobject, cas_nmin=1.999, cas_nmax=0.0, macroiter=0,
         numcores=numcores, memory=50000, tol=1e-8, initial_orbitals='CCSD', block_parallelization='OpenMP', 
         maxM=1000, singlet_embedding=True, DMRG_DoRDM=False)
     #Now running Singlepoint job
     result = Singlepoint(fragment=fragment, theory=blockcalc)
-    print(f"Block DMRG-M=1000: Energy: {result.energy}”)
+    print(f"Block DMRG-M=1000: Energy: {result.energy}")
 
 **Example 2: Block2 DMRG calculation with increasing M states**
 
@@ -236,4 +236,4 @@ Examples
 
         #Now running Singlepoint job for each epsilon
         result = Singlepoint(fragment=fragment, theory=blockcalc)
-        print(f"Block-DMRG M={M}: Energy: {result.energy}”)
+        print(f"Block-DMRG M={M}: Energy: {result.energy}")
