@@ -1,10 +1,130 @@
 CREST interface
 ======================================
 
-ASH features a simple interface to the powerful conformational sampling program `crest <https://xtb-docs.readthedocs.io/en/latest/crest.html>`_ by the Grimme group.
+ASH features an interface to the powerful conformational sampling program `crest <https://xtb-docs.readthedocs.io/en/latest/crest.html>`_ by the Grimme group.
+
+The interface is evolving and currently contains 3 different ways of utilizing CREST together with ASH.
+
+################################################################################
+new_call_crest  (general CREST interface, allowing any ASHTheory to be used)
+################################################################################
+
+.. code-block:: python
+
+    def new_call_crest(fragment=None, theory=None, runtype="ancopt", crestdir=None, numcores=1, charge=None, mult=None)
+
+The **new_call_crest** function will call the CREST program to perform any CREST-runtype available, on a selected ASH fragment with an ASH theory.
+The CREST runtype options are (in order of usefulness):
+
+- imtd-gc (the CREST MTD-based conformational sampler)
+- nci-mtd (CREST sampling with a wall potential, NCI_MTD workflow)
+- imtd-smtd (CREST sampling for calculating configurational entropy)
+- mtd (Metadynamics as implemented in CREST)
+- screen_ensemble
+- ancopt_ensemble
+- ancopt (the CREST ANC optimizer)
+- numhess (numerical Hessian)
+- imtd-gcimtd-gc
 
 
-By providing an ASH fragment object to the **call_crest** function, the Crest xTB-metadynamics-based conformational sampling procedure is invoked.
+See `crest documentation for details <https://crest-lab.github.io/crest-docs/page/documentation/inputfiles.html>`_
+
+
+.. warning:: Not all of these runtypes have been tested and may not currently work.
+
+ 
+Example: CREST conformational sampling using the ORCATheory interface in ASH:
+
+.. code-block:: python
+
+    from ash import *
+    frag = Fragment(xyzfile="molecule.xyz", charge=0, mult=1)
+    theory  = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
+    new_call_crest(fragment=frag, theory=theory, runtype="imtd-gc")
+
+
+.. warning:: Unfortunately, while many other ASH theories will work for the example above, 
+    the interface is currently limited to ASH Theory objects that can be serialized (pickled). Theory interfaces relying on Python libraries
+    and hybrid theories such as QMMMTheory will most likely not work.
+
+
+################################################################################
+Using CREST to call ASH as a generic theory
+################################################################################
+
+It is also possible to use CREST as a driver and provide an ASH script as a theory-level to CREST. This is the generic option available in CREST.
+This option has the advantage of being more flexible than the option above as it should in principle allow any ASH level of theory to be used within CREST.
+
+This option works like the following.  
+CREST should be called by providing a CREST inputfile in TOML format (here called input.toml)
+
+.. code-block:: shell
+
+    crest --input input.toml
+
+The input.toml file should look e.g. like this:
+
+.. code-block:: text
+
+    # CREST 3 input file
+    input = "struc.xyz"
+    runtype="ancopt"
+    threads = 1
+
+    [calculation]
+    elog="energies.log"
+
+    [[calculation.level]]
+    method = "generic"
+    binary = "python3 ../ash_input.py"
+    gradfile = "genericinp.engrad"
+    gradtype = "engrad"
+    uhf = 0
+    chrg = 0
+
+where the system coordinates are provided in the form of an XYZ-file (struc.xyz), the runtype is chosen (here ancopt) as well as a few other options.
+See `crest documentation <https://crest-lab.github.io/crest-docs/page/documentation/inputfiles.html>`_ for details.
+
+The calculation level is next chosen to be "generic" and the syntax for running an ASH Python script is provided (don't modify).
+
+The ASH script named *ash_input.py* should be created in the same directory as *input.toml* and should look like this:
+
+.. code-block:: python
+
+    from ash import *
+
+    #Charge/mult settings
+    charge=0
+    mult=1
+    #Definition of the ASH Theory that you want
+    theory = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
+
+    ###############################
+    # No changing anything below !
+    ###############################
+    #ASH creation of fragment for CREST-generated XYZ-file (genericinp.xyz) in each CREST-step
+    frag = Fragment(xyzfile="genericinp.xyz", charge=charge,mult=mult)
+    #Singlepoint Energy+Gradient calculation
+    result = Singlepoint(theory=theory, fragment=frag, Grad=True)
+    #Print energy and gradient in the form of the ORCA-formatted engrad file (that CREST reads)
+    print_gradient_in_ORCAformat(result.energy,result.gradient,"genericinp", extrabasename="")
+
+This script is essentially just an ASH script for running a Singlepoint Energy+gradient calculation using CREST-created input coordinates (will be created/updated in each step in file genericinp.xyz)
+and then writing the Energy and Gradient into a specifically formatted file (genericinp.engrad, note: in ORCA-format).
+
+When CREST is running it will in each step create a new geometry, run the ASH script above and will then read the energy and gradient for each new geometry.
+
+The advantage of this option is that the file *ash_input.py* can contain any valid ASH-level of theory (including hybrid theories)
+and can in principle be customized if required.
+
+
+################################################################################
+call_crest  (simple xtb-based conformation sampling)
+################################################################################
+
+By providing an ASH fragment object to the **call_crest** function, the CREST xTB-metadynamics-based conformational sampling procedure is invoked.
+This function can only perform xTB-based conformational sampling.
+
 The output from crest is written to standard output. If successful, Crest will create a file crest_conformers.xyz
 that can be directly read into ASH for further processing or further calculations.
 This allows one to write a multi-step workflow of which the crest-procedure is one of many steps.
@@ -27,9 +147,9 @@ If you specify a list of constrained atoms then ASH will create an .xcontrol fil
 
 
 
-################################################################################
+-----------------------------------------------------------------------------------
 Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
-################################################################################
+-----------------------------------------------------------------------------------
 .. code-block:: python
 
     from ash import *
@@ -50,9 +170,9 @@ Example workflow 1. Call crest to get low-energy conformers as ASH fragments.
     print("xTB energies: ", xtb_energies)
 
 
-################################################################################
+-----------------------------------------------------------------------------------
 confsampler_protocol : Automatic Crest+DFTopt+DLPNO-CCSD(T) workflow
-################################################################################
+-----------------------------------------------------------------------------------
 
 It is also possible to call the **confsampler_protocol** function that carries out an automatic multi-step workflow
 at various levels of theory.
