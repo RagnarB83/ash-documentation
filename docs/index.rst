@@ -110,6 +110,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
 
    ORCA-interface
    xTB-interface
+   DFTB+-interface
    CP2K-interface
    MRCC-interface
    CFour-interface
