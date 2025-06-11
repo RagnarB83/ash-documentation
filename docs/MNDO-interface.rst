@@ -68,6 +68,8 @@ See also `MNDO input documentation <https://mndo.kofo.mpg.de/input.php>`_ .
      - 1
      - Number of cores. MNDO parallelization is currently not active.
 
+
+
 ################################################################################
 MNDO installation
 ################################################################################

@@ -172,7 +172,8 @@ Molecular symmetry information can be provided to the PySCFTheory object and thi
 
 **via ORCATheory or ORCA GBW-file**
 
-By providing a :doc:`ORCA-interface` object when creating the ccpyTheory object, an ORCA calculation will first be run (a HF/DFT RHF/ROHF SCF). 
+By providing a :doc:`ORCA-interface` 
+object when creating the ccpyTheory object, an ORCA calculation will first be run (a HF/DFT RHF/ROHF SCF). 
 Once the ORCA run is complete, the ORCA GBW file is automatically converted into a JSON-file, containing MOs and integrals. 
 The JSON-file contents are processed and used to setup the ccpy calculation before running the ccpy coupled cluster job.
 Because of the  GBW->JSON conversion and integral processing, using ORCATheory will take quite a bit longer than using PySCFTheory (above).

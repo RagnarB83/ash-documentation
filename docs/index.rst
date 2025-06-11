@@ -129,6 +129,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    MNDO-interface
    MLatom-interface
    torch_interface
+   MACE-interface
    helper_programs
 
 

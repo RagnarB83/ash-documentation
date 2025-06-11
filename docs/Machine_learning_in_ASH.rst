@@ -2,31 +2,41 @@ Machine learning in ASH
 =========================================================
 
 ASH is well-suited for utilizing machine-learning within computational chemistry,
-being a scriptable Python library with interfaces to various quantum chemistry codes and the OpenMM molecular mechanics code.
-This makes ASH convenient for generating training data for machine-learning potentials.
-Additionally, as almost all ASH job-types are theory-agnostic, ML-potentials are just as valid as input to computational chemistry jobs within ASH (as long as an interface to that ML-potential is available).
-Thanks to interfaces to PyTorch, MLatom and other machine learning libraries, 
-the training of ML-potentials can also be performed within the ASH environment and pre-trained models can be utilized
-directly in ASH just as easily as any other Theory object.
+being a Python library with interfaces to various quantum chemistry codes and the OpenMM molecular mechanics code.
+This makes ASH convenient for generating training data for machine-learning interaction potentials (MLIP).
+Additionally, as almost all ASH job-types are theory-agnostic, MLIP Theories are just as valid as input to 
+computational chemistry jobs within ASH, requiring only an interface to that ML-potential to be available.
+ASH currently features interfaces to:  
+
+- PyTorch and TorchANI libraries: allowing use of ANI and AIMNet2 potentials
+- MACE: allowing both training and running equivariant NN potentials
+- MLatom: which features interfaces to many MLIPs (and can be used for training and running). 
+
+ML-based theory objects can be used in hybrid theories (QMMMTheory, ONIOMTheory and WrapTheory).
 
 Machine learning capabilities of ASH are expected to grow in the future.
+
+
 
 ################################################################################
 Creating training data for machine-learning potentials or Δ-learning
 ################################################################################
 
 ASH features a function **create_ML_training_data** that can be used to generate energy or energy+gradient data,
-suitable for training machine-learning potentials or Δ-learning corrections. 
-Other properties are currently not supported, a manual workflow is needed for those.
+suitable for training machine-learning interaction potentials or Δ-learning corrections (potential differences), mostly for training of a single-system potential.
 
 .. code-block:: python
-        
-    # Function to create ML training data given XYZ-files and 2 ASH theories
-    def create_ML_training_data(xyzdir=None, xyz_trajectory=None, theory_1=None, theory_2=None, 
-                                num_snapshots=100, random_snapshots=False, charge=0, mult=1, Grad=True):
 
-The user should either specify a directory with XYZ-files (*xyzdir* keyword) or a single XYZ trajectory file (*xyz_trajectory* keyword, file should contain multiple XYZ geometries in Xmol format).
-The number of snapshots (geometries) should be given (*num_snapshots*, defaults to 100), and the snapshots can be randomized or not (*random_snapshots*, defaults to False).
+    #  Function to create ML training data given XYZ-files and 2 ASH theories
+    def create_ML_training_data(xyzdir=None, dcd_trajectory=None, xyz_trajectory=None, num_snapshots=None, random_snapshots=True,
+                                    dcd_pdb_topology=None, nth_frame_in_traj=1,
+                                theory_1=None, theory_2=None, charge=0, mult=1, Grad=True, runmode="serial", numcores=1):
+
+One needs to give as input a set of molecular geometries, which can be a directory with XYZ-files (*xyzdir* keyword),
+a multi-geometry XYZ trajectory file (*xyz_trajectory* keyword, file should contain multiple XYZ geometries in Xmol format) or 
+a DCD-trajectory (*dcd_trajectory*, requiring *dcd_pdb_topology* to be specified as well).
+The number of snapshots (geometries) can be specified (*num_snapshots*), in which only those number of snapshots will be used from the input XYZtraj/XYZdir/DCDtraj.
+The number of snapshots can be randomized or not (*random_snapshots*, defaults to False).
 Charge and multiplicity of the molecule should be provided (*charge* and *mult* keywords).
 For training a potential using both energy and gradient data, set *Grad* to True (default), this is generally preferable (more accurate training). For energy-only training, set *Grad* to False. 
 
@@ -69,9 +79,20 @@ The latter can e.g. come from a molecular dynamics simulation.
     create_ML_training_data(xyz_trajectory=xyztraj, num_snapshots=num_snaps, random_snapshots=True,
         theory_1=theory_gas, theory_2=theory_solv, Grad=True)
     #produces files: train_data.xyz, train_data.energies, train_data.gradients
+    # or MACE-formatted file: train_data_mace.xyz
 
 Now that the training data has been created it can be used as input to a machine-learning training library.
-Below we show as an example how to use the ASH interface to the MLatom library to train a Δ-learning correction potential:
+Here we show how we can use the MACE interface in ASH to train a MACE-model potential using the "train_data_mace.xyz"
+file, created by create_ML_training_data.
+
+.. code-block:: python
+
+    #Create MACETheory object and train
+    mace_theory = MACETheory()
+    mace_theory.train(train_file="train_data_mace.xyz")
+
+
+Another option is to use the ASH interface to the MLatom library to train an ANI potential.
 
 .. code-block:: python
 
@@ -81,6 +102,24 @@ Below we show as an example how to use the ASH interface to the MLatom library t
                 molDB_xyzvecproperty_file="train_data.gradients")
 
 
+################################################################################
+Interface to MACE
+################################################################################
+
+The interface to  `MACE <https://mace-docs.readthedocs.io>`_ is documented at :doc:`MACE-interface` .
+This interface allows easy use of pretrained MACE-based machine-learning potentials in ASH but can also be used for training models directly using ASH data.
+
+.. code-block:: python
+
+    from ash import *
+
+    #H2O fragment
+    frag = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+    # Create a MACETheory object 
+    theory = MACETheory(model_file="file.model") #
+    
+    #Run a geometry optimization
+    Optimizer(theory=theory, fragment=frag)
 
 ################################################################################
 Interface to Torch and TorchANI
@@ -107,7 +146,7 @@ Interface to MLatom
 ################################################################################
 
 MLatom is a library for training and using ML potentials in computational chemistry.
-The ASH interface can be used for both training and using ML-atom potentials.
+The ASH interface to MLatom can be used for both training and using ML-atom potentials.
 See :doc:`MLatom-interface` for more.
 
 ################################################################################
@@ -117,7 +156,7 @@ Using machine-learning potentials in OpenMMTheory
 A trained machine learning potential can be used directly by OpenMM thanks to 
 the `OpenMM_Torch <https://github.com/openmm/openmm-torch>`_ and `OpenMM-ML <https://github.com/openmm/openmm-ml>`_ 
 additions to OpenMM (need to be separately installed).
-The advantage of using machine-learning potentials with OpenMM is that the simulation may run faster 
+The advantage of using machine-learning potentials with OpenMM is that the simulation will run faster 
 than other options requiring additional interfaces, as OpenMM is then responsible for propagating the system with 
 optimized C++ or CUDA/OpenCL code. OpenMM can also be used for mixed systems where part is described by MM and part by ML.
 
