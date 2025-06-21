@@ -96,6 +96,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
 
    ensemble_averaging
    elstructure_analysis
+   QC_interfaces_based_on_integrals
    module_workflows
    module_highlevel_workflows
    specific_workflows
