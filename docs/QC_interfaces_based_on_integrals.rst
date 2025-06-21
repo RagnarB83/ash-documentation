@@ -20,7 +20,36 @@ Currently supported programs are:
 Read/write AO integrals
 ######################################################
 
+Here we will assume that we have the 1-electron and 2-electron integrals available as Numpy arrays.
 
+- The 1-electron and overlap integrals should be 2-dimensional Numpy arrays with dimensions (numbf,numbf) where numbf is number of basis functions.
+- The 2-electron integrals can be stored with different permutation symmetry: 8-fold, 4-fold or no symmetry.
+
+    - For 8-fold symmetry we will have a dimensional array of (numbf*(numbf+1)/2)*(numbf*(numbf+1)/2+1)/2 elements.
+    - For 4-fold symmetry we will have a 2-dimensional array of (numbf*(numbf+1)/2, numbf*(numbf+1)/2) elements.
+    - For no-symmetry we will have a 4-dimensional array of (numbf,numbf,numbf,numbf) elements.
+
+In the examples below we will usually have the 2-electron integrals be a non-symmetric 4-dimensional array with dimensions (numbf,numbf,numbf,numbf).
+
+We can read and write them like this:
+
+.. code-block:: python
+
+    from ash import *
+
+    numbf = 4
+
+    #Define some dummy integrals (here random)
+    AO_CO_1el = np.random.random((numbf,numbf))
+    AO_CO_2el = np.random.random((numbf,numbf,numbf,numbf))
+
+    # Write the integrals to Numpy binary format
+    one_el_integrals = np.save("AO_CO_1el.npy", AO_CO_1el)
+    two_el_integrals = np.save("AO_CO_2el.npy", AO_CO_2el)
+
+    # Read the integrals from Numpy binary format
+    one_el_integrals = np.load("AO_CO_1el.npy")
+    two_el_integrals = np.load("AO_CO_2el.npy")
 
 
 ########################################################################
@@ -38,6 +67,7 @@ Here we read in the integrals from Numpy binary files.
 .. code-block:: python
 
     from ash import *
+    from ash.interfaces.interface_pyscf import create_pyscf_mol_and_mf
 
     #Defining the basic parameters of the system
     nuc_repulsion_energy = 22.51817918808511 # Nuclear repulsion energy in Eh
@@ -51,9 +81,9 @@ Here we read in the integrals from Numpy binary files.
     #numocc = num_corr_el/2 #Number of occupied orbitals
 
     #AO integrals read as Numpy arrays from disk (Numpy binary format)
-    one_el_integrals = np.load("../AO_CO_1el.npy")
-    two_el_integrals = np.load("../AO_CO_2el.npy")
-    overlap = np.load("../AO_CO_overlap.npy")
+    one_el_integrals = np.load("AO_CO_1el.npy")
+    two_el_integrals = np.load("AO_CO_2el.npy")
+    overlap = np.load("AO_CO_overlap.npy")
 
     num_basis=one_el_integrals.shape[0] #Number of basis functions
 
@@ -67,11 +97,16 @@ Here we read in the integrals from Numpy binary files.
     # MO occupations: mf.mo_occ
     # MO energies: mf.mo_energy
 
-Once the meanfield object has been run and we have the MOs, we can perform the AO->MO integral transformation. This can also be accomplished by tools inside pySCF.
+Once the meanfield object has been run and we have the MOs, we can perform the AO->MO integral transformation. 
+This can also be accomplished by tools inside pySCF, namely the *ao2mo* module, see 
+https://pyscf.org/contributor/ao2mo_developer.html
+https://pyscf.org/pyscf_api_docs/pyscf.ao2mo.html
+
 
 .. code-block:: python
 
-    #2-el and 1-el integral transformation from MO to AO
+    from pyscf import ao2mo
+    # 2-el and 1-el integral transformation from AO to MO
     twoel_MObas = ao2mo.kernel(two_el_integrals, mf.mo_coeff)
     oneel_MObas = np.einsum("ap, ab, bq -> pq", mf.mo_coeff, one_el_integrals, mf.mo_coeff)
 
@@ -80,7 +115,8 @@ Write MO integrals to disk
 ######################################################
 
 Now that we have the integrals in the MO-basis it is convenient to write them to disk.
-A common standard is the FCIDUMP format.
+A common standard is the FCIDUMP format defined in the article:
+Knowles, P. J.; Handy, N. C. A Determinant Based Full Configuration Interaction Program. Computer Physics Communications 1989, 54, 75–83. https://doi.org/10.1016/0010-4655(89)90033-7. ↩
 
 ASH features the function *ASH_write_integralfile* for this purpose. 
 
@@ -90,7 +126,37 @@ ASH features the function *ASH_write_integralfile* for this purpose.
                                 num_corr_el=None, filename=None, int_threshold=1e-16, scf_type="RHF", mult=None,
                                 symmetry_option=0, orbsym=None):
 
+For writing a standard FCIDUMP file we would do:
 
+.. code-block:: python
+
+    from ash import *
+    from ash.interfaces.interface_pyscf import create_pyscf_mol_and_mf
+    from pyscf import ao2mo
+
+    nuc_repulsion_energy = 22.51817918808511 # Nuclear repulsion energy in Eh
+    num_el=14
+    scf_type="RHF"
+    mult = 1
+
+    #AO integrals read as Numpy arrays from disk (Numpy binary format)
+    one_el_integrals = np.load("AO_CO_1el.npy")
+    two_el_integrals = np.load("AO_CO_2el.npy")
+    overlap = np.load("AO_CO_overlap.npy")
+
+    # Run SCF via pySCF
+    mol, mf = create_pyscf_mol_and_mf(numel=num_el, mult=mult, nuc_repulsion_energy=nuc_repulsion_energy,
+            one_el_integrals=one_el_integrals, two_el_integrals=two_el_integrals, overlap=overlap )
+    mf.kernel()
+
+    # AO->MO integral transformation
+    twoel_MObas = ao2mo.kernel(two_el_integrals, mf.mo_coeff)
+    oneel_MObas = np.einsum("ap, ab, bq -> pq", mf.mo_coeff, one_el_integrals, mf.mo_coeff)
+
+    # Write FCIDUMP file
+    ASH_write_integralfile(two_el_integrals=twoel_MObas, one_el_integrals=oneel_MObas,
+        nuc_repulsion_energy=nuc_repulsion_energy, header_format="FCIDUMP",
+        num_corr_el=num_el, int_threshold=1e-16, scf_type=scf_type, mult=mult)
 
 For MRCC calculations (see next) we want the FCIDUMP file to have an MRCC-specific header and have the filename be fort.55 and so we would run the function like this: 
 
@@ -111,7 +177,7 @@ Running CC from integrals (MRCC)
 
 To run a MRCC calculation directly from MO integrals we need 2 files: the integral-file called fort.55 and a special basic inputfile named fort.56.
 We can write the inputfile like below where we have specified the excitation level to be 4 (corresponding to CCSDTQ), scf_type to be RHF etc.
-To request the calculation of reduced density matrices we specify dens = 1.
+To request the calculation of reduced density matrices we specify dens = 2.
 We also need to specify the occupations to use for the WF calculation and define how many electrons should be correlated etc.
 
 .. code-block:: python
@@ -122,7 +188,7 @@ We also need to specify the occupations to use for the WF calculation and define
     occupations = [2.0 if c < numocc else 0.0 for i,c in enumerate(range(num_basis))]
 
     MRCC_write_basic_inputfile(occupations=occupations, filename="fort.56", scf_type="RHF",
-                               ex_level=4, nsing=1, ntrip=0, rest=0, CC_CI=1, dens=1, CS=1,
+                               ex_level=4, nsing=1, ntrip=0, rest=0, CC_CI=1, dens=2, CS=1,
                                spatial=1, HF=1, ndoub=0, nacto=0, nactv=0, tol=9, maxex=0,
                                sacc=0, freq=0.0000, symm=0, conver=0, diag=0, dboc=0, mem=1024)
 
@@ -130,8 +196,11 @@ The inputfile is written to disk as fort.56 and looks like this:
 
 .. code-block:: text
 
+    2    1    0     0    1    -2     0     0     0    1    1     1      0    0      0    9      0     0 0.0     0 1024
+    ex.lev, nsing, ntrip, rest, CC/CI, dens, conver, symm, diag, CS, spatial, HF, ndoub, nacto, nactv, tol, maxex, sacc, freq, dboc, mem
+    2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 
-It can be modified as desired.
+The file can be modified as desired.
 Once both fort.56 and fort.55 have been created we can run MRCC directly.
 
 .. code-block:: python
@@ -141,16 +210,14 @@ Once both fort.56 and fort.55 have been created we can run MRCC directly.
     numcores = 1
     run_mrcc("/path/to/mrccdir","mrcc.out", "OMP", numcores)
 
-The density matrices are then available.
-
-
+The density matrices are then available in the file CCDENSITIES
 
 
 ######################################################
 Running CC calculations from integrals (pySCF)
 ######################################################
 
-pySCF has support for various correlated wavefunctions, including the ability to get RDM1 and RDM2 from a CCSD(T) wavefunction.
+pySCF has support for various correlated wavefunctions, including the ability to get RDM1 and RDM2 from CCSD and CCSD(T) wavefunctions.
 If we already have a pySCF mean-field object created, we can use the ASH wrapper around pySCF to create a PySCFTheory object and request a CC calculation.
 
 .. code-block:: python
@@ -169,8 +236,29 @@ If we already have a pySCF mean-field object created, we can use the ASH wrapper
 
     Singlepoint(theory=pyscfobject, fragment=frag)
 
+Once the pySCF CC calculation has been done we can request calculation of the RDM1 and RDM2 in AO or MO basis and save them to disk.
 
+.. code-block:: python
 
+    # RDM1 in AO basis
+    rdm1_MO = pyscfobject.ccobject.make_rdm1(ao_repr=False)
+    # Convert RDM1 from MO to AO basis
+    new_rdm_AO = DM_MO_to_AO(rdm1_MO, mf.mo_coeff)
+
+    # RDM2 in AO and MO basis
+    rdm2_MO = theory.ccobject.make_rdm2(ao_repr=False)
+    rdm2_AO = theory.ccobject.make_rdm2(ao_repr=True)
+
+    # Write the RDMs to disk as Numpy binary files or text
+    np.save("rdm1_MObasis", rdm1_MO)
+    np.save("rdm1_newAObasis", new_rdm_AO)
+    np.savetxt("rdm1_MObasis.txt", rdm1_MO)
+    np.savetxt("rdm1_newAObasis.txt", new_rdm_AO)
+
+    np.save("rdm2_MObasis", rdm2_MO)
+    np.savetxt("rdm2_MObasis.txt", rdm2_MO)
+    np.save("rdm2_AObasis", rdm2_AO)
+    np.savetxt("rdm2_AObasis.txt", rdm2_AO)
 
 
 ######################################################
@@ -221,9 +309,9 @@ We first need to get the integrals in the MO-basis. Here we first run an SCF via
     frag = Fragment(coordsstring=coordsstring, charge=0, mult=1)
 
     # Get 1- and 2-integrals in AO basis
-    one_el_integrals = np.load("../AO_CO_1el.npy")
-    two_el_integrals = np.load("../AO_CO_2el.npy")
-    overlap = np.load("../AO_CO_overlap.npy")
+    one_el_integrals = np.load("AO_CO_1el.npy")
+    two_el_integrals = np.load("AO_CO_2el.npy")
+    overlap = np.load("AO_CO_overlap.npy")
 
     #Create mol and mf objects from integrals
     mol, mf = create_pyscf_mol_and_mf(numel=14, mult=1,
