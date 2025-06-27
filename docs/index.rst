@@ -157,7 +157,6 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
 .. role:: underline
     :class: underline
 
-.. warning:: This is ASH version 0.9. Use at your own risk!
 
 
 Indices and tables

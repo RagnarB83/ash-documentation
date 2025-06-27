@@ -2,6 +2,13 @@ Geometry optimization
 ======================================
 
 Geometry optimizations in ASH are almost exclusively performed via an interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
+In addition there is a very simple optimizer, *SimpleOpt*, that performs geometry optimizations exclusively using Cartesian coordinates,
+by basic algorithms such as steepest descent and LBFGS. 
+
+
+######################################################
+geomeTRICOptimizer
+######################################################
 
 The interface to the geomeTRIC optimization library allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Constraints and frozen atoms are supported natively.
 Any ASH theory object can be used using in principle any available Hamiltonian (implemented analytical gradient strongly recommended though).
@@ -10,14 +17,12 @@ Only the active region coordinates are in this case passed to geomeTRIC.
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations (via ActiveRegion feature), 
 relaxed and unrelaxed 1D/2D surface scans (see  :doc:`surfacescan`), saddlepoint optimizations and more.
 
-If you use geometry optimizations in ASH using the geomeTRIC library make sure to cite the article:
+If you use geometry optimizations in ASH using the geomeTRIC library, make sure to cite the article:
 
 *Geometry optimization made simple with translation and rotation coordinates*  by    Lee-Ping Wang, Chenchen Song, *J. Chem. Phys.* **2016**, *144*, 214108. 
 
 
-######################################################
-geomeTRICOptimizer
-######################################################
+
 
 The geomeTRICOptimizer function can also be called via the shorter aliases: 
 **Optimizer** or **Opt**.
@@ -417,3 +422,158 @@ Example on how to use:
     optimizer = GeomeTRICOptimizerClass(theory=theory, fragment=fragment, charge=0, mult=1))
     #Run the optimizer object
     result = optimizer.run()
+
+
+
+######################################################
+SimpleOpt
+######################################################
+
+SimpleOpt is an alternative to the geomeTRIC optimizer. 
+It is rarely recommended except for very small systems where it can find some use.
+It performs geometry optimization in Cartesian coordinates only via the following algorithms:
+
+- steepest descent (optimizer="SD")
+- LBFGS (via Knarr library, optimizer="KNARR-LBFGS")
+- KNARR (via Knarr library, optimizer="KNARR-FIRE")
+
+.. code-block:: python
+
+  def SimpleOpt(fragment=None, theory=None, charge=None, mult=None, optimizer='KNARR-LBFGS', maxiter=50, 
+                frozen_atoms=None, RMSGtolerance=0.0001, MaxGtolerance=0.0003, FIRE_timestep=0.00009):
+
+*Geometry optimization of an H2O fragment at the xTB level, with default options.*
+
+
+.. code-block:: python
+
+    from ash import *
+
+    frag=Fragment(databasefile="h2o.xyz",charge=0, mult=1)
+    xtbcalc=xTBTheory(xtbmethod='GFN1')
+
+    Optimizer(theory=xtbcalc, fragment=frag)
+
+
+######################################################
+Numerical Gradient Optimizations
+######################################################
+
+For some complicated quantum chemical methods as well as some hybrid methods, no analytical gradient might be available, 
+typically preventing convenient geometry optimizations. However, a numerical gradient can always be defined.
+
+ASH allows numerical gradient optimizations to be performed in those cases.
+This is performed by wrapping the Theory object by the *NumGradclass*.
+
+.. code-block:: python
+    
+  # Numerical gradient class
+  class NumGradclass:
+      def __init__(self, theory, npoint=2, displacement=0.00264589,  runmode="serial", numcores=1, printlevel=2):
+
+Once a NumGradclass object has been defined, one can use it to e.g. perform geometry optimizations or any other job-type where gradients are needed (MD, surface scan etc.).
+Be aware of course that numerical gradients are by definition more noisy than analytical ones and require considerable effort. MD using numerical gradients is unlikely to work well.
+
+The example below requests a numerical-gradient geometry optimization using a ORCA-DFT level (just as an example, analytical gradient is of course preferable):
+
+.. code-block:: python
+
+  from ash import *
+
+  #Fragment
+  frag = Fragment(databasefile="h2o.xyz")
+  #Theory
+  theory = ORCATheory(orcasimpleinput="! B3LYP def2-SVP tightscf")
+  #Numgrad wrapper
+  numgrd_theory = NumGradclass(theory=theory)
+  #Optimization
+  Optimizer(theory=numgrd_theory, fragment=frag)
+
+A simpler alternative for numerical gradient optimization makes use of the NumGrad keyword in the *Optimizer* :
+
+.. code-block:: python
+
+  from ash import *
+
+  #Fragment
+  frag = Fragment(databasefile="h2o.xyz")
+  #Theory
+  theory = ORCATheory(orcasimpleinput="! B3LYP def2-SVP tightscf")
+  #Optimization
+  Optimizer(theory=theory, fragment=frag, NumGrad=True)
+
+A good use-case for numerical-gradient optimizations would e.g. involve geometry optimization of a small molecule using a correlated wavefunction
+where no analytic gradient is available.
+
+
+######################################################
+Minimum Energy Crossing Point Optimizations
+######################################################
+
+Minimum energy crossing point (MECP) optimizations are intented for finding the point where 2 potential energy surfaces cross each other.
+The 2 energy surfaces might differ e.g. by spin multiplicity or an alternative SCF solution of the same multiplicity.
+The gradient is defined following Harvey et al: Harvey, J. N.; Aschi, M.; Schwarz, H.; Koch, W. Theor. Chem. Acc., 1998, 99, 95.
+
+ASH has a way of conveniently defining the MECP gradient by the *MECPGradclass*. 
+One simply couples together 2 different theory objects and also specifies the charge and multiplicity of both energy surfaces.
+In principle the 2 theory objects could even be interfaces to 2 different QM programs.
+
+.. code-block:: python
+
+  # MEPC-gradient class
+  class MECPGradclass:
+      def __init__(self, theory_1=None,theory_2=None, charge_1=None, charge_2=None, 
+                  mult_1=None, mult_2=None, runmode="serial", numcores=1, printlevel=2):
+
+Once an *MECPGradclass* object is defined, one can run a geometry optimization by using the *MECPGradclass* object as a Theory object.
+In the limited testing done so far, the MECP-optimizations have been found to be more efficient using the Cartesian-based *SimpleOpt* optimizer.
+
+
+
+*Example: MECP optimization of the quartet/sextet crossing of FeO+*
+
+We define the system as a fragment, then define 2 identical theory levels and then specify the different spin multiplicity for each.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Define system
+  frag = Fragment(diatomic="FeO", bondlength=1.67, charge=1, mult=6)
+
+  # Define theory levels for both electronic states
+  theory_1 = ORCATheory(orcasimpleinput="! B3LYP tzvp tightscf")
+  theory_2 = ORCATheory(orcasimpleinput="! B3LYP tzvp tightscf")
+
+  # Wrap the 2 theory levels into a MECPGradclass object
+  mecpgrad = MECPGradclass(theory_1=theory_1, theory_2=theory_2, charge_1=1, charge_2=1, mult_1=6, mult_2=4)
+
+  # Run using the basic optimizer
+  SimpleOpt(fragment=frag, theory=mecpgrad, optimizer='KNARR-LBFGS', maxiter=50,
+    RMSGtolerance=0.00001, MaxGtolerance=0.00003)
+
+Starting from an FeO+ distance of 1.67 Angstrom (close to the sextet minimum) the MECP optimization converges to a distance of 1.99 Angstrom
+which is where the sextet and quartet surfaces cross.
+
+*Example: MECP optimization involving a non-ground-state SCF solution*
+
+ASH allows some additional freedom in MECP optimization as the 2 electronic states are 
+controlled by the 2 theory objects as well as specifying the multiplicity of them.
+For example for ORCATheory one could control the specific SCF-state solution by the deltaSCF feature as ASH can turn that off and on for each theory object.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag = Fragment(diatomic="FeO", bondlength=1.67, charge=1, mult=6)
+
+  theory_1 = ORCATheory(orcasimpleinput="! UKS B3LYP tzvp tightscf")
+  theory_2 = ORCATheory(orcasimpleinput="! UKS B3LYP tzvp tightscf", deltaSCF=True,
+            deltaSCF_PMOM=False, deltaSCF_confline="betaconf 0,1", deltaSCF_turn_off_automatically=True)
+
+  mecpgrad = MECPGradclass(theory_1=theory_1, theory_2=theory_2, charge_1=1, charge_2=1, mult_1=6, mult_2=4)
+
+  SimpleOpt(fragment=frag, theory=mecpgrad, optimizer='KNARR-LBFGS', maxiter=50,
+    RMSGtolerance=0.00001, MaxGtolerance=0.00003)
+
+As it not necessarily straightforward though to stay on the correct SCF solution throughout so that requires some experimentation.
