@@ -50,34 +50,39 @@ Features
 
 **Interfaces to various QM codes:**
 
-- ORCA (general QM-program). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding.
-- xTB (semi-empirical QM (DFTB). OpenMP parallelization
-- Psi4 (general QM-program, Python library. Threaded parallelization.
-- PySCF (general QM library in Python, OpenMP parallelization.
-- ccpy (coupled cluster code in PYthon)
+- ORCA (general QM-program). Parallelization via OpenMPI. Flexible input, BS-DFT, pointcharge embedding
+- xTB (semi-empirical QM (TB)). OpenMP parallelization
+- DFTB+ (semi-empirical QM (DFTB) program)
+- MNDO (semi-empirical QM program)
+- Psi4 (general QM-program, Python library. Threaded parallelization
+- PySCF (general QM library in Python, OpenMP parallelization
+- ccpy (coupled cluster code in Python)
 - CFour (WFT and CC program)
 - MRCC (general QM-program and CC code)
 - Dalton (general QM program)
 - Dice (a selected CI code)
+- Block2 (a DMRG code)
 - NWChem (general QM program)
+- Gaussian (general QM program)
 - TeraChem (GPU-based QM code)
 - QUICK (GPU-based QM code)
 - CP2K (Periodic Gaussian-planewave DFT)
+- Turbomole (general QM program)
 
 **Parallelization :**
 
 - Parallelization via Python multiprocessing.
 - Simultaneous QM code parallelization also possible.
 - Support for running many simultaneous single-point jobs.
-- Efficient parallelization of Numerical-Hessian displacement calculations.
-- Efficient parallelization of NEB image calculations.
-- Efficient parallelization of 1D and 2D surface scans.
+- Parallelization of Numerical-Hessian displacement calculations.
+- Parallelization of NEB image calculations.
+- Parallelization of 1D and 2D surface scans.
 
 **Single-point electrostic embedding QM/MM**
 
 - Full QM/MM support (including pointcharge-gradient) for  ORCA, xTB, PySCF, CFour, MRCC, NWChem, CP2K, TeraChem and QUICK.
 
-**Polarizable embedding via PySCF,Psi4 and CPPE library**
+**Polarizable embedding via CPPE library**
 
 - TODO
 

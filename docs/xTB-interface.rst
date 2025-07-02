@@ -1,7 +1,40 @@
 xTB interface
 ======================================
 
+`xTB <https://xtb-docs.readthedocs.io>`_  is a semiempirical tightbinding DFT quantum chemistry code from the Grimme group.
+It features the extended tight-binding (xTB) methods (GFN0-xTB,GFN1-xTB and GFN2-xTB) that feature a fairly accurate 
+electrostatic interaction term and built-in dispersion correction and are parameterized in a general element parameterization 
+fashion that avoids pair-potentails, unlike standard DFTB-based methods.
+GFN-xTB methods give overall fairly accurate geometries, frequencies and noncovalent interactions, 
+often even for transition metal complex while energies are further from regular DFT. 
+The speed of these methods is 100-1000 x compared to regular DFT.
+
+More recently, a new method, g-xTB, has been described that gives much more accurate energies, much closer to regular DFT:
+`g-xTB preprint <https://chemrxiv.org/engage/chemrxiv/article-details/685434533ba0887c335fc974>`_
+
+**gxTBTheory class:**
+
+The g-xTB method is available as a preliminary implementation in the gxtb binary, 
+see `g-xTB Github repository <https://github.com/grimme-lab/g-xtb>`_ .
+As this implementation features only a numerical gradient, 
+geometry optimizations will be slow and will suffer from some numerical noise.
+A future implementation is expected in the tblite library that ASH will support once available.
+
+ASH features a very basic interface to the gxtb binary that allows for energies and slow geometry optimizations.
+
+.. code-block:: python
+
+  class gxTBTheory(Theory):
+      def __init__(self, printlevel=2, numcores=1):
+
+No QM/MM is supported in gxTBTheory yet as pointcharge-support is not available in the gxtb program. For xTB-based QM/MM, see xTBTheory class below.
+
+
 **xTBTheory class:**
+
+*xTBTheory* is the interface to the general xTB program that supports the GFN-xTB methods (GFN0, GFN1 and GFN2) with analytic
+gradients, implicit solvation and pointcharges.
+xTBTheory can be used for QM/MM and ONIOM embedding etc.
 
 .. code-block:: python
 

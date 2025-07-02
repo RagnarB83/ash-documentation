@@ -435,7 +435,7 @@ It performs geometry optimization in Cartesian coordinates only via the followin
 
 - steepest descent (optimizer="SD")
 - LBFGS (via Knarr library, optimizer="KNARR-LBFGS")
-- KNARR (via Knarr library, optimizer="KNARR-FIRE")
+- FIRE (via Knarr library, optimizer="KNARR-FIRE")
 
 .. code-block:: python
 
@@ -472,9 +472,9 @@ This is performed by wrapping the Theory object by the *NumGradclass*.
       def __init__(self, theory, npoint=2, displacement=0.00264589,  runmode="serial", numcores=1, printlevel=2):
 
 Once a NumGradclass object has been defined, one can use it to e.g. perform geometry optimizations or any other job-type where gradients are needed (MD, surface scan etc.).
-Be aware of course that numerical gradients are by definition more noisy than analytical ones and require considerable effort. MD using numerical gradients is unlikely to work well.
+Be aware of course that numerical gradients are by definition more noisy than analytical ones and require considerable effort. MD using numerical gradients is unlikely to work well due to noise.
 
-The example below requests a numerical-gradient geometry optimization using a ORCA-DFT level (just as an example, analytical gradient is of course preferable):
+The example below requests a numerical-gradient geometry optimization using a ORCA-DFT level (just as an example, the analytical gradient is of course preferable here):
 
 .. code-block:: python
 

@@ -23,7 +23,7 @@ Strict dependencies:
 * `Numpy <https://numpy.org>`_ library.
 
 
-Strongly recommended (necessary for some ASH functionality):
+Strongly recommended (necessary for most ASH functionality):
 
 * `geomeTRIC <https://github.com/leeping/geomeTRIC>`_ (Python package via pip). Required for geometry optimizations.
 * `OpenMM <http://openmm.org>`_ version 7.6 or later. Required for most MM and MD functionality in ASH.
@@ -54,7 +54,7 @@ Useful libraries for specific functionality:
 A. Python environment setup
 ##################################################
 
-Installing Miniforge <https://github.com/conda-forge/miniforge>`_ , see also `Conda-Forge downloads page <https://conda-forge.org/download/>`_ is strongly recommended to handle Python and package installations (openMM in particular).
+Installing `Miniforge <https://github.com/conda-forge/miniforge>`_ , see also `Conda-Forge downloads page <https://conda-forge.org/download/>`_ is strongly recommended to handle Python and package installations (openMM in particular).
 This installs both the `mamba <https://github.com/mamba-org/mamba>`_ and conda package manager and sets it up for use with `conda-forge <https://conda-forge.org>`_ 
 collection of repositories.
 
