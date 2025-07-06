@@ -16,7 +16,7 @@ MolecularDynamics (via OpenMM library routines)
 
 Dynamics are performed by calling the **MolecularDynamics** function (alias for the **OpenMM_MD** function)
 
-- Available Integrators: Langevin, LangevinMiddleIntegrator, NoseHooverIntegrator, VerletIntegrator, VariableLangevinIntegrator, VariableVerletIntegrator
+- Available Integrators: Langevin, LangevinMiddleIntegrator, NoseHooverIntegrator, VerletIntegrator, VariableLangevinIntegrator, VariableVerletIntegrator, RPMDIntegrator
 - Available Barostat: MonteCarloBarostat
 - Optional additional thermostat: Anderson
 
