@@ -291,6 +291,39 @@ CCSDT/cc-pVTZ:
     #Geometry optimization
     result = Optimizer(theory=cfourcalc, fragment=frag)
 
+**Excited state Geometry optimization at the EOM-CCSD level of theory**
+
+CFour also contains analytic gradients for various excited state methods, including EOM-CCSD.
+The CFourTheory object should be modified so that in addition to the ground-state Hamiltonaian (here CCSD),
+an excited-state calculations is requested (here EXCITE -> EOMEE) which requests an EOM-CCSD calculation. 
+The number of states should also be requested for each symmetry (here symmetry is off so we simply 
+request the number of states). 
+
+The example below shows how the first excited state geometry of ammonia can be optimized starting from the ground-state geometry.
+The excited state geometry is planar as known from the literature.
+
+.. code-block:: python
+
+  from ash import *
+
+  frag = Fragment(databasefile="nh3", charge=0, mult=1)
+
+
+
+    cfouroptions = {
+    'CALC':'CCSD',
+    'BASIS':'PVDZ',
+    'REF':'RHF',
+    'FROZEN_CORE':'ON',
+    'MEM_UNIT':'MB',
+    'MEMORY':3100,
+    'EXCITE':'EOMEE',
+    'ESTATE_SYM':'1',
+    }
+
+  cfourcalc = CFourTheory(cfouroptions=cfouroptions)
+  Optimizer(theory=cfourcalc, fragment=frag, coordsystem='hdlc')
+
 
 **Harmonic vibrational frequencies at the CCSD(T) level of theory:**
 
