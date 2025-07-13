@@ -83,7 +83,7 @@ The **diffdens_tool** function can be used for this purpose.
 It reads all files in a directory with a given extension (e.g. .gbw, .molden, .nat) and creates difference densities
 w.r.t. to a reference file (e.g. HF.gbw).
 
-This function use Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn-interface` for details).
+This function uses Multiwfn via the Multiwfn-ASH interface (See :doc:`Multiwfn-interface` for details).
 
 .. code-block:: python
 
@@ -188,9 +188,10 @@ NOCV analysis
 
 NOCV analysis can be performed in ASH in 2 different ways: **NOCV_density_ORCA** or **NOCV_Multiwfn**
 
-**NOCV_density_ORCA** calls on ORCA to perform the NOCV and ETS-NOCV. 
-It is unfortunately limited to closed-shell systems but the advantage is that the ETS-NOCV is performed exactly.
+**NOCV_density_ORCA** calls on ORCA to perform the NOCV and ETS-NOCV. Note that the functionality is more complete in ORCA 6.1 and now available for the open-shell case.
 
+
+Warning: The function below has not been tested with ORCA 6.1
 .. code-block:: python
 
     def NOCV_density_ORCA(fragment_AB=None, fragment_A=None, fragment_B=None, theory=None, griddensity=80,
@@ -199,7 +200,7 @@ It is unfortunately limited to closed-shell systems but the advantage is that th
 
 
 The **NOCV_Multiwfn** function calls on Multiwfn to perform the NOCV and ETS-NOCV.
-The advantage is that it can be used for open-shell systems but the disadvantage is that the energy decomposition analysis
+The disadvantage is that the energy decomposition analysis
 is approximate as full ETS method is not performed.
 
 .. code-block:: python

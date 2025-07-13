@@ -26,9 +26,8 @@ The type of Multiwfn job to perform is controlled by the option parameter.
 The default option is 'density', for creating a Cubefile of the electron density.
 Other options are: 
 'nocv' for NOCV analysis (see NOCV_Multiwfn in :doc:`elstructure_analysis` for more information).
-'hirshfeld' for Hirshfeld population analysis.
-
-
+'hirshfeld' for Hirshfeld population analysis
+'elf' for Electron Localization Function (ELF) analysis.
 
 
 For reading a Molden-file produced by MRCC one should use the **mrccoutputfile** and **mrccdensityfile** options.

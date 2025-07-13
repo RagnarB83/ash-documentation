@@ -482,4 +482,56 @@ This analysis demonstrates well how one can obtain convergence of the electron d
 ELF analysis
 ##############################################################################
 
-TODO
+The Multiwfn interface in ASH can also be utilized to perform ELF analysis based on the same densities and Moldenfiles created. 
+See :doc:`elstructure_analysis` and :doc:`Multiwfn-interface`  .
+
+If all the Moldenfiles are available in the same directory ELF plots can be generated like this.
+As ELF plots can be particularly useful when the nuclear attractor positions are present, we show here how this can also be accomplished
+using the AutoELF package by Keelan Byrne that is shipped with ASH, where the nuclear attractors are added to the Multiwfn-created Cube files.
+
+
+*Create ELF plots*
+
+This script finds all Molden-files in current directory and performs ELF analysis via the Multiwfn interface.
+
+.. code-block:: python
+
+   from ash import *
+   # Auto-ElF does core and valence assignment of  the nuclear attractors and adds their positions to the cubefile for visualization
+   # AutoELF: https://github.com/keelan542/AutoELF by Keelan Byrne
+   from ash.external.additional_python_modules import AutoELF
+
+   moldenfiles=glob.glob("*molden*")
+
+   #Looping over Moldenfiles to do ELF analysis via Multiwfn
+   for moldenfile in moldenfiles:
+      cubefile = multiwfn_run(moldenfile, option='elf', grid=3, numcores=1)
+      #Auto-ELF assignment (requires library)
+      AutoELF.auto_elf_assign(cubefile, "attractors.pdb", interest_atoms=[0,1])
+
+The script creates Cube files for each Moldenfile-density.
+
+
+*Plot ELF Cube files via VMD*
+
+Once Cube files of ELF surfaces have been generated one can plot them using any program supporting Gaussian Cube files.
+One of these programs is VMD and ASH can also generate a VMD script for visualization of multiple Cube files conveniently:
+
+.. code-block:: python
+
+   from ash import *
+
+   # Find all Cube files in current dir
+   cubefiles=glob.glob("*cube")
+
+   #Create VMD state-file
+   write_VMD_script_cube(cubefiles=cubefiles,VMDfilename="ELF.vmd",
+                           isovalue=0.8, isosurfacecolor_pos="blue", isosurfacecolor_neg="red")
+
+This creates a VMD-state file that can be conveniently opened like this:
+
+.. code-block:: shell
+
+   vmd -e ELF.vmd
+
+
