@@ -70,6 +70,10 @@ The geomeTRICOptimizer function can also be called via the shorter aliases:
        | Keywords refer to when the exact Hessian is calculated or the path to an external Hessian-file.
        | Default: No Hessian ('never') for TSOpt=False; 
        | for TSOpt=True the Hessian is calculated in the first step ('first').
+   * - ``partial_hessian_atoms``
+     - list
+     - None
+     - | List of atom indices for which a partial numerical Hessian will be calculated.
    * - ``frozenatoms``
      - list
      - None
@@ -395,6 +399,49 @@ Valid options are: 'ORCA', 'ORCA_TIGHT', 'Chemshell', 'GAU', 'GAU_TIGHT', 'GAU_V
 geomeTRIC handles constraints a little different than many codes and the constraints are not fully enforced until the end of the constrained optimization.
 There are also cases where the minimization stalls because constraints can not be fully satisfied.
 Changing *convergence_cmax* to a smaller value than 1.0e-2 may be necessary in these cases.
+
+######################################################
+Transition-State/Saddlepoint Optimization
+######################################################
+
+A direct transition-state/Saddle-points optimization can be performed in the Optimizer via an eigenvector-following
+algorithm as implemented in the geometric library. This option is actived by the *TSOpt=True* keyword as shown below:
+
+.. code-block:: python
+
+  from ash import *
+
+  frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1) #Fragment object creation
+  ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
+
+  #TSOpt=True enables saddlepoint optimization in geomeTRIC. Note: Exact Hessian is calculated in the first step by default.
+  Optimizer(fragment=frag, theory=ORCAcalc, coordsystem='tric', TSOpt=True)
+
+It is important to realize that a direct TS-Optimization like this only makes sense when a good guess for the 
+saddlepoint geometry is available, e.g. if the geometry has been estimated from a surface scan, aprevious NEB/NEB-CI job etc. 
+
+Additionally, the algorithm requires a good initial approximation to the Hessian to be successful (unlike a regular minimization).
+By default, if an Hessian-option (*hessian* keyword) is not specified for a *TSOpt=True* job, then an exact Hessian is estimated in the first step (*hessian='first'* option)
+by a numerical-frequency calculation. The exact Hessian option can be expensive, especially if the system is large or the number of active atoms is large (often the case for QM/MM optimizations).
+
+Options include:
+
+- *hessian* = 'first'. Calculate the Hessian in the first step using geometric library.
+- *hessian* = 'each'. Calculate the Hessian in each step (very expensive) using geometric library.
+- *hessian* = 'partial'. Calculate an exact partial Hessian. Requires *partial_hessian_atoms* keyword to be defined.
+- *hessian* = 'xtb'. Calculate an exact Hessian but using the cheap xTB level of theory. 
+- *hessian* = '1point'. Calculate an exact Hessian using ASH using a cheap 1-point formula (requires 3*N energy+gradient displacement calculations).
+- *hessian* = '2point'. Calculate an exact Hessian using ASH using a 2-point formula (requires 2*3*N energy+gradient displacement calculations).
+- *hessian* = 'file\:/path/to/Hessianfile'. Read Hessian from file.
+- *hessian* = <Numpy array>. Read Hessian from Numpy array.
+
+The option to read in the Hessian from a file or a Numpy array offers a lot of flexibility.
+Any Hessian (however calculated) can be read in from a file (or Numpy array) as long as it has the correct dimensions of the system (3*N, where N=numatoms).
+See :doc:`module_freq` for options how an Hessian can be calculated numerically or analytically using various ASH Theories.
+A Hessian-file is always written to disk (as text) following a successful NumFreq/AnFreq calculation.
+The Hessian is also part of the Results object that is returned by NumFreq/AnFreq.
+
+
 
 ######################################################
 The geomeTRICOptimizer class
