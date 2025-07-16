@@ -12,8 +12,11 @@ Overall, this is similar to QM/MM methodology (see :doc:`module_QM-MM`) but work
 In particular the ability to combine 2 (or potentially more) QM-levels of theory (such as DFT and semi-empirical or WFT and DFT) offers particularly interesting 
 multilevel method strategies.
 The advantage of using a program like ASH for ONIOM unlike QM-programs with built-in ONIOM capability, 
-is that ASH offers the ability to perfrom ONIOM calculations by combining 
-QM-levels of theory from multiple QM programs, as long as interfaces are available.
+is that ASH offers the ability to perform ONIOM calculations by combining QM-levels of theory from multiple QM programs, 
+as long as interfaces are available.
+
+An ONIOMTheory can be used for geometry optimizations, surface scans, NEB calculations, molecular dynamics etc.
+As long as all theory components of an ONIOMTheory object are capable of producing a gradient, then these job-types will automatically work.
 
 ######################################################
 The basics of ONIOM
@@ -183,6 +186,7 @@ ASH allows 2 ways to define these charges:
 TODO: Add details about 3-layer ONIOM.
 
 
+
 ######################################################
 Covalent boundaries
 ######################################################
@@ -208,6 +212,7 @@ by the *chargeboundary_method* keyword in the ONIOMTheory object.
 
 See :doc:`module_QM-MM` , section **QM/MM boundary treatment: mechanical vs. electrostatic embedding**, 
 for more details about the chargeboundary-methods. They work the same in ONIOMTheory and QMMMTheory.
+
 
 
 ######################################################
@@ -271,3 +276,99 @@ This should be somewhat more realistic, especially if there are larger polarizat
 
     #Single-point energy calculation of ONIOM object
     result = Singlepoint(theory=oniom, fragment=frag, charge=0, mult=1, Grad=True)
+
+
+######################################################
+More Examples: Flexible theory handling
+######################################################
+
+As the ONIOM implementation in ASH is so general, it is possible to perform ONIOM by combining almost any
+theory levels, including different external programs such as xTB and ORCA in the examples above. 
+One could also combine a QM-theory with a machine-learning (ML) interatomic potential through the respective interface etc. (see :doc:`Machine_learning_in_ASH`).
+
+It is even possible for an ONIOMTheory to be combined with other hybrid-theory approaches in ASH. 
+
+*Wrapping ONIOMTheory with another object*
+
+An ONIOMTheory object can be combined into a WrapTheory object (see :doc:`module_Hybrid_Theory`).
+This could e.g. be used to combine an ONIOMTheory with a  :math:`\Delta`-ML correction in an additive way,
+(see :doc:`Machine_learning_in_ASH`) as in the example below:
+
+
+.. code-block:: python
+
+    from ash import *
+
+    #Peptide pair
+    frag = Fragment(xyzfile="full.xyz")
+
+    #Region definitions
+    region1_atoms=list(range(0,11+1))
+    #Region 2 defined as the difference between all-atoms and Region1-atoms
+    region2_atoms=listdiff(frag.allatoms,region1_atoms)
+
+    #HL and LL theory objects
+    ORCA = ORCATheory(orcasimpleinput="!revPBE D4 def2-TZVP def2/J tightscf", orcablocks="")
+    xtb = xTBTheory(xtbmethod="GFN2")
+
+    #ONIOMTheory object
+    oniom = ONIOMTheory(fragment=frag, theories_N=[ORCA,xtb], regions_N=[region1_atoms,region2_atoms],
+        fullregion_charge=0, fullregion_mult=1, regions_chargemult=[[0,1],[0,1]], embedding="elstat")
+
+    #A Pre-trained machine-learning correction
+    ml = MACETheory(model_file="trained_deltaML.model")
+
+    # Combining ONIOM and ML objects in a WrapTheory object
+    #DeltaML correction is here defined to only a subset of atoms (here Region1)
+    wraptheory = WrapTheory(theories=[oniom,ml], theory2_atoms=region1_atoms)
+
+
+*Combining other hybrid theories into an ONIOMTheory object*
+
+A more elaborate hybrid strategy is even possible where a QM/MM object is combined into an ONIOMTheory object with another theory.
+Below, we first define a QMMMTheory object by combining a QM-theory (xTBTheory) with an MM-theory (OpenMMTheory) with the default electrostatic embedding.
+We then define a machine-learning theory (MACETheory) that uses a foundational MACE-ML-model trained on the large OMol dataset.
+By combining the QMMMTheory and MACETheory objects in the subtractive 2-layer ONIOM scheme we can effectively correct
+Region1 with another theory. The QMMMTheory object here acts as a low-level (LL) theory for the whole system while MACETheory acts as 
+a high-level theory (HL) for Region 1 alone.
+
+.. math::
+
+    E_{ONIOM} = E^{LL}_{12} + E^{HL}_{1} - E^{LL}_{1}
+
+This strategy is suitable here because it incorporates electrostatic embedding via QM/MM using a supported QM-theory (xTB) in the low-level theory,
+while we use an ML-model to make a correction in region 1 (an ML-theory does not support electrostatic embedding). 
+This would not be possibly by the ONIOM-definition alone.
+
+.. note:: The use of a QMMMTheory within an ONIOM scheme works here because ASH automatically recognizes the nature of the theory-object
+  when calculating the low-level-Region 1 term (last term in equation above) and only performs a plain QMTheory-calculation on region 1 in the calculation.
+
+.. code-block:: python
+
+
+  from ash import *
+
+  # H2O...MeOH fragment defined. Reading XYZ file
+  frag = Fragment(xyzfile=f"h2o_MeOH.xyz")
+  pdbfile="h2o_MeOH.pdb"
+  #Defining QM-region / Region1
+  qmatoms=[3,4,5,6,7,8]
+  #Defining Region II
+  region2atoms = listdiff(frag.allatoms,qmatoms)
+
+  # QM theory
+  qm = xTBTheory()
+  # MM: OpenMMTheory using XML-file
+  mm = OpenMMTheory(xmlfiles=[f"MeOH_H2O-sigma.xml"], pdbfile=pdbfile, autoconstraints=None, rigidwater=False)
+  # Creating QM/MM object
+  qm_mm = QMMMTheory(fragment=frag, qm_theory=qm, mm_theory=mm, qmatoms=qmatoms,
+                          embedding='Elstat', qm_charge=0, qm_mult=1)
+  # ML theory
+  ml = MACETheory(model_file="../MACE-omol-0-extra-large-1024.model")
+
+  #Combining everything into an ONIOMTheory
+  oniom = ONIOMTheory(theories_N=[ml,qm_mm], regions_N=[qmatoms,region2atoms], regions_chargemult=[[0,1],[0,1]],
+                  embedding="mechanical", fragment=frag, fullregion_charge=0, fullregion_mult=1)
+
+  # Single-point energy calculation of ONIM object
+  result = Singlepoint(theory=oniom, fragment=frag, Grad=True)

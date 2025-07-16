@@ -112,7 +112,7 @@ Giving the following output:
 A slightly more complicated workflow is to calculate an ensemble-averaged TDDFT absorption spectrum.
 Below we have already generated the ensemble, we then read in the Wigner ensembler trajectory, define the theory level and then loop over the fragments,
 calculating a single-point TDDFT calculation for each fragment. The transition energies and intensities are collected and then in the end
-fed to the plot_Spectrum function that applies Gaussian-broadening to every stick (from each fragment) and plots the final spectrum.
+fed to the **plot_Spectrum** function that applies Gaussian-broadening to every stick (from each fragment) and plots the final spectrum.
 
 .. code-block:: python
 
@@ -154,7 +154,7 @@ Here we have used the nitronapthalene molecule as an example (PBE0/def2-TZVP/CPC
    :width: 300
 
 See the `excellent paper by González and coworkers <https://pubs.acs.org/doi/epdf/10.1021/acs.jctc.8b00198>`_  for a good discussion of vibrational sampling of nitronapthalene.
-As discussed, better agreement with experiment can be obtained by going from implicit solvation (CPCM) to explicit (QM/MM) and use an ensembler from a QM/MM MD trajectory instead.
+As discussed, better agreement with experiment can be obtained by going from implicit solvation (CPCM) to explicit (QM/MM) and use an ensemble from a QM/MM MD trajectory instead.
 
 
 Note that the results will of course also depend on the value chosen for the broadening of each stick (here 0.1 eV was chosen), the number of points and the shape of the lineshape function (here a Gaussian).

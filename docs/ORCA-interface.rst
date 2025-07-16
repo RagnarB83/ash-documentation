@@ -305,16 +305,65 @@ Since the broken-symmetry SCF orbitals are available in the GBW file they are au
 
 
 ################################################################################
-ORCA_External_Optimizer
+ORCA_External_Optimizer: Using ORCA algorithms using ASH Theories 
 ################################################################################
 
-It is possible to use ORCA as an external optimizer for ASH. 
-This means that the ORCA geometry optimizer will be used with an ASH Theory level as input.
-This functionality has not been tested much.
+It is possible to use ORCA as an external optimizer or job-driver 
+This means that the ORCA algorithms, e.g. Optimizer and the GOAT conformational sampler can be used with an ASH Theory level as input.
 
 .. code-block:: python
 
-  def ORCA_External_Optimizer(fragment=None, theory=None, orcadir=None, charge=None, mult=None):
+  def ORCA_External_Optimizer(fragment=None, theory=None, orcadir=None, charge=None, mult=None,
+                              ORCA_jobkeyword="Opt", ORCA_blockinput="", actatoms=None):
+
+ORCA_jobkeyword can be any valid ORCA-job keyword in principle.
+In practice the following keywords make sense:
+- 'Opt' (for using the ORCA geometry optimizer),
+- 'GOAT'
+
+Additional block-options to ORCA can in principle be provided using *ORCA_blockinput* .
+If the ORCA optimizer (or related job) should only optimize certain atoms, i.e. there is an active region, then the ORCA optimizer must enforce constraints.
+These constraints are automatically set up (by ASH when creating the ORCA inputfile) if a list of active-atoms are provided to the *actatoms* keyword argument.
+
+
+*Basic example:*
+
+.. code-block:: python
+
+  from ash import *
+
+  # H2O Fragment
+  frag = Fragment(databasefile="h2o.xyz")
+  # PySCFTheory
+  pys = PySCFTheory(scf_type="RKS", functional="b3lyp", basis="def2-SVP")
+  # Calling ORCA_External_Optimizer
+  ORCA_External_Optimizer(fragment=frag, theory=pys, ORCA_jobkeyword="Opt")
+
+
+*QM/MM optimization with an active region:*
+
+.. code-block:: python
+
+  from ash import *
+  # H2O...MeOH fragment defined. Reading XYZ file
+  H2O_MeOH = Fragment(xyzfile=f"h2o_MeOH.xyz")
+
+  # Write PDB-file for OpenMM (used for topology)
+  H2O_MeOH.write_pdbfile_openmm(filename="h2o_MeOH.pdb", skip_connectivity=True)
+  pdbfile="h2o_MeOH.pdb"
+
+  # Specifying the QM atoms (3-8) by atom indices (MeOH). The other atoms (0,1,2) is the H2O and MM.
+  # IMPORTANT: atom indices begin at 0.
+  qmatoms=[3,4,5,6,7,8]
+  # QM
+  qm = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", densityfit=False)
+  # MM: OpenMMTheory using XML-file
+  MMpart = OpenMMTheory(xmlfiles=[f"MeOH_H2O-sigma.xml"], pdbfile=pdbfile, autoconstraints=None, rigidwater=False)
+  # Creating QM/MM object
+  QMMMobject = QMMMTheory(fragment=H2O_MeOH, qm_theory=qm, mm_theory=MMpart, qmatoms=qmatoms,
+                          embedding='Elstat', qm_charge=0, qm_mult=1)
+  # ORCA EXTOPT on ASH QM/MM theory with an active region
+  ORCA_External_Optimizer(ORCA_jobkeyword="Opt", fragment=H2O_MeOH, theory=QMMMobject, actatoms=qmatoms, charge=0, mult=1)
 
 
 ################################################################################
