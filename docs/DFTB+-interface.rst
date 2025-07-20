@@ -18,7 +18,7 @@ It also supports pointcharge embedding and can thus be used for electrostatic em
     class DFTBTheory():
         def __init__(self, dftbdir=None, hamiltonian="XTB", xtb_method="GFN2-xTB", printlevel=2, label="DFTB",
                     numcores=1, slaterkoster_dict=None, maxmom_dict=None, Gauss_blur_width=0.0,
-                    SCC=True, ThirdOrderFull=False, ThirdOrder=False):
+                    SCC=True, ThirdOrderFull=False, ThirdOrder=False, MaxSCCIterations=300):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -56,6 +56,10 @@ It also supports pointcharge embedding and can thus be used for electrostatic em
      - Boolean
      - True
      - Whether self-consistence charge option should be enabled or not. 
+   * - ``MaxSCCIterations``
+     - integer
+     - 300
+     - Max number of SCC iterations. 
    * - ``ThirdOrderFull``
      - Boolean
      - False
