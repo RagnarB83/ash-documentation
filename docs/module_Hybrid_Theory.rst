@@ -96,7 +96,13 @@ then these job-types will automatically work with a **WrapTheory** object.
 
 To use, one first defines 2 or more theory objects, combines them into a list and gives them to the *theories* keyword of WrapTheory 
 (alternatively one can use *theory1* and *theory2* keywords).
+
+.. math::
+
+    E_{comb.} = E_{Theory1} + E_{Theory2} 
+
 Below we combine 2 objects but any number of objects can in principle be combined.
+
 
 .. code-block:: python
 
@@ -110,7 +116,13 @@ Below we combine 2 objects but any number of objects can in principle be combine
 By default, energies and gradients are **summed** together (assuming complete additivity of the energy expressions).
 However, this behaviour can be changed by the *theory_operators* keyword.
 Below we change this so that the energy (and gradient) from the first theory is summed (used) but the second energy (and gradient)
-is subtracted. Obviously such a hybrid method would only make sense for very specific theories (e.g. when correcting for double-counting of interations).
+is subtracted. 
+
+.. math::
+
+    E_{comb.} = E_{Theory1} - E_{Theory2} 
+
+Obviously such a hybrid method would only make sense for very specific theories (e.g. when correcting for double-counting of interations).
 
 .. code-block:: python
 
@@ -125,6 +137,10 @@ Also by default, the run-method of the **WrapTheory** object will request a calc
 This can be changed by specifying the atom indices of the system for each theory.
 Below, we define a **WrapTheory** of 3 theories, and an energy expression where the first 2 theories are summed but the third is subtracted,
 and where Theory2 and Theory3 are only applied to a specific region of the system (atoms 3,4 and 5).
+
+.. math::
+
+    E_{comb.} = E_{Theory1} + E_{Theory2-subregion} - E_{Theory3-subregion}
 
 .. code-block:: python
 
@@ -180,7 +196,14 @@ A regular DFT calculation (barely describes dispersion) + an atom pairwise dispe
 *Composite DFT scheme example:*
 
 Composite methods such as r2SCAN-3c is another example where the energy of the method is a sum of 3 different contributions: A regular DFT-energy, a dispersion correction and a gCP (geometric counterpoise) correction.
+
+.. math::
+
+    E_{r2SCAN-3c} = E_{r2SCAN/def2-mTZVPP} + E_{D4} + E_{GCP}
+
 A **WrapTheory** object can easily be created that defines r2SCAN-3c in this way.
+
+
 See DFTD4 and gCP sections in :doc:`helper_programs` for more information on the dispersion and gcp corrections.
 
 .. code-block:: python
@@ -207,6 +230,11 @@ See DFTD4 and gCP sections in :doc:`helper_programs` for more information on the
 *Delta machine-learning correction example:*
 
 A :math:`\Delta`-ML correction would be another example where WrapTheory would be convenient for combining Theory-levels.
+
+.. math::
+
+    E_{DFT+\Delta ML} = E_{DFT} + E_{\Delta ML}
+
 See :doc:`Machine_learning_in_ASH` on how to define and train ML-models.
 
 .. code-block:: python
@@ -232,7 +260,12 @@ See :doc:`Machine_learning_in_ASH` on how to define and train ML-models.
 A more complex hybrid theory involves combining an electrostatic-embedding **QMMMTheory** object (where QM and MM-regions are already defined)
 with a general machine-learning model (ML). 
 The ML-theory might furthermore only be applied to certain atoms such as the QM-region (see use of *theory2_atoms* below).
-In order to avoid double-counting of the QM-region we have to subtract the QM-method energy for the QM-region.
+In order to avoid double-counting of the QM-region we have to subtract the QM-method energy of the QM-region.
+
+.. math::
+
+    E_{QM/MM + ML} = E_{QM/MM} + E_{ML-subset} - E_{QM-subset}
+
 This can all be accomplished using WrapTheory by utilizing *theory_operators=['+','+','-']* and 
 *theory1_atoms*, *theory2_atoms* and *theory3_atoms* keywords.
 

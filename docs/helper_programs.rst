@@ -132,7 +132,7 @@ Basis Set Exchange
 The `Basis Set Exchange website <http://basissetexchange.org>`_ website is well-known in the community as a database of Gaussian basis sets
 that can be downloaded for various elements and is exportable in various formats.
 Perhaps less known is that a Python API is also available that allows one to extract the basis set via a Python-library.
-See `basis_set_exchange repository <https://github.com/MolSSI-BSE/basis_set_exchange>` for details but in short the library can be installed using pip: pip install basis_set_exchange
+See `basis_set_exchange repository <https://github.com/MolSSI-BSE/basis_set_exchange>`_ for details but in short the library can be installed using pip: pip install basis_set_exchange
 
 It can then be used like this in an ASH Python script.
 

@@ -2,7 +2,7 @@ PySCF interface
 ======================================
 
 `PySCF <https://pyscf.org>`_ is a very powerful open-source quantum chemistry program (or rather library) with the entire outer interface written in Python and everything else in C, 
-including the very powerful libcint integral library. More recently the interface supports GPU-based computations.
+including the very powerful libcint integral library. More recently the interface supports Nvidia GPU-based computations via the `gpu4pyscf <https://pyscf.org/user/gpu.html>`_ plugin.
 
 ASH features a pretty good interface to PYSCF that allows one to conveniently use the various powerful DFT and WFT based features in the program 
 that can be combined with the geometry optimization, surface scans, NEB, numerical frequencies, QM/MM,  MD and metadynamics features of ASH.
@@ -497,7 +497,7 @@ See articles on GPU4PySCF: `Introducing GPU Acceleration into the Python-Based S
 Using the interface
 ################################################################################
 
-Typicall the pySCFTheory theory object is simply used as an input-theory object
+Typically the pySCFTheory theory object is simply used as an input-theory object
 
 **Regular pySCF on the CPU:**
 
