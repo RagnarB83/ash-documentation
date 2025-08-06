@@ -25,6 +25,7 @@ MM and QM theory objects are easily combined into hybrid multi-theory QM/MM or O
 ASH is a great solution for automating workflows and performing multi-scale and multi-theory calculations.
 Interfaces are available to various popular QM codes, such as ORCA, xTB, CP2K, Psi4, PySCF, ccpy, Dalton, MRCC, CFour, MNDO, Terachem, QUICK, Gaussian, NWChem. 
 Reaction profiles and saddlepoint optimizations can be performed using the nudged elastic band method (NEB).
+More recently, ASH features interfaces to machine-learning interatomic potential (MLIP) libraries such as MACE, TorchANI and Mlatom and can be used to both run and train MLIP potentials.
 
 
 ..

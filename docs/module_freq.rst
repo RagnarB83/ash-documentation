@@ -1,10 +1,12 @@
 Vibrational frequencies
 ======================================
 
-A frequency calculation can be performed either numerically or analytically. The numerical approach is implemented directly in ASH and can always be applied to any QM, MM or QM/MM theory (requires the method to have an analytical gradient, however)
-while the analytical approach is only available if the QM program contains the functionality and if the ASH interface to that theory supports it (see below)
+A frequency calculation can be performed either numerically or analytically. 
+The numerical approach is more genera and is implemented directly in ASH. This approach can always be applied to any QM or MM theory or hybrid theories like QM/MM, ONIOM and Wrap theories, as long as an accurate gradient (typically analytic) is available.
 
-For QM/MM Hamiltonians, the numerical approach is the only available option.
+For some QM-programs it is also possible to request an analytical Hessian. This is only available for some QM programs and requires this features to be enabled in the ASH interface. Currently supported programs: ORCA, CFour, pyscf.
+
+For hybrid theories like QM/MM Hamiltonians, the numerical approach is often the only available option.
 
 #########################################
 Numerical frequencies
