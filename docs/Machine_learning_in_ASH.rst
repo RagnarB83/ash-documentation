@@ -3,7 +3,7 @@ Machine learning in ASH
 
 ASH is well-suited for utilizing machine-learning within computational chemistry,
 being a Python library with interfaces to various quantum chemistry codes and the OpenMM molecular mechanics code.
-This makes ASH convenient for generating training data for machine-learning interaction potentials (MLIP).
+This makes ASH convenient for generating training data for machine-learning interatomic potentials (MLIP).
 Additionally, as almost all ASH job-types are theory-agnostic, MLIP Theories are just as valid as input to 
 computational chemistry jobs within ASH, requiring only an interface to that ML-potential to be available.
 ASH currently features interfaces to:  
