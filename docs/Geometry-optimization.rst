@@ -555,12 +555,14 @@ Also showing how constraints can be provided by providing a dictionary (same for
 **Example: P-RFO saddlepoint optimization**
 
 A P-RFO saddlepoint job requires an input-Hessian.
-*inithessian* controls what Hessian DL-FIND will use.        
-# 0: external program. if failure we go to 2-point FD
-# 1: 1-point FD
-# 2: 2-point FD
-# 3: diagonal 1-point FD
-# 4: identity matrix
+
+*inithessian* controls what Hessian DL-FIND will use:
+
+-  0: external program. if failure we go to 2-point FD
+- 1: 1-point FD
+- 2: 2-point FD
+- 3: diagonal 1-point FD
+- 4: identity matrix
 
 For inithessian=0, ASH computes the Hessian in one of various ways.
 The *hessian_choice* keyword can be set to "numfreq", "anfreq", "xtb", "file:Hessianfilename" (read from file) or defined as a 2d numpy-array.
