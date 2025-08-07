@@ -476,26 +476,18 @@ DL-FIND interface
 ######################################################
 
 In addition to geomeTRIC, ASH features an interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ .
-
 DL-FIND is developed by Prof. Johannes Kaestner and includes various powerful optimization algorithms.
 If you use the interface, make sure to cite the `DL-FIND article <https://pubs.acs.org/doi/10.1021/jp9028968>`_
-
 The ASH interface to DL-FIND utilizes the `libdlfind C/Python API <https://github.com/digital-chemistry-laboratory/libdlfind>`_ .
 
 The interface supports most of the algorithms available in DL-FIND including :
 
-- geometry optimizations using Cartesian, HDLC internal coordinates
+- Geometry optimizations using Cartesian, HDLC internal coordinates using L-BFGS algorithm.
 - Saddlepoint optimizations using P-RFO algorithm
 - Dimer-method for saddle-point searches requiring only gradients
 - Nudged elastic band calculations
 - Instanton calculations
 - Optimizations with active/frozen atoms as well as bond, angle and dihedral constraints.
-
-Since the interface supports active regions, DLFIND_optimizer can e.g. be used for QM/MM geometry optimizations in ASH.
-
-Some of the specific DL-FIND options must be chosen via the icoord and iopt keywords.
-See `DL-FIND manual <https://github.com/digital-chemistry-laboratory/libdlfind/blob/4167998d16d8dac4a484ba9305f27d6325a7a28d/docs/documentation.pdf>`_
-See also `libdlfind README <https://github.com/digital-chemistry-laboratory/libdlfind/blob/4167998d16d8dac4a484ba9305f27d6325a7a28d/docs/README.md>`_
 
 
 .. code-block:: python
@@ -509,6 +501,14 @@ See also `libdlfind README <https://github.com/digital-chemistry-laboratory/libd
                       hessian_choice="numfreq", inithessian=0, 
                       numfreq_npoint=1, numfreq_displacement=0.005, numfreq_hessatoms=None,
                       numfreq_force_projection=None, print_atoms_list=None):
+
+
+Since the interface supports active regions, **DLFIND_optimizer** can e.g. be used for QM/MM geometry optimizations in ASH.
+
+Some of the specific DL-FIND options must be chosen via the icoord and iopt keywords.
+See `DL-FIND manual <https://github.com/digital-chemistry-laboratory/libdlfind/blob/4167998d16d8dac4a484ba9305f27d6325a7a28d/docs/documentation.pdf>`_
+See also `libdlfind README <https://github.com/digital-chemistry-laboratory/libdlfind/blob/4167998d16d8dac4a484ba9305f27d6325a7a28d/docs/README.md>`_
+
 
 
 **Example: Default geometry optimization in HDLC internal coordinates**
