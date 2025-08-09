@@ -580,7 +580,7 @@ For the "numfreq" option we can control the approximate Hessian calculated via *
   # Read previously calculated Hessian from file
   hessian = np.loadtxt("Hessian")
   # Start P-RFO job with this input Hessian
-  DLFIND_optimizer(theory=theory, fragment=frag, fragment2=frag2, jobtype="tsopt", inithessian=0, 
+  DLFIND_optimizer(theory=theory, fragment=frag, jobtype="tsopt", inithessian=0, 
             hessian_choice=hessian, maxcycle=300)
 
 **Example: NEB**
