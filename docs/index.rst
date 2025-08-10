@@ -132,6 +132,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    MLatom-interface
    torch_interface
    MACE-interface
+   Fairchem-interface
    helper_programs
 
 
