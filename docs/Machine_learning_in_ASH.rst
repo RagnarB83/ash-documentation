@@ -8,9 +8,10 @@ Additionally, as almost all ASH job-types are theory-agnostic, MLIP Theories are
 computational chemistry jobs within ASH, requiring only an interface to that ML-potential to be available.
 ASH currently features interfaces to:  
 
-- PyTorch and TorchANI libraries: allowing use of ANI and AIMNet2 potentials
-- MACE: allowing both training and running equivariant NN potentials
-- MLatom: which features interfaces to many MLIPs (and can be used for training and running). 
+- PyTorch and TorchANI libraries: allowing use of ANI and AIMNet2 potentials. See :doc:`torch_interface`
+- MACE: allowing both training and running equivariant NN potentials. :doc:`MACE-interface`
+- MLatom: which features interfaces to many MLIPs (and can be used for training and running). See :doc:`MLatom-interface`
+- Fairchem: library for loading Meta's UMA models. :doc:`Fairchem-interface`
 
 ML-based theory objects can be used in hybrid theories (QMMMTheory, ONIOMTheory and WrapTheory).
 
