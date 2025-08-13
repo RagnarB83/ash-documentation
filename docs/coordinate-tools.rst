@@ -17,7 +17,7 @@ create an ASH fragment for each XYZ-file and then return a list of the ASH fragm
 
 Additional options include the *readchargemult* option which if set to True then ASH will try to read charge/mult information (space-separated) from the 2nd-line of the XYZ-file (needs to be present).
 Note that otherwise charge/mult information has to be provided in some other way when Fragment is used for a calculation (either by setting the charge/mult attribute to each Fragment or provide the info to the job-function).
-The *label_from_filename* option is automatically set to True which ensures that each ASH fragment created will have a unique label (corresponding to orginal XYZ filename).
+The *label_from_filename* option is automatically set to True which ensures that each ASH fragment created will have a unique label (corresponding to original XYZ filename).
 The label can be changed by changing the Fragment.label attribute if desired.
 
 Example:
@@ -116,7 +116,7 @@ flexible_align
 ############################################
 
 Sometimes it is useful to align a molecular geometry so that it is as similar as possible to another geometry. This is often performed for the purpose of calculating the RMSD (see above) but often
-the purpose is the aligned geometry itself, the 2 structure might not fully match and one might even want the structure reoriented or even reorderered as much as possible for the purpose of maximum alignment.
+the purpose is the aligned geometry itself, the 2 structures might not fully match and one might even want the structure reoriented or even reorderered as much as possible for the purpose of maximum alignment.
 
 The **flexible_align** function allows one to align a structure (fragmentA below) onto another fragment (fragmentB). One can choose to only allow rotation of the structure (rotate_only=True), 
 only allow translation (translate_only=True) or allow both (default). One can also allow reordering which would use the Hungarian algorithm to reorder the atoms of fragmentA to match fragmentB as much as possible.
@@ -300,7 +300,7 @@ The VMD shell will then output a list of atom indices that you can copy-paste in
 **Adding/removing atoms of an MM system**
 ######################################################
 
-If you need to add or remove atoms to your MM or QM/MM system this is a bit more involved than just modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices > 4556 change.
+If you need to add or remove atoms to your MM or QM/MM system this is a bit more involved than just modifying the coordinates. The reason is that both the coordinate and forcefield file needs to be updated and also: if you delete e.g. atom 4556 then all atom indices larger than 4556 change.
 This requires updating of forcefield files, coordinate files as well as atom lists (qmatoms and active atoms) that reference atom indices of the system.
 
 There are two options:
@@ -308,6 +308,8 @@ There are two options:
 1. Go back to the original MM-system preparation and prepare a new MM model with the added/deleted atom(s). This is a safe option but inconvenient.
 
 2. Modify the coordinate-file (XYZ-file, YGG-file, PDB-file), the forcefield file (e.g. PSF-file, topology file) and update atom-indices-files (e.g. active_atoms and qmatoms files).
+The forceefield files are the tricky ones. For OpenMM-XML forcefield files it is relatively straightforward to modify the user-created XML-files. Amber prmtop files are much more difficult due to their format and it is instead recommended to go back to e.g. the Ambertools setup instead.
+For CHARMM-files see below:
 
     a. CHARMM files:
         The PSF-file has to be regenerated and the topology and parameter-files may also need modifications/additions.
