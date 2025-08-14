@@ -16,8 +16,9 @@ ASH has a simple interface to Packmol that allows one to easily use the program 
 
 .. code-block:: python
 
-    def packmol_solvate(packmoldir=None, inputfiles=None, num_mols=None, tolerance=2.0, result_file="final", shape="box",
-                    min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[40.0, 40.0, 40.0],density=None):
+   
+    def packmol_solvate(packmoldir=None,ligand_files=None, num_mols_ligands=None, solvent_files=None, solvents_ratio=None, tolerance=2.0, result_file="final", shape="box",
+                    min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[40.0, 40.0, 40.0],total_density=None):
 
 
 Packmol needs to be either downloaded and compiled (see `Packmol releases <https://github.com/m3g/packmol/releases>`_ ) or installed via conda/mamba (see `conda-forge packmol package <https://anaconda.org/conda-forge/packmol>`_). 
@@ -28,33 +29,33 @@ Packmol needs to be either downloaded and compiled (see `Packmol releases <https
     For compilation problems, see the Packmol documentation.
     Once compiled, you can either add the directory to the PATH environment variable or specify the directory when calling the ASH function.
 
-To use the program you have to specify input-coordinate files containing a single molecule each 
-(e.g. water.pdb and ethanol.pdb) and the number of molecules of each type that you want in the final box. Alternatively to the number of molecules it is possible to specify the density of the system.
-The inputfiles can be either PDB or XYZ files. 
-The number of molecules should be a list of integers corresponding to the number of molecules of each type.
-If the density is specified it should be in units of g/ml
-The tolerance (default 2.0 Angstrom) is the minimum distance between any two atoms in the final box.
-The shape of the system can be chosen (e.g. box or sphere) and the min and max coordinates of the box should then be specified
-which will control the size of the box (and where in Cartesian space).
+The packmol interface in ASH, offers a lot of flexibility in creating complicated systems easily.
+It can create a box with a mixture of ligands and solvents in a very flexible way (e.g. Multiple Ligands and multiple solvents).
+The interface allows you to control the number of molecules of each type (ligands and solvents), the density of the system, the shape of the box (###currently supports only box shape####) and the dimensions of the box.
+For a case of mixture of solvents (e.g. water and ethanol) the ratio of the solvents (e.g. 2:1) can be specified instead of manually calculating the number of molecules.
+The program will automatically calculate the number of molecules of each solvent based on the total density desired. The total density should be specified in g/ml units.
+The input files can be either PDB or XYZ files, and the output file will be written as 'final.pdb' file.
+
+
 
 Simple *packmol_solvate* examples:
 
 
 .. code-block:: python
 
-    #Create a box of 5281 ethanol molecules in a 80x80x80 Angstrom box
-    packmol_solvate(inputfiles=["ethanol.pdb"], num_mols=[5281],
-        min_coordinates=[0,0,0], max_coordinates=[80,80,80])
+    #Create a box with 5:1 water-ethanol mixture in a 60x60x60 Angstrom box
+    packmol_solvate(solvent_files=["water.xyz","ethanol.pdb"],solvents_ratio=[5,1],
+        min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[60.0, 60.0, 60.0],total_density=1.0)
 
-    #Create a box of ethanol molecules corresponding to a density of 0.789 g/ml (will result in 5281 molecules)
-    packmol_solvate(inputfiles=["ethanol.pdb"], density=0.789,
-        min_coordinates=[0,0,0], max_coordinates=[80,80,80])
+    #Create a box with 1 ligand (in center of the box by default) with a solvent mixture of Acetonitrile and DMF (5:1)
+    packmol_solvate(ligand_files=["DUM.pdb"], num_mols_ligands=[1],solvent_files=["ACN.xyz","DMF.pdb"],solvents_ratio=[5,1],
+        min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[60.0, 60.0, 60.0],total_density=1.0)
 
-    #Create an ethanol-water mixture box (1000 and 500) 40x40x40 Angstrom box
-    packmol_solvate(inputfiles=["water.pdb", "ethanol.pdb"], num_mols=[1000, 500],
-        min_coordinates=[0,0,0], max_coordinates=[40,40,40])
+   #Multiple ligands with a solvent mixture of Acetonitrile and DMF (5:1)
+   packmol_solvate(ligand_files=["DUM.pdb","MOL.pdb"], num_mols_ligands=[1,2],solvent_files=["ACN.xyz","DMF.pdb"],solvents_ratio=[5,1],
+        min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[60.0, 60.0, 60.0],total_density=1.0)
 
-The final coordinate file will be written out as 'final.xyz' or 'final.pdb' depending on the extension of the input files.
+
 The packmol.out file can be inspected to see additional Packmol output.
 
 The coordinate file can next be used to create an OpenMMTheory object for the purpose of running a classical molecular dynamics simulation.
