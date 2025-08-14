@@ -2,11 +2,6 @@
 About ASH
 ==================================================
 
-.. image:: figures/ASH-QBIC-poster-small.png
-   :align: right
-   :width: 200
-   :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
-   
 ASH is a Python-based computational chemistry and multiscale modelling program
 designed for ultimate flexibility. This works by separating the Hamiltonians (of the QM or MM programs) from the 
 typical jobtypes of computational chemistry (optimization, frequencies, MD, scans etc.).
@@ -20,6 +15,17 @@ Reaction profiles and saddlepoint optimizations can be performed using the nudge
 
 The code is free and open-source and available on `Github <https://github.com/RagnarB83/ash>`_
 
+.. image:: figures/ASH-QBIC-poster-small.png
+   :align: right
+   :width: 200
+   :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
+
+.. image:: figures/ASH-WATOC2025-poster_small.png
+   :align: right
+   :width: 200
+   :target: https://drive.google.com/file/d/15lCLQYWgzBYaXjrEZza4ErOpJCEs9cHp/view?usp=share_link
+
+
 The program is  developed in the research group of 
 `Dr. Ragnar Bjornsson <https://sites.google.com/site/ragnarbjornsson/home>`_ in the `CoMX group <https://www.cbm-lab.fr/en/COMX>`_ , of the 
 `Laboratory for Chemistry and Biology of Metals <https://www.cbm-lab.fr/en>`_,
@@ -27,6 +33,10 @@ at the `CEA <https://www.cea.fr>`_ in Grenoble, France.
 
 Curious?
 Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.research.google.com/drive/11-FG7eTElCvcMNZiTIEXcdWjcR4YWRS-#scrollTo=ViPg1cGuck_a>`_
+
+**How to cite ASH?**
+
+See :doc:`Citing_ASH`
 
 
 #####################
@@ -105,7 +115,8 @@ Features
 **Geometry optimization with internal coordinates**
 
 - geomeTRIC interface: powerful optimizer supporting multiple internal coordinates (TRIC, HDLC, DLC etc.), frozen atoms, constraints.
-- QM/MM optimizations. Support for HDLC internal coordinates.
+- DL-FIND interface: powerful optimizer supporting various coordinate-systems (HDLC), PRFO-TSOpt algorithm, NEB and dimer methods, frozen atoms and constraints.
+
 
 **Numerical frequencies: one-point (forward difference) and two-point (central difference)**
 

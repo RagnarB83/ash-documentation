@@ -9,10 +9,10 @@
 ASH: Documentation
 ======================================
 
-.. image:: figures/ASH-QBIC-poster-small.png
+.. image:: figures/ASH-WATOC2025-poster_small.png
    :align: right
    :width: 300
-   :target: https://drive.google.com/file/d/1aJb4nw7unn10HNvW_ZApt-IYP-9MfP5d/view?pli=1
+   :target: https://drive.google.com/file/d/15lCLQYWgzBYaXjrEZza4ErOpJCEs9cHp/view?usp=share_link
 
 ASH is a Python-based computational chemistry and multiscale modelling program
 designed for ultimate flexibility. This works by separating the Hamiltonians (of the QM or MM programs) from the 
@@ -51,6 +51,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    :caption: ASH
 
    About
+   Citing_ASH
    setup
    basics
    basic-examples
