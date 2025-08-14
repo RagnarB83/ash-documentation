@@ -8,7 +8,7 @@ ASH features a simple interface to the Fairchem library that allows easy use of 
 
 Once a FairchemTheory has been created, specifying a model or previously downloaded file, it
 can be used to calculate energies and gradients (just like a regular QM or MM theory).
-A FairchemTHeory object can be used for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
+A FairchemTheory object can be used for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
 Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 
 
@@ -73,7 +73,7 @@ Currently available models include e.g. : 'uma-s-1p1' and 'uma-m-1p1'
 *task_name* specifies a specific parameterization within each model. 
 
 Options: 'oc20', 'omol', 'omat', 'odac', 'omc'
-For molecular chemistry use: *task_name*='omol'
+For molecular chemistry use: *task_name* ='omol'
 
 
 See `Fairchem UMA models documentation <https://fair-chem.github.io/core/uma.html>`_ for more information.
