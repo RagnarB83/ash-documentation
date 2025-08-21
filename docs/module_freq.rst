@@ -200,9 +200,9 @@ It contains the calculated frequencies, eigenvectors, normalmodes, list-of frequ
     #Parallel mode: ASH will use the number of cores given to run same number of displacments simultaneously.
     freqresult = NumFreq(fragment=frag, theory=ORCAcalc, npoint=2, runmode='parallel', numcores=numcores)
 
-    print("Vibrational frequencies (cm**-1) : ", freqresult['frequencies'])
-    print("ZPVE (Eh) : ", freqresult['ZPVE'])
-    print("Gibbs energy corrections (Eh) : ", freqresult['Gcorr'])
+    print("Vibrational frequencies (cm**-1) : ", freqresult.frequencies)
+    print("ZPVE (Eh) : ", freqresult.thermochemistry['ZPVE'])
+    print("Gibbs energy corrections (Eh) : ", freqresult.thermochemistry['Gcorr'])
 
 
 #########################################

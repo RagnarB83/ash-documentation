@@ -29,11 +29,11 @@ suitable for training machine-learning interaction potentials or Δ-learning cor
 .. code-block:: python
 
     #  Function to create ML training data given XYZ-files and 2 ASH theories
-    def create_ML_training_data(xyzdir=None, dcd_trajectory=None, xyz_trajectory=None, num_snapshots=None, random_snapshots=True,
+    def create_ML_training_data(xyz_dir=None, dcd_trajectory=None, xyz_trajectory=None, num_snapshots=None, random_snapshots=True,
                                     dcd_pdb_topology=None, nth_frame_in_traj=1,
                                 theory_1=None, theory_2=None, charge=0, mult=1, Grad=True, runmode="serial", numcores=1):
 
-One needs to give as input a set of molecular geometries, which can be a directory with XYZ-files (*xyzdir* keyword),
+One needs to give as input a set of molecular geometries, which can be a directory with XYZ-files (*xyz_dir* keyword),
 a multi-geometry XYZ trajectory file (*xyz_trajectory* keyword, file should contain multiple XYZ geometries in Xmol format) or 
 a DCD-trajectory (*dcd_trajectory*, requiring *dcd_pdb_topology* to be specified as well).
 The number of snapshots (geometries) can be specified (*num_snapshots*), in which only those number of snapshots will be used from the input XYZtraj/XYZdir/DCDtraj.
@@ -66,7 +66,7 @@ The latter can e.g. come from a molecular dynamics simulation.
     num_snaps=100 #Number of snapshots to use
 
     #Training data directory
-    #xyzdir="/Users/rb269145/ash-tests/ML-deltacorrection-3fgaba/individual-molecules"
+    #xyz_dir="/Users/rb269145/ash-tests/ML-deltacorrection-3fgaba/individual-molecules"
     xyztraj = "/Users/rb269145/ash-tests/ML-deltacorrection-3fgaba/MD-data/walker0_trajectory.xyz"
     #Theory levels for delta_learning
     #Theory 1 (low-level)
@@ -75,7 +75,7 @@ The latter can e.g. come from a molecular dynamics simulation.
     theory_solv=ORCATheory(orcasimpleinput=f"! {method} CPCM(water) tightscf", numcores=numcores)
 
     #Call create_ML_training_data using 2 theory levels (delta-learning)
-    #create_ML_training_data(xyz_dir=xyzdir, num_snapshots=num_snaps, random_snapshots=True,
+    #create_ML_training_data(xyz_dir=xyz_dir, num_snapshots=num_snaps, random_snapshots=True,
     #    theory_1=theory_gas, theory_2=theory_solv, Grad=True)
     create_ML_training_data(xyz_trajectory=xyztraj, num_snapshots=num_snaps, random_snapshots=True,
         theory_1=theory_gas, theory_2=theory_solv, Grad=True)
