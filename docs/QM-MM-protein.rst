@@ -27,7 +27,7 @@ The importance of taking this step seriously before starting any QM/MM can not b
 
 
 There are many programs capable of setting up a classical model of the protein and most setups would be compatible with ASH.
-However, the most convenient way to set up a new protein model from scratch.
+However, the most convenient way is probably to set up a new protein model from scratch via ASH using OpenMM_Modeller.
 
 ASH is currently capable of reading in (via OpenMM library):
 
@@ -46,7 +46,8 @@ Option a. OpenMM using built-in CHARMM/Amber forcefields
 
 
 The ASH-OpenMM interface can now set up a new biomolecular system starting from a raw PDB-file, adding hydrogens, solvating, minimize and running classical MD simulations.
-This has the convenience of using the same MM program that ASH uses for QM/MM, and no need to switch between different programs.
+The setup uses the *OpenMM_Modeller* function (see  :doc:`OpenMM-interface` for details) for adding hydrogens, solvating and neutralizing.
+This option has the convenience of staying within the same environment and using the same MM program that ASH uses for QM/MM, and hence no need to switch between different programs, having to convert forcefield files from one format to another etc.
 
 Example on lysozyme:
 
