@@ -17,8 +17,9 @@ ASH has a simple interface to Packmol that allows one to easily use the program 
 .. code-block:: python
 
    
-    def packmol_solvate(packmoldir=None,ligand_files=None, num_mols_ligands=None, solvent_files=None, solvents_ratio=None, tolerance=2.0, result_file="final", shape="box",
-                    min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[40.0, 40.0, 40.0],total_density=None):
+      def packmol_solvate(packmoldir=None,ligand_files=None, num_mols_ligands=None, solvent_files=None, solvents_ratio=None, tolerance=2.0, result_file="final", shape="box",
+                    min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[40.0, 40.0, 40.0],total_density=None, sphere_center=None, sphere_radius=None):
+
 
 
 Packmol needs to be either downloaded and compiled (see `Packmol releases <https://github.com/m3g/packmol/releases>`_ ) or installed via conda/mamba (see `conda-forge packmol package <https://anaconda.org/conda-forge/packmol>`_). 
@@ -31,7 +32,7 @@ Packmol needs to be either downloaded and compiled (see `Packmol releases <https
 
 The packmol interface in ASH, offers a lot of flexibility in creating complicated systems easily.
 It can create a box with a mixture of ligands and solvents in a very flexible way (e.g. Multiple Ligands and multiple solvents).
-The interface allows you to control the number of molecules of each type (ligands and solvents), the density of the system, the shape of the box (###currently supports only box shape####) and the dimensions of the box.
+The interface allows you to control the number of molecules of each type (ligands and solvents), the density of the system, the shape (box or sphere) and the dimensions (box length / sphere radius) of the box.
 For a case of mixture of solvents (e.g. water and ethanol) the ratio of the solvents (e.g. 2:1) can be specified instead of manually calculating the number of molecules.
 The program will automatically calculate the number of molecules of each solvent based on the total density desired. The total density should be specified in g/ml units.
 The input files can be either PDB or XYZ files, and the output file will be written as 'final.pdb' file.
@@ -52,8 +53,12 @@ Simple *packmol_solvate* examples:
         min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[60.0, 60.0, 60.0],total_density=1.0)
 
    #Multiple ligands with a solvent mixture of Acetonitrile and DMF (5:1)
-   packmol_solvate(ligand_files=["DUM.pdb","MOL.pdb"], num_mols_ligands=[1,2],solvent_files=["ACN.xyz","DMF.pdb"],solvents_ratio=[5,1],
+    packmol_solvate(ligand_files=["DUM.pdb","MOL.pdb"], num_mols_ligands=[1,2],solvent_files=["ACN.xyz","DMF.pdb"],solvents_ratio=[5,1],
         min_coordinates=[0.0, 0.0, 0.0], max_coordinates=[60.0, 60.0, 60.0],total_density=1.0)
+
+     #Multiple ligands with a solvent mixture of Acetonitrile and DMF (5:1)
+    packmol_solvate(ligand_files=["DUM.pdb","MOL.pdb"], num_mols_ligands=[1,2],solvent_files=["ACN.xyz","DMF.pdb"],solvents_ratio=[5,1],
+        shape="sphere",sphere_center=[0,0,0], sphere_radius=45.0,total_density=1.0)
 
 
 The packmol.out file can be inspected to see additional Packmol output.
