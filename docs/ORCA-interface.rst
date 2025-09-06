@@ -512,6 +512,46 @@ Examples:
 
 .. warning:: If a UHF/UKS WF is found, then this is currently not handled. However, the convert_UHF_to_ROHF keyword can be set to True to make a naive conversion of UHF/UKS to ROHF.
   
+
+################################################################################
+Creating natural-orbitals from a correlated WF density as a Molden-file
+################################################################################
+
+It is possible to use the JSON-interface together with some ASH functionality to conveniently get correlated WF densities
+as Molden-files.
+The example below shows how we can grab a correlated WFN-density (here a FIC-MRCC density) from a previous ORCA-job,
+diagonalize the densitry matrix to get natural orbitals and then write the natural orbitals to a Molden-file.
+This Molden-file can then conveniently be read by Multwfn for example.
+
+.. code-block:: python
+
+  from ash import *
+
+  # Fragment
+  fragment=Fragment(xyzfile="FeS2-caspt2.xyz", charge=-1, mult=6)
+
+  # GBW-file associated with a previously run ORCA-job:
+  gbwfile="CASSCF_5_5.gbw"
+  # Also present in dir: CASSCF_5_5.densities, CASSCF_5_5.densitiesinfo
+
+  # Create JSON-file from ORCA-GBW and density-files
+  jsonfile = create_ORCA_json_file(gbwfile, format="json")
+  #Read the JSON-file
+  data = read_ORCA_json_file(jsonfile)
+
+  #Get densities from data dictionary (from read_ORCA_json_file)
+  get_densities_from_ORCA_json(data)
+
+  #Grab ORCA density from jsonfile or data-dictionary. Returns DM_AO,C,S, MO_occs, MO_energies, AO_basis, AO_order
+  DM_AO,C,S, MO_occs, MO_energies, AO_basis, AO_order = grab_ORCA_wfn(jsonfile=jsonfile, density="mult.6.root.0.FIC-MRCC.autoci.p")
+
+  #Diagonalize density matrix
+  natorb, natocc = diagonalize_DM_AO(DM_AO, S)
+  # Create Molden-file. Note: probably not compatible with Chemcraft, but will work with Multiwfn
+  make_molden_file(fragment, AO_basis, natorb, MO_energies=None, MO_occs=natocc, AO_order=AO_order,
+      label="ASH_orbs", spherical_MOs=True)
+
+
 ################################################################################
 Workflow to automate ORCA-orbital creation
 ################################################################################
