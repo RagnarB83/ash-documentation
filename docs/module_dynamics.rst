@@ -604,8 +604,60 @@ Useful reading:
   #Remove force by name (if we know it)
   omm.remove_force_by_name("CustomNonbondedForce")
 
+######################################################
+Restarting MD simulations
+######################################################
+
+It is possible to restart MD simulations or start a new MD simulation from modified velocities.
+The OpenMM library supports restarting simulations by either binary checkpoint files or XML-state files as discussed in the  `OpenMM documentation <https://docs.openmm.org/latest/userguide/application/02_running_sims.html#saving-simulation-progress-and-results>`_.
+Two options are available: a binary checkpoint-file or an XML-format saved-state file.
+
+The state XML-file looks like this:
+
+.. code-block:: text
+
+  <?xml version="1.0" ?>
+  <State openmmVersion="8.3" stepCount="100" time=".10000000000000007" type="State" version="1">
+    <PeriodicBoxVectors>
+        <A x="2" y="0" z="0"/>
+        <B x="0" y="2" z="0"/>
+        <C x="0" y="0" z="2"/>
+    </PeriodicBoxVectors>
+    <Parameters/>
+    <Positions>
+        <Position x=".008686653612073623" y=".013197006052021825" z="-.0001458851064637103"/>
+        <Position x="-.0005478869013667725" y="-.000729813364949961" z=".09166779442536259"/>
+    </Positions>
+    <Velocities>
+        <Velocity x=".03210965794276634" y=".4381082392746044" z=".682044684968602"/>
+        <Velocity x="-.014983076408536472" y="-.011669544972909418" z="-.012789170128928287"/>
+    </Velocities>
+    <IntegratorParameters/>
+  </State>
 
 
+During an ASH MD-simulation, a checkpoint-file (named "OpenMM_MD_checkpoint.chk") and XML-state file (named "OpenMM_MD_state.xml")
+are regularly written to disk. The frequency of writing to disk is controlled by the *restartfile_frequency* keyword (default value : 1000, i.e. every 1000 steps).
+
+To restart an MD-simulation you do:
+
+.. code-block:: python
+
+  from ash import *
+
+  #Fragment and Theory
+  frag = Fragment(databasefile="hf.xyz")
+  theory = xTBTheory()
+
+  #Restart MD simulation from a state-file:
+  MolecularDynamics(theory=theory, fragment=frag, simulation_time=2,
+      statefile="OpenMM_MD_state_prev.xml", restartfile_frequency=1000)
+
+  #Restart MD simulation from a checkpoint-file:
+  MolecularDynamics(theory=theory, fragment=frag, simulation_time=2,
+      chkfile="OpenMM_MD_checkpoint_prev.chk", restartfile_frequency=1000)
+
+The state-XML file can be used for starting an MD-simulation with specific user-specified velocities.
 
 ######################################################
 mdtraj interface
