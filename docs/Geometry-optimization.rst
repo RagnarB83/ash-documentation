@@ -1,7 +1,7 @@
 Geometry optimization
 ======================================
 
-Geometry optimizations in ASH are almost exclusively performed via an interface to the powerful geomeTRIC optimizer library  (https://github.com/leeping/geomeTRIC).
+Geometry optimizations in ASH are almost exclusively performed via an interface to the powerful `geomeTRIC optimizer library <https://github.com/leeping/geomeTRIC>`_.
 In addition there is a very simple optimizer, *SimpleOpt*, that performs geometry optimizations exclusively using Cartesian coordinates,
 by basic algorithms such as steepest descent and LBFGS.
 There is also a preliminary interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , which will be improved in the near future.
@@ -20,9 +20,8 @@ relaxed and unrelaxed 1D/2D surface scans (see  :doc:`surfacescan`), saddlepoint
 
 If you use geometry optimizations in ASH using the geomeTRIC library, make sure to cite the article:
 
-*Geometry optimization made simple with translation and rotation coordinates*  by    Lee-Ping Wang, Chenchen Song, *J. Chem. Phys.* **2016**, *144*, 214108. 
-
-
+`Geometry optimization made simple with translation and rotation coordinates <https://doi.org/10.1063/1.4952956>`_
+by Lee-Ping Wang, Chenchen Song, *J. Chem. Phys.* **2016**, *144*, 214108. 
 
 
 The geomeTRICOptimizer function can also be called via the shorter aliases: 
@@ -282,7 +281,7 @@ Changing the convergence tolerance of the constraints are then necessary (see Co
     Optimizer(theory=xtbcalc, fragment=frag, constraints=constraints_dict, constrainvalue=True)
 
 
-Finally an alternative way of specifying constraint is to provide a file with the constraints defined according to the syntax of the geomeTRIC library.
+An alternative way of specifying constraint is to provide a file with the constraints defined according to the syntax of the geomeTRIC library.
 See `geomeTRIC constraints file format <https://github.com/leeping/geomeTRIC/blob/master/examples/constraints.txt>`_ for more information.
 The drawback of this approach is that atom indices will use 1-based indexing (unlike ASH in general), indices would have to be checked and modified in case of an Active Region,
 and finally either a global path to this file needs to be provided (so that the computing node can access it) or the file copied over to the scratch on the node.
@@ -301,6 +300,50 @@ Format of the constraint file (*Warning: geomeTRIC counts from 1 (unlike ASH).*)
     $scan
     dihedral 4 2 3 5 0.0 180.0 19
 
+
+Finally it should be noted that the default constraint algorithm in geomeTRIC enforces constraints in a special way `as documented <https://geometric.readthedocs.io/en/latest/constraints.html#enforcing-constraint-satisfaction`_.
+The exact constraints are not fully imposed until late in the optimization.
+This behaviour can be controlled by enforcing a particular threshold when constraints are fully enforced.
+In ASH this is controlled by the keyword *enforce_constraints*=X  where X is the desired threshold value for the constraint (Bohr for distance, radian for angles/dihedrals).
+
+
+######################################################
+Rigid optimization
+######################################################
+
+An alternative to user-supplied constraints is a rigid optimization as described in the `geomeTRIC library documentation <https://geometric.readthedocs.io/en/latest/constraints.html#rigid-optimizations>`_
+In a rigid optimization, only the intermolecular positions and orientations are optimized while internal bonds etc. are kept fixed.
+This option is available in ASH via the rigid Boolean keyword. A revised constraint algorithm is automatically used.
+
+Example:
+
+.. code-block:: python
+
+  from ash import *
+
+  coordsstring="""
+  C       -0.911459798      0.000000000     -1.679453249
+  O       -0.911459798      0.000000000     -2.895258249
+  C       -0.911459798      1.292616000     -0.880357249
+  C       -0.911459798     -1.292616000     -0.880357249
+  H       -0.911459798      2.146342000     -1.559037249
+  H       -0.911459798     -2.146342000     -1.559037249
+  H       -0.031457798      1.340052000     -0.228371249
+  H       -1.791461798      1.340052000     -0.228371249
+  H       -1.791461798     -1.340052000     -0.228371249
+  H       -0.031457798     -1.340052000     -0.228371249
+  C        3.397788926     -2.560955125     -0.179308061
+  H        3.397788926     -3.396837760     -0.883608867
+  H        2.505939926     -1.948477943     -0.381012003
+  H        4.289637926     -1.948477943     -0.381012003
+  O        3.397788926     -3.120042498      1.123961354
+  H        3.397788926     -2.390939481      1.756408337
+  """
+  frag = Fragment(coordsstring=coordsstring, charge=0, mult=1)
+  theory = xTBTheory(xtbmethod="GFN1")
+
+  # rigid opt
+  Optimizer(theory=theory,fragment=frag, rigid=True)
 
 
 ######################################################
@@ -441,6 +484,36 @@ Any Hessian (however calculated) can be read in from a file (or Numpy array) as 
 See :doc:`module_freq` for options how an Hessian can be calculated numerically or analytically using various ASH Theories.
 A Hessian-file is always written to disk (as text) following a successful NumFreq/AnFreq calculation.
 The Hessian is also part of the Results object that is returned by NumFreq/AnFreq.
+
+
+######################################################
+Intrinsic Reaction Coordinate (IRC)
+######################################################
+
+The Intrinsic Reaction Coordinate (IRC) method is intended to find the minimum energy pathway, 
+starting from a previously optimzied saddlepoint geometry and a Hessian. 
+The primary intention is usually to validate that the located saddlepoint are connected to the assumed reaction and product minima.
+
+The IRC method is implemented in the `geomeTRIC library <https://geometric.readthedocs.io/en/latest/irc.html>`_
+and the ASH interface supports it. Note that version 1.1 of the geometric library is required for IRC.
+
+IRC Example:
+
+.. code-block:: python
+
+  from ash import *
+
+  coordsstring="""
+  C   -0.1088783634   -0.6365101639    0.0043221742
+  N   -0.6393457902    0.4205365638    0.0052498438
+  H    0.7532976101    0.2173493463   -0.0090384631
+  """
+  frag = Fragment(coordsstring=coordsstring, charge=0, mult=1)
+  theory = xTBTheory(xtbmethod="GFN1")
+  # NumFreq to get the Hessian
+  result = NumFreq(theory=theory, fragment=frag)
+  # IRC with an input Hessian
+  Optimizer(theory=theory,fragment=frag, maxiter=200, irc=True, hessian=result.hessian)
 
 
 
