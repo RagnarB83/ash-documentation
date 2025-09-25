@@ -67,7 +67,7 @@ A NEB-TS implementation is also available.
    * - ``restart_file``
      - 'string'
      - None
-     - Name of restart-file (XYZ-file) to use as initial guess path instead of IDPP/linear.
+     - Name of restart-file (path XYZ-file) to use as initial guess path instead of IDPP/linear.
    * - ``TS_guess_file``
      - 'string'
      - None
@@ -150,7 +150,7 @@ Recommendations and how to use
 - In runmode = 'parallel' you should generally choose the number of active images to be equal to the number of CPU cores provided to NEB.
 - If you activate parallelization of the theory level also, this will be the number of cores used per image. So if you do ORCATheory(...numcores=2) and NEB(...images=8,numcores=8) ASH will be attempting to use 2x8 = 16 cores. 
 - When a partially converged NEB path reveals that there probably is an intermediate inbetween, it is best to cancel the calculation and split the job into 2 jobs, i.e. start a new job from reactant to intermediate and another from intermediate to product. A CI-NEB job would only converge to the higher energy saddlepoint in such a case.
-- It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess.
+- It can be a good idea to do an initial NEB from a lower level of theory (e.g. xTB) before doing the higher level of theory (DFT). Use restart_file option to read in lower-level MEP as guess (e.g. knarr_current.xyz).
 - If you already know approximately what the saddlepoint geometry should look like you can provide such a geometry using the TS_guess_file option. The geometry will be used during the interpolation to provide a more accurate guess path. This could also be a previously obtained saddlepoint at another level of theory.
 - In rare cases the IDPP interpolation goes wrong, you can either 1) try modify the idpp_springconst value or 2) switch to a simpler linear Cartesian interpolation (interpolation="linear" option) instead, perhaps in combination with a TS_guess_file (guides the linear interpolation).
 - There is now also the option of using the 'GEODESIC' option which uses the geodesic_interpolate library to perform the interpolation.
@@ -190,9 +190,9 @@ Examples
 
 **Restarting a calculation with user-defined path-file.**
 
-Here, using the *restart_file* option to the NEB we read in a previous Knarr path-file ("knarr_MEP.xyz") instead of doing the regular IDPP interpolation
+Here, using the *restart_file* option to the NEB we read in a previous Knarr path-file (can be "knarr_MEP.xyz" or "knarr_current.xyz") instead of doing the regular IDPP interpolation
 This file must contain the coordinates of the same number of images (here 10) as number of images specified.
-The file can come from a previously unconverged NEB calculation or perhaps a converged MEP from a calculation at another level of theory.
+The file can come from a previously unconverged NEB calculation (then the file is called "knarr_current.xyz") or perhaps a converged MEP from a calculation at another level of theory ("knarr_MEP.xyz").
 
 .. code-block:: python
 
