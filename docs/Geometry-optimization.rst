@@ -710,9 +710,9 @@ jobtype="neb" selects a climbing-image NEB job with frozen endpoints (same as ic
 SimpleOpt
 ######################################################
 
-SimpleOpt is an alternative to the geomeTRIC optimizer. 
+SimpleOpt is an internal alternative to the geomeTRIC and DL-FIND external optimizers. 
 It is rarely recommended except for very small systems where it can find some use.
-It performs geometry optimization in Cartesian coordinates only via the following algorithms:
+It can only performs geometry optimizations using Cartesian coordinates,  via the following algorithms:
 
 - steepest descent (optimizer="SD")
 - LBFGS (via Knarr library, optimizer="KNARR-LBFGS")
@@ -721,10 +721,10 @@ It performs geometry optimization in Cartesian coordinates only via the followin
 .. code-block:: python
 
   def SimpleOpt(fragment=None, theory=None, charge=None, mult=None, optimizer='KNARR-LBFGS', maxiter=50, 
-                frozen_atoms=None, RMSGtolerance=0.0001, MaxGtolerance=0.0003, FIRE_timestep=0.00009):
+                frozen_atoms=None, actatoms=None, RMSGtolerance=0.0001, MaxGtolerance=0.0003, FIRE_timestep=0.00009):
 
-*Geometry optimization of an H2O fragment at the xTB level, with default options.*
 
+*Example: Geometry optimization of an H2O fragment at the xTB level, with default options.*
 
 .. code-block:: python
 
@@ -741,10 +741,11 @@ Numerical Gradient Optimizations
 ######################################################
 
 For some complicated quantum chemical methods as well as some hybrid methods, no analytical gradient might be available, 
-typically preventing convenient geometry optimizations. However, a numerical gradient can always be defined.
+typically preventing convenient geometry optimizations. However, a numerical gradient can in these cases be defined.
+While a numerical gradient can sometimes be requested in programs like ORCA, ASH also allows calculation of the numerical gradient
+for any level of theory.
 
-ASH allows numerical gradient optimizations to be performed in those cases.
-This is performed by wrapping the Theory object by the *NumGradclass*.
+In ASH a numerical-gradient can be requested by wrapping the Theory object by the *NumGradclass*.
 
 .. code-block:: python
     
@@ -753,7 +754,8 @@ This is performed by wrapping the Theory object by the *NumGradclass*.
       def __init__(self, theory, npoint=2, displacement=0.00264589,  runmode="serial", numcores=1, printlevel=2):
 
 Once a NumGradclass object has been defined, one can use it to e.g. perform geometry optimizations or any other job-type where gradients are needed (MD, surface scan etc.).
-Be aware of course that numerical gradients are by definition more noisy than analytical ones and require considerable effort. MD using numerical gradients is unlikely to work well due to noise.
+Be aware of course that numerical gradients are by definition more noisy than analytical ones and require considerable effort. 
+MD using numerical gradients is unlikely to work well due to noise.
 
 The example below requests a numerical-gradient geometry optimization using a ORCA-DFT level (just as an example, the analytical gradient is of course preferable here):
 
