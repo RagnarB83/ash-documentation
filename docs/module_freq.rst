@@ -290,15 +290,18 @@ Alternatively, the thermochemcalc function can be called directly.
 
     def thermochemcalc(vfreq,atoms,fragment, multiplicity, temp=298.18,pressure=1.0):
 
-This function calculates the thermodynamic corrections from a list of available frequencies, number of atoms, ASH fragment object and spin multiplicity.
-The temperature (default: 298.15 K) and pressure (default: 1.0 atm) can be specified.
+This function calculates the thermodynamic corrections from a list of available frequencies, list of atoms, 
+ASH fragment object and spin multiplicity. The temperature (default: 298.15 K) and pressure (default: 1.0 atm) 
+can be specified.
 
 .. code-block:: python
 
-    h2o_frag = Fragment(xyzfile="h2o.xyz")
+    from ash import *
+    from ash.modules.module_freq import thermochemcalc
+    frag = Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
     #Manually defined frequencies for system
     frequencies=[1600.1, 2300.2, 2400.3]
-    thermochemcalc(frequencies,3,h2o_frag, 1, temp=298.18, pressure=1.0)
+    thermochemcalc(frequencies,frag.allatoms,frag, frag.mult, temp=298.18, pressure=1.0)
 
 
 #########################################
