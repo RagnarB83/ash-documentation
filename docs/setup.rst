@@ -69,7 +69,8 @@ Here is a simple setup for a Linux x86_64 (most HPC clusters) system that you ca
     #Install without prompt (this accepts the license). Remove -b if you want to control where it installs miniforge3
     sh Miniforge3-Linux-x86_64.sh -b #creates a ~/miniforge3 directory
     #Initialize mamba/conda for your shell (if desired). 
-    ~/miniforge3/bin/mamba init #This will add code to your shell-config file (.bashrc or equivalent)
+    ~/miniforge3/bin/mamba shell init #This will add code to your shell-config file (.bashrc or equivalent)
+    #~/miniforge3/bin/mamba init # For older mamba versions
     #Log out and log in again to activate the new shell-config
     #source-ing the shell-config file should also work:
     source ~/.bashrc
@@ -78,7 +79,6 @@ Here is a simple setup for a Linux x86_64 (most HPC clusters) system that you ca
     mamba activate ASH #This activates ASH.
     #Install python and numpy in the ASH environment
     #Note: python 3.12 problematic at the moment
-    mamba config --add channels conda-forge #Add conda-forge channel
     mamba install -c conda-forge python=3.11 numpy -y  #Installs approx. 50 MB of packages
 
 .. note:: Note that mamba and conda are both installed by Miniforge. Mamba is a faster version of conda and is usually better behaved. They are pretty much interchangeable.
@@ -253,10 +253,15 @@ first-ash-job.py:
 
 This will only work if ORCA is available in the shell session. It is usually best to add PATH and LD_LIBRARY_PATH definitions for ORCA to your *~/set_environment_ash.sh* file.
 
+#########################################
+F. Basic usage of ASH
+#########################################
+
+See :doc:`basics` for information on how to use ASH, including how to submit ASH jobs to a cluster (e.g. using the **subash** submission script).
 
 
 #########################################
-F. Installation problems
+G. Installation problems
 #########################################
 
 **ASH library not found by Python interpreter**
