@@ -50,7 +50,7 @@ Here is a basic ASH Python script, e.g. named: ashtest.py
     orcablocks="""
     %scf maxiter 200
     end
-    """"
+    """
     #Defining ORCATheory object
     ORCAcalc = ORCATheory(orcasimpleinput=orcasimpleinput, orcablocks=orcablocks, numcores=numcores)
 
