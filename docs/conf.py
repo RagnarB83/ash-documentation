@@ -40,7 +40,7 @@
 #Disabled "sphinxcontrib.asciinema". does not work with readthedocs
 #Disabled: 'rinoh.frontend.sphinx',
 extensions = [
-    "sphinx_rtd_theme", "sphinx_togglebutton"
+    "sphinx_rtd_theme", "sphinx_togglebutton", "sphinxcontrib.googleanalytics"
 ]
 
 
@@ -254,11 +254,13 @@ html_theme = 'sphinx_rtd_theme'
 # html_theme_options = {}
 #LOGO
 
+googleanalytics_id="G-2WSWZWMRRC"
+
 html_logo= 'figures/ash-simple-logo-letterbig.png'
 #html_logo= 'figures/ash-simple-logo-letterbig.png'
 html_theme_options = {
     'canonical_url': '',
-    'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
+    'analytics_id': 'G-2WSWZWMRRC',  #  Provided by Google in your dashboard
     'logo_only': False,
     'display_version': True,
     'prev_next_buttons_location': 'bottom',

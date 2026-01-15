@@ -1,12 +1,16 @@
 Biased sampling MD & Free energy simulations
 ===============================================
 
-Biased/enhanced sampling or free-energy simulations are possible in ASH via the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`).
+Biased/enhanced sampling or free-energy simulations are possible in ASH in various ways:
+- Thanks to the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`), available harmonic restraints as well as metadynamics,
+umbrella sampling and metadynamics can be performed via the native OpenMM routines. This is possible through any level of theory in ASH.
+- An interface to the enhanced-sampling `Plumed library <https://www.plumed.org>`_ allows even more options.
+- An ASH interface available as part of the `adaptive_sampling <https://ochsenfeld-lab.github.io/adaptive_sampling>`_ allows additional options.
+
 
 Metadynamics has become a very popular biased sampling / free energy simulation method due to its ease-of-use and handy parallelization strategy.
 It is possible to perform metadynamics simulations in ASH using essentially any theory-level, including an OpenMMTheory level, any type of QMTheory level and a QMMMTheory level.
-The OpenMM native metadynamics routines are used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
-
+The OpenMM native metadynamics routines canb used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
 The **OpenMM_metadynamics** function can be used to start a metadynamics simulation from an ASH Fragment and ASH Theory level and some collective variable information, using the metadynamics functionality inside the OpenMM library.
 See `OpenMM implementation <http://docs.openmm.org/development/api-python/generated/openmm.app.metadynamics.Metadynamics.html>`_ .
 The function sets up the necessary collective-variable bias potentials before launching an MD simulation using the **OpenMM_MD** class.
@@ -17,11 +21,16 @@ Additionally ASH features an interface (via OpenMM) to the popular enhanced-samp
 Plumed-based simulations use the  **OpenMM_MD_plumed** function which activates the interface between OpenMM and the powerful `Plumed library <https://www.plumed.org>`_ .
 This option requires the installation of the `OpenMM PLUMED plugin <https://github.com/openmm/openmm-plumed>`_ and also `Plumed <https://www.plumed.org>`_ .
 
-The first option is generally recommended when possible, as it is faster (no OpenMM-Plumed communication per timestep required) and does not require additional software.
+Finally via a third-party interface to ASH it is possible to use the `adaptive_sampling <https://ochsenfeld-lab.github.io/adaptive_sampling>`_ package (see also `Github page <https://github.com/ochsenfeld-lab/adaptive_sampling>`_) for various enhanced sampling strategies such as:
+adaptive biasing force, metadynamics, OPES, accelerated MD, free-energy NEB etc. 
+
+The first option is generally recommended for metadynamics when possible, as it is faster (no OpenMM-Plumed communication per timestep required) and does not require additional software.
 The most useful collective variable options are available (distances, angles, torsion, RMSD, coordination-number).
 In addition it is possible to define your own collective variables (see later on this page) by the useful Custom-forces options inside OpenMM.
 However, the PLUMED-OpenMM option offers even more flexiblity as in principle all collective variables inside the Plumed library can be used 
 (as long as they depend only on geometric information). Additionally, other enhanced sampling methods inside Plumed can in principle also be used.
+Experi
+
 
 ######################################################
 OpenMM_metadynamics 
@@ -513,7 +522,7 @@ Umbrella sampling in ASH
 
 ASH can also be used for umbrella sampling simulations by adding a restraint potential to the system
 before running MD. See section "Adding custom forces to MD simulation" in  :doc:`module_dynamics` for more information.
-
+This can also be accomplished using the Plumed interface (see above).
 
 A workflow and tutorial for running umbrella sampling is currently missing but a basic example is shown below.
 The post-processing could then in principle be performed by a method such as MBAR or WHAM using a program such as `FastMBAR <https://fastmbar.readthedocs.io>`_

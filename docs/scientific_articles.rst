@@ -153,13 +153,19 @@ Broken-symmetry solutions in the QM-part were controlled by the ORCA interface (
 
 **QM/MM modelling of Cu proteins**
 
+ASH has been utilized by Casey van Stappen and coworkers in a series of QM/MM studies on azurin Cu proteins:
+
 Uncovering primary and secondary coordination sphere effects in S-nitrosylating azurin:
 `2023 JACS article <https://pubs.acs.org/doi/10.1021/jacs.3c07399>`_
 
 Second sphere variants of Type 1 Cu site in azurin:
 `2024 J Phys. Chem. B article <https://pubs.acs.org/doi/full/10.1021/acs.jpcb.3c08194>`_
 
+Beyond Blue: Systematic Modulation of Electronic Structure and Redox Properties of Type 1 Copper in Azurin
+`2025 JACS article <https://pubs.acs.org/doi/10.1021/jacs.5c07009>`_
 
+Contrasting secondary coordination sphere effects on spin density distribution in Red vs. Blue Cu azurin:
+`JBIC 2025 article <https://link.springer.com/article/10.1007/s00775-025-02116-x>`_
 
 ###################################
 Highlevel WFT workflows

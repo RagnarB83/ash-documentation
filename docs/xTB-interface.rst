@@ -1,23 +1,123 @@
-xTB interface
+xTB/tblite interface
 ======================================
 
-`xTB <https://xtb-docs.readthedocs.io>`_  is a semiempirical tightbinding DFT quantum chemistry code from the Grimme group.
-It features the extended tight-binding (xTB) methods (GFN0-xTB,GFN1-xTB and GFN2-xTB) that feature a fairly accurate 
-electrostatic interaction term and built-in dispersion correction and are parameterized in a general element parameterization 
-fashion that avoids pair-potentails, unlike standard DFTB-based methods.
+xTB is a collection of semiempirical methods based on the extended tightbinding DFT methodology from the group of Stefan Grimme in Bonn, Germany.
+The original methods GFN1-xTB, GFN2-xTB and GFN0-xTB, feature a fairly accurate electrostatic interaction term and built-in dispersion correction and are parameterized in a general element parameterization 
+fashion that avoids pair-potentails, unlike the DFTB-based methods (available in programs like DFTB+).
 GFN-xTB methods give overall fairly accurate geometries, frequencies and noncovalent interactions, 
 often even for transition metal complex while energies are further from regular DFT. 
 The speed of these methods is 100-1000 x compared to regular DFT.
 
+The methods are available in the general xTB program, see `xTB <https://xtb-docs.readthedocs.io>`_  but development of the methods has mostly moved to the `tblite <https://tblite.readthedocs.io/en/latest/>`_  library.
 More recently, a new method, g-xTB, has been described that gives much more accurate energies, much closer to regular DFT:
 `g-xTB preprint <https://chemrxiv.org/engage/chemrxiv/article-details/685434533ba0887c335fc974>`_
+However, analytical gradients are not yet available for g-xTB.
 
-**gxTBTheory class:**
+ASH features interfaces to xtB methods in a few different ways. All of them are documented here as they have different pros and cons:
+
+- tbliteTheory: Interface to the tblite library (recommended for speed).
+- xTBTheory: Interface to the general xTB program (file-based or library-based). QM/MM electrostatic embedding support.
+- gxTBTheory: Basic interface to the gxtb binary that allows using the accuracy gxtb method (preliminary implementation).
+
+######################################################
+**tbliteTheory:**
+######################################################
+
+tblite installation documentation can be found at `tblite installation <https://tblite.readthedocs.io/en/latest/installation.html>`_ .
+Most likely you will want to install tblite via conda/mamba:
+
+.. code-block:: bash
+
+  mamba install tblite
+
+The advantage of tblite over the general xTB program is speed, that comes from its newer development, and as almost no disk I/O is performed while running.
+ASH features an interface to the tblite library that is recommended in general, unless you want to use QM/MM electrostatic embedding, which is not yet supported in tblite.
+
+.. code-block:: python
+
+  class tbliteTheory(Theory):
+      def __init__(self, method=None, printlevel=2, numcores=1, spinpol=False, solvation_method=None, solvent_name=None, solvent_eps=None,
+                  maxiter=500, electronic_temp=9.5e-4, accuracy=1.0, grab_BOs=False, grab_charges=False, grab_DM=False, autostart=True):
+
+.. list-table::
+   :widths: 15 15 15 60
+   :header-rows: 1
+
+   * - Keyword
+     - Type
+     - Default value
+     - Details
+   * - ``method``
+     - string
+     - 'GFN1'
+     - The xTB Hamiltonian to use. Options: 'GFN2-xTB', 'GFN1-xTB', 'GFN0-xTB', 'GFN-FF'
+   * - ``spinpol``
+     - Boolean
+     - False
+     - Whether to enable spin-polarized calculations.
+   * - ``solvation_method``
+     - string
+     - None
+     - Solvation model ot use. Options: 'GBSA', 'ALPB', 'CPCM'
+   * - ``solvent_name``
+     - string
+     - None
+     - Name of solvent if implicit solvation is desired.
+   * - ``solvent_eps``
+     - float
+     - None
+     - Epsilon value of the solvent if a custom solvent is desired.
+   * - ``maxiter``
+     - integer
+     - 500
+     - Max number of SCC iterations
+   * - ``electronic_temp``
+     - float
+     - 9.5e-4
+     - Electronic temperature in Hartree.
+   * - ``accuracy``
+     - Boolean
+     - 1.0
+     - Accuracy parameter for the SCC calculation. Smaller value, more accurate.
+   * - ``grab_BOs``
+     - Boolean
+     - False
+     - Whether to grab the bondorder matrix after calculation.
+   * - ``grab_charges``
+     - Boolean
+     - False
+     - Whether to grab the charges after calculation.
+   * - ``grab_DM``
+     - Boolean
+     - False
+     - Whether to grab the density matrix after calculation.
+   * - ``autostart``
+     - Boolean
+     - True
+     - Whether to use automatic restart when running multiple calculations.
+
+------------------
+**Examples:**
+------------------
+
+.. code-block:: python
+
+  from ash import *
+  frag = Fragment(xyzfile="h2o.xyz", charge=0, mult=1)
+  tblitetheory = tbliteTheory(method="GFN2-xTB")
+
+  Singlepoint(theory=tblitetheory, fragment=frag)
+  Optimizer(theory=tblitetheory, fragment=frag)
+  MolecularDynamics(theory=tblitetheory, fragment=frag, simulation_steps=100)
+
+######################################################
+**gxTBTheory:**
+######################################################
 
 The g-xTB method is available as a preliminary implementation in the gxtb binary, 
 see `g-xTB Github repository <https://github.com/grimme-lab/g-xtb>`_ .
 As this implementation features only a numerical gradient, 
-geometry optimizations will be slow and will suffer from some numerical noise.
+geometry optimizations (or MD) will be slow and will suffer from some numerical noise.
 A future implementation is expected in the tblite library that ASH will support once available.
 
 ASH features a very basic interface to the gxtb binary that allows for energies and slow geometry optimizations.
@@ -29,8 +129,9 @@ ASH features a very basic interface to the gxtb binary that allows for energies 
 
 No QM/MM is supported in gxTBTheory yet as pointcharge-support is not available in the gxtb program. For xTB-based QM/MM, see xTBTheory class below.
 
-
-**xTBTheory class:**
+######################################################
+**xTBTheory:**
+######################################################
 
 *xTBTheory* is the interface to the general xTB program that supports the GFN-xTB methods (GFN0, GFN1 and GFN2) with analytic
 gradients, implicit solvation and pointcharges.
@@ -107,9 +208,9 @@ It requires first installation of xtb-python (https://xtb-python.readthedocs.io/
 The file-based interface writes an XYZ-file to disk, calls an xTB executable which reads the XYZ file, runs the job and writes the output to disk which is then read by ASH.
 For regular jobs, e.g. geometry optimizations, the speed-difference between interfaces will probably not matter.
 
-################################
+-------------------------
 Finding the xTB program
-################################
+-------------------------
 
 ASH can find the xTB program in a few different ways. For the inputfile-based runmode:
 
@@ -119,9 +220,9 @@ ASH can find the xTB program in a few different ways. For the inputfile-based ru
 
 runmode='library' on the other hand requires the installation of the xtb-python interface to your Python environment. ASH will check and complain if it does not find the library. 
 
-################################
+-------------------------
 Examples
-################################
+-------------------------
 
 To use either interface is quite simple, when an xTB object is created, the xtbmethod keyword is used to select xTB method: "GFN2", "GFN1" for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
 The optional runmode argument is also available: runmode='library' or runmode='inputfile'. Default runmode: "inputfile"
@@ -140,8 +241,9 @@ The optional runmode argument is also available: runmode='library' or runmode='i
 
 
 
-################################
+-------------------------
 Parallelization
-################################
+-------------------------
 The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the numcores keyword.
 Currently OMP threads are set equal to numcores and MKL threads are set equal to 1.
+Be aware that xTB parallelization may not be very efficient for small systems and running xTB in serial (i.e. numcores=1) is often much faster.

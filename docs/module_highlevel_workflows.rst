@@ -139,7 +139,7 @@ Atomic spin-orbit coupling can be automatically included if system is an atom.
        | to 3 values, e.g. [2,3,4]
    * - ``pnoextrapolation``
      - list
-     - [1e-6,1e-7,1.5,'TightPNO']
+     - [1e-6,3.33e-7,2.38,'TightPNO']
      - | Parameters for PNO-extrapolation (X,Y,Z): X and Y being
        | TCutPNO thresholds while Z signifies the PNOsetting for the other thresholds. 
    * - ``FullLMP2Guess``
