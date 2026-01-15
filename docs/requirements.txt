@@ -1,3 +1,4 @@
 docutils<0.18
 sphinx-togglebutton
 sphinx_rtd_theme
+sphinxcontrib-googleanalytics
