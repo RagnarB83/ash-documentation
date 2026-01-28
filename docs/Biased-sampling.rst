@@ -2,6 +2,7 @@ Biased sampling MD & Free energy simulations
 ===============================================
 
 Biased/enhanced sampling or free-energy simulations are possible in ASH in various ways:
+
 - Thanks to the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`), available harmonic restraints as well as metadynamics,
 umbrella sampling and metadynamics can be performed via the native OpenMM routines. This is possible through any level of theory in ASH.
 - An interface to the enhanced-sampling `Plumed library <https://www.plumed.org>`_ allows even more options.
@@ -10,7 +11,7 @@ umbrella sampling and metadynamics can be performed via the native OpenMM routin
 
 Metadynamics has become a very popular biased sampling / free energy simulation method due to its ease-of-use and handy parallelization strategy.
 It is possible to perform metadynamics simulations in ASH using essentially any theory-level, including an OpenMMTheory level, any type of QMTheory level and a QMMMTheory level.
-The OpenMM native metadynamics routines canb used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
+The OpenMM native metadynamics routines can be used for the simulations, and in the case of QM and QM/MM Theories, the energy and forces are passed onto OpenMM in each timestep.
 The **OpenMM_metadynamics** function can be used to start a metadynamics simulation from an ASH Fragment and ASH Theory level and some collective variable information, using the metadynamics functionality inside the OpenMM library.
 See `OpenMM implementation <http://docs.openmm.org/development/api-python/generated/openmm.app.metadynamics.Metadynamics.html>`_ .
 The function sets up the necessary collective-variable bias potentials before launching an MD simulation using the **OpenMM_MD** class.
