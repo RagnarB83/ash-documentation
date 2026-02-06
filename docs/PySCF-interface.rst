@@ -786,6 +786,43 @@ in a WrapTheory object, see :doc:`module_Hybrid_Theory`.
 This is useful for flexibility in defining e.g. composite methods (such as r2SCAN-3c) but is a more manual approach and offers more possibilities of selecting the wrong method.
 It is thus only recommended if you carefully check the correctness of the results.
 
+################################################################################
+Use of implicit solvation models in pySCF
+################################################################################
+
+The ASH interface upports use of implicit solvation in SCF-based pySCF calculations.
+Information about the solvation models can be found on in the `pySCF documentation<https://pyscf.org/user/solvent.html>`_
+In the ASH interface, the models are use by choosing the *solvation* keyword to be either "PCM", "SMD" or "ddCOSMO".
+For PCM solvation, the *solvation_method* keyword can be used to specify a specific method : 'IEF-PCM', 'C-PCM', 'SS(V)PE', 'COSMO'.
+The specific solvent environment is then controlled by *solvation_eps* for PCM and ddCOSMO and by *SMD_solvent* for SMD (which takes the name of the solvent as a string, e.g. "water" or "benzene").
+
+**Examples on how to use:**
+
+.. code-block:: python
+
+  # PCM solvation via IEF-PCM and eps=78
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="PCM", 
+    solvation_method="IEF-PCM", solvation_eps=78)
+
+  # PCM solvation via IEF-PCM and eps=4
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="PCM", 
+    solvation_method="IEF-PCM", solvation_eps=4)
+
+  # ddCOSMO  solvation with eps=78
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="ddCOSMO", 
+    solvation_eps=78)
+
+  # ddCOSMO  solvation with eps=4
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="ddCOSMO",
+    solvation_eps=4)
+
+  # SMD solvation and solvent water
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="SMD", 
+    SMD_solvent="water")
+
+  # SMD solvation and solvent water
+  theory = PySCFTheory(scf_type="RKS", functional="PBE", basis="def2-SVP", solvation="SMD", 
+    SMD_solvent="benzene")
 
 ################################################################################
 Natural orbital calculations from various WF methods
