@@ -191,7 +191,7 @@ Examples
 As CFour may not have all desired basis sets built-in, it is convenient to be able to specify user-defined basis sets.
 ASH has a few basis sets built-in in CFour-format that can be used together with the specialbasis and ash_basisfile keywords in the CFourTheory class.
 
-ASH-basis set files for CFour are stored in ASH-source-directory/basis-sets/cfour (https://github.com/RagnarB83/ash/tree/master/basis-sets/cfour)
+ASH-basis set files for CFour are stored in ASH-source-directory/basis_sets/cfour (https://github.com/RagnarB83/ash/tree/master/basis_sets/cfour)
 Currently includes :
 
 - cc basis sets from H to Kr: cc-pVDZ, cc-pVTZ, cc-pVQZ and cc-pV5Z 
