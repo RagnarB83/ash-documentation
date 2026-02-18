@@ -21,15 +21,18 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
     
   class CP2KTheory:
       def __init__(self, cp2kdir=None, cp2k_bin_name=None, filename='cp2k', printlevel=2, basis_dict=None, potential_dict=None, label="CP2K",
-                  periodic=False, periodic_type='XYZ', qm_periodic_type=None,cell_dimensions=None, cell_vectors=None,
+                  periodic=False, periodic_type='XYZ', qm_periodic_type=None, 
+                  xtb_periodic=False, xtb_type='GFN2', xtb_tblite=False,
+                  user_input_dft=None, vdwpotential=None,
+                  cell_dimensions=None, cell_vectors=None,
                   qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
                   functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
                   basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
                   method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
-                  center_coords=True, scf_maxiter=50, outer_SCF=True, outer_scf_maxiter=10, scf_convergence=1e-6, eps_default=1e-10,
+                  center_coords=True, scf_maxiter=50, outer_scf_maxiter=10, scf_convergence=1e-6, eps_default=1e-10,
                   coupling='GAUSSIAN', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None,
-                  OT=True, OT_minimizer='DIIS', OT_preconditioner='FULL_ALL', 
-                  OT_linesearch='3PNT', outer_SCF_optimizer='DIIS', OT_energy_gap=0.08):
+                  OT=True, OT_minimizer='DIIS', OT_preconditioner='FULL_ALL',
+                  OT_linesearch='3PNT', outer_SCF=True, outer_SCF_optimizer='SD', OT_energy_gap=0.08):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -139,6 +142,10 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - string
      - None
      - Whether to use a user-defined DFT section in the CP2K input file. If None, ASH will generate the DFT section based on the other keywords. If a string is provided, it should either be a multi-line string containing the DFT section or a filename pointing to a file containing the DFT section.
+    * - ``vdwpotential``
+     - string
+     - None
+     - Whether to use a built-in dispersion correction. Options: 'DFTD3', 'DFTD3BJ', 'DFTD4'.
    * - ``ngrids``
      - integer
      - 4
@@ -320,9 +327,13 @@ xTB in CP2K
 CP2K is traditionally a DFT-code but also offer some semi-empirical tightbinding functionality, e.g. xTB.
 xTB methods come with a built-in basis set.
 To use CP2K for xTB calculations in ASH,  the *basis_method* keyword should be set to 'XTB' (instead of default GAPW).
-and specify the functional to use (e.g. 'GFN2-xTB') in the *functional* keyword.
+and specify the method to use (e.g. 'GFN2-xTB') in the *functional* keyword.
+By default the internal xTB implementations in CP2K will be used (check CP2K manual for what is available)
+unless the *xtb_tblite* is set to True, in which case xtB will be run using the tblite library.
+Do note that xTB functionality in CP2K is undergoing changes.
 
 .. code-block:: python
+
     # GFN1-xTB built-in example
     cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1')
     # GFN1-xTB built-in example with periodicity
@@ -330,7 +341,7 @@ and specify the functional to use (e.g. 'GFN2-xTB') in the *functional* keyword.
     # GFN2-xTB tblite example
     cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN2', xtb_tblite=True)
 
-Do note that xTB functionality in CP2K is undergoing changes.
+
 
 ################################################################################
 Controlling the basis set in DFT calculations
@@ -396,6 +407,12 @@ In the case of the MT solver the cell should be at least 2 as large as the charg
 For periodic calculations, the CP2KTheory object should be defined with *periodic=True*. The *periodic_type* is by default 'XYZ' (i.e. PBC in all directions).
 The cell size should be specified as described above.
 Poisson solver options are : 'PERIODIC', 'WAVELET', 'MULTIPOLE' or 'IMPLICIT'. The PERIODIC solver is recommended (only available for full 3D periodicity).
+
+**Dispersion corrections**
+
+CP2K supports a few dispersion correction options (see manual) including D3, D3BJ and D4 that can be used for functionals that have parameters available.
+To use these in ASH, use the *vdwpotential* keyword which should be set to either 'DFTD3', 'DFTD3BJ' or 'DFTD4'.
+For other dispersion corrections, the user has to provide the necessary input via the *user_input_dft* keyword as described in the next section.
 
 ################################################################################
 Advanced control of the CP2K input
