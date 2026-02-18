@@ -11,7 +11,7 @@ Both periodic and non-periodic systems are supported to some extent.
 Additionally pointcharge-embedding is supported by the interface via the GEEP (Gaussian Expansion of Electrostatic Potential) approach in CP2K. 
 This allows QM/MM calculations with CP2K as QM-code and OpenMM as MM-code within ASH.
 
-If the purpose is to primarily carry out periodic DFT MD simulations, running CP2K via the ASH interface will not offer many benefits over CP2K directly, 
+If the purpose is to primarily carry out periodic DFT MD simulations, running CP2K via the ASH interface may not offer many benefits over CP2K directly, 
 however, running geometry optimizations, surface scans and NEB via ASH may be more convenient than using CP2K directly.
 Furthermore the QM/MM capabilities within ASH and the flexible forcefield support by OpenMM may be preferable to the CP2K options.
 
@@ -122,7 +122,23 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
    * - ``basis_method``
      - string
      - 'GAPW'
-     - Type of CP2K basis-set method to use. Options: 'GPW' (Gaussian-planewave with pseudopoentials), 'GAPW' (Gaussian augmented planewave). 
+     - Type of CP2K basis-set method to use. Options: 'GPW' (Gaussian-planewave with pseudopoentials), 'GAPW' (Gaussian augmented planewave) or 'XTB'.
+   * - ``xtb_type``
+     - string
+     - 'GFN2'
+     - xTB-method type. Options: 'GFN2', 'GFN1', 'GFN0'. Only valid if basis_method='XTB'.
+   * - ``xtb_tblite``
+     - Boolean
+     - False
+     - Whether to use the tblite library for xTB calculations instead of built-in xTB. Only valid if basis_method='XTB'.
+   * - ``xtb_periodic``
+     - Boolean
+     - False
+     - Whether to use periodic boundary conditions for xTB calculations. Only valid if basis_method='XTB'. 
+   * - ``user_input_dft``
+     - string
+     - None
+     - Whether to use a user-defined DFT section in the CP2K input file. If None, ASH will generate the DFT section based on the other keywords. If a string is provided, it should either be a multi-line string containing the DFT section or a filename pointing to a file containing the DFT section.
    * - ``ngrids``
      - integer
      - 4
@@ -225,6 +241,7 @@ CP2K installation
 CP2K can be installed in several different ways, see https://www.cp2k.org/download
 It can be tricky to compile.
 It is easiest to either download binaries (see link, though MPI-parallel version not typically available) or install via conda/mamba (see https://anaconda.org/conda-forge/cp2k).
+Github releases are here: https://github.com/cp2k/cp2k/releases/tag/v2026.1
 Alternatively you can compile CP2K from source: https://github.com/cp2k/cp2k/blob/master/INSTALL.md
 
 Note that downloaded or compiled CP2K binaries may come in a few different forms: e.g. cp2k.ssmp, cp2k.sopt, ccp2k.popt, cp2k.psmp 
@@ -232,7 +249,8 @@ where sopt means serial-optimized, ssmp means single-process with OpenMP,
 popt means parallel-optimized with MPI and psmp means parallel-optimized with MPI and OpenMP.
 The cp2k.psmp binary is the most flexible and is recommended to use if available.
 
-We have had success installing the latest CP2K version (2024.1) via conda/mamba like this:
+We have had success installing CP2K via conda/mamba. However, the latest CP2K versions may not yet be available on conda-forge.
+and may have to be downloaded manually (Linux binaries are available on https://github.com/cp2k/cp2k/releases/tag/v2026.1 ).
 
 .. code-block:: shell
 
@@ -240,8 +258,8 @@ We have had success installing the latest CP2K version (2024.1) via conda/mamba 
   #Note: mamba install cp2k will install non-MPI version: cp2k.ssmp binary
   mamba install cp2k=2024.1=openblas_openmpi_h7c9ef3d_1
 
-
-ASH will then try find the CP2K installation to use according to this logic:
+Once CP2K is installed you can try to use the ASH interface.
+ASH will try find the CP2K installation to use according to this logic:
 
 1. if cp2kdir variable provided (containing path to where the binaries are) and cp2k_bin_name provided: use that binary in that directory
 2. if cp2kdir variable provided but cp2k_bin_name NOT provided: search for cp2k.X executables in the cp2kdir directory
@@ -296,12 +314,31 @@ For example, if *numcores=8*, *mixed_mpi_procs=4* and *mixed_omp_threads=2* then
 Note that ASH will give an error if numcores is not equal to mixed_mpi_procs*mixed_omp_threads.
 
 ################################################################################
-Controlling the basis set
+xTB in CP2K
+################################################################################
+
+CP2K is traditionally a DFT-code but also offer some semi-empirical tightbinding functionality, e.g. xTB.
+xTB methods come with a built-in basis set.
+To use CP2K for xTB calculations in ASH,  the *basis_method* keyword should be set to 'XTB' (instead of default GAPW).
+and specify the functional to use (e.g. 'GFN2-xTB') in the *functional* keyword.
+
+.. code-block:: python
+    # GFN1-xTB built-in example
+    cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1')
+    # GFN1-xTB built-in example with periodicity
+    cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1', xtb_periodic=True)
+    # GFN2-xTB tblite example
+    cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN2', xtb_tblite=True)
+
+Do note that xTB functionality in CP2K is undergoing changes.
+
+################################################################################
+Controlling the basis set in DFT calculations
 ################################################################################
 
 The primary purpose of using CP2K is probably to take advantage of the efficient mixed Gaussian and plane wave (GPW) approach where Gaussians are used to calculate
 the 1-electron integrals and plane waves are used to calculate the 2-electron integrals.
-Furthermore the user should specify whether the standard GPW (Gaussian and planewaves) or GAPW (Gaussian augmented GPW) method should be used.
+Furthermore the user should specify whether the standard GPW (Gaussian and planewaves) or GAPW (Gaussian augmented GPW) method should be used via the *basis_method* keyword.
 Pseudopotential-based calculations can be performed with both methods, however, all-electron calculations can only be performed with GAPW.
 GAPW may have more stable forces and require reduced cutoff but may be more expensive.
 
@@ -360,6 +397,82 @@ For periodic calculations, the CP2KTheory object should be defined with *periodi
 The cell size should be specified as described above.
 Poisson solver options are : 'PERIODIC', 'WAVELET', 'MULTIPOLE' or 'IMPLICIT'. The PERIODIC solver is recommended (only available for full 3D periodicity).
 
+################################################################################
+Advanced control of the CP2K input
+################################################################################
+
+The CP2K inputfile is complicated and the ASH interface was written partially for the purpose of simplifying the use of CP2K for common use-cases
+but also to make sure the ASH controls specifically how a CP2K energy+gradient calculation is carried out.
+However, since CP2K has a lot of options, it is impossible to cover all possible use-cases via the keyword syntax.
+
+To allow for more flexibility for advanced CP2K usage, ASH allows the user to provide their own DFT-section of the CP2K input file (the section that begins and ends with the &DFT ... &END DFT block).
+This option is enabled by the *user_input_dft* keyword and the user can provide either a file or a string containing the DFT section of the CP2K input file.
+If this option is used then ASH will not write it's own DFT-section (all DFT-related keywords will be ignored) but will still write the rest of the CP2K input file according to the ASH settings.
+
+Below is an example of how to use the *user_input_dft* keyword to provide a custom DFT section for a CP2KTheory object in ASH. 
+In this example, the DFT section is defined via a multi-line string but it could also be read from a file.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=2
+  frag = Fragment(xyzfile="meoh.xyz",charge=0, mult=1)
+
+  #Basis set and pseudopotential information per element
+  basis_dict={'C':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH'}
+  potential_dict={'C':'GTH-PBE-q4','O':'GTH-PBE-q6','H':'GTH-PBE-q1'}
+
+  # Define whole DFT-section via multi-line string
+  user_input_dft="""
+    &DFT
+    &SCF
+      SCF_GUESS RESTART
+      MAX_SCF 500
+      EPS_SCF 1e-06
+      &OUTER_SCF
+            OPTIMIZER SD
+            MAX_SCF 10
+      &END OUTER_SCF
+    &END SCF
+    CHARGE 0
+    MULTIPLICITY 1
+    BASIS_SET_FILE_NAME BASIS
+    POTENTIAL_FILE_NAME POTENTIAL
+    &POISSON
+      PERIODIC NONE
+      PSOLVER wavelet
+      &WAVELET wavelet
+         SCF_TYPE 40
+      &END WAVELET wavelet
+    &END POISSON
+    &PRINT
+      &MO
+        EIGENVALUES .TRUE.
+      &END MO
+    &END PRINT
+    &XC
+      &XC_FUNCTIONAL None
+      &END XC_FUNCTIONAL
+    &END XC
+  &END DFT
+  """
+  #NOTE ALTERNATIVE: Define DFT section in a separate file and point to it with the user_input_dft keyword
+  #user_input_dft="dftsection.inp"
+
+  #CP2KTheory definition with user-defined DFT section
+  qm = CP2KTheory(cp2k_bin_name="cp2k.ssmp",basis_dict=basis_dict,potential_dict=potential_dict,
+                  functional='PBE',numcores=numcores, user_input_dft=user_input_dft,
+                  periodic=True,cell_dimensions=[10,10,10,90,90,90],
+                  psolver='periodic',basis_method='GPW', ngrids=4, cutoff=450, rel_cutoff=50)
+
+Only the &DFT section can currently be modified by the user, the rest of the input file is still generated by ASH and cannot be modified by the user (this is partially to make sure user-options won't interfere with ASH's CP2K control).
+
+To make sure the user-input DFT section is compatible with ASH's control of the CP2K input one can first 
+run a regular single-point dummy job without *user_input_dft* (the job can be stopped after 2 seconds), copy the ASH-generated CP2K input file (cp2k.inp) to a new file dftsection.inp,
+delete everything except the &DFT section (i.e. delete &GLOBAL, &FORCE_EVAL, &SUBSYS sections).
+The file should begin with "&DFT" and end with "&END DFT" and the indentation can be kept as is. This makes sure that all the necessary settings for the DFT section are included (e.g. charge and multiplicity) and compatible with ASH's control of the CP2K input file.
+This file can then be modified as desired (SCF convergence settings, grids, alternative methods etc.) and will be read by ASH as long as the *user_input_dft* keyword is set to point to this file.
 
 
 ################################################################################
