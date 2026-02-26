@@ -218,3 +218,18 @@ For regular pointcharge-embedding, things should work automatically.
 Since Turbomole supports alternatives besides simple pointcharges such as Gaussians or multipoles (see *pointcharge_type* keyword) ,
 it is in principle possible to go beyond regular pointcharges. However, ASH does not support these options as part of QMMMTheory for the moment.
 
+
+################################################################################
+UFF via Turbomole
+################################################################################
+
+Turbomole has an UFF (Universal Force Field) implementation that the interface supports.
+Simply set the *uff=True* keyword without specifying anything else and it can be used for some basic UFF jobs.
+
+.. code-block:: python
+
+    from ash import *
+    frag = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+    theory = TurbomoleTheory(uff=True)
+
+    Optimizer(theory=theory, fragment=frag)

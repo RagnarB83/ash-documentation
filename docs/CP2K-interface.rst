@@ -142,7 +142,7 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - string
      - None
      - Whether to use a user-defined DFT section in the CP2K input file. If None, ASH will generate the DFT section based on the other keywords. If a string is provided, it should either be a multi-line string containing the DFT section or a filename pointing to a file containing the DFT section.
-    * - ``vdwpotential``
+   * - ``vdwpotential``
      - string
      - None
      - Whether to use a built-in dispersion correction. Options: 'DFTD3', 'DFTD3BJ', 'DFTD4'.
@@ -150,6 +150,10 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - integer
      - 4
      - Number of real-space grids to use.
+   * - ``kpoint_settings``
+     - list
+     - None
+     - k-point values to use, e.g. [2,2,2].
    * - ``cutoff``
      - integer
      - 250
@@ -239,6 +243,7 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - None
      - QM/MM only: Optional dictionary of MM radii for each element. If not provided, radii are estimated internal table.
 
+    
 
 
 ################################################################################
@@ -413,6 +418,23 @@ Poisson solver options are : 'PERIODIC', 'WAVELET', 'MULTIPOLE' or 'IMPLICIT'. T
 CP2K supports a few dispersion correction options (see manual) including D3, D3BJ and D4 that can be used for functionals that have parameters available.
 To use these in ASH, use the *vdwpotential* keyword which should be set to either 'DFTD3', 'DFTD3BJ' or 'DFTD4'.
 For other dispersion corrections, the user has to provide the necessary input via the *user_input_dft* keyword as described in the next section.
+
+**K-point sampling**
+
+For large unit cells, the default gamma-point calculations are sufficient.
+For smaller or anisotropic unit cells, k-point sampling may be required.
+k-point sampling settings can be adjusted in ASH by the *kpoint_settings* keyword.
+By setting the *kpoint_settings* keyword to be equal to [2,2,2] in CP2KTheory,
+the CP2K inputfile is modified to include the block:
+
+.. code-block:: text
+
+  &KPOINTS
+        SCHEME MONKHORST-PACK  2  2  2
+  &END KPOINTS
+
+
+If more advanced k-point settings are required, see CP2K manual and use the advanced control option discussed below.
 
 ################################################################################
 Advanced control of the CP2K input
