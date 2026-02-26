@@ -5,16 +5,26 @@ ASH features an interface to the powerful conformational sampling program `crest
 
 The interface is evolving and currently contains 3 different ways of utilizing CREST together with ASH.
 
-################################################################################
+######################################################################################
 new_call_crest  (general CREST interface, allowing any ASHTheory to be used)
-################################################################################
+######################################################################################
 
 .. code-block:: python
 
-    def new_call_crest(fragment=None, theory=None, runtype="ancopt", crestdir=None, numcores=1, charge=None, mult=None)
+    def new_call_crest(fragment=None, theory=None, crestdir=None, runtype="imtd-gc", 
+                    energywindow=6.0, rthr=None, ethr=None, bthr=None,
+                    shake=None, tstep=None, dump=None,length_ps=None,temp=None, hmass=None,
+                    kpush=None, alpha=None, cvtype=None, dump_ps=None,
+                    numcores=1, charge=None, mult=None, 
+                    topocheck=True, constraints=None):
 
 The **new_call_crest** function will call the CREST program to perform any CREST-runtype available, on a selected ASH fragment with an ASH theory.
-The CREST runtype options are (in order of usefulness):
+The way the interface works is that *new_call_crest* will call CREST which will periodically run an ASH Python script to provide energies and gradients of the system.
+In addition to ASH theories it is also possible to specify xtb-methods directly as valid string ('gfn1', 'gfn2', 'gfnff').
+
+--------------------------
+The CREST runtype options
+--------------------------
 
 - imtd-gc (the CREST MTD-based conformational sampler)
 - nci-mtd (CREST sampling with a wall potential, NCI_MTD workflow)
@@ -26,14 +36,13 @@ The CREST runtype options are (in order of usefulness):
 - numhess (numerical Hessian)
 - imtd-gcimtd-gc
 
+.. warning:: Not all of these runtypes have been tested 
 
 See `crest documentation for details <https://crest-lab.github.io/crest-docs/page/documentation/inputfiles.html>`_
 
-
-.. warning:: Not all of these runtypes have been tested and may not currently work.
-
- 
+------------------------------------------------------------------------------
 Example: CREST conformational sampling using the ORCATheory interface in ASH:
+------------------------------------------------------------------------------
 
 .. code-block:: python
 
@@ -44,8 +53,71 @@ Example: CREST conformational sampling using the ORCATheory interface in ASH:
 
 
 .. warning:: Unfortunately, while many other ASH theories will work for the example above, 
-    the interface is currently limited to ASH Theory objects that can be serialized (pickled). Theory interfaces relying on Python libraries
-    and hybrid theories such as QMMMTheory will most likely not work.
+    the interface is currently limited to ASH Theory objects that can be serialized (pickled). Theory interfaces relying on Python libraries may not always work.
+
+--------------------------
+Modifying CREST parameters
+--------------------------
+
+See https://crest-lab.github.io/crest-docs/page/documentation/inputfiles.html#calculationconstraints-sub-blocks
+for the CREST Inputfile documentation that ASH uses.
+
+Currently some CREST options can be modified by the interface:
+
+**CREGEN keywords**
+
+- *ewin*
+- *rthr*
+- *ethr*
+- *bthr
+
+**Dynamics keywords**
+
+- *shake*
+- *tstep*
+- *dump*
+- *length_ps*
+- *temp*
+- *hmass*
+
+**Metadynamics keywords**
+
+- *kpush*
+- *alpha*
+- *cvtype*
+- *dump_ps*
+
+
+Topology check can be turned on/off  by the *topocheck* Boolean keyword.
+
+--------------------------
+Constraints
+--------------------------
+Finally constraints can also be defined by providing a dictionary of constraints via the *constraints* keyword.
+
+A dictionary containing one or more of the following keys can be provided: 
+'atoms', 'elements', 'distance', 'angle', 'dihedral', 'force', 'reference', 'metadyn_atoms'.
+The corresponding values of the keys should be strings defining the constraints according to CREST's syntax.
+
+*Example:*
+
+.. code-block:: python
+
+    from ash import *
+
+    frag = Fragment(xyzfile="cowley_full.xyz", charge=0, mult=1)
+    theory  = ORCATheory(orcasimpleinput="! r2SCAN-3c tightscf")
+    # constraints
+    constraints={'distance':'2, 66, 2.51630', 'bond':'1,2,auto'}
+    new_call_crest(fragment=frag, theory=theory, runtype="imtd-gc", constraints=constraints)
+
+.. warning:: The constraints defined here follow the CREST 1-based atom indexing in contrast to the general 0-based indexing that ASH uses. 
+
+See CREST documentation for examples of constraints that can be applied:
+
+- https://crest-lab.github.io/crest-docs/page/documentation/inputfiles_examples.html#constrained-geometry-optimization
+- https://crest-lab.github.io/crest-docs/page/examples/qcg/example_3.html#constraining-the-solute
+- https://crest-lab.github.io/crest-docs/page/examples/example_4.html
 
 
 ################################################################################
@@ -54,6 +126,7 @@ Using CREST to call ASH as a generic theory
 
 It is also possible to use CREST as a driver and provide an ASH script as a theory-level to CREST. This is the generic option available in CREST.
 This option has the advantage of being more flexible than the option above as it should in principle allow any ASH level of theory to be used within CREST.
+Additionally all CREST options are more easily specified.
 
 This option works like the following.  
 CREST should be called by providing a CREST inputfile in TOML format (here called input.toml)

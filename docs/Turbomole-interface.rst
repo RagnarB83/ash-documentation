@@ -2,7 +2,7 @@ Turbomole interface
 ======================================
 
 `Turbomole <https://www.turbomole.org>`_  is an old popular quantum chemistry code, particularly known for its fast implementation of many algorithms
-and its speed of execution.
+and its speed of execution for both DFT and WFT implementations.
 
 ASH features a simple interface to Turbomole that allows the easy use of Turbomole for basic DFT and MP2 calculation.
 Due to the nature of Turbomole-execution, not all Turbomole features are currently supported.
@@ -223,7 +223,7 @@ it is in principle possible to go beyond regular pointcharges. However, ASH does
 UFF via Turbomole
 ################################################################################
 
-Turbomole has an UFF (Universal Force Field) implementation that the interface supports.
+Turbomole has an UFF (Universal Force Field) implementation that the ASH interface supports.
 Simply set the *uff=True* keyword without specifying anything else and it can be used for some basic UFF jobs.
 
 .. code-block:: python
