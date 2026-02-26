@@ -1,17 +1,17 @@
 OpenBabel interface
 ======================================
 
-OpenBabel is described as a chemical toolbox for speaking the many languages of chemical data.
+`OpenBabel <https://openbabel.org>`_ is described as a chemical toolbox for speaking the many languages of chemical data.
 It's an open-source project that has long been useful for converting between file formats and many other things.
 
 
 ASH features a simple interface to using OpenBabel as a theory-level, currently only for the purpose of using the
 built-in FF options in OpenBabel.
-The interface hence allows one to utilize MMFF94, UFF, GAFF and Ghemical forcefield.
-These can be useful in ASH as e.g pre-optimizer or 
+The interface hence allows one to utilize the simple MMFF94, UFF, GAFF and Ghemical forcefields.
+These can be useful in ASH as e.g pre-optimizer or useful on their own if accurate enough.
 
 Note that the interface can not be used as MM-theory in a hybrid QM/MM context.
-However, it should work together within a hybrid ONIOM scheme.
+However, it should work within a hybrid ONIOM scheme.
 
 **OpenBabelTheory class:**
 
@@ -87,9 +87,11 @@ Example usage.
 Other OpenBabel features in ASH
 ################################################################################
 
-OpenBabel is also occasionally used by ASH for other features 
+OpenBabel is also occasionally used by ASH for other features.
 The ability to define an ASH fragment via a SMILES string alone (see :doc:`coordinate-input`) 
-is enabled by OpenBabel.
+is e.g. enabled by OpenBabel.
+
+ASH has also wrapped some OpenBabel library functionality into special functions:
 
 .. code-block:: python
 
