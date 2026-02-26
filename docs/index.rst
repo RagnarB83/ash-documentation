@@ -135,6 +135,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    torch_interface
    MACE-interface
    Fairchem-interface
+   OpenBabel-interface
    helper_programs
 
 
