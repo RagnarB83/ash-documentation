@@ -2,10 +2,10 @@ Torch interface
 ======================================
 
 PyTorch is a very general deep-learning framework within the Python ecosystem and one of the most popular approches to training neural networks.
-TorchANI is a PyTorch-based implementation of the ANI neural network potential for describing potential energy surfaces of molecular systems (and other properties).
-AIMNet2 is another even newer neural network potential, also implemented using PyTorch, capable of unprecedented accuracy for up to 14 chemical elements, 
+TorchANI is a PyTorch-based implementation of the older ANI neural network potential for describing potential energy surfaces of molecular systems (and other properties).
+AIMNet2 is newer neural network potential, also implemented using PyTorch, capable of unprecedented accuracy for up to 14 chemical elements, 
 support for charged systems and is capable of describing long-range interactions and dispersion.
-AIMNet2 paper: https://doi.org/10.26434/chemrxiv-2023-296ch-v2
+AIMNet2 paper: https://www.sciencedirect.com/org/science/article/pii/S2041652025006844
 
 
 ASH features a basic interface to PyTorch that furthermore supports both TorchANI and AIMNet2 neural network models,
@@ -95,14 +95,12 @@ Torchani can be installed via pip:
 
 *AIMNet2*
 
-To use AIMNet2 follow the installation instructions at https://github.com/isayevlab/AIMNet2
-We installed it like this in a conda environment where Pytorch and ASH had already been installed:
+To use AIMNet2 follow the installation instructions at https://isayevlab.github.io/aimnetcentral/#installation 
 
-.. code-block:: shell
+.. code-block:: python
 
-  git clone https://github.com/isayevlab/AIMNet2.git
-  cd AIMNet2
-  python setup.py install
+    pip install aimnet
+
 
 ################################################################################
 AIMNet2 Examples
@@ -111,7 +109,8 @@ AIMNet2 Examples
 *Basic AIMNet2 example*
 
 It is easy to use the AIMNet2 neural network potential with TorchTheory.
-The available models are: 'AIMNet2', and it is available for elements: 'H', 'C', 'N', 'O', 'F', 'Cl', 'S', 'Si', 'B', 'P', 'Br', 'As', 'I', 'Se'
+The available models are: 'aimnet2', 'aimnet2_2025', 'aimnet2_b973c', 'aimnet2nse', 'aimnet2pd'
+and models are available for elements: 'H', 'C', 'N', 'O', 'F', 'Cl', 'S', 'Si', 'B', 'P', 'Br', 'As', 'I', 'Se'
 
 .. code-block:: python
 
@@ -120,8 +119,8 @@ The available models are: 'AIMNet2', and it is available for elements: 'H', 'C',
     #H2O fragment
     frag = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
   
-    # Create a TorchTheory object using the AIMNet2 neural network potential
-    theory = TorchTheory(model_name="AIMNet2", platform="cpu")
+    # Create a TorchTheory object using the aimnet2_2025 neural network potential
+    theory = TorchTheory(model_name="aimnet2_2025", platform="cpu")
     
     #Run a single-point energy+gradient calculation
     #Optimizer,NumFreq, MolecularDynamics etc. should also work

@@ -139,9 +139,11 @@ xTBTheory can be used for QM/MM and ONIOM embedding etc.
 
 .. code-block:: python
 
-    class xTBTheory:
-        def __init__(self, xtbdir=None, xtbmethod='GFN1', runmode='inputfile', numcores=1, printlevel=2, filename='xtb_',
-                    maxiter=500, electronic_temp=300, label=None, accuracy=0.1, hardness_PC=1000, solvent=None):
+  class xTBTheory:
+      def __init__(self, xtbdir=None, xtbmethod='GFN1', runmode='inputfile', numcores=1, printlevel=2, filename='xtb_',
+                  maxiter=500, electronic_temp=300, label=None, accuracy=0.1, hardness_PC=1000, solvent=None,
+                  use_tblite=False, periodic=False, periodic_cell_dimensions=None, extraflag=None, grab_charges=False,
+                  grab_BOs=False):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -239,11 +241,35 @@ The optional runmode argument is also available: runmode='library' or runmode='i
     #An Energy+Gradient calculation running on 8 cores
     Singlepoint(theory=xTBcalc, fragment=HF_frag, Grad=True)
 
-
-
 -------------------------
 Parallelization
 -------------------------
 The xTB parallelization is OpenMP or MKL thread-based and can be controlled via the numcores keyword.
 Currently OMP threads are set equal to numcores and MKL threads are set equal to 1.
 Be aware that xTB parallelization may not be very efficient for small systems and running xTB in serial (i.e. numcores=1) is often much faster.
+
+-------------------------
+Periodic calculations
+-------------------------
+
+The xTB program has some support for periodic boundary conditions.
+By enabling *periodic*=True and setting *periodic_cell_dimensions* to a list of cell-dimensions (box lengths and angles),
+xTB will attempt to run the system with PBC enabled. 
+Note also that *use_tblite=True* allows using a different PBC implementation (requires installation of tblite library).
+
+
+Example:
+
+.. code-block:: python
+
+  from ash import *
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  periodic_cell_dimensions=[5.01336, 5.01336, 5.01336, 90.0, 90.0,90.0]
+
+  theory = xTBTheory(xtbmethod="GFN1", use_tblite=True, periodic=True,
+      periodic_cell_dimensions=periodic_cell_dimensions)
+
+  MolecularDynamics(theory=theory, fragment=frag, simulation_time=50,
+      traj_frequency=10, trajectory_file_option='DCD',
+      force_periodic=True, periodic_cell_dimensions=periodic_cell_dimensions)
