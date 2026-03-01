@@ -29,7 +29,7 @@ It was run using the ASH *calc_surface* function as follows:
     theory = tbliteTheory(method="GFN2-xTB")
 
     #Calling the calc_surface function
-    surfacedictionary = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
+    result = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
         resultfile='surface_results.txt', runmode='serial',
         RC1_range=[-180,180,10], RC1_type='dihedral', RC1_indices=[0,1,2,3])
 
@@ -197,7 +197,7 @@ We can then run the calc_surface function as we did before, but now with the com
     delta_ml_theory = WrapTheory(theory_1=ll_theory, theory_2=mace_theory)
 
     #Calling the calc_surface function
-    surfacedictionary = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
+    result = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
         resultfile='surface_results.txt', runmode='serial',
         RC1_range=[-180,180,10], RC1_type='dihedral', RC1_indices=[0,1,2,3])
 

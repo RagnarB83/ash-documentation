@@ -39,7 +39,7 @@ This relaxed surface-scan was performed using the **calc_surface function**  (se
     theory = xTBTheory(runmode='library')
 
     #Calling the calc_surface function
-    surfacedictionary = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
+    result = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
         resultfile='surface_results.txt', runmode='serial',
         RC1_range=[-180,180,10], RC1_type='dihedral', RC1_indices=[0,1,2,3])
 
