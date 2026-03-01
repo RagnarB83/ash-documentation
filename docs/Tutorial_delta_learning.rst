@@ -33,7 +33,12 @@ It was run using the ASH *calc_surface* function as follows:
         resultfile='surface_results.txt', runmode='serial',
         RC1_range=[-180,180,10], RC1_type='dihedral', RC1_indices=[0,1,2,3])
 
-Figure 1. XX 
+
+.. image:: figures/tutorial_dl_butane_surfacescan_xtb.png
+   :align: center
+   :width: 400
+
+Figure 1. Relaxed surface scan at GFN2-xTB level of theory.
 
 A simple NDO-based semiempirical method like AM1 is capable of capturing the conformational energy between the 2 minima, but severely underestimates both torsional barriers.
 A more modern semiempirical tightbinding method like GFN2-xTB performs better, but still underestimates the barriers.
