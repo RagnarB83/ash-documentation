@@ -25,8 +25,8 @@ It was run using the ASH *calc_surface* function as follows:
     from ash import *
     #Creating the ASH fragment 
     frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
-    #Defining a theory: here tblitetheory (GFN2-xTB)
-    theory = tbliteTheory(method="GFN2-xTB")
+    #Defining a theory: here xtb (GFN2-xTB)
+    theory = xTBTheory(xtbmethod="GFN2-xTB")
 
     #Calling the calc_surface function
     result = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
@@ -34,17 +34,45 @@ It was run using the ASH *calc_surface* function as follows:
         RC1_range=[-180,180,10], RC1_type='dihedral', RC1_indices=[0,1,2,3])
 
 
-.. image:: figures/tutorial_dl_butane_surfacescan_xtb.png
+.. image:: figures/PESbutane_gfn1_2_pbe0.png
    :align: center
    :width: 400
 
-Figure 1. Relaxed surface scan at GFN2-xTB level of theory.
+Figure 1. Relaxed surface scan at GFN1-xTB and GFN2-xTB level of theory.
 
-A simple NDO-based semiempirical method like AM1 is capable of capturing the conformational energy between the 2 minima, but severely underestimates both torsional barriers.
+The above figure was created using the script below:
+
+.. toggle::
+
+    .. code-block:: python
+
+        from ash import *
+        import glob
+
+        hartokcal=627.5091
+        #Create ASH_plot object named edplot
+        eplot = ASH_plot("", num_subplots=1, x_axislabel="Dihedral (°)", y_axislabel='Energy(kcal/mol)')
+        # List of colors to use for series
+        colors=['blue','red','green', 'black', 'orange', 'brown', 'purple', 'gray', 'cyan', 'lime', 'pink', 'darkviolet', 'olive']
+        # Looping over surface txt files with data. Here the files are called surface_GFN2.txt and surface_GFN1.txt
+        for i,txtfile in enumerate(glob.glob("*.txt")):
+            label=txtfile.replace(".txt","")
+            color=colors[i]
+            #Grab data
+            dataseries = np.genfromtxt(txtfile, delimiter=' ')
+            xvalues=dataseries[:,0]
+            energies=dataseries[:,1]
+            relenergies = [(i-min(energies))*hartokcal for i in energies]
+            # Add a dataseries to subplot 0 (the only subplot)
+            eplot.addseries(0, x_list=xvalues, y_list=relenergies, label=label, color=color, line=True, scatter=True)
+
+        # Create image
+        eplot.savefig('PES_plot')
+
+A simple semiempirical method like GFN1-xTB is capable of capturing the conformational energy between the 2 minima, but severely underestimates both torsional barriers.
 A more modern semiempirical tightbinding method like GFN2-xTB performs better, but still underestimates the barriers.
-DFT methods do better. 
-MP2 is the highest level of theory used here, and even with a small basis set the accuracy is very good (when compared against even higher level coupled cluster methods). We will use MP2 as our target high-level theory in the following. 
-Here we will show how to train a Δ-ML model to learn the difference between AM1 and MP2 for butane.
+DFT methods do better. We will use PBE0 as our target high-level theory in the following. 
+Here we will show how to train a Δ-ML model to learn the difference between GFN1-xTB and PBE0/def2-SVP for butane.
 
 It is important to note that the butane test system chosen here is deliberately simple for pedagogic purposes and for being computationally affordable to carry out the training, even on a laptop.
 A model trained to reproduce the energy surface of butane is probably not particularly useful.
