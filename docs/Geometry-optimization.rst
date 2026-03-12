@@ -225,6 +225,7 @@ Syntax to use for the constraints dictionary:
     constraints={'angle':[[98,99,100]]} #This defines a angle constraint between atoms 98,99 and 100
     constraints={'dihedral':[[98,99,100,101]]} #This defines a dihedral constraint between atoms 98,99,100 and 101.
     constraints={'bond':[[0,1],[3,4]], 'angle':[[98,99,100]]} #This defines 2 bond constraints and 1 angle constraint.
+    constraints={'xyz':[5,6]} #This defines XYZ constraints for the indicated atoms (i.e. freeze atoms). Alternative to frozenatoms option.
 
 *Example:*
 

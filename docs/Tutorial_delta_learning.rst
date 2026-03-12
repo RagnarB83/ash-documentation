@@ -16,7 +16,7 @@ For more information on machine learning in ASH, please refer to :doc:`Machine_l
 #######################################################################################
 
 The potential energy surface of butane is a nice simple system with a very simple conformational landscape.
-It still shows some differences in the torsional barrier heights for different quantum chemistry methods.
+It shows some differences in the torsional barrier heights for different quantum chemistry methods that could not be corrected by a single global shift.
 Figure 1 shows a relaxed surface scan of butane, calculated with different levels of theory.
 It was run using the ASH *calc_surface* function as follows:
 
@@ -26,6 +26,7 @@ It was run using the ASH *calc_surface* function as follows:
     #Creating the ASH fragment 
     frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
     #Defining a theory: here xtb (GFN2-xTB)
+    #theory = xTBTheory(xtbmethod="GFN1-xTB")
     theory = xTBTheory(xtbmethod="GFN2-xTB")
 
     #Calling the calc_surface function
@@ -108,7 +109,7 @@ The script below shows how we can perform a semiempirical GFN1-xTB MTD simulatio
 
     #Calling the OpenMM_metadynamics function with a time of 1 ps
     OpenMM_metadynamics(fragment=frag, theory=theory,
-                timestep=0.001, simulation_time=100, traj_frequency=1,
+                timestep=0.001, simulation_time=100, traj_frequency=100,
                 temperature=300,
                 CV1_atoms=[0,1,2,3], CV1_type='dihedral', CV1_biaswidth=0.5,
                 biasfactor=6, height=1,
@@ -207,7 +208,7 @@ e. Testing the Δ-ML potential
 The real testing is seeing how well the trained Δ-ML potential works in practice on something other than the training data
 and something other than energies and forces.
 Here we will do a relaxed surface scan to test how well the Δ-ML potential works. 
-This will test the robustness (a series of geometry optimizations are carried out) as well as the final accuracy of the conformational landscape we care about.
+This will test the robustness (a series of constrained geometry optimizations are carried out) as well as the final accuracy of the conformational landscape we care about.
 
 First we need to define our final theory in ASH. Because the ML-model is trained to learn only the difference between 2 levels of theory, we need to define a composite theory that also contains the low-level theory (or baseline).
 For this we use the WrapTheory class in ASH and define a theory that sums both energies and gradients from the low-level theory and the trained MACE model.
@@ -220,9 +221,9 @@ We can then run the calc_surface function as we did before, but now with the com
     #Define low-level theory
     ll_theory = xTBTheory(runmode='library', xtbmethod="GFN1")
     #Define trained MACE model
-    mace_theory = MACETheory(model_file="mace_model.pt", device="cpu")
+    mace_theory = MACETheory(model_file="mace_model.model", device="cpu")
     #Wrap the 2 theories into a composite Δ-ML theory
-    delta_ml_theory = WrapTheory(theory_1=ll_theory, theory_2=mace_theory)
+    delta_ml_theory = WrapTheory(theory1=ll_theory, theory2=mace_theory)
 
     #Calling the calc_surface function
     result = calc_surface(fragment=frag, theory=theory, scantype='Relaxed',
