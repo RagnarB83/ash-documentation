@@ -10,6 +10,8 @@ The ASH interface to DFTB+ is fairly new and not very extensive.
 It supports energies and gradients and can thus be used within ASH for optimization, frequencies, dynamics etc.
 It also supports pointcharge embedding and can thus be used for electrostatic embedding QM/MM.
 
+Periodic boundary conditions were recently made available in the interface.
+
 
 **DFTBTheory class:**
 
@@ -18,7 +20,8 @@ It also supports pointcharge embedding and can thus be used for electrostatic em
     class DFTBTheory():
         def __init__(self, dftbdir=None, hamiltonian="XTB", xtb_method="GFN2-xTB", printlevel=2, label="DFTB",
                     numcores=1, slaterkoster_dict=None, maxmom_dict=None, Gauss_blur_width=0.0,
-                    SCC=True, ThirdOrderFull=False, ThirdOrder=False, MaxSCCIterations=300):
+                    SCC=True, ThirdOrderFull=False, ThirdOrder=False, MaxSCCIterations=300,
+                    periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None, kpoint_value=1):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -76,6 +79,22 @@ It also supports pointcharge embedding and can thus be used for electrostatic em
      - float
      - 0.0
      - Gaussian blur width for pointcharge embedding 
+   * - ``periodic``
+     - Boolean
+     - False
+     - Enable periodic boundary conditions.
+   * - ``periodic_cell_vectors``
+     - 2d array
+     - None
+     - Cell vectors in Å as a Numpy 2D array.
+   * - ``periodic_cell_dimensions``
+     - list
+     - None
+     - Cell dimensions as a list of [a,b,c,alpha,beta,gamma] parameters in Å and °.
+   * - ``kpoint_value``
+     - integer
+     - 1
+     - Specify k-point grid by a simple parameter. 1 indicates gamma point.
 
 
 ################################################################################
@@ -188,3 +207,50 @@ set *hcorrection_zeta* to be 4.0 as recommended (see README of 3ob).
        hubbard_derivs_dict=hubbard_derivs_dict, hcorrection_zeta=zeta)
 
     Singlepoint(theory=theory, fragment=frag)
+
+**Periodic DFTB3 with 3ob paremeter set with PBCs**
+
+Here showing how a periodic DFTB3 geometry optimization (optimization of both atom and cell parameters) can be carried out.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  #periodic_cell_dimensions=[5.01336, 5.01336, 5.01336, 90.0, 90.0,90.0]
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0>
+
+  # DFTB3-3ob
+  skdir="/Users/rb269145/ash-tests/dftb_interface/dftb_for_website/DFTB>
+  sldict_3ob = {'N-N':f'{skdir}/N-N.skf', 'H-N':f'{skdir}/H-N.skf',
+          'N-H':f'{skdir}/N-H.skf', 'H-H':f'{skdir}/H-H.skf'}
+
+  hubbard_derivs_dict={'N':-0.1575, 'H':-0.1857}
+  zeta=4.0 #damping parameter for H
+
+  # Defining DFTB3-3ob Hamiltonian
+  theory = DFTBTheory(hamiltonian="DFTB", SCC=True, ThirdOrderFull=True>
+    hubbard_derivs_dict=hubbard_derivs_dict, hcorrection_zeta=zeta,
+      periodic=True, periodic_cell_vectors=cell_vectors)
+
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")
+
+**Periodic GFN2-xTB with PBCs**
+
+Here showing how a periodic GFN2-xTB geometry optimization (optimization of both atom and cell parameters) can be carried out.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  #periodic_cell_dimensions=[5.01336, 5.01336, 5.01336, 90.0, 90.0,90.0]
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+  theory = DFTBTheory(hamiltonian="XTB", xtb_method="GFN2-xTB",
+      periodic=True, periodic_cell_vectors=cell_vectors)
+
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")

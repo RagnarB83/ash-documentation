@@ -59,6 +59,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    coordinate-input
    parallelization
    QM-interfaces
+   Periodic-systems
    scientific_articles
 
 

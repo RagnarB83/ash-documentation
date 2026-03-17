@@ -179,6 +179,55 @@ Other options to calc_surface:
 
 Note: See :doc:`Geometry-optimization` for geomeTRICOptimizer-related features.
 
+######################################################
+Periodic boundary conditions
+######################################################
+
+Thanks to the feature in the ASH interface to geomeTRIC, it is possible to perform geometry optimizations of both atom and lattice positions
+in a periodic system. This feature can be extended to constrained optimizations allowing surface scans via **calc_surface** 
+to be carried out under PBCs. See  :doc:`Geometry-optimization` documentation for more information on the optimization aspect.
+
+To enable PBC-based surface scans one simply needs to :
+
+- create an ASH Fragment containing the Cartesian coordinates of the unitcell (can be an XYZ-file or something else).
+- provide an ASH Theory object that has native support for PBCs (and PBC enabled) and provide cell vectors or cell dimensions to object.
+- **calc_surface** will automatically recognize whether the Theory object has PBCs enabled.
+
+See  :doc:`Periodic-systems` for information on what Theory objects are supported.
+
+The *PBC_format_option* keyword can be used to specify the file format used for each surfacepoint that will be 
+stored in the surface_pbcfiles directory. PBC_format_option takes options: 'CIF', 'XSF' or 'POSCAR'
+CIF-files and POSCAR file can be visualized in Chemcraft while XSF files can be visualized in VMD.
+
+
+An example  
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+
+  #Create fragment from xyz-file
+  fragment=Fragment(xyzfile="system_unitcell.xyz", charge=0, mult=1)
+
+  #Periodic CP2KTheory definition with specified cell dimensions
+  qm = CP2KTheory(cp2k_bin_name="cp2k.psmp",parallelization='OMP',
+      basis_method='XTB', xtb_type='GFN1',
+      numcores=numcores, scf_maxiter=1500,
+      periodic=True,cell_dimensions=[13.8,8.9,15.4,90,90,90],
+      psolver='periodic', OT_preconditioner="FULL_SINGLE_INVERSE",
+      eps_default=1e-12, stress_tensor=True)
+
+  # Scan using HDLC internal coordinates for the constrained optimizations
+  # NOTE: PBC_format_option: 'CIF', 'XSF', or 'POSCAR
+  results = calc_surface(fragment=fragment, theory=qm, scantype='relaxed',
+      resultfile='surface_results.txt',
+      runmode='serial', RC1_range=[0,360,10], RC1_type='dihedral',
+      RC1_indices=[6,17,14,10],
+      RC2_range=[0,360,10], RC2_type='dihedral',
+      RC2_indices=[51,62,59,55], keepoutputfiles=True, coordsystem='hdlc',
+      PBC_format_option="CIF")
 
 
 ###########################################################

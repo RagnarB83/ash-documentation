@@ -1,11 +1,12 @@
 Geometry optimization
 ======================================
 
-Geometry optimizations in ASH are almost exclusively performed via an interface to the powerful `geomeTRIC optimizer library <https://github.com/leeping/geomeTRIC>`_.
+Geometry optimizations in ASH are mostly performed via an interface to the powerful `geomeTRIC optimizer library <https://github.com/leeping/geomeTRIC>`_.
 In addition there is a very simple optimizer, *SimpleOpt*, that performs geometry optimizations exclusively using Cartesian coordinates,
 by basic algorithms such as steepest descent and LBFGS.
-There is also a preliminary interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , which will be improved in the near future.
+There is also an interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , which will be improved in the near future.
 
+More recently, optimizers for periodic cell optimizations have become available.
 
 ######################################################
 geomeTRICOptimizer
@@ -517,6 +518,60 @@ IRC Example:
   Optimizer(theory=theory,fragment=frag, maxiter=200, irc=True, hessian=result.hessian)
 
 
+######################################################
+Periodic Boundary Conditions with geomeTRIC
+######################################################
+
+The geomeTRIC library is normally intended only for molecular systems (i.e. no translational symmetry), 
+not systems with periodic boundary conditions.
+In previous ASH versions, if the system was described by a Theory-interface supporting PBCs (e.g. CP2K)
+but optimized with geomeTRICOptimizer, a frozen-lattice optimization was automatically performed (i.e. only atoms of the cell were optimized).
+
+More recently, the ASH interface to geomeTRIC, supports a way of coaxing the geomeTRIC library to 
+simultaneously minimize atom positions and cell vectors of a periodic system.
+This is performed by converting the cell-vectors into dummy atoms that are simultaneously optimized in geomeTRIC's internal coordinates.
+This option will currently only work for HDLC internal coordinates (automatically enforced).
+
+To utilize this option, one only needs to provide a Theory object that has native support for PBCs and has enabled PBCs in object (usually via *periodic* = True keyword)
+The geomeTRICOptimizer will then automatically perform an atom+cellvector optimization. 
+
+If this behaviour is not desired one can turn it off (*force_noPBC* = False in geomeTRICOptimizer) which should then correspond to a frozen lattice calculation.
+
+During the optimization ASH will write XYZ-files and XYZ trajectories as normal.
+Once the optimization finishes will additionally write the coordinates in a file-format suited for PBCs.
+This format can be chosen by keyword *PBC_format_option* which is by default set to 'CIF' (see `CIF file format <https://www.ccdc.cam.ac.uk/community/access-deposit-structures/deposit-a-structure/guide-to-cifs/>`_ but other other options are 'XSF' 
+(see `XSF file format <http://www.xcrysden.org/doc/XSF.html>`_) or 'POSCAR' (see `POSCAR file format <https://www.vasp.at/wiki/POSCAR>`_)
+
+
+See also: :doc:`Periodic-systems` .
+
+Example below shows a way of using geomeTRIC to optimize an ammonia crystal using CP2K as a PBC-DFT theory.
+
+.. code-block:: python
+
+    from ash import *
+
+    # Defining an ASH fragment by reading an XYZ-file 
+    frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+    # Defining the cell vectors 
+    cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+    #periodic_cell_dimensions=[5.01336, 5.01336, 5.01336, 90.0, 90.0,90.0]
+
+    #CP2K basis set and pseudopotential information
+    basis_dict={'C':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH', 'N':'DZVP-MOLOPT-SR-GTH'}
+    potential_dict={'C':'GTH-PBE-q4','O':'GTH-PBE-q6','H':'GTH-PBE-q1', 'N':'GTH-PBE-q5'}
+
+    #Periodic CP2KTheory definition with specified cell dimensions
+    theory = CP2KTheory(cp2k_bin_name="cp2k.psmp",basis_dict=basis_dict,potential_dict=potential_dict,
+                    basis_method='GPW', functional='PBE', ngrids=4, cutoff=600, numcores=numcores,
+                    periodic=True,cell_vectors=cell_vectors, psolver='periodic', stress_tensor=True)
+
+    # Calling the geomeTRIC optimizer. 
+    # The optimizer will check for PBC support of the theory object and enable PBC optimization in HDLC (only coordsystem supported)
+    Optimizer(theory=theory, fragment=frag, coordsystem="hdlc", PBC_format_option="XSF")
+
+
 
 ######################################################
 The geomeTRICOptimizer class
@@ -544,6 +599,7 @@ Example on how to use:
     optimizer = GeomeTRICOptimizerClass(theory=theory, fragment=fragment, charge=0, mult=1))
     #Run the optimizer object
     result = optimizer.run()
+
 
 ######################################################
 DL-FIND interface

@@ -3,22 +3,26 @@ MACE interface
 
 `MACE <https://mace-docs.readthedocs.io/>`_ is an equivariant message passing neural network potential and software that looks very promising.
 
-ASH features a simple interface to MACE via the PyTorch implementation that allows both the direct use of pre-trained MACE models
+ASH features an interface to MACE via the PyTorch implementation that allows both the direct use of pre-trained MACE models
 to be used in ASH (just like any other theory) as well as direct training of a MACE-potential.
 
 Energies and gradients can be requested (just like a regular QM or MM theory) and so a valid 
 MACETheory object can be used for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
 Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 
+Periodic boundary conditions are now also supported for running pretrained models.
 
 **MACETheory class:**
 
 .. code-block:: python
     
-    class MACETheory():
-        def __init__(self, config_filename="config.yml", 
-                    model_file=None, printlevel=2, 
-                    label="MACETheory", numcores=1, device="cpu"):
+    def __init__(self, config_filename="config.yml",
+                 model_name=None, model_name_subtype=None, model_name_head=None,
+                 model_file=None, printlevel=2, mace_load_dispersion=False,
+                 label="MACETheory", numcores=1, platform="cpu", device=None, return_zero_gradient=False, 
+                 polarmace=False, default_dtype="float64",
+                 energy_weight=None, forces_weight=None, max_num_epochs=None, valid_fraction=None,
+                 periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None):
 
 .. list-table::
     :widths: 15 15 15 60
@@ -34,8 +38,20 @@ Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
       - Filename used for for MACE training configuration file.
     * - ``model_file``
       - string
-      - 'mace.model'
+      - None
       - Name of file used to load model (when using) or file created when training new model.
+    * - ``model_name``
+      - string
+      - None
+      - Name of foundational model used to load.
+    * - ``model_name_subtype``
+      - string
+      - None
+      - Name of foundational model subtype to choose (when appropriate).
+    * - ``model_name_head``
+      - string
+      - None
+      - For multihead models, which head to choose.
     * - ``printlevel``
       - integer
       - 2
@@ -44,15 +60,42 @@ Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
       - string
       - 'MACETheory'
       - Label used for object
-    * - ``device``
+    * - ``platform``
       - string
       - 'cpu'
-      - Device used for training or using of MACE model within PyTorch. Options are: 'cuda', 'opencl', 'mps', 'cpu'.
+      - Platform (device) used for training or running of MACE model within PyTorch. Options are: 'cuda', 'opencl', 'mps', 'cpu'.
+    * - ``default_dtype``
+      - string
+      - 'float64'
+      - Whether to use float64 or float32 in Pytorch.
     * - ``numcores``
       - integer
       - 1
       - Number of CPU cores used (if device is CPU)
-
+    * - ``energy_weight``
+      - float
+      - None
+      - Weight on energy for training
+    * - ``forces_weight``
+      - float
+      - None
+      - Weight on forces for training
+    * - ``max_num_epochs``
+      - integer
+      - None
+      - Max number of epochs to use for training
+    * - ``periodic``
+      - Boolean
+      - False
+      - Whether to use PBCs or not
+    * - ``periodic_cell_vectors``
+      - numpy array
+      - None
+      - Cell vectors as 3x3 numpy array in Angstrom.
+    * - ``periodic_cell_vectors``
+      - list
+      - None
+      - Cell dimensions as list of cell lengths and angles in Angstrom and degrees.
 
 
 **MACETheory train method:**
@@ -115,6 +158,45 @@ number of epochs requested (500 by default) etc. The training uses the CPU by de
 
 
 ################################################################################
+Loading pre-trained or foundational MACE models
+################################################################################
+Pre-trained MACE models can either be previously trained models by yourself or a general foundational model.
+If you simply want to load a MACE model in MACETheory, for the purpose of using it as a Theory object to run calculations,
+you can either load the model via file (*model_file* keyword) or by name in case of a foundational model (*model_name* keyword).
+For option *model_name* the model is looked up inside the mace-torch library and automatically downloaded.
+Sometimes it may be necessary also to specify a subtype (*model_name_head*) or a specific head in the case of multi-head models (*model_name_head*).
+
+For information on available foundational models, see:
+`MACE-docs Foundational models <https://mace-docs.readthedocs.io/en/latest/guide/foundation_models.html>`_
+`MACE-foundations repository <https://github.com/ACEsuit/mace-foundations>`_
+`MACE modeles on Hugginf Face <https://huggingface.co/mace-foundations>`_
+
+Examples on different ways to load models into MACETheory:
+
+.. code-block:: python
+
+  frag = Fragment(xyzfile="acetone.xyz", charge=0, mult=1)
+
+  # Load a MACE foundational model via previously downloaded file (here MACE-OFF23)
+  theory = MACETheory(model_file="/path/to/MACE-foundational-models/MACE-OFF23_medium.model")
+  # Load a MACE foundational model via name (here MACE-OFF23)
+  theory = MACETheory(model_name="mace-off23")
+  # Load a MACE foundational model via name (here MACE-OFF23) and specify subtype (size)
+  theory = MACETheory(model_name="mace-off23", model_name_subtype="large")
+  # Load a MACE MH-1 foundational model via name and specify a specific head 
+  theory = MACETheory(model_file="/path/to/MACE-foundational-models/mace-mh-1.model", model_name_head="omat_pbe")
+
+
+Recognized *model_name* options by MACETheory in ASH:
+
+- mace-off23 (*model_name_subtype* options: 'small', 'medium', 'large')
+- mace-mp  (*model_name_subtype* options: 'small', 'medium', 'large' or 'medium-mpa-0')
+- mace-polar or mace-polar-1  (*model_name_subtype* options: 'polar-1-s', 'polar-1-m', 'polar-1-l')
+- mace-ani-cc
+
+Other foundational models would likely have to be downloaded separately and selected via *model_file* keyword.
+
+################################################################################
 MACE Examples
 ################################################################################
 
@@ -165,11 +247,9 @@ The code below will create multiple model files but the file named model_stagetw
     #Train model
     macetheory.train(train_file="train_data_mace.xyz", device="cpu", max_num_epochs="3", forces_weight=100)
 
-
-
 **Use a previously trained model**
 
-Here it is assumed that you have already either trained a model yourself previously (see above) or that you want to use a pre-trained MACE model
+Here it is assumed that you have already either trained a model yourself previously (see above) or that you want to use a foundational MACE model
 from the literature. 
 
 .. code-block:: python
@@ -183,3 +263,26 @@ from the literature.
     
     #Run a job with Theory
     res = Optimize(theory=macetheory, fragment=frag)
+
+**Run PBC calculations with MACE foundational models**
+
+MACE foundational models can be used for periodic calculations.
+Example below activates PBCs in MACETheory object and then uses the geomeTRICOptimizer to 
+optimize atom and cell positions.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  #Cell
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+
+  #Periodic CP2KTheory definition with specified cell dimensions
+  theory = MACETheory(model_file="/Users/rb269145/MACE-foundational-models/MACE-POLAR-1-M.model",
+                  periodic=True, periodic_cell_vectors=cell_vectors)
+
+  # Here using the geomeTRIC Optimizer that recognizes that PBCs are active in MACETheory and optimizes atoms and cell positions
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")
