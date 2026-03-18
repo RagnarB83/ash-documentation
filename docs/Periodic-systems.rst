@@ -2,7 +2,7 @@ Periodic boundary conditions in ASH
 ======================================
 
 ASH was originally designed for treating molecular systems without any translational symmetry. 
-In fact most interfaces to QM codes in ASH do not support periodic boundary conditions (PBC).
+In fact most interfaces to QM codes in ASH do not support periodic boundary conditions (PBC) while the main MM program (OpenMM) does.
 
 There is now, however, increasing support for PBC-based QM codes in ASH and ASH is starting to support PBCs in a more general way.
 Work is still in progress in this important area and is subject to interface changes.
@@ -10,8 +10,7 @@ Work is still in progress in this important area and is subject to interface cha
 
 **Current status**
 
-- **Fragment objects:** It is important to realize that an ASH Fragment object currently has no knowledge of periodic boundary conditions 
-(regardless of whether PBC information is present in the file that was read-in).
+- **Fragment objects:** It is important to realize that an ASH Fragment object currently has no knowledge of periodic boundary conditions  (regardless of whether PBC information is present in the file that was read-in).
 - **Theory objects:** PBC information generally always needs to be provided to the supported Theory object to get PBCs.
 - **Job functions:** Not all job-types in ASH may account for PBCs.
 
@@ -32,7 +31,7 @@ Hybrid theories currently do not support PBCs (QMMMTheory, ONIOMTHeory, WrapTheo
 Periodic cell optimizations
 ######################################################
 
-New in ASH is the ability to perform geometry optimizations of periodic systems, minimizing both atom positions and cell vectors.
+New in ASH is the ability to perform geometry optimizations of periodic systems in a general way (independent of what algorithm is implemented in the QM program) minimizing both atom positions and cell vectors.
 This option will only work for Theory classes that support periodic boundary conditions natively (see supported codes at the top).
 
 Developer note: Specifically the Theory classes need to support *theory.update_cell* method and the *theory.cell_gradient* and *theory.periodic_cell_vectors* attribues.
@@ -46,7 +45,7 @@ Developer note: Specifically the Theory classes need to support *theory.update_c
 
 Periodic_optimizer_cart is a native PBC geometry optimizer in Cartesian coordinates.
 It minimizes atoms and cell vectors simultaneously by a BFGS algorithm. 
-Other step algorithms are available: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
+It is also possible to choose a different algorithm for taking the step: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
 
 This optimizer is likely to be on par with other similar Cartesian optimization algorithms in e.g. periodic DFT programs, 
 but will ultimately suffer from the Cartesian coordinate representation for many systems that will make convergence slow.
@@ -62,14 +61,14 @@ Can be modified by passing a dictionary : conv_criteria = {'convergence_grms':1e
                                 printlevel=2, conv_criteria=None):
 
 -----------------------------------------------------------------------------------
-*Modified geomeTRIC Optimizer*:  PBC geometry optimization in internal coordinates
+*Modified geomeTRIC Optimizer* :  PBC geometry optimization in internal coordinates
 -----------------------------------------------------------------------------------
 
-The ASH interface to the geomeTRIC library also contains a way of coaxing the geomeTRIC library to 
-simultaneously minimize atom positions and cell vectors of a periodic system geomeTRIC's internal coordinate system.
+The ASH interface to the geomeTRIC library now also contains a way of coaxing the geomeTRIC library to 
+simultaneously minimize atom positions and cell vectors of a periodic system using geomeTRIC's internal coordinate system.
 
 This option has not been rigorously tested but it is likely to work well for periodic systems that feature molecular 
-units e.g. molecular crystals, i.e. systems where an internal coordinate representation will offer advantages.
+units e.g. molecular crystals, i.e. systems where an internal coordinate representation (only HDLCs for now) will offer advantages.
 
 .. code-block:: python
 
