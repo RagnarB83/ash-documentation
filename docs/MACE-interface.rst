@@ -167,9 +167,10 @@ For option *model_name* the model is looked up inside the mace-torch library and
 Sometimes it may be necessary also to specify a subtype (*model_name_head*) or a specific head in the case of multi-head models (*model_name_head*).
 
 For information on available foundational models, see:
-`MACE-docs Foundational models <https://mace-docs.readthedocs.io/en/latest/guide/foundation_models.html>`_
-`MACE-foundations repository <https://github.com/ACEsuit/mace-foundations>`_
-`MACE modeles on Hugginf Face <https://huggingface.co/mace-foundations>`_
+
+- `MACE-docs Foundational models <https://mace-docs.readthedocs.io/en/latest/guide/foundation_models.html>`_
+- `MACE-foundations repository <https://github.com/ACEsuit/mace-foundations>`_
+- `MACE modeles on Hugging Face <https://huggingface.co/mace-foundations>`_
 
 Examples on different ways to load models into MACETheory:
 
