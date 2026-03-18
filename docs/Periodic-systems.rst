@@ -16,7 +16,7 @@ Work is still in progress in this important area and is subject to interface cha
 
 Only a few Theory interfaces in ASH currently support periodic boundary conditions:
 
-    - OpenMMTheory: periodic MM Hamiltonian as well as PBC MD simulations
+    - OpenMMTheory: periodic MM Hamiltonian as well as PBC MD simulations and optimizations
     - CP2KTheory: periodic xTB, QM and QM/MM Hamiltonians
     - xTBTheory: periodic xTB 
     - tbliteTheory: periodic xTB
@@ -33,8 +33,9 @@ Periodic cell optimizations
 
 New in ASH is the ability to perform geometry optimizations of periodic systems in a general way (independent of what algorithm is implemented in the QM program) minimizing both atom positions and cell vectors.
 This option will only work for Theory classes that support periodic boundary conditions natively (see supported codes at the top).
+The theories listed above should all work.
 
-Developer note: Specifically the Theory classes need to support *theory.update_cell* method and the *theory.cell_gradient* and *theory.periodic_cell_vectors* attribues.
+Developer note: Specifically the Theory classes need to support *theory.update_cell* and  *theory.get_cell_gradient* methods and *theory.periodic_cell_vectors* attribues.
 
 .. warning::
   Periodic geometry optimizations in ASH will only work for simple theories, not QM/MM.

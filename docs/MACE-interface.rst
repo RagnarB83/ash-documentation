@@ -191,11 +191,27 @@ Examples on different ways to load models into MACETheory:
 Recognized *model_name* options by MACETheory in ASH:
 
 - mace-off23 (*model_name_subtype* options: 'small', 'medium', 'large')
-- mace-mp  (*model_name_subtype* options: 'small', 'medium', 'large' or 'medium-mpa-0')
-- mace-polar or mace-polar-1  (*model_name_subtype* options: 'polar-1-s', 'polar-1-m', 'polar-1-l')
+- mace-mp or mace-mh (*model_name_subtype* options: 'small', 'medium', 'large' or 'medium-mpa-0', 'mh-1', 'mh-0')
+- mace-polar  (*model_name_subtype* options: 'polar-1-s', 'polar-1-m', 'polar-1-l')
 - mace-ani-cc
+- mace_omol
 
-Other foundational models would likely have to be downloaded separately and selected via *model_file* keyword.
+Note that for mace-mp / mace-mh models, D3 dispersion can also be activated via the *mace_load_dispersion*=True keyword and the *mace_dispersion_xc* keyword can be used to specify
+the name of the DFT functional to use for evaluating the dispersion formula (e.g. *mace_dispersion_xc*="PBE" for ).
+Dispersion is often recommended for use with those models (see literature).
+Code block below shows how to perform a mace-mh-1-omat-D3 model calculation (see preprint: https://arxiv.org/pdf/2510.25380):
+
+.. code-block:: python
+
+  # Choosing MACE-MH-1 model by name, subtype and head. And activating D3 dispersion
+  qm = MACETheory(model_name="mace-mh-1", model_name_subtype="mh-1", model_name_head="omat_pbe",
+                  mace_load_dispersion=True, mace_dispersion_xc="pbe")
+  # Choosing MACE-MH-1 model by file and head.  And activating D3 dispersion
+  qm = MACETheory(model_file="/path/to/MACE-foundational-models/mace-mh-1.model", model_name_head="omat_pbe",
+                  mace_load_dispersion=True, mace_dispersion_xc="pbe")
+
+
+Note that for other MACE foundational models it is easiest to download them separately and select via *model_file* keyword.
 
 ################################################################################
 MACE Examples
