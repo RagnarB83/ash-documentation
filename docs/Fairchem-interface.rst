@@ -11,6 +11,7 @@ can be used to calculate energies and gradients (just like a regular QM or MM th
 A FairchemTheory object can be used for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
 Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 
+Periodic boundary conditions are also supported.
 
 
 **FairchemTheory class:**
@@ -18,7 +19,8 @@ Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 .. code-block:: python
     
     class FairchemTheory():
-        def __init__(self, model_name=None, model_file=None, task_name=None, device="cuda", seed=41, numcores=1):
+        def __init__(self, model_name=None, model_file=None, task_name=None, platform="cpu", seed=41, numcores=1,
+                    periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None):
 
 .. list-table::
     :widths: 15 15 15 60
@@ -40,15 +42,26 @@ Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
       - string
       - None
       - Name task. Options: 'oc20', 'omol', 'omat', 'odac', 'omc'
-    * - ``device``
+    * - ``platform``
       - string
       - 'cuda'
-      - Device used for using Fairchem model within PyTorch. Options are: 'cuda', 'opencl', 'mps', 'cpu'.
+      - Platform/device used for using Fairchem model within PyTorch. Options are: 'cuda', 'opencl', 'mps', 'cpu'.
     * - ``numcores``
       - integer
       - 1
-      - Number of CPU cores used (if device is CPU)
-
+      - Number of CPU cores used (if platform is CPU)
+    * - ``periodic``
+      - Boolean
+      - False
+      - Whether to use PBCs or not
+    * - ``periodic_cell_vectors``
+      - numpy array
+      - None
+      - Cell vectors as 3x3 numpy array in Angstrom.
+    * - ``periodic_cell_vectors``
+      - list
+      - None
+      - Cell dimensions as list of cell lengths and angles in Angstrom and degrees.
 
 ################################################################################
 Fairchem installation
@@ -109,3 +122,24 @@ the file, upload to the relevant computer/cluster and load them via the Fairchem
     # Here selecting the pre-downloaded uma-s-1p1.pt file 
     theory = FairchemTheory(model_file="/data/ML-models/uma-s-1p1.pt", task_name="omol")
     Singlepoint(theory=theory, fragment=frag)
+
+**Use a UMA model with PBCs**
+
+Here is an example of how to use periodic boundary conditions.
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=1
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  #Cell
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+
+  #Periodic CP2KTheory definition with specified cell dimensions
+  theory = FairchemTheory(model_file="/path/to/uma-s-1p1.pt",
+                  periodic=True, periodic_cell_vectors=cell_vectors)
+
+  # Here using the geomeTRIC Optimizer that recognizes that PBCs are active in FairChemTheory and optimizes atoms and cell positions
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")

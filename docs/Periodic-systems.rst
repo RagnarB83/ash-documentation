@@ -23,6 +23,7 @@ Only a few Theory interfaces in ASH currently support periodic boundary conditio
     - DFTBTheory: periodic DFTB and xTB methods
     - pySCFTheory: not yet supported but soon
     - MACETheory: periodic ML potentials
+    - FairchemTheory: periodic UMA ML potentials
 
 Hybrid theories currently do not support PBCs (QMMMTheory, ONIOMTHeory, WrapTheory).
 

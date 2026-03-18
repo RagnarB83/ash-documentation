@@ -198,7 +198,7 @@ Recognized *model_name* options by MACETheory in ASH:
 
 Note that for mace-mp / mace-mh models, D3 dispersion can also be activated via the *mace_load_dispersion*=True keyword and the *mace_dispersion_xc* keyword can be used to specify
 the name of the DFT functional to use for evaluating the dispersion formula (e.g. *mace_dispersion_xc*="PBE" for ).
-Dispersion is often recommended for use with those models (see literature).
+Dispersion is often recommended for use with those models (see literature). Note that the torch-dftd library is needed for this (pip install torch-dftd)
 Code block below shows how to perform a mace-mh-1-omat-D3 model calculation (see preprint: https://arxiv.org/pdf/2510.25380):
 
 .. code-block:: python
@@ -298,7 +298,7 @@ optimize atom and cell positions.
   cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
 
   #Periodic CP2KTheory definition with specified cell dimensions
-  theory = MACETheory(model_file="/Users/rb269145/MACE-foundational-models/MACE-POLAR-1-M.model",
+  theory = MACETheory(model_file="/path/to/MACE-foundational-models/MACE-POLAR-1-M.model",
                   periodic=True, periodic_cell_vectors=cell_vectors)
 
   # Here using the geomeTRIC Optimizer that recognizes that PBCs are active in MACETheory and optimizes atoms and cell positions
