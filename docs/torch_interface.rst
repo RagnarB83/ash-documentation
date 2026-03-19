@@ -7,24 +7,25 @@ AIMNet2 is newer neural network potential, also implemented using PyTorch, capab
 support for charged systems and is capable of describing long-range interactions and dispersion.
 AIMNet2 paper: https://www.sciencedirect.com/org/science/article/pii/S2041652025006844
 
-
-ASH features a basic interface to PyTorch that furthermore supports both TorchANI and AIMNet2 neural network models,
-that allows easy use of pre-trained neural network potentials and even training of new models. 
+ASH features an interface allowing use of either TorchANI or AIMNet2 neural network models.
+The interface allows easy use of pre-trained neural network potentials.
 This allows the use of such neural network potentials as any other theory-level within ASH.
 
 Energies and gradients can be requested (just like a regular QM or MM theory) and so a valid TorchTheory object can be used
 for single-point energies, geometry optimizations, numerical frequencies, surface scans, NEB, molecular dynamics etc. within ASH.
 Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
 
+Periodic boundary conditions are also available but only for AIMNet2 potentials.
 
 **TorchTheory class:**
 
 .. code-block:: python
     
-    class TorchTheory():
-        def __init__(self, filename="torch.pt", model_name=None, model_object=None,
-                    model_file=None, printlevel=2, label="TorchTheory", numcores=1, 
-                    platform=None, train=False):
+  class TorchTheory():
+      def __init__(self, filename="torch.pt", model_name=None, model_object=None,
+                  model_file=None, printlevel=2, label="TorchTheory", numcores=1,
+                  platform=None, aimnet_mode="new",
+                  periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -66,10 +67,23 @@ Even hybrid ONIOM and QM/MM calculations are possible (with some limitations).
      - integer
      - 1
      - Number of cores.
-   * - ``train``
-     - Boolean
-     - False
-     - Whether to create a TorchTheory object that will be used for training.
+    * - ``periodic``
+      - Boolean
+      - False
+      - Whether to use PBCs or not
+    * - ``periodic_cell_vectors``
+      - numpy array
+      - None
+      - Cell vectors as 3x3 numpy array in Angstrom.
+    * - ``periodic_cell_vectors``
+      - list
+      - None
+      - Cell dimensions as list of cell lengths and angles in Angstrom and degrees.
+    * - ``aimnet_mode``
+      - string
+      - "new"
+      - Whether to use new or old aimnet interface (newer recommended, old will be removed soon)
+
 
 ################################################################################
 Torch/TorchANI/AIMNet2 installation
@@ -106,6 +120,18 @@ To use AIMNet2 follow the installation instructions at https://isayevlab.github.
 AIMNet2 Examples
 ################################################################################
 
+If you use AIMNet2, cite:
+
+@article{aimnet2,
+  title={AIMNet2: A Neural Network Potential to Meet Your Neutral, Charged, Organic, and Elemental-Organic Needs},
+  author={Anstine, Dylan M and Zubatyuk, Roman and Isayev, Olexandr},
+  journal={Chemical Science},
+  volume={16},
+  pages={10228--10244},
+  year={2025},
+  doi={10.1039/D4SC08572H}
+}
+
 *Basic AIMNet2 example*
 
 It is easy to use the AIMNet2 neural network potential with TorchTheory.
@@ -128,6 +154,27 @@ and models are available for elements: 'H', 'C', 'N', 'O', 'F', 'Cl', 'S', 'Si',
 
     print(result.energy)
     print(result.gradient)
+
+
+*AIMNet2 with PBCs*
+
+The AIMNet2 potentials can be used for periodic systems as well.
+
+.. code-block:: python
+    
+  from ash import *
+
+  numcores=1
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  #Cell
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+
+  #Periodic AIMNet2 Torchtheory
+  theory = TorchTheory(model_name="aimnet2", numcores=numcores,
+                  periodic=True, periodic_cell_vectors=cell_vectors)
+
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")
 
 ################################################################################
 TorchANI Examples

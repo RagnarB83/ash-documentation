@@ -15,7 +15,7 @@ Electrostatic embedding QM/MM is supported. Analytical Hessian is also supported
     
     class TurbomoleTheory:
         def __init__(self, TURBODIR=None, turbomoledir=None, filename='XXX', printlevel=2, label="Turbomole",
-                    numcores=1, parallelization='SMP', functional=None, gridsize="m4", scfconv=7, symmetry="c1", rij=True,
+                    numcores=1, parallelization='SMP', functional=None, dispersion=None, gridsize="m4", scfconv=7, symmetry="c1", rij=True,
                     basis=None, jbasis=None, scfiterlimit=50, maxcor=500, ricore=500, controlfile=None,skip_control_gen=False,
                     mp2=False, pointcharge_type=None, pc_gaussians=None):
 
@@ -51,6 +51,10 @@ Electrostatic embedding QM/MM is supported. Analytical Hessian is also supported
      - string
      - None
      - Name of DFT-functional keyword that will be specified in control-file.
+   * - ``dispersion``
+     - string
+     - None
+     - Name of DFT-D dispersion correction to use. Options: 'D2', 'D3BJ', 'D3ZERO', 'D4'.
    * - ``gridsize``
      - string
      - "m4"
@@ -175,6 +179,24 @@ The *rij* Boolean keyword controls whether the **ridft** or **dscf** executable 
 
 ASH in this case automatically creates the control-file. The options in the control-file created by ASH can be modified somewhat by
 keywords: *gridsize*, *scfconv*, *symmetry*, *rij*, *mp2*, *scfiterlimit*, *maxcor* and *ricore*.
+
+**Simple basic dispersion-corrected DFT example **
+
+Grimme-type dispersion corrections can be employed via the *dispersion* keyword.
+Choose:
+
+- dispersion="D2" to get the DFT-D2 correction
+- dispersion="D3ZERO" to get the original DFT-D3(0) correction
+- dispersion="D3BJ" to get the recommended DFT-D3 correction that uses Becke-Johnson damping.
+- dispersion="D4" to get the modern DFT-D4 dispersion correction.
+
+.. code-block:: python
+
+    from ash import *
+    frag = Fragment(databasefile="h2o.xyz", charge=0, mult=1)
+    theory = TurbomoleTheory(functional="b3-lyp", basis="def2-SVP", dispersion='D4', jbasis="def2-SVP", rij=True, numcores=2)
+
+    Singlepoint(theory=theory, fragment=frag)
 
 
 **DFT example via user-provided control-file**

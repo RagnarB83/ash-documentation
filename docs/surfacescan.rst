@@ -38,18 +38,22 @@ it is strongly advised to instead use the :doc:`neb` for this purpose.
      - string
      - 'Unrelaxed'
      - What type of scan to perform. Options: 'Unrelaxed' and 'Relaxed'
+   * - ``RC_list``
+     - list
+     - None
+     - New syntax: A list of dictionaries that define the reaction coordinates (RC)..
    * - ``RC1_indices/RC2_indices``
      - list of integers
      - None
-     - List of atom indices defining Reaction coordinate(RC) 1 or 2.
+     - Old syntax: List of atom indices defining Reaction coordinate(RC) 1 or 2.
    * - ``RC1_type/RC2_type``
      - string
      - None
-     - String indicating the type of reaction coordinate (either RC1 or RC2). Option: 'bond', 'angle', 'dihedral'
+     - Old syntax: String indicating the type of reaction coordinate (either RC1 or RC2). Option: 'bond', 'angle', 'dihedral'
    * - ``RC1_range/RC2_range``
      - list of floats
      - None
-     - | List of number indicating the range of values to scan for RC1 or RC2. 
+     - | Old syntax:  List of number indicating the range of values to scan for RC1 or RC2. 
        | Example: [2.0,2.2,0.01] indicates scan value from 2.0 to 2.2 in 0.01 increments.
    * - ``runmode``
      - string
@@ -121,52 +125,91 @@ it is strongly advised to instead use the :doc:`neb` for this purpose.
 Parallelization
 ######################################################
 
-- calc_surface is fully parallelized for both unrelaxed/relaxed and 1D/2D scans.
-- Use runmode='parallel' and provide as many numcores as you have available.
-- Make sure to turn off theory parallelization (almost never desired) by setting theory.numcores=1
+Surface scans can be parallelized in one of 2 ways. Either you run :
+i) each surfacepoint one after the other (runmode="serial", this is default)
+(using the optimized geometry of the previous surfacepoint and possible MOs as well) while parallelizing the Theory-level of each surfacepoint.
+This approach does not parallelize as well (QM calculations have limitations regardign parallelization) but has the advantage of likely avoiding
+convergence issues or falling into local minima.
+
+This strategy is the simplest to start with.
+
+ii) (runmode="parallel" and select numcores)
+Here surfacepoints are run in parallel and independently of each other. 
+Here we can utilize all X available CPU cores on the computer and run X surfacepoint calculations at the same time.
+We typically want to turn off and Theory parallelization for this scenario (almost never desired) by setting numcores in Theory object to be 1.
+For many surfacepoints, this will be the most efficient parallelization strategy.
+A disadvantage is that convergence can be affected and one could fall into local minima.
+
 
 ######################################################
 How to use
 ######################################################
 
-The **calc_surface** function takes a fragment object and theory object as input. The type of scan is specified ('Unrelaxed' or 'Relaxed') and
-then either 1 or 2 reaction coordinates are specified via keyword arguments: RC1_type, RC1_range and RC1_indices (and RC2 versions if using two reaction coordinates).
+The **calc_surface** function always takes a Fragment and Theory object as input. 
+The type of scan should be specified via *scantype* ('Unrelaxed' or 'Relaxed') and runmode should be chosen according to the parallelization strategy (see above).
 
-- The RC1_type/RC2_type keyword can be: 'bond', 'angle' or 'dihedral'.
+We then need to define the reaction coordinate.
+
+**New syntax: Defining Reaction Coordinates via RC_list**
+It is recommended to use the newer syntax of using the *RC_list* keyword.
+Here we define a list of dictionaries that define the desired Reaction-Coordinates
+
+.. code-block:: python
+  # Defining RCs via list of dictionaries:
+  RC_list=[{'type': 'dihedral',  'indices': [[0,1,2,3]], 'range': [-180, 180, 10]},
+            {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}
+            {'type': 'bond',  'indices': [[1,0]], 'range': [1.1, 1.5, 10]}])
+
+This general syntax allows any number of RCs to be defined, meaning we can define 1D, 2D, 3D surface scans and even beyond that.
+
+**Old syntax: Defining Reaction Coordinates via RCX_type/RCX_indices/RCX_range keywords**
+
+The older syntax is only available for either 1 or 2 reaction coordinates.
+One specifies RC1_type, RC1_range and RC1_indices (and also RC2 versions if 2 reaction coordinates are wanted).
+
+- The RC1_type/RC2_type keyword can be: 'bond', 'angle' or 'dihedral' .
 - The RC1_indices/RC2_indices keyword defines the atom indices for the bond/angle/dihedral. Note: ASH counts from zero.
 - The RC1_range/RC2_range keyword species the start coordinate, end coordinate and the stepsize (Å units for bonds, ° for angles/dihedrals).
 
-The resultfile keyword should be used to specify the name of the file that contains the results of the scan ( format: coord1 coord2 energy).
-This file can be used to restart an incomplete/failed scan. If ASH finds this file in the same dir as the script, it will read the data and skip unneeded calculations.
-Default name : 'surface_results.txt'
+The old syntax is only kept for backward compatibility and will probably be removed at some point.
+
+**Result file**
+The resultfile keyword should be used to specify the name of the file that contains the results of the scan ( format: coord1 coord2 coord3... energy).
+This file can be used to restart an incomplete/failed scan and to plot the final surface.
+If ASH finds this file in the same dir as the script, it will read the data and skip unneeded calculations.
+By default it is named: 'surface_results.txt'
 
 
-**calc_surface** returns an ASH Results object that contains a dictionary of total energies for each surface point. The key is a tuple of coordinate value and the value is the energy, i.e.
-(RC1value,RC2value) : energy
+**calc_surface** returns an ASH Results object that contains a dictionary of total energies for each surface point. 
+The key is a tuple of coordinate values and the value is the energy, i.e. (RC1value,RC2value) : energy
 
 **1D scan:**
+
+Here scanning an angle (defined by atom indices 1,0,2 and scanning from 180° to 110 by taking decreasing steps of 10°).
 
 .. code-block:: python
 
     results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
-    runmode='serial', RC1_range=[180,110,-10], RC1_type='angle', RC1_indices=[1,0,2], keepoutputfiles=True)
-    surfacedictionary = results.surfacepoints
+          runmode='serial', RC_list=[{'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 110, -10]}],
+          keepoutputfiles=True, surfacedictionary = results.surfacepoints
 
 **2D scan:**
 
-If both RC1 and RC2 keywords are provided then a 2D scan will be calculated.
+If 2 dictionaries are defined in *RC_list*   (or alternatively in the old syntax: if both RC1 and RC2 keywords are provided)
+then a 2D scan will be calculated. 
+Below we scan both a bond(distance) between 2.0 and 2.2 Å (0.01 Å step) for atom-pairs [0,1] and [0,2].
+and the angle (between atoms 1,0,2) from 180° to 100°.
+
+As can be seen it is possible to have each RC apply to multiple sets of atom indices by specifying a list of lists.
+In this 2D scan example , the first RC (bond/distance) is applied to both atoms [0,1] as well as [0,2].
+This typically makes sense when one wants to preserve the symmetry of a system e.g. this might apply to the O-H bonds in H2O.
 
 .. code-block:: python
 
     results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
-        RC1_type='bond', RC1_range=[2.0,2.2,0.01], RC1_indices=[[0,1],[0,2]], RC2_range=[180,110,-10], 
-        RC2_type='angle', RC2_indices=[1,0,2], keepoutputfiles=True)
-    surfacedictionary = results.surfacepoints
-
-NOTE: It is possible to have each chosen reaction coordinate apply to multiple sets of atom indices by specifying a list of lists.
-In the 2D scan example above, the RC1_indices keyword (a 'bond' reaction coordinate) will apply to both atoms [0,1] as well as [0,2].
-This makes sense when preserving symmetry of a system e.g. the O-H bonds in H2O.
-
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}],
+                        keepoutputfiles=True, surfacedictionary = results.surfacepoints)
 
 Other options to calc_surface:
 
@@ -223,11 +266,10 @@ An example
   # NOTE: PBC_format_option: 'CIF', 'XSF', or 'POSCAR
   results = calc_surface(fragment=fragment, theory=qm, scantype='relaxed',
       resultfile='surface_results.txt',
-      runmode='serial', RC1_range=[0,360,10], RC1_type='dihedral',
-      RC1_indices=[6,17,14,10],
-      RC2_range=[0,360,10], RC2_type='dihedral',
-      RC2_indices=[51,62,59,55], keepoutputfiles=True, coordsystem='hdlc',
-      PBC_format_option="CIF")
+      runmode='serial', 
+      RC_list=[{'type': 'dihedral',  'indices': [[6,17,14,10]], 'range': [0,360,10]},
+          {'type': 'dihedral',  'indices': [[51,62,59,55]], 'range': [0, 360, 10]}],
+          coordsystem='hdlc', PBC_format_option="CIF")
 
 
 ###########################################################
@@ -241,8 +283,8 @@ calculate single-point energies or optimizations for each surfacepoint with any 
 
     def calc_surface_fromXYZ(xyzdir=None, theory=None, dimension=None, resultfile=None, scantype='Unrelaxed',runmode='serial',
                             coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None, numcores=None,
-                            RC1_type=None, RC2_type=None, RC1_indices=None, RC2_indices=None, keepoutputfiles=True, keepmofiles=False,
-                            read_mofiles=False, mofilesdir=None):
+                            RC_list=None, RC1_type=None, RC2_type=None, RC1_indices=None, RC2_indices=None, 
+                            keepoutputfiles=True, keepmofiles=False, read_mofiles=False, mofilesdir=None):
         """Calculate 1D/2D surface from XYZ files
 
         Args:
@@ -267,10 +309,6 @@ calculate single-point energies or optimizations for each surfacepoint with any 
         """
 
 
-
-
-
-
 We can use the **calc_surface_fromXYZ** function to read in previous XYZ-files (named like this: RC1_2.0-RC2_180.0.xyz for a 2D scan and like this: RC1_2.0.xyz for a 1D scan).
 These files should have been created from **calc_surface** already (present in surface_xyzfiles results directory).
 By providing a theory level object we can then easily perform single-point calculations for each surface point or alternatively relax the structures employing constraints.
@@ -290,9 +328,9 @@ The results is a dictionary like before.
     #The RC1_type and RC1_indices (and RC2_type and RC2_indices for a 2D scan) also need to be provided
     results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt',
                         coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None,
-                        RC1_type='bond', RC1_indices=[[0,1],[0,2]], RC2_type='angle', RC2_indices=[1,0,2])
+                        RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                        {'type': 'angle',  'indices': [[1,0,2]], 'range': [100, 150, 10]}],)
     surfacedictionary = results.surfacepoints
-
 
 Other options:
 
@@ -305,19 +343,13 @@ Other options:
 
 
 ######################################################
-Parallelization
-######################################################
-
-- calc_surface_fromXYZ is fully parallelized.
-- Use runmode='parallel' and provide as many numcores as you have available.
-- Make sure to turn off theory parallelization (almost never desired) by setting theory.numcores=1
-
-######################################################
 Plotting
 ######################################################
 
-The final result of the scan can be found as dictionary in the ASH Results object (returned by calc_surface and calc_surface_fromXYZ )
-and can be easily plotted by giving the dictionary as input to plotting functions (based on Matplotlib).
+The final result of the scan can be found in a textfile ('surface_results.txt' by default)
+or as a dictionary in the ASH Results object (returned by calc_surface and calc_surface_fromXYZ ).
+
+To plot the results, the dictionary can be given as input to some ASH plotting functions (based on Matplotlib).
 See :doc:`module_plotting`) page.
 
 The dictionary has the format: (coord1,coord2) : energy  for a 2D scan  and (coord1) : energy for a 1D scan
@@ -325,16 +357,21 @@ where (coord1,coord2)/(coord1) is a tuple of floats and energy is the total ener
 
 A dictionary using data from a previous job (stored e.g. in surface_results.txt) can be created via the **read_surfacedict_from_file** function:
 
+**Example**
+
 .. code-block:: python
 
+    from ash import *
+
+    # Read in the results of a previous scan from file surface_results.txt into a dictionary
     surfacedictionary = read_surfacedict_from_file("surface_results.txt")
 
-    #For 1D scan:
-    #reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='Plotname', x_axislabel='Angle', y_axislabel='Energy',
-    #imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
-    #For 2D scan:
+    #Plot a 1D scan:
+    reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='Plotname', x_axislabel='Angle', y_axislabel='Energy',
+    imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
+    #Plot a 2D scan:
     contourplot(surfacedictionary, finalunit='kcal/mol',label="Plotname", interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
-
+    # There are currently not automatic plotting options for 3D scans and beyond 
 
 .. image:: figures/SurfaceTPSSh.png
    :align: center
