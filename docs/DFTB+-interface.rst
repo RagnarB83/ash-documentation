@@ -21,7 +21,7 @@ Periodic boundary conditions were recently made available in the interface.
         def __init__(self, dftbdir=None, hamiltonian="XTB", xtb_method="GFN2-xTB", printlevel=2, label="DFTB",
                     numcores=1, slaterkoster_dict=None, maxmom_dict=None, Gauss_blur_width=0.0,
                     SCC=True, ThirdOrderFull=False, ThirdOrder=False, MaxSCCIterations=300,
-                    periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None, kpoint_value=1):
+                    periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None, kpoint_values=[1,1,1]):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -91,10 +91,10 @@ Periodic boundary conditions were recently made available in the interface.
      - list
      - None
      - Cell dimensions as a list of [a,b,c,alpha,beta,gamma] parameters in Å and °.
-   * - ``kpoint_value``
-     - integer
-     - 1
-     - Specify k-point grid by a simple parameter. 1 indicates gamma point.
+   * - ``kpoint_values``
+     - list
+     - [1,1,1]
+     - Specify k-point grid by a list. [1,1,1] indicates gamma point in all three X,Y,Z directions.
 
 
 ################################################################################

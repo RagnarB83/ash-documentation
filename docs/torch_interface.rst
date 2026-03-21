@@ -67,22 +67,22 @@ Periodic boundary conditions are also available but only for AIMNet2 potentials.
      - integer
      - 1
      - Number of cores.
-    * - ``periodic``
-      - Boolean
-      - False
-      - Whether to use PBCs or not
-    * - ``periodic_cell_vectors``
-      - numpy array
-      - None
-      - Cell vectors as 3x3 numpy array in Angstrom.
-    * - ``periodic_cell_vectors``
-      - list
-      - None
-      - Cell dimensions as list of cell lengths and angles in Angstrom and degrees.
-    * - ``aimnet_mode``
-      - string
-      - "new"
-      - Whether to use new or old aimnet interface (newer recommended, old will be removed soon)
+   * - ``periodic``
+     - Boolean
+     - False
+     - Whether to use PBCs or not
+   * - ``periodic_cell_vectors``
+     - numpy array
+     - None
+     - Cell vectors as 3x3 numpy array in Angstrom.
+   * - ``periodic_cell_vectors``
+     - list
+     - None
+     - Cell dimensions as list of cell lengths and angles in Angstrom and degrees.
+   * - ``aimnet_mode``
+     - string
+     - "new"
+     - Whether to use new or old aimnet interface (newer recommended, old will be removed soon)
 
 
 ################################################################################
@@ -120,17 +120,6 @@ To use AIMNet2 follow the installation instructions at https://isayevlab.github.
 AIMNet2 Examples
 ################################################################################
 
-If you use AIMNet2, cite:
-
-@article{aimnet2,
-  title={AIMNet2: A Neural Network Potential to Meet Your Neutral, Charged, Organic, and Elemental-Organic Needs},
-  author={Anstine, Dylan M and Zubatyuk, Roman and Isayev, Olexandr},
-  journal={Chemical Science},
-  volume={16},
-  pages={10228--10244},
-  year={2025},
-  doi={10.1039/D4SC08572H}
-}
 
 *Basic AIMNet2 example*
 

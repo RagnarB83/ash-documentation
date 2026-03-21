@@ -388,7 +388,7 @@ Example plotting MO diagrams for multiple ORCA outputfiles:
 ##############################################################################
  Reaction_profile
 ##############################################################################
-For a 1D scan (see :doc:`job-types`), the result dictionary can be given to the **reactionprofile_plot** function which will visualize the
+For a 1D scan (see :doc:`surfacescan`), the result dictionary can be given to the **reactionprofile_plot** function which will visualize the
 relative energy surface as a lineplot. Dictionary should contain key-value pairs: coordinate : energy (in Eh).
 The output is an imagefile (PNG by default).
 
@@ -426,7 +426,7 @@ The output is an imagefile (PNG by default).
  Contour_plot
 ##############################################################################
 
-For a 2D scan (see :doc:`job-types`), the dictionary can be given to the **contourplot** function which will visualize the energy surface as a contourplot.
+For a 2D scan (see :doc:`surfacescan`), the dictionary can be given to the **contourplot** function which will visualize the energy surface as a contourplot.
 The output is an imagefile (PNG by default).
 
 - The unit of the surface can be chosen via finalunit keyword (kcal/mol, kJ/mol, eV etc.).
@@ -451,4 +451,40 @@ The output is an imagefile (PNG by default).
    :align: center
    :width: 600
 
-Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.
+Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S bond coordinate applies to both Fe-S bonds.
+
+
+##############################################################################
+ Volume plots
+##############################################################################
+
+If you have 3-dimensional data (i.e. 3 geometric coordinates and a value such as energy)
+then visualization is trickier but can still be done.
+A 3D relaxed surface scan (scanning 3 variables) can nowadays be performed in ASH (see :doc:`surfacescan`).
+There are various ways of plotting such data, see e.g.:
+
+- https://matplotlib.org/stable/plot_types/3D/index.html
+- https://plotly.com/python/3d-volume-plots/
+- https://beautiful.makie.org/dev/examples/3d/volume/volume_contour_scatters
+
+In ASH we have added a convenient function to directly plot the results from a surface scan as a Plotly 3D Volume plot
+using the **volumeplot** function. 
+This requires the plotly library to be installed (e.g. pip install plotly).
+One then simply provides the surface-dictionary of a 3D scan to **volumeplot**, adjusts label and relative energy scale
+as needed.
+Plotly will automatically open an interactive version of the plot in a browser (temporary) and also save a static image-file (PNG)
+and an interactive HTML-file.
+
+.. code-block:: python
+
+  from ash import *
+
+  surfacedictionary=read_surfacedict_from_file("surface_results.txt")
+  volumeplot(surfacedictionary, x_axislabel='Bond length (Å)', y_axislabel='Angle (°)',
+                z_axislabel='Dihedral (°)', colorbar_label='Energy',
+                finalunit='kcal/mol', RelativeEnergy=True)
+
+An interactive Plotly 3D volumeplot of a 3D-surface scan of ethanol is shown below:
+
+.. raw:: html
+   :file: _static/3dsurface.html

@@ -1,6 +1,8 @@
 Citing ASH
 ======================================
 
-An article describing ASH has been submitted.
-A preprint is available on ChemRxiv.
-https://chemrxiv.org/doi/full/10.26434/chemrxiv.10001640/v1
+If you use ASH in your computational research please cite the following article:
+
+ASH: a multi-scale, multi-theory modelling program
+R. Bjornsson*,  J. Comput. Chem 2026, accepted. 
+ChemRxiv preprint: https://chemrxiv.org/doi/full/10.26434/chemrxiv.10001640/v1

@@ -155,6 +155,7 @@ It is recommended to use the newer syntax of using the *RC_list* keyword.
 Here we define a list of dictionaries that define the desired Reaction-Coordinates
 
 .. code-block:: python
+
   # Defining RCs via list of dictionaries:
   RC_list=[{'type': 'dihedral',  'indices': [[0,1,2,3]], 'range': [-180, 180, 10]},
             {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}
@@ -371,10 +372,24 @@ A dictionary using data from a previous job (stored e.g. in surface_results.txt)
     imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
     #Plot a 2D scan:
     contourplot(surfacedictionary, finalunit='kcal/mol',label="Plotname", interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
-    # There are currently not automatic plotting options for 3D scans and beyond 
+    # Plot a 3D scan (requires plotly)
+    volumeplot(surfacedictionary, x_axislabel='Bond length (Å)', y_axislabel='Angle (°)',z_axislabel='Dihedral (°)', 
+                colorbar_label='Energy', finalunit='kcal/mol', RelativeEnergy=True) 
+
+.. image:: figures/PlotTPSS.png
+   :align: center
+   :width: 600
+
+Figure 2. 1D Energy Surface scanning an angle of some molecule
 
 .. image:: figures/SurfaceTPSSh.png
    :align: center
    :width: 600
 
-Figure. Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S reaction coordinate applies to both Fe-S bonds.
+Figure 2. 2D Energy surface of FeS2 scanning both the Fe-S bond and the S-Fe-S angle. The Fe-S bond coordinate applies to both Fe-S bonds.
+
+.. raw:: html
+   :file: _static/3dsurface.html
+
+
+Figure 3. 3D energy surface of ethanol, scanning C-C bond length, <O-C-C> angle and <C-C-O-H torsion
