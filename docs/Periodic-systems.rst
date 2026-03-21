@@ -14,10 +14,11 @@ Work is still in progress in this important area and is subject to interface cha
 - **Theory objects:** PBC information generally always needs to be provided to the supported Theory object to get PBCs.
 - **Job functions:** Not all job-types in ASH may account for PBCs.
 
-Only a few Theory interfaces in ASH currently support periodic boundary conditions:
+A few Theory interfaces in ASH currently support periodic boundary conditions:
 
-    - OpenMMTheory: periodic MM Hamiltonian as well as PBC MD simulations and optimizations
+    - OpenMMTheory: periodic MM Hamiltonian
     - CP2KTheory: periodic xTB, QM and QM/MM Hamiltonians
+    - TurbomoleTheory: periodic HF/DFT Hamiltonians
     - xTBTheory: periodic xTB 
     - tbliteTheory: periodic xTB
     - DFTBTheory: periodic DFTB and xTB methods

@@ -1,23 +1,32 @@
 Turbomole interface
 ======================================
 
-`Turbomole <https://www.turbomole.org>`_  is an old popular quantum chemistry code, particularly known for its fast implementation of many algorithms
+`Turbomole <https://www.turbomole.org>`_  is a popular quantum chemistry code, particularly known for its fast implementation of many algorithms
 and its speed of execution for both DFT and WFT implementations.
 
 ASH features a simple interface to Turbomole that allows the easy use of Turbomole for basic DFT and MP2 calculation.
-Due to the nature of Turbomole-execution, not all Turbomole features are currently supported.
+Not all Turbomole features are currently supported.
 
 Electrostatic embedding QM/MM is supported. Analytical Hessian is also supported.
+
+Periodic boundary conditions via the Turbomole riper module are now supported.
+This allows periodic HF and DFT calculations with Turbomole to be carried out.
+Periodic geometry optimizations can be carried out using the ASH optimizer options, see :doc:`Periodic-systems`.
+
+
+
 
 **TurbomoleTheory class:**
 
 .. code-block:: python
     
-    class TurbomoleTheory:
-        def __init__(self, TURBODIR=None, turbomoledir=None, filename='XXX', printlevel=2, label="Turbomole",
-                    numcores=1, parallelization='SMP', functional=None, dispersion=None, gridsize="m4", scfconv=7, symmetry="c1", rij=True,
-                    basis=None, jbasis=None, scfiterlimit=50, maxcor=500, ricore=500, controlfile=None,skip_control_gen=False,
-                    mp2=False, pointcharge_type=None, pc_gaussians=None):
+  class TurbomoleTheory:
+      def __init__(self, TURBODIR=None, turbomoledir=None, filename='XXX', printlevel=2, label="Turbomole", uff=False,
+                  numcores=1, parallelization='SMP', functional=None, dispersion=None, gridsize="m4", scfconv=7, symmetry="c1", rij=True,
+                  basis=None, jbasis=None, scfiterlimit=50, maxcor=500, ricore=500, controlfile=None,skip_control_gen=False,
+                  mp2=False, pointcharge_type=None, pc_gaussians=None,
+                  periodic=False, periodic_cell_vectors=None, PBC_dimension=3,
+                  periodic_cell_dimensions=None, kpoint_values=[1,1,1]):
 
 .. list-table::
    :widths: 15 15 15 60
@@ -111,6 +120,22 @@ Electrostatic embedding QM/MM is supported. Analytical Hessian is also supported
      - list
      - None
      - If pointcharge_type="gaussian", provide here a list of alphas for each MM-pointcharge.
+   * - ``periodic``
+     - Boolean
+     - False
+     - Enable periodic boundary conditions.
+   * - ``periodic_cell_vectors``
+     - 2d array
+     - None
+     - Cell vectors in Å as a Numpy 2D array.
+   * - ``periodic_cell_dimensions``
+     - list
+     - None
+     - Cell dimensions as a list of [a,b,c,alpha,beta,gamma] parameters in Å and °.
+   * - ``kpoint_values``
+     - list
+     - [1,1,1]
+     - Specify k-point grid by a list. [1,1,1] indicates gamma point in all three X,Y,Z directions.
 
 
 ################################################################################
@@ -255,3 +280,25 @@ Simply set the *uff=True* keyword without specifying anything else and it can be
     theory = TurbomoleTheory(uff=True)
 
     Optimizer(theory=theory, fragment=frag)
+
+
+################################################################################
+PBC DFT calculations via Turbomole
+################################################################################
+
+Turbomole supports periodic boundary conditions for HF and DFT via the riper module.
+To do PBC DFT calculations via the ASH interface see example below:
+
+.. code-block:: python
+
+  from ash import *
+
+  numcores=8
+  frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+  cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+
+  theory = TurbomoleTheory(basis="def2-SVP", functional="PBE", dispersion="D3BJ", jbasis="def2-SVP", 
+              periodic=True, periodic_cell_vectors=cell_vectors)
+
+  Optimizer(theory=theory, fragment=frag, coordsystem="hdlc")
