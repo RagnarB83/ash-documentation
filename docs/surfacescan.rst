@@ -3,19 +3,34 @@ Surface Scan
 
 
 Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** .
-This function utilizes the **Optimizer** (from  :doc:`Geometry-optimization`) to change coordinates and carry out constrained optimizations.
+This function performs unrelaxed and relaxed scans and can utilize either the geomeTRIC Optimizer or the DL-FIND Optimizer 
+(see :doc:`Geometry-optimization`) to carry out the constrained optimizations needed for the scans.
 
-This allows one to conveniently scan the potential energy surface using a convenient reaction coordinate.
-Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction coordinates.
+Surface scans explore the potential energy surface by gradually changing and freezing one or more suitable geometric coordinates
+while optimizing all other geometric coordinates.
+The **calc_surface** has been rewritten and now supports any number of scan variables, meaning, 1D, 2D and even 3D surface scans are possible (and beyond, if really required).
 
 While surface scans can also be used to approximate minimum energy paths between minima and locate approximate saddlepoints ("Transition states"),
 it is strongly advised to instead use the :doc:`neb` for this purpose. 
 
 .. code-block:: python
 
-    def calc_surface(fragment=None, theory=None, charge=None, mult=None, scantype='Unrelaxed', resultfile='surface_results.txt', 
-                    keepoutputfiles=True, keepmofiles=False,runmode='serial', coordsystem='dlc', maxiter=50, extraconstraints=None, 
-                    convergence_setting=None, ActiveRegion=False, actatoms=None):
+  def calc_surface(
+      fragment=None, theory=None, charge=None, mult=None, optimizer='geometric',
+      scantype='UNRELAXED', resultfile='surface_results.txt',
+      keepoutputfiles=True, keepmofiles=False,
+      runmode='serial', coordsystem='dlc', maxiter=250,
+      NumGrad=False, extraconstraints=None,
+      convergence_setting=None, conv_criteria=None,
+      subfrctor=1, force_noPBC=False,
+      numcores=1, ActiveRegion=False, actatoms=None,
+      PBC_format_option="CIF",
+      # ---- New N-dimensional interface ----
+      RC_list=None,
+      # ---- Legacy 1D/2D interface (kept for backward compatibility) ----
+      RC1_range=None, RC1_type=None, RC1_indices=None,
+      RC2_range=None, RC2_type=None, RC2_indices=None,
+  ):
 
 
 .. list-table::
@@ -136,9 +151,10 @@ This strategy is the simplest to start with.
 ii) (runmode="parallel" and select numcores)
 Here surfacepoints are run in parallel and independently of each other. 
 Here we can utilize all X available CPU cores on the computer and run X surfacepoint calculations at the same time.
-We typically want to turn off and Theory parallelization for this scenario (almost never desired) by setting numcores in Theory object to be 1.
-For many surfacepoints, this will be the most efficient parallelization strategy.
-A disadvantage is that convergence can be affected and one could fall into local minima.
+We typically want to turn off any Theory parallelization for this scenario (almost never desired) by setting numcores in Theory object to be 1.
+If you have many surfacepoints, this might be the most efficient parallelization strategy.
+A disadvantage is that convergence can be affected since scanpoints with geometries far from the initial structure,
+could struggle to converge and could fall into local minima.
 
 
 ######################################################
@@ -210,18 +226,38 @@ This typically makes sense when one wants to preserve the symmetry of a system e
     results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
               RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
                        {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}],
-                        keepoutputfiles=True, surfacedictionary = results.surfacepoints)
+                        keepoutputfiles=True)
 
-Other options to calc_surface:
+######################################################
+Choosing between geometry optimizers
+######################################################
+
+While the geomeTRICOptimizer is currently the default optimizer and works generally well, there are cases where using the DL-FIND Optimizer 
+instead might be preferred. If you are using a Theory level that has very fast execution speed: e.g. a forcefield via OpenMMTheory, 
+a machine-learning potential via PyTorch or perhaps a semiempirical method like GFN2-xTB, then the energy+gradient calculations calculated
+by the Theory object may be so fast that the bottleneck of the surfacescans may be the set-up and run of the geometry optimization algorithms themselves.
+Since geomeTRIC is written in Python and DL-FIND is written in Fortran, DL-FIND has a considerable edge in such cases.
+Telling **calc_surface** to use DL-FIND instead is easy and scan-variables and additional constraints are handled in the same manner.
+Do note that certain **calc_surface** keywords may be specific to each optimizer.
+
+*Surface scan using the DL-FIND optimizer instead*
+
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer="dlfind",
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
+
+
+DLFINDOptimizer-specific options in **calc_surface**:
+
+TODO
+
+geomeTRICOptimizer-specific options in **calc_surface**:
 
 - coordsystem  (for geomeTRICOptimizer, default: 'dlc'. Other options: 'hdlc' and 'tric')
 - maxiter (for geomeTRICOptimizer,default : 50)
-- extraconstraints (for geomeTRICOptimizer, default : None. dictionary of additional constraints. Same syntax as constraints in **geomeTRICOptimizer**)
 - convergence_setting (for geomeTRICOptimizer, same syntax as in **geomeTRICOptimizer**)
-- keepoutputfiles  (Boolean, keep outputfiles for each point. Default is True. )
-- keepmofiles (Boolean, keep MO files for each point in a directory. Default is False.)
 
-Note: See :doc:`Geometry-optimization` for geomeTRICOptimizer-related features.
+Note: See :doc:`Geometry-optimization` for discussion of both geomeTRIC and DL-FIND.
 
 ######################################################
 Periodic boundary conditions
@@ -230,6 +266,7 @@ Periodic boundary conditions
 Thanks to the feature in the ASH interface to geomeTRIC, it is possible to perform geometry optimizations of both atom and lattice positions
 in a periodic system. This feature can be extended to constrained optimizations allowing surface scans via **calc_surface** 
 to be carried out under PBCs. See  :doc:`Geometry-optimization` documentation for more information on the optimization aspect.
+This option is currently only available for the geomeTRIC Optimizer.
 
 To enable PBC-based surface scans one simply needs to :
 
