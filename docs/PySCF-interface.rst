@@ -791,7 +791,7 @@ Use of implicit solvation models in pySCF
 ################################################################################
 
 The ASH interface upports use of implicit solvation in SCF-based pySCF calculations.
-Information about the solvation models can be found on in the `pySCF documentation<https://pyscf.org/user/solvent.html>`_
+Information about the solvation models can be found on in the `pySCF documentation <https://pyscf.org/user/solvent.html>`_
 In the ASH interface, the models are use by choosing the *solvation* keyword to be either "PCM", "SMD" or "ddCOSMO".
 For PCM solvation, the *solvation_method* keyword can be used to specify a specific method : 'IEF-PCM', 'C-PCM', 'SS(V)PE', 'COSMO'.
 The specific solvent environment is then controlled by *solvation_eps* for PCM and ddCOSMO and by *SMD_solvent* for SMD (which takes the name of the solvent as a string, e.g. "water" or "benzene").

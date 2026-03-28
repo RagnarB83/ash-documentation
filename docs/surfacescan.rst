@@ -141,6 +141,7 @@ Parallelization
 ######################################################
 
 Surface scans can be parallelized in one of 2 ways. Either you run :
+
 i) each surfacepoint one after the other (runmode="serial", this is default)
 (using the optimized geometry of the previous surfacepoint and possible MOs as well) while parallelizing the Theory-level of each surfacepoint.
 This approach does not parallelize as well (QM calculations have limitations regardign parallelization) but has the advantage of likely avoiding
@@ -240,22 +241,43 @@ Since geomeTRIC is written in Python and DL-FIND is written in Fortran, DL-FIND 
 Telling **calc_surface** to use DL-FIND instead is easy and scan-variables and additional constraints are handled in the same manner.
 Do note that certain **calc_surface** keywords may be specific to each optimizer.
 
-*Surface scan using the DL-FIND optimizer instead*
+*Surface scan using the geomeTRIC optimizer*
 
-    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer="dlfind",
+.. code-block:: python
+
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer="geometric",
               RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
                        {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
-
-
-DLFINDOptimizer-specific options in **calc_surface**:
-
-TODO
 
 geomeTRICOptimizer-specific options in **calc_surface**:
 
 - coordsystem  (for geomeTRICOptimizer, default: 'dlc'. Other options: 'hdlc' and 'tric')
 - maxiter (for geomeTRICOptimizer,default : 50)
 - convergence_setting (for geomeTRICOptimizer, same syntax as in **geomeTRICOptimizer**)
+
+*Surface scan using the DL-FIND optimizer*
+
+.. code-block:: python
+
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer="dlfind",
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
+
+
+In order to use special optimization settings for the DLFIND Optimizer, there is an option to
+first create a DLFINDOptimizer_class object, then provide that object to **calc_surface**.
+
+.. code-block:: python
+
+    # Create a DLFIND Optimizer object with special settings
+    dlfind_optimizer = DLFIND_optimizerClass(theory=theory, fragment=fragment, 
+                        maxcycle=300, tolerance=4.5E-4, tolerance_e=1E-6,
+                        constraints={'bond':[0,1]})
+    # Provide the optimizer object to calc_surface
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer=dlfind_optimizer,
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
+
 
 Note: See :doc:`Geometry-optimization` for discussion of both geomeTRIC and DL-FIND.
 
@@ -381,11 +403,57 @@ Other options:
 
 
 ######################################################
-Plotting
+Analyzing the surface (experimental)
 ######################################################
 
 The final result of the scan can be found in a textfile ('surface_results.txt' by default)
-or as a dictionary in the ASH Results object (returned by calc_surface and calc_surface_fromXYZ ).
+or as a dictionary in the ASH Results object (returned by **calc_surface** and **calc_surface_fromXYZ** ).
+
+ASH contains a function **analyze_surface** that attempts to automatically analyze
+the calculated energy surface and detect local and global minima as well as saddlepoint and maxima.
+This analysis should be exact for 1D scans but is more approximate for 2D and 3D surfaces (and beyond).
+Saddlepoint detection is hit-and-miss.
+
+
+.. code-block:: python
+
+  results = analyze_surface(resultfile='surface_results.txt', energy_unit='kcal/mol',
+              tol=1e-6)
+
+The function spits out a text output like below:
+
+.. code-block:: text
+
+  ================================================================================
+  SURFACE ANALYSIS
+  ================================================================================
+
+  MINIMA
+  --------------------------------------------------------------------------------
+      65.0000    -80.0000      -16.7600375595 Eh        0.0000 kcal/mol  (global min)
+
+  MAXIMA
+  --------------------------------------------------------------------------------
+     115.0000   -125.0000      -16.7578845482 Eh        2.6394 kcal/mol  (global max)
+    -100.0000   -120.0000      -16.7595899788 Eh        1.5692 kcal/mol  (local max)
+
+  SADDLE POINTS
+  --------------------------------------------------------------------------------
+      10.0000   -175.0000      -16.7609859067 Eh        0.6933 kcal/mol    (1-order SP)
+    -125.0000   -175.0000      -16.7609600772 Eh        0.7095 kcal/mol    (1-order SP)
+    -125.0000   -170.0000      -16.7609276133 Eh        0.7298 kcal/mol    (1-order SP)
+    -105.0000   -175.0000      -16.7609271752 Eh        0.7301 kcal/mol    (1-order SP)
+
+Additionally the results object from the function, contains a dictionary with the same data.
+
+
+.. warning:: **analyze_surface**  should be considered experimental.
+
+######################################################
+Plotting
+######################################################
+
+
 
 To plot the results, the dictionary can be given as input to some ASH plotting functions (based on Matplotlib).
 See :doc:`module_plotting`) page.

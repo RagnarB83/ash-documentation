@@ -3,8 +3,7 @@ Biased sampling MD & Free energy simulations
 
 Biased/enhanced sampling or free-energy simulations are possible in ASH in various ways:
 
-- Thanks to the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`), available harmonic restraints as well as metadynamics,
-umbrella sampling and metadynamics can be performed via the native OpenMM routines. This is possible through any level of theory in ASH.
+- Thanks to the OpenMM molecular dynamics routines (see :doc:`module_dynamics` and :doc:`OpenMM-interface`), available harmonic restraints as well as metadynamics,umbrella sampling and metadynamics can be performed via the native OpenMM routines. This is possible through any level of theory in ASH.
 - An interface to the enhanced-sampling `Plumed library <https://www.plumed.org>`_ allows even more options.
 - An ASH interface available as part of the `adaptive_sampling <https://ochsenfeld-lab.github.io/adaptive_sampling>`_ allows additional options.
 

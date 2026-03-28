@@ -482,7 +482,15 @@ and an interactive HTML-file.
   surfacedictionary=read_surfacedict_from_file("surface_results.txt")
   volumeplot(surfacedictionary, x_axislabel='Bond length (Å)', y_axislabel='Angle (°)',
                 z_axislabel='Dihedral (°)', colorbar_label='Energy',
-                finalunit='kcal/mol', RelativeEnergy=True)
+                finalunit='kcal/mol', RelativeEnergy=True,
+                colorscale='RdBu_r', opacity=0.1, surface_count=20,
+                )
+
+Useful plotting variables:
+
+- *colorscale* : Choose e.g. between 'RdBu' (Red-to-Blue) or 'RdBu_r' (Red-to-Blue reversed). See `Plotly colorscales <https://plotly.com/python/builtin-colorscales/>`_
+- *opacity*: Max opacity
+- *surface_count*: Should be a large number for good rendering.
 
 An interactive Plotly 3D volumeplot of a 3D-surface scan of ethanol is shown below:
 

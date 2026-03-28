@@ -70,6 +70,8 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    job-types
    singlepoint
    Geometry-optimization
+   geometric_interface
+   dlfind-interface
    module_freq
    module_dynamics
    Biased-sampling

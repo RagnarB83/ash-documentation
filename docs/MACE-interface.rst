@@ -196,8 +196,8 @@ Recognized *model_name* options by MACETheory in ASH:
 - mace-ani-cc
 - mace_omol
 
-Note that for mace-mp / mace-mh models, D3 dispersion can also be activated via the *mace_load_dispersion*=True keyword and the *mace_dispersion_xc* keyword can be used to specify
-the name of the DFT functional to use for evaluating the dispersion formula (e.g. *mace_dispersion_xc*="PBE" for ).
+Note that for mace-mp / mace-mh models, D3 dispersion can also be activated via the *mace_load_dispersion* =True keyword and the *mace_dispersion_xc* keyword can be used to specify
+the name of the DFT functional to use for evaluating the dispersion formula (e.g. *mace_dispersion_xc*="PBE" for PBE-D3 correction).
 Dispersion is often recommended for use with those models (see literature). Note that the torch-dftd library is needed for this (pip install torch-dftd)
 Code block below shows how to perform a mace-mh-1-omat-D3 model calculation (see preprint: https://arxiv.org/pdf/2510.25380):
 
