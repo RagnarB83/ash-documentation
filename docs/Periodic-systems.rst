@@ -44,25 +44,29 @@ Developer note: Specifically the Theory classes need to support *theory.update_c
   Periodic geometry optimizations in ASH will only work for simple theories, not QM/MM.
 
 -----------------------------------------------------------
-*Periodic_optimizer_cart*: Native atoms+cell PBC optimizer
+*Cart_optimizer*: Native atoms+cell PBC optimizer
 -----------------------------------------------------------
 
-Periodic_optimizer_cart is a native PBC geometry optimizer in Cartesian coordinates.
+**Cart_optimizer** is a native Cartesian-coordinate based optimizer in ASH 
+that is capable of treating both molecular systems and systems wither periodic boundary conditions.
 It minimizes atoms and cell vectors simultaneously by a BFGS algorithm. 
 It is also possible to choose a different algorithm for taking the step: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
 
 This optimizer is likely to be on par with other similar Cartesian optimization algorithms in e.g. periodic DFT programs, 
-but will ultimately suffer from the Cartesian coordinate representation for many systems that will make convergence slow.
+but will ultimately suffer from the Cartesian coordinate representation for many systems that will make convergence slow
+for molecular systems.
 
 Convergence criteria are by default the same as in the geomeTRICOptimizer (convergence_grms':1e-4, 'convergence_gmax':3e-4).
 Can be modified by passing a dictionary : conv_criteria = {'convergence_grms':1e-4, 'convergence_gmax':3e-4}
 
 .. code-block:: python
 
-    def Periodic_optimizer_cart(fragment=None, theory=None, rate=2.0, 
-                                scaling_rate_cell=1.0, maxiter=50, 
-                                step_algo="bfgs",max_step=0.25, momentum=0.5, 
-                                printlevel=2, conv_criteria=None):
+    def Cart_optimizer(fragment=None, theory=None, rate=2.0, 
+                                    scaling_rate_cell=1.0, maxiter=50, 
+                                    step_algo="bfgs",
+                                    max_step=0.25, momentum=0.5, 
+                                    printlevel=2, conv_criteria=None, PBC_format_option="CIF",
+                                    constraints=None, frozen_atoms=None, result_write_to_disk=True):
 
 -----------------------------------------------------------------------------------
 *Modified geomeTRIC Optimizer* :  PBC geometry optimization in internal coordinates
@@ -101,6 +105,41 @@ units e.g. molecular crystals, i.e. systems where an internal coordinate represe
 
 See  :doc:`Geometry-optimization` documentation on how to use the geomeTRICOptimizer in general.
 
+
+-----------------------------------------------------------------------------------
+*Modified DL-FIND Optimizer* :  PBC geometry optimization in internal coordinates
+-----------------------------------------------------------------------------------
+
+The ASH interface to the DL-FIND library also contains a way of coaxing DL-FIND to 
+simultaneously minimize atom positions and cell vectors of a periodic system using geomeTRIC's internal coordinate system.
+
+This option has not been rigorously tested but it is likely to work well for periodic systems that feature molecular 
+units e.g. molecular crystals, i.e. systems where an internal coordinate representation (only HDLCs for now) will offer advantages.
+
+
+.. code-block:: python
+
+    from ash import *
+
+    # Defining an ASH fragment by reading an XYZ-file 
+    frag = Fragment(xyzfile="ammonia.xyz", charge=0, mult=1)
+
+    # Defining the cell vectors 
+    cell_vectors = np.array([[5.01336,0.0,0.0],[0.0,5.01336,0.0],[0.0,0.0,5.01336]])
+    #periodic_cell_dimensions=[5.01336, 5.01336, 5.01336, 90.0, 90.0,90.0]
+
+    #CP2K basis set and pseudopotential information
+    basis_dict={'C':'DZVP-MOLOPT-SR-GTH','O':'DZVP-MOLOPT-SR-GTH','H':'DZVP-MOLOPT-SR-GTH', 'N':'DZVP-MOLOPT-SR-GTH'}
+    potential_dict={'C':'GTH-PBE-q4','O':'GTH-PBE-q6','H':'GTH-PBE-q1', 'N':'GTH-PBE-q5'}
+
+    #Periodic CP2KTheory definition with specified cell dimensions
+    theory = CP2KTheory(cp2k_bin_name="cp2k.psmp",basis_dict=basis_dict,potential_dict=potential_dict,
+                    basis_method='GPW', functional='PBE', ngrids=4, cutoff=600, numcores=numcores,
+                    periodic=True,cell_vectors=cell_vectors, psolver='periodic', stress_tensor=True)
+
+    # Calling the DLFIND_optimizer 
+    # The optimizer will check for PBC support of the theory object and enable PBC optimization in HDLC (only coordsystem supported)
+    DLFIND_optimizer(theory=theory, fragment=frag, jobtype="opt")
 
 ----------------------------------
 Alternating atoms+cell optimizer
