@@ -6,10 +6,9 @@ The oldest interface is to the `geomeTRIC optimizer library <https://github.com/
 There is also an interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , 
 which has very fast execution speed.
 
-In addition there is a very simple optimizer, *SimpleOpt*, that performs geometry optimizations exclusively using Cartesian coordinates,
-by basic algorithms such as steepest descent and LBFGS.
+In addition there is a native Cartesian-coordinate optimizer, *Cart_optimizer*, that performs geometry optimizations exclusively using Cartesian coordinates.
 
-More recently, optimizers for periodic cell optimizations have become available.
+More recently, periodic cell optimizations have become possible.
 
 ######################################################
 geomeTRIC
@@ -23,6 +22,29 @@ DL-FIND
 
 See :doc:`dlfind-interface`
 
+######################################################
+Cart_optimizer
+######################################################
+
+**Cart_optimizer** is a native Cartesian-coordinate based optimizer in ASH that is capable of treating both molecular systems and systems with periodic boundary conditions.
+It minimizes atoms and cell vectors simultaneously by a BFGS algorithm. 
+It is also possible to choose a different algorithm for taking the step: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
+
+This optimizer is likely to be on par with other similar Cartesian optimization algorithms in e.g. periodic DFT programs, 
+but will ultimately suffer from the Cartesian coordinate representation for many systems that will make convergence slow
+for molecular systems.
+
+Convergence criteria are by default the same as in the geomeTRICOptimizer (convergence_grms':1e-4, 'convergence_gmax':3e-4).
+Can be modified by passing a dictionary : conv_criteria = {'convergence_grms':1e-4, 'convergence_gmax':3e-4}
+
+Constraints will soon be available.
+
+.. code-block:: python
+
+    def Cart_optimizer(fragment=None, theory=None, rate=2.0, scaling_rate_cell=1.0, maxiter=50, 
+                                    step_algo="bfgs", max_step=0.25, momentum=0.5, 
+                                    printlevel=2, conv_criteria=None, PBC_format_option="CIF",
+                                    constraints=None, frozen_atoms=None, result_write_to_disk=True):
 
 ######################################################
 Constraints
@@ -276,5 +298,7 @@ As it not necessarily straightforward though to stay on the correct SCF solution
 Optimizers for periodic boundary conditions
 ######################################################
 
+The interfaces to geomeTRIC and DL-FIND as well as the native **Cart_optimizer** are all capable of optimizing systems with periodic boundary conditions with both atoms and cell vectors minimized.
 
+See :doc:`Periodic-systems` for more information.
 
