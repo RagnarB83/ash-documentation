@@ -87,7 +87,7 @@ Units of force constants: Eh/Bohr^2 (bonds) or Eh/rad^2 (angles and dihedrals).
 
   # Here defining a single restraint as a list with a single dictionary.
   # A dihedral restraint between atoms 6,5,11,29 (zero-based indexing), centered at 0° with a force-constant of 5 Eh/rad^2
-  restraints=[{'type':'dihedral', 'indices': [6,5,11,29], 'target': 0, 'force_constant'=5.0}]
+  restraints=[{'type':'dihedral', 'indices': [6,5,11,29], 'target': 0, 'force_constant':5.0}]
 
 The RestraintTheory object can used on it's own as a Theory object (where the energy and gradient contributions come solely from defined resetraints),
 or can be combined with other objects in a hybrid WrapTheory object (see :doc:`module_Hybrid_Theory`).
@@ -103,9 +103,9 @@ It may be particularly useful for special geometry optimizations as shown below.
   # Define Restrainttheory that adds harmonic restraints to enforce a particular coordinates
   # Note: here setting an individual forceconstant for each of the 3 restraints.
   rest_theory = RestraintTheory(fragment=frag, restraints=[
-  {'type':'dihedral', 'indices': [6,5,11,29], 'target': 0, 'force_constant'=5.0},
-  {'type':'angle', 'indices': [7,3,10], 'target': 120, 'force_constant'=4.0},
-  {'type':'bond', 'indices': [8,1], 'target': 1.5, 'force_constant'=50.0}])
+  {'type':'dihedral', 'indices': [6,5,11,29], 'target': 0, 'force_constant':5.0},
+  {'type':'angle', 'indices': [7,3,10], 'target': 120, 'force_constant':4.0},
+  {'type':'bond', 'indices': [8,1], 'target': 1.5, 'force_constant':50.0}])
 
   #Optimizing using the RestraintTheory. Any Optimizer can be used, here geomeTRIC is used.
   Optimizer(theory=rest_theory, fragment=frag)

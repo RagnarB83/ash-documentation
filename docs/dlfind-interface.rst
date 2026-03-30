@@ -227,6 +227,59 @@ To freeze atoms in space it is easiest to provide a list of frozen atoms by the 
 
 Alternatively, if a large number of atoms should be frozen it may be easier to provide a list of active atoms by the *actatoms* keyword.
 
+######################################################
+HDLC coordinates in DL-FIND and residue definitions 
+######################################################
+
+The hybrid delocalized internal coordinates (HDLCs)  in DL-FIND are generally recommended for geometry optimizations.
+Some information on HDLCs can be found here: 
+https://chemshell.org/static_files/tcl-chemshell/manual/hdlc.html 
+and in the original article: https://pubs.rsc.org/en/content/articlehtml/2000/cp/a909486e 
+
+By default, the ASH interface to DL-FIND will, however, define a single system of internal coordinates which are close to internal delocalized
+coordinate (with 6 external degrees of freedom retained). This is fine for small systems.
+For larger systems, this will not scale very well due to a large diagonalization step of the G-matrix (see article).
+To circumvent this unfavorable scaling it is possible to split the molecular system into fragments or residues, 
+and generate internal coordinates for each residue. This ensures linear scaling of geometry optimizations in internal coordinates.
+Cartesian coordinates are used to specify position and relative orientation of the residues.
+This procedure defines HDLCs and requires a definition of residues, that currently has to be user-specified.
+
+Generally, residue definitions should range from 3-50 atoms in size and one should avoid cutting through rings and multiple-bonds. 
+Furthermore only one molecule should be in a residue.
+The residue definitions should be given as a list-of-lists and passed to *DLFIND_optimizer* via the residues keyword. 
+A manual way of specifying residues is shown below:
+
+.. code-block:: python
+
+  # Manual definition of residues for an 11-atom system: two 3-atom residues and one 5-atom residue
+  # This might be a system of 2 water molecules and a formic acid molecule
+  residues = [[0,1,2], [3,4,5], [6,7,8,9,10]]
+  # Call the optimizer with the residue definition
+  DLFIND_optimizer(theory=theory, fragment=frag, jobtype="opt", residues=residues)
+
+For larger systems (where the need for HDLC residue definitions is greater) it obviously becomes laborious to manually specify residues.
+For biomolecules like proteins it is often possible to automatically get the residue definitions from the forcefield definition 
+(i.e. amino acid residues).
+It is also possible to use **define_residues** , a function that automatically fragments a system according to connectivity and where one can
+specify minimum and maximum size.
+
+.. code-block:: python
+
+  def define_residues(fragment=None, min_size=5, max_size=15):
+
+
+The function can be used like this:
+
+.. code-block:: python
+
+  from ash.interfaces.interface_dlfind import define_residues
+  
+  fragment = Fragment(xyzfile="somelargesystem.xyz")
+  # Automatic residue definition
+  residues = define_residues(fragment=fragment, min_size=5, max_size=15)
+  # Call the optimizer with the residue definition
+  DLFIND_optimizer(theory=theory, fragment=frag, jobtype="opt", residues=residues)
+
 
 ######################################################
 Periodic Boundary Condition Optimizations with DL-FIND
@@ -278,7 +331,7 @@ Example below shows a way of using geomeTRIC to optimize an ammonia crystal usin
 
     # Calling the DL-FIND optimizer. 
     # The optimizer will check for PBC support of the theory object and enable PBC optimization in HDLC (only coordsystem supported)
-    DLFIND_optimizer(theory=theory, fragment=frag, coordsystem="hdlc", PBC_format_option="XSF")
+    DLFIND_optimizer(theory=theory, fragment=frag,  PBC_format_option="XSF")
 
 
 

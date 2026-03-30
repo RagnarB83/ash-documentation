@@ -207,7 +207,8 @@ Here scanning an angle (defined by atom indices 1,0,2 and scanning from 180° to
 
 .. code-block:: python
 
-    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', 
+          resultfile='surface_results.txt', 
           runmode='serial', RC_list=[{'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 110, -10]}],
           keepoutputfiles=True, surfacedictionary = results.surfacepoints
 
@@ -224,7 +225,8 @@ This typically makes sense when one wants to preserve the symmetry of a system e
 
 .. code-block:: python
 
-    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', runmode='serial',
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', resultfile='surface_results.txt', 
+              runmode='serial',
               RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
                        {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}],
                         keepoutputfiles=True)
@@ -381,12 +383,14 @@ The results is a dictionary like before.
 
     #Calculate surface from collection of XYZ files. Will read old surface-results.txt file if requested (resultfile="surface-results.txt")
     #Unrelaxed single-point job
-    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Unrelaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt' )
+    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Unrelaxed', theory=ORCAcalc, dimension=2, 
+                resultfile='surface_results.txt' )
     surfacedictionary = results.surfacepoints
     
     #Relaxed optimization job. A geometry optimization with constraints will be done for each point
     #The RC1_type and RC1_indices (and RC2_type and RC2_indices for a 2D scan) also need to be provided
-    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, resultfile='surface_results.txt',
+    results = calc_surface_fromXYZ(xyzdir=surfacedir, scantype='Relaxed', theory=ORCAcalc, dimension=2, 
+                        resultfile='surface_results.txt',
                         coordsystem='dlc', maxiter=50, extraconstraints=None, convergence_setting=None,
                         RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
                         {'type': 'angle',  'indices': [[1,0,2]], 'range': [100, 150, 10]}],)
@@ -473,13 +477,16 @@ A dictionary using data from a previous job (stored e.g. in surface_results.txt)
     surfacedictionary = read_surfacedict_from_file("surface_results.txt")
 
     #Plot a 1D scan:
-    reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='Plotname', x_axislabel='Angle', y_axislabel='Energy',
-    imageformat='png', RelativeEnergy=True, pointsize=40, scatter_linewidth=2, line_linewidth=1, color='blue')
+    reactionprofile_plot(surfacedictionary, finalunit='kcal/mol',label='Plotname', x_axislabel='Angle', 
+                y_axislabel='Energy', imageformat='png', RelativeEnergy=True, pointsize=40, 
+                scatter_linewidth=2, line_linewidth=1, color='blue')
     #Plot a 2D scan:
-    contourplot(surfacedictionary, finalunit='kcal/mol',label="Plotname", interpolation='Cubic', x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
+    contourplot(surfacedictionary, finalunit='kcal/mol',label="Plotname", interpolation='Cubic', 
+                x_axislabel='Bond (Å)', y_axislabel='Angle (°)')
     # Plot a 3D scan (requires plotly)
-    volumeplot(surfacedictionary, x_axislabel='Bond length (Å)', y_axislabel='Angle (°)',z_axislabel='Dihedral (°)', 
-                colorbar_label='Energy', finalunit='kcal/mol', RelativeEnergy=True) 
+    volumeplot(surfacedictionary, x_axislabel='Bond length (Å)', y_axislabel='Angle (°)', 
+                z_axislabel='Dihedral (°)', colorbar_label='Energy', finalunit='kcal/mol', 
+                RelativeEnergy=True) 
 
 .. image:: figures/PlotTPSS.png
    :align: center
