@@ -67,7 +67,7 @@ Periodic boundary conditions are also supported.
 Fairchem installation
 ################################################################################
 
-See Fairchem installation instructions: https://fair-chem.github.io/core/install.html
+See Fairchem installation instructions: https://fair-chem.github.io/install/
 Most likely the installation can be simply carried out using pip: 
 
 .. code-block:: python
@@ -89,15 +89,15 @@ Options: 'oc20', 'omol', 'omat', 'odac', 'omc'
 For molecular chemistry use: *task_name* ='omol'
 
 
-See `Fairchem UMA models documentation <https://fair-chem.github.io/core/uma.html>`_ for more information.
+See `Fairchem UMA models documentation <https://fair-chem.github.io/uma/>`_ for more information.
 
 **Use a UMA model by model_name**
 
 This option will automatically download the UMA model from Hugging-Face and use directly.
 It requires a Hugging-Face account and one must have been granted access to the `UMA-model <https://huggingface.co/facebook/UMA>`_
-One must also create a Hugging-Face token and set a shell environment variable. `Read here <https://fair-chem.github.io/core/install.html#access-to-gated-models-on-huggingface>`_
+One must also create a Hugging-Face token and set a shell environment variable. `Read here <https://fair-chem.github.io/install/#access-to-gated-models-on-huggingface>`_
 
-Available models are documented at: https://fair-chem.github.io/core/uma.html
+Available models are documented at: https://fair-chem.github.io/uma
 
 .. code-block:: python
 

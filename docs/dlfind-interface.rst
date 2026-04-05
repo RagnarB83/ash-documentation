@@ -232,9 +232,8 @@ HDLC coordinates in DL-FIND and residue definitions
 ######################################################
 
 The hybrid delocalized internal coordinates (HDLCs)  in DL-FIND are generally recommended for geometry optimizations.
-Some information on HDLCs can be found here: 
-https://chemshell.org/static_files/tcl-chemshell/manual/hdlc.html 
-and in the original article: https://pubs.rsc.org/en/content/articlehtml/2000/cp/a909486e 
+Some information on HDLCs can be found on the `HDLC Chemshell page <https://chemshell.org/static_files/tcl-chemshell/manual/hdlc.html>`_ (where HDLCs were first implemented)
+and in the `original article on HDLCs <https://pubs.rsc.org/en/content/articlehtml/2000/cp/a909486e>`_ .
 
 By default, the ASH interface to DL-FIND will, however, define a single system of internal coordinates which are close to internal delocalized
 coordinate (with 6 external degrees of freedom retained). This is fine for small systems.
@@ -273,7 +272,7 @@ The function can be used like this:
 .. code-block:: python
 
   from ash.interfaces.interface_dlfind import define_residues
-  
+
   fragment = Fragment(xyzfile="somelargesystem.xyz")
   # Automatic residue definition
   residues = define_residues(fragment=fragment, min_size=5, max_size=15)
