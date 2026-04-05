@@ -4,20 +4,22 @@ Geometry optimization
 Geometry optimizations in ASH can be performed in a few different ways.
 The oldest interface is to the `geomeTRIC optimizer library <https://github.com/leeping/geomeTRIC>`_ that allows several type of internal coordinates.
 There is also an interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , 
-which has very fast execution speed.
+which has very fast execution speed (being written in Fortran).
 
-In addition there is a native Cartesian-coordinate optimizer, *Cart_optimizer*, that performs geometry optimizations exclusively using Cartesian coordinates.
+In addition there is a native Cartesian-coordinate optimizer, *Cart_optimizer*, 
+that performs geometry optimizations exclusively using Cartesian coordinates that also has fast execution speed.
 
-More recently, periodic cell optimizations have become possible.
+More recently, periodic cell optimizations have become possible for all 3 optimizers,
+allowing simultaneous atom+cell optimizations for periodic systems.
 
 ######################################################
-geomeTRIC
+geomeTRIC library
 ######################################################
 
 See :doc:`geometric_interface`
 
 ######################################################
-DL-FIND
+DL-FIND library
 ######################################################
 
 See :doc:`dlfind-interface`
@@ -27,17 +29,21 @@ Cart_optimizer
 ######################################################
 
 **Cart_optimizer** is a native Cartesian-coordinate based optimizer in ASH that is capable of treating both molecular systems and systems with periodic boundary conditions.
-It minimizes atoms and cell vectors simultaneously by a BFGS algorithm. 
-It is also possible to choose a different algorithm for taking the step: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
+It minimizes atoms and cell vectors simultaneously by a BFGS algorithm by default. 
+In addition to BFGS one can choose the following step algorithms: 'sd' (steepest descent), 'cg' (conjugate gradient), 'damped-md' (a damped MD algorithm), 'nesterov' (a Nesterov modified damped MD algorithm).
 
-This optimizer is likely to be on par with other similar Cartesian optimization algorithms in e.g. periodic DFT programs, 
-but will ultimately suffer from the Cartesian coordinate representation for many systems that will make convergence slow
-for molecular systems.
+This optimizer is likely to be on par with other similar Cartesian optimization algorithms in e.g. periodic DFT programs.
+It does suffer from the Cartesian coordinate representation that for many molecular systems that will make convergence slow
+for molecular systems in terms of number of steps required. Because it avoids the overhead of internal coordinate transformations,
+and does not have any blow-up problems associated with internal coordinates, it can offer a certain robustness and execution speed
+for Theory levels where the energy+gradient evaluation is fast.
 
 Convergence criteria are by default the same as in the geomeTRICOptimizer (convergence_grms':1e-4, 'convergence_gmax':3e-4).
 Can be modified by passing a dictionary : conv_criteria = {'convergence_grms':1e-4, 'convergence_gmax':3e-4}
 
-Constraints will soon be available.
+Soft constraints (i.e. restraints) have been implemented. Bonds, angles, dihedrals as well as frozen Cartesian positions are available.
+Atoms can be frozen, either by specifying them via *frozen_atoms* keyword  or by defining them as XYZ constraints in the constraints keyword.
+Partial Cartesian constraints (e.g. 'X', 'Y', 'Z', 'XY', 'XZ' and 'YZ') are also possible.
 
 .. code-block:: python
 
@@ -50,7 +56,7 @@ Constraints will soon be available.
 Constraints
 ######################################################
 
-Both geomeTRIC and and DL-FIND Optimizers support constraints and the syntax is generally the same:
+GeomeTRIC, DL-FIND and Cart_optimizer all  support constraints and the syntax is generally the same:
 
 .. code-block:: python
 
@@ -60,18 +66,24 @@ Both geomeTRIC and and DL-FIND Optimizers support constraints and the syntax is 
     constraints={'dihedral':[[98,99,100,101]]} #This defines a dihedral constraint between atoms 98,99,100 and 101.
     constraints={'bond':[[0,1],[3,4]], 'angle':[[98,99,100]]} #This defines 2 bond constraints and 1 angle constraint.
     constraints={'xyz':[5,6]} #This defines XYZ constraints for the indicated atoms (i.e. freeze atoms). Alternative to frozenatoms option.
+    constraints={'x':[5,6]} #This freezes the X-coordinate for the indicated atoms.
+    constraints={'xy':[7,8]} #This freezes the X and Y coordinates for the indicated atoms.
 
-However, there are some differences as the geomeTRIC interface allows additionally to specify the value of 
-the constraint while DL-FIND does not allow this. See individual documentation.
+Be aware that the specific algoriths used to enforce constraints differ. DL-FIND will employ hard in-place constraints, 
+while geomeTRIC will use soft constraints (restraints) during the optimization and will only enforce exact hard constraints towards the end of the optimization.
+Cart_optimizer currently features only soft constraints, that are more approximate.
+
+Additionally, the geomeTRIC interface allows to specify the target value of 
+the constraint while DL-FIND can only freeze the geometry in-place. See individual documentation.
 
 ######################################################
 Restraints
 ######################################################
 
-Harmonic restraints can be useful alternatives to constraints in geometry optimizations, being less strict and are less likely to blow
+The general use oh harmonic restraints can be useful alternatives to constraints in geometry optimizations, being less strict and are less likely to blow
 up optimizations, especially if the force constant is tuned. They can be used to drive a molecule gently towards a specific structure.
 
-ASH features a special theory, RestraintTheory, that can be used to apply restraints to a system in a general way.
+ASH features a special theory, RestraintTheory, that can be used to apply restraints to a system in a general way, irrespective of the optimizer.
 
 .. code-block:: python
 
@@ -117,7 +129,7 @@ While the above example will often work, the optimization will likely not succee
 far from the target geometry (where the restraints are satisfied) or if the coordinate changes required
 are coupled to movements of other atoms (will cause atoms to be in strained positions that will blow up the Optimizer or Theory run.).
 
-In this case, a better alternative is to build a hybrid theory where there restraints are simply added on top
+In this case, a better alternative is to build a hybrid theory where the restraints are simply added on top
 of a regular Theory object. 
 Below we build a WrapTheory object that combines an xTBTheory object with the RestraintTheory object.
 The final energy expression (and gradient) that is minimized by the Optimizer is then the sum of the xTB-energy and the restraint-energy.
@@ -140,7 +152,7 @@ The final energy expression (and gradient) that is minimized by the Optimizer is
 
 
 ######################################################
-SimpleOpt
+Deprecated: SimpleOpt
 ######################################################
 
 SimpleOpt is an internal alternative to the geomeTRIC and DL-FIND external optimizers. 
