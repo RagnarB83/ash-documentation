@@ -400,21 +400,55 @@ read and write bias-potential information on the shared biasdirectory. Pay atten
 how often the bias is read and written to disk. The more often, the more up-to-date the bias-potential will be but this may read to excessive read/write operations that will 
 slow down the simulation and may lead to excessive network traffic on the cluster (especially if you are running MM metadynamics).
 
-.. note:: The multiple-walker approach should also work for OpenMM_MD_plumed jobs but requires more setup. 
-  The biasdirectory should be set by PLUMED keyword WALKERS_DIR, the number of walkers by WALKERS_N etc. See Plumed documentation.
+
+The multiple-walker approach also works for **OpenMM_MD_plumed** jobs and requires enabling disk-based multiple walker feature in the PLUMED input. 
+In the example below we mention the biasdirectory path in plumed input using PLUMED keyword WALKERS_DIR, and number of walkers by WALKERS_N, and need to create N input files each with its different WALKER_ID.
+The WALKERS_RSTRIDE keyword defines the frequecy of steps at which the bias information of all the walkers would be shared, although useful for faster convergence, very small frequech could lead to artifacts.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Creation of the ASH fragment
+  frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
+
+  #Create theory level. Here xTB using the in-memory library approach (no disk-based input or output)
+  theory = xTBTheory(runmode='library')
+
+  # Warning: atom indices inside plumed-string start from 1 (not 0 like in ASH)
+  plumedstring="""
+  # set up two variables for Phi and Psi dihedral angles
+  phi: TORSION ATOMS=1,2,3,4
+
+  metad: METAD ...
+         ARG=phi
+         PACE=500
+         HEIGHT=1.2 SIGMA=0.35
+         FILE=HILLS
+         WALKERS_N=24 WALKERS_DIR=/home/username/metadynamics_simulations_plumed/biasdirectory WALKERS_RSTRIDE=100 WALKERS_ID=XYZ
+  PRINT STRIDE=10 ARG=phi,metad.bias FILE=COLVAR
+  """
+
+  #Call the OpenMM_MD_plumed function
+  OpenMM_MD_plumed(fragment=frag, theory=theory, timestep=0.001,
+                simulation_steps=10000,
+                temperature=300, integrator='LangevinMiddleIntegrator',
+                coupling_frequency=1, traj_frequency=1,
+                plumed_input_string=plumedstring)
+
+
+
+The **subash** script (see :doc:`basics` ) automatically handles this for plumed multiple walkers, by recognising WALKERS_N/WALKERS_ID keywords and creates multiple inputs and submit each on single core. 
+If one wants to use a single computing node that has e.g. 24 cores and you wish to run 24 walkers on that node automatically.
+Here we assume each walker will run with 1 CPU core.
+
+.. code-block:: shell
+
+  subash mtd_sim.py -mw -p 24 # mw will launch multiple walkers on a single node, -p 24 will request 24 CPU cores, each node for each WALKERS_ID
 
 The advantage of the approach above is that you can submit multiple walker-jobs, 
 perhaps using different CPU cores for each simulation (to speed up the theory energy+gradient step), 
 depending on the resources that are available. You can submit jobs whenever you want, even after all other jobs have finished and continue a previous metadynamics simulation.
-
-Another scenario might come up where you might want to submit to a single computing node that has e.g. 24 cores and you wish to run 24 walkers on that node automatically.
-Here we assume each walker will run with 1 CPU core.
-
-The **subash** script (see :doc:`basics` ) has an option to automatically submit multiple-walker ASH calculations on a single node, using a single job submissions.
-
-.. code-block:: shell
-  
-  subash mtd_sim.py -mw -p 24 # mw will launch multiple walkers on a single node, -p 24 will request 24 CPU cores
 
 
 If you inspect the `subash script <https://github.com/RagnarB83/ash/blob/master/scripts/subash.sh>`_  (search for multiwalker) 
@@ -427,6 +461,56 @@ Once each simulation has finished, the job ends and all contents are copied back
 This is a highly convenient way of launching multiple walkers on the same single node.
 
 .. note:: Running as many multiple walkers as possible should generally be preferable to speeding up the energy+gradient step of the Theory level.
+
+
+######################################################
+Restarting a OpenMM_MD_plumed simulation
+######################################################
+
+Considering a scenario where a multiple walker OpenMM_MD_plumed simulation was performed and one wants to restart it, this would require mainly 2 things, 
+1. **Previous bias data**:  Give the path of biasdirectory you used for the previous run only, which would have HILLS.N file for each walker, and if you mention the keyword **RESTART** in the PLUMED input, plumed will read the previous hills files automatically.
+2. **Velocities and coordinates**:  Just restarting the calculation by reading the bias data from previous calculation is not enough, and could lead to artifacts of simulation crash, to avoid that and start the simulation exaclty from the last step, read in the **chkfile/statefile** from the previous job. 
+
+Here is the exaple for restarting a OpenMM_MD_plumed job.
+
+.. code-block:: python
+
+  from ash import *
+
+  #Creation of the ASH fragment
+  frag = Fragment(databasefile="butane.xyz", charge=0, mult=1)
+
+  #Create theory level. Here xTB using the in-memory library approach (no disk-based input or output)
+  theory = xTBTheory(runmode='library')
+
+  # Warning: atom indices inside plumed-string start from 1 (not 0 like in ASH)
+  plumedstring="""
+  RESTART
+  # set up two variables for Phi and Psi dihedral angles
+  phi: TORSION ATOMS=1,2,3,4
+
+  metad: METAD ...
+         ARG=phi
+         PACE=500
+         HEIGHT=1.2 SIGMA=0.35
+         FILE=HILLS
+         WALKERS_N=24 WALKERS_DIR=/home/username/metadynamics_simulations_plumed/biasdirectory WALKERS_RSTRIDE=100 WALKERS_ID=XYZ
+  PRINT STRIDE=10 ARG=phi,metad.bias FILE=COLVAR
+  """
+
+  #Call the OpenMM_MD_plumed function
+  OpenMM_MD_plumed(fragment=frag, theory=theory, timestep=0.001,
+                simulation_steps=10000,
+                temperature=300, integrator='LangevinMiddleIntegrator',
+                coupling_frequency=1, traj_frequency=1,
+                plumed_input_string=plumedstring,
+                chkfile="/path/to/previous/job/walkersimXYZ/OpenMM_MD_final_checkpoint.chk")
+
+Now that we have given the path to chk file from the previous job, we can once again use **subash** to submit the job as before.
+
+.. code-block:: shell
+
+  subash mtd_sim.py -mw -p 24 # for each WALKERS_ID=XYZ, a new input would be created which will use the chkfile and HILLS file from previous job.
 
 
 ######################################################
