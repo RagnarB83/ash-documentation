@@ -60,14 +60,14 @@ But you could of course also write this kind of simple workflow manually, allowi
     Optimizer(theory=ORCAcalc,fragment=molecule)
 
     #Numfreq job of molecule (contains optimized coordinates). A 2-point Hessian is requested in runmode serial.
-    thermochem = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
+    results_numfreq = NumFreq(fragment=molecule, theory=ORCAcalc, npoint=2, runmode='serial')
 
     #Single-point HL job on optimized geometry
-    cc = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
+    HL = ORCA_CC_CBS_Theory(elements=["N"], cardinals = [2,3], basisfamily="cc", numcores=numcores)
     HLresult = Singlepoint(theory=HL, fragment=molecule)
 
     print("Final HL energy: ", HLresult.energy, "Eh")
-    print("ZPVE: ", thermochem['ZPVE'], "Eh")
+    print("ZPVE: ", results_numfreq.thermochem['ZPVE'], "Eh")
 
 
 #######################################################################################################

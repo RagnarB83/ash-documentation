@@ -7,9 +7,11 @@ The primary job-types available in ASH:
 
 * Single-point energy/property job
 * Geometry optimization
+* Saddlepoint search
 * Numerical frequencies
 * Analytic frequencies
-* Nudged elastic band optimization (or saddlepoint search)
+* Nudged elastic band optimization
+* Freezing string optimization
 * Molecular dynamics
 * Surface scan
 
@@ -208,12 +210,13 @@ on multiple fragments or with multiple theories.
 Geometry optimization
 ###########################
 
-Geometry optimizations are easily performed in ASH due to availability of the flexible optimizer: geomeTRIC (https://github.com/leeping/geomeTRIC): 
+Geometry optimizations in ASH can be performed in variety of ways.
+See  :doc:`Geometry-optimization` documentation for all options.
 
-| See  :doc:`Geometry-optimization` documentation for all options.
-
-The geomeTRIC **Optimizer** allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. Supports constraints as well as frozen atoms natively. 
-Allows an active-region definition which enables efficient QM/MM optimizations of a part of large systems (where most atoms are frozen).
+The geomeTRIC-Optimizer is called by simply calling the **Optimizer** function. 
+This option allows efficient optimization in multiple coordinate systems: TRIC, HDLC, DLC, Cartesian, redundant internals. 
+The optimizer supports constraints as well as frozen atoms natively. 
+Additionaly, an active-region can be defined which enables efficient QM/MM optimizations of a part of large systems (where most atoms are frozen).
 ASH features a full-featured interface to geomeTRIC that allows flexible constraint input, QM/MM optimizations, relaxed and unrelaxed 1D/2D surface scans and more.
 
 **Example:**
@@ -229,11 +232,9 @@ ASH features a full-featured interface to geomeTRIC that allows flexible constra
     Optimizer(fragment=HF_frag, theory=ORCAcalc, coordsystem='tric')
     #Optimizer and Opt are aliases for the geomeTRICOptimizer function name.
 
-See :doc:`Geometry-optimization` for all features.
+See :doc:`Geometry-optimization` for information on other features of the geomeTRIC Optimizer as well as information on other options:
+such as DL-FIND, and the native Cartesian-based optimizer.
 
-Other optimizers:
-
-- An internal optimizer is available (called **SimpleOpt**) that can optimize the system in Cartesian coordinates only using the LBFGS algorithm. While frozen atoms are supported, no other constraints are supported.
 
 ################################
 Numerical frequencies (Hessian)
@@ -265,7 +266,7 @@ Nudged Elastic Band Calculations
 ##################################
 
 Through an interface to the external code Knarr, nudged elastic band (NEB) calculations are possible.
-This enables one to calculate minimum energy paths and locate saddlepoints ("transition states") using any QM, MM or QM/MM Theory in ASH.
+This enables one to calculate minimum energy paths and locate approximate saddlepoints using any QM, MM or QM/MM Theory in ASH.
 
 See :doc:`neb` for documentation
 
@@ -292,19 +293,43 @@ Both unrelaxed and relaxed scans be calculated, using either 1 and 2 reaction co
 
 See :doc:`surfacescan`
 
+#################################
+Freezing string optimization
+#################################
+
+The freezing string method is an alternative method to NEB for locating approximate saddlepoints.
+A variant of the growing string method (that like NEB can locate minimum energy paths), 
+the freezing string method sacrifices computation of the MEP  in favor of a more efficient optimization of the saddlepoint geometry.
+
+See X
 
 
 ###########################
 Saddle-point optimization
 ###########################
 
-Saddle-points searches can be be performed in ASH via a double-ended strategy (requiring reactant and product starting points) and a single-ended strategy (requiring only a single geometry).
-The double-ended strategy involves use of the climbing image NEB method which also results in a minimum energy path between reactant and product.
-See :doc:`neb` for documentation.
+While NEB and freezing string methods as well as surface scans all work to locate approximate saddlepoint geometries, and can often come very close
+to the true saddlepoint, they ultimately suffer from not using curvature information (Hessian) and thus cannot be expected to locate the true saddlepoint geometry with high accuracy.
 
-An eigenvector-following algorithm is also available via the geomeTRIC library (TSOpt=True option). This option is only feasible when a good guess for the 
-saddlepoint geometry is available, e.g. from a surface scan, previous NEB/NEB-CI job etc. It furthermore requires a good initial approximation to the Hessian (default: exact Hessian in first step).
-See :doc:`Geometry-optimization` for all features.
+A truly accurate saddle-point optimization needs to be performed by an eigenvector-following algorithm (usually a PRFO algorithm)
+but requires as input: 
+
+- i) a reasonably accurate guess for the SP geometry
+- ii) information about the curvature (Hessian information)
+
+ASH features a few different options of performing saddle-point optimizations.
+
+- The RS-P-RFO algorithm of the geomeTRIC Optimizer. See :doc:`geometric_interface`
+- The PRFO algorithm implemented in the DL-FIND library. See :doc:`DL-FIND_interface`
+- The iterative Hessian diagonalization algorithm Sella algorithm. See :doc:`Sella_interface`
+
+
+A simple example of how to find a saddlepoint via the algorithm in geomeTRIC is shown below.
+The syntax is similar to regular geomeTRIC optimization, except one adds the TSOpt=True option and 
+then makes a choice for the Hessian approxiatmion.
+Note that this option relies on the input geometry being a good guess for the saddlepoint geometry.
+A Hessian also needs to be available (default: numerical Hessian is calculated in the first step).
+See :doc:`geometric_interface` for further details.
 
 **Example:**
 
@@ -312,7 +337,7 @@ See :doc:`Geometry-optimization` for all features.
 
     from ash import *
 
-    HF_frag=Fragment(xyzfile="hf.xyz", charge=0, mult=1) #Fragment object creation
+    HF_frag=Fragment(xyzfile="tsguess.xyz", charge=0, mult=1) #Fragment object creation
     ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
 
     #TSOpt=True enables saddlepoint optimization in geomeTRIC. Note: Exact Hessian is calculated in the first step by default.
@@ -323,8 +348,10 @@ See :doc:`Geometry-optimization` for all features.
 **NEB-TS**
 -----------------------------------
 
+Generally, the combination of NEB, scan or frozen-string job followed by a saddlepoint optimization is an efficient way to locate saddlepoints.
+
 A combination of the double-ended NEB strategy and a single-ended eigenvector-following method is also available in ASH in the form of the NEB-TS method.
-This is probably one of the most efficient and accurate method for finding a saddlepoint as discussed in the article:
+This is an efficient yet robust way of finding a saddlepoint as discussed in the article:
 
 V. Ásgeirsson, B. Birgisson, R. Bjornsson, U. Becker, F. Neese, C: Riplinger,  H. Jónsson, J. Chem. Theory Comput. 2021,17, 4929–4945.
 DOI: 10.1021/acs.jctc.1c00462

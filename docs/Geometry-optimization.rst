@@ -6,8 +6,12 @@ The oldest interface is to the `geomeTRIC optimizer library <https://github.com/
 There is also an interface to the powerful `DL-FIND library <https://www.itheoc.uni-stuttgart.de/research/kaestner/research/dlfind/>`_ , 
 which has very fast execution speed (being written in Fortran).
 
+
 In addition there is a native Cartesian-coordinate optimizer, *Cart_optimizer*, 
 that performs geometry optimizations exclusively using Cartesian coordinates that also has fast execution speed.
+
+The geomeTRIC and DL-FIND optimizers support saddlepoint optimizations via PRFO algorithms (with various Hessian input options)
+and additionally ASH supports the powerful Sella saddlepoint optimization program.
 
 More recently, periodic cell optimizations have become possible for all 3 optimizers,
 allowing simultaneous atom+cell optimizations for periodic systems.
@@ -23,6 +27,16 @@ DL-FIND library
 ######################################################
 
 See :doc:`dlfind-interface`
+
+
+######################################################
+Sella
+######################################################
+
+An interface to the Sella saddlepoint optimization algorithm is also available in ASH.
+The Sella algorithm is only intended for saddlepoint optimizations and is based on an iterative Hessian diagonalization approach,
+that avoids computation of the exact Hessian.
+See :doc:`Sella_interface`
 
 ######################################################
 Cart_optimizer
@@ -41,22 +55,56 @@ for Theory levels where the energy+gradient evaluation is fast.
 Convergence criteria are by default the same as in the geomeTRICOptimizer (convergence_grms':1e-4, 'convergence_gmax':3e-4).
 Can be modified by passing a dictionary : conv_criteria = {'convergence_grms':1e-4, 'convergence_gmax':3e-4}
 
-Soft constraints (i.e. restraints) have been implemented. Bonds, angles, dihedrals as well as frozen Cartesian positions are available.
-Atoms can be frozen, either by specifying them via *frozen_atoms* keyword  or by defining them as XYZ constraints in the constraints keyword.
+Soft constraints (i.e. restraints) have been implemented for bonds, angles, dihedrals.
+Frozen Cartesian positions are also available; atoms can be frozen, 
+either by specifying them via *frozen_atoms* keyword  or by defining them as XYZ constraints in the constraints dictionary.
 Partial Cartesian constraints (e.g. 'X', 'Y', 'Z', 'XY', 'XZ' and 'YZ') are also possible.
+The soft bond/angle/dihedral constraints are implemented as harmonic restraints and the force constant 
+can be tuned by the user via the kf_bonds, kf_angles and kf_dihedrals keywords (units of Eh/Bohr^2 and Eh/rad^2). 
+.. code-block:: python
+
+  def Cart_optimizer(fragment=None, theory=None, rate=2.0, 
+                                  scaling_rate_cell=1.0, maxiter=50, 
+                                  step_algo="bfgs",
+                                  max_step=0.25, momentum=0.5, constrain_method='soft',
+                                  printlevel=2, conv_criteria=None, PBC_format_option="CIF",
+                                  constraints=None, frozen_atoms=None, result_write_to_disk=True,
+                                  kf_bonds=10.0, kf_angles=10.0, kf_dihedrals=10.0):
+
+For more flexibility it is also possible to define a Cart_optimizer_class object instead.
 
 .. code-block:: python
 
-    def Cart_optimizer(fragment=None, theory=None, rate=2.0, scaling_rate_cell=1.0, maxiter=50, 
-                                    step_algo="bfgs", max_step=0.25, momentum=0.5, 
-                                    printlevel=2, conv_criteria=None, PBC_format_option="CIF",
-                                    constraints=None, frozen_atoms=None, result_write_to_disk=True):
+  class Cart_optimizer_class:
+
+    def __init__(self,fragment=None, theory=None, rate=2.0, scaling_rate_cell=1.0, maxiter=50, step_algo="bfgs",
+                                max_step=0.25, momentum=0.5, printlevel=2, conv_criteria=None, print_atoms_list=None,
+                                PBC_format_option="CIF", constraints=None, constrain_method='soft',
+                                frozen_atoms=None, result_write_to_disk=True,
+                                kf_bonds=10.0, kf_angles=10.0, kf_dihedrals=10.0):
+
+
+The object would be defined like this:
+
+.. code-block:: python
+
+  cartopt=Cart_optimizer_class(step_algo="bfgs", printlevel=1, frozen_atoms=[0,1], 
+      constraints={'bond':[[0,1],[3,4]], 'angle':[[98,99,100]]}, conv_criteria={'convergence_grms':1e-4, 'convergence_gmax':3e-4})
+
+The object could then e.g. be passed to *calc_surface* to perform a surface scan using the Cart_optimizer with the defined options.
+Or it could be run directly by calling the *run* method of the Cart_optimizer_class object
+and passing a Fragment and Theory object to it.
+
+.. code-block:: python
+
+  cartopt.run(fragment=frag, theory=theory)
+
 
 ######################################################
 Constraints
 ######################################################
 
-GeomeTRIC, DL-FIND and Cart_optimizer all  support constraints and the syntax is generally the same:
+GeomeTRIC, DL-FIND and Cart_optimizer all support constraints and the syntax is generally the same:
 
 .. code-block:: python
 
@@ -71,7 +119,7 @@ GeomeTRIC, DL-FIND and Cart_optimizer all  support constraints and the syntax is
 
 Be aware that the specific algoriths used to enforce constraints differ. DL-FIND will employ hard in-place constraints, 
 while geomeTRIC will use soft constraints (restraints) during the optimization and will only enforce exact hard constraints towards the end of the optimization.
-Cart_optimizer currently features only soft constraints, that are more approximate.
+Cart_optimizer currently features only soft constraints, that are more approximate but tunable by modifying the force constant of the restraints.
 
 Additionally, the geomeTRIC interface allows to specify the target value of 
 the constraint while DL-FIND can only freeze the geometry in-place. See individual documentation.

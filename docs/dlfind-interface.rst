@@ -123,7 +123,7 @@ The DLFIND_optimizer function
    * - ``NumGrad``
      - Boolean
      - False
-     - Whether to perform a numerical gradient optimization (uses NumGradClas)
+     - Whether to perform a numerical gradient optimization (uses NumGradClass)
    * - ``delta``
      - float
      - 0.01
@@ -211,6 +211,9 @@ Syntax to use for the constraints dictionary:
     constraints={'dihedral':[[98,99,100,101]]} #This defines a dihedral constraint between atoms 98,99,100 and 101.
     constraints={'bond':[[0,1],[3,4]], 'angle':[[98,99,100]]} #This defines 2 bond constraints and 1 angle constraint.
     constraints={'xyz':[5,6]} #This defines XYZ constraints for the indicated atoms (i.e. freeze atoms). Alternative to frozenatoms option.
+    constraints={'x':[5,6]} #This defines a partial X Cartesian constraint for the indicated atoms.
+    constraints={'xy':[5,6]} #This defines a partial XY Cartesian constraint for the indicated atoms.
+
 
 Note that, unlike the geomeTRIC library, DL-FIND constraints act directly on the initial geometry provided. 
 It is not possible to specify what the constraint should be (i.e. like the constrainvalue option in geomeTRIC).
@@ -224,7 +227,6 @@ This can be done in a few ways:
 - Do a RestraintTheory minimization first. See more information on :doc:`Geometry-optimization` page.
 
 To freeze atoms in space it is easiest to provide a list of frozen atoms by the *frozenatoms* keyword.
-
 Alternatively, if a large number of atoms should be frozen it may be easier to provide a list of active atoms by the *actatoms* keyword.
 
 ######################################################

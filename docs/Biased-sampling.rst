@@ -467,11 +467,12 @@ This is a highly convenient way of launching multiple walkers on the same single
 Restarting a OpenMM_MD_plumed simulation
 ######################################################
 
-Considering a scenario where a multiple walker OpenMM_MD_plumed simulation was performed and one wants to restart it, this would require mainly 2 things, 
+Considering a scenario where a multiple walker OpenMM_MD_plumed simulation was performed and one wants to restart it, this would require mainly 2 things:
+
 1. **Previous bias data**:  Give the path of biasdirectory you used for the previous run only, which would have HILLS.N file for each walker, and if you mention the keyword **RESTART** in the PLUMED input, plumed will read the previous hills files automatically.
 2. **Velocities and coordinates**:  Just restarting the calculation by reading the bias data from previous calculation is not enough, and could lead to artifacts of simulation crash, to avoid that and start the simulation exaclty from the last step, read in the **chkfile/statefile** from the previous job. 
 
-Here is the exaple for restarting a OpenMM_MD_plumed job.
+Here is the example for restarting a OpenMM_MD_plumed job.
 
 .. code-block:: python
 

@@ -233,6 +233,8 @@ Syntax to use for the constraints dictionary:
     constraints={'dihedral':[[98,99,100,101]]} #This defines a dihedral constraint between atoms 98,99,100 and 101.
     constraints={'bond':[[0,1],[3,4]], 'angle':[[98,99,100]]} #This defines 2 bond constraints and 1 angle constraint.
     constraints={'xyz':[5,6]} #This defines XYZ constraints for the indicated atoms (i.e. freeze atoms). Alternative to frozenatoms option.
+    constraints={'x':[5,6]} #This defines a partial X Cartesian constraint for the indicated atoms.
+    constraints={'xy':[5,6]} #This defines a partial XY Cartesian constraint for the indicated atoms.
 
 *Example:*
 
@@ -456,7 +458,11 @@ Transition-State/Saddlepoint Optimization
 ######################################################
 
 A direct transition-state/Saddle-points optimization can be performed in the Optimizer via an eigenvector-following
-algorithm as implemented in the geometric library. This option is actived by the *TSOpt=True* keyword as shown below:
+algorithm as implemented in the geometric library. 
+Specific geomeTRIC uses a restricted-step partitioned rational function optimization (RS-P-RFO) method,  `geomeTRIC documentation <https://geometric.readthedocs.io/en/latest/transition.html>`_ 
+for more information on the algorithm and its implementation in geomeTRIC.
+
+This option is actived by the *TSOpt=True* keyword as shown below:
 
 .. code-block:: python
 

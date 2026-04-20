@@ -3,8 +3,8 @@ Surface Scan
 
 
 Potential Energy Surfaces can be conveniently scanned in ASH using the **calc_surface function** .
-This function performs unrelaxed and relaxed scans and can utilize either the geomeTRIC Optimizer or the DL-FIND Optimizer 
-(see :doc:`Geometry-optimization`) to carry out the constrained optimizations needed for the scans.
+This function performs unrelaxed and relaxed scans and can utilize either the geomeTRIC Optimizer, the DL-FIND Optimizer 
+or the ASH built-in Cartesian optimizer (see :doc:`Geometry-optimization`) to carry out the constrained optimizations needed for the scans.
 
 Surface scans explore the potential energy surface by gradually changing and freezing one or more suitable geometric coordinates
 while optimizing all other geometric coordinates.
@@ -235,12 +235,22 @@ This typically makes sense when one wants to preserve the symmetry of a system e
 Choosing between geometry optimizers
 ######################################################
 
-While the geomeTRICOptimizer is currently the default optimizer and works generally well, there are cases where using the DL-FIND Optimizer 
-instead might be preferred. If you are using a Theory level that has very fast execution speed: e.g. a forcefield via OpenMMTheory, 
+While the geomeTRICOptimizer is currently the default optimizer and works generally well, there are cases where other optimizers might be preferred.
+This might be the case if the geomeTRIC optimizer overhead becomes a considerable part of the surface-scan,
+and the surface-scan contains many points. Another reason for switching between optimizers might be if the constrained optimization has trouble converging, then switching to a different optimizer might help.
+
+If you are using a Theory level that has very fast execution speed: e.g. a forcefield via OpenMMTheory, 
 a machine-learning potential via PyTorch or perhaps a semiempirical method like GFN2-xTB, then the energy+gradient calculations calculated
 by the Theory object may be so fast that the bottleneck of the surfacescans may be the set-up and run of the geometry optimization algorithms themselves.
-Since geomeTRIC is written in Python and DL-FIND is written in Fortran, DL-FIND has a considerable edge in such cases.
+
+Use of the DL-FIND optimizer can be an attractive option in such cases, being a very fast and robust optimizer, written in Fortran and with very low overhead. DL-FIND implements hard constraints and features HDLC internal coordinates.
+Another option is the ASH built-in Cartesian optimizer. Because it avoids the overhead of internal coordinate transformations, it can be very fast for small systems and scans with many points. 
+It features soft constraints instead of hard constraints but often works well.
+
 Telling **calc_surface** to use DL-FIND instead is easy and scan-variables and additional constraints are handled in the same manner.
+
+Alternatively, 
+
 Do note that certain **calc_surface** keywords may be specific to each optimizer.
 
 *Surface scan using the geomeTRIC optimizer*
@@ -280,14 +290,48 @@ first create a DLFINDOptimizer_class object, then provide that object to **calc_
               RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
                        {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
 
+*Surface scan using the ASH Cartesian optimizer*
 
-Note: See :doc:`Geometry-optimization` for discussion of both geomeTRIC and DL-FIND.
+The ASH *Cart_optimizer* is a built-in Cartesian optimizer that can be used for the constrained optimizations during the surface scan.
+It optimizes only in Cartesian coordinates (not internal coordinates) and may thus take more optimization steps than the other optimizers.
+However, it has the advantages of very low overhead (it avoids the overhead of internal coordinate transformations) 
+and can be very fast for small systems and scans with many points.
+It uses soft constraints instead of hard constraints but this can be perfectly sufficient and the accuracy is tunable
+ by modifying the force constants involved.
+
+Using Cart_optimizer in *calc_surface* with default options:
+
+.. code-block:: python
+
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer="cartopt",
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
+
+
+In order to use special optimization settings for the ASH Cartesian Optimizer, one has to
+first create a Cart_optimizer_class object, then provide that object to **calc_surface**.
+
+.. code-block:: python
+
+    # Create a Cart_optimizer_class object with special settings
+    cart_optimizer = Cart_optimizer_class(step_algo="bfgs",maxiter=150, printlevel=1, 
+                      kf_bonds=10.0, kf_angles=10.0, kf_dihedrals=10.0)
+    # Provide the optimizer object to calc_surface
+    results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Relaxed', optimizer=cart_optimizer,
+              RC_list=[{'type': 'bond',  'indices': [[0,1],[0,2]], 'range': [2.0, 2.2, 0.01]},
+                       {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}])
+
+Note: See :doc:`Geometry-optimization` for discussion of the different optimizers: geomeTRIC, DL-FIND and Cart_optimizer.
+
+
+
 
 ######################################################
 Periodic boundary conditions
 ######################################################
 
-Thanks to the feature in the ASH interface to geomeTRIC, it is possible to perform geometry optimizations of both atom and lattice positions
+As the ASH interfaces to geomeTRIC, DL-FIND and Cart_optimizer can also optimize cell parameters,
+it is possible to perform geometry optimizations of both atom and lattice positions
 in a periodic system. This feature can be extended to constrained optimizations allowing surface scans via **calc_surface** 
 to be carried out under PBCs. See  :doc:`Geometry-optimization` documentation for more information on the optimization aspect.
 This option is currently only available for the geomeTRIC Optimizer.
