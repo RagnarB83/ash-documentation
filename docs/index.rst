@@ -72,6 +72,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
    Geometry-optimization
    geometric_interface
    dlfind-interface
+   Sella_interface
    module_freq
    module_dynamics
    Biased-sampling

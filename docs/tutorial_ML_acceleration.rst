@@ -39,8 +39,7 @@ required. This strategy is particularly useful for very large systems when far f
 While semiempirical methods like GFN2-xTB often serve the purpose for such pre-optimizations,
 new foundational ML potentials offer another alternative. 
 These ML potentials have usually been trained to reproduce a certain dispersion-corrected DFT level of theory.
-Models trained on the OMol25 training set contain e.g. 100 million molecular structures and associated energies
- and gradients at the wB97M-V/def2-TZVPD level of theory.
+Models trained on the OMol25 training set contain e.g. 100 million molecular structures and associated energies and gradients at the wB97M-V/def2-TZVPD level of theory.
 wB97M-V is a range-separate hybrid functional that together with the non-local VV10 dispersion functional and a close-to basis-set limit def2-TZVPD basis set,
 is one of the most accurate DFT methods for maingroup and transition metal chemistry.
 
@@ -162,8 +161,7 @@ The disadvantage of NEB for the purpose of locating a single saddlepoint,
  is the need to compute many structures (images, 6-10 is a common choice) in each optimization step,
 and overall slow convergence to the minimum energy path (so slow that one only rarely chooses to optimize a 
 path to a tolerance where all images are converged).
-Another disadvantage comes from the fact that because the algorithm only uses
- gradient-information, it does not always precisely locate the 1st-order saddlepoint 
+Another disadvantage comes from the fact that because the algorithm only uses gradient-information, it does not always precisely locate the 1st-order saddlepoint 
  (characterized by 1 negative eigenvalue of the Hessian), even with CI-NEB.
 
 Combining NEB with an eigenvector-following algorithm, as in the NEB-TS method,
@@ -174,9 +172,9 @@ computing the Hessian at this geometry and then optimizing to the saddlepoint vi
 
 It is possible to use ML potentials to accelerate these steps. If the ML potential is accurate enough it will be capable of predicting a minimum
 energy path close to that predicted by DFT but at a much cheaper cost. We can modify the tolerances of the NEB job as we please:
- the lower they are the better the SP-geometry is likely to be but they we do not have to worry about converging the images very tightly.
- Because the ML potential is cheap we can also choose to increase the number of images which will both aid convergence and also provide more resolution
- in the saddlepoint region which will result in a more accurate guess.
+the lower they are the better the SP-geometry is likely to be but they we do not have to worry about converging the images very tightly.
+Because the ML potential is cheap we can also choose to increase the number of images which will both aid convergence and also provide more resolution 
+in the saddlepoint region which will result in a more accurate guess.
 Once the NEB job is over, we can take the highest energy structure and compute the Hessian at the ML-potential level of theory.
 
 We now have all the ingredients for locating the saddlepoint precisely
