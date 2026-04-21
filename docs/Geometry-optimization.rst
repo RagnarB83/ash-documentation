@@ -60,7 +60,8 @@ Frozen Cartesian positions are also available; atoms can be frozen,
 either by specifying them via *frozen_atoms* keyword  or by defining them as XYZ constraints in the constraints dictionary.
 Partial Cartesian constraints (e.g. 'X', 'Y', 'Z', 'XY', 'XZ' and 'YZ') are also possible.
 The soft bond/angle/dihedral constraints are implemented as harmonic restraints and the force constant 
-can be tuned by the user via the kf_bonds, kf_angles and kf_dihedrals keywords (units of Eh/Bohr^2 and Eh/rad^2). 
+can be tuned by the user via the kf_bonds, kf_angles and kf_dihedrals keywords (units of Eh/Bohr^2 and Eh/rad^2).
+
 .. code-block:: python
 
   def Cart_optimizer(fragment=None, theory=None, rate=2.0, 
