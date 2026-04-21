@@ -140,15 +140,19 @@ ASH features a special theory, RestraintTheory, that can be used to apply restra
       def __init__(self, fragment=None, printlevel=None, numcores=1, label=None,
                   restraints=None, force_constant=10000.0):
 
-The restraints should be provided as a list of dictionaries.
-Units of restraint values: Å (bonds) or ° (angles and dihedrals)
+The restraints should be provided as a list of dictionaries. Options are: 'bond', 'bond_difference', 'angle', 'dihedral'
+Units of restraint values: Å (bonds and bond_differences) or ° (angles and dihedrals)
 Units of force constants: Eh/Bohr^2 (bonds) or Eh/rad^2 (angles and dihedrals).
 
 .. code-block:: python
 
   # Here defining a single restraint as a list with a single dictionary.
-  # A dihedral restraint between atoms 6,5,11,29 (zero-based indexing), centered at 0° with a force-constant of 5 Eh/rad^2
+  # Example: dihedral restraint between atoms 6,5,11,29 (zero-based indexing), centered at 0° with a force-constant of 5 Eh/rad^2
   restraints=[{'type':'dihedral', 'indices': [6,5,11,29], 'target': 0, 'force_constant':5.0}]
+  # Example angle restraint: 
+  restraints=[{'type':'angle', 'indices': [0,1,2], 'target': 180, 'force_constant':5.0}]
+  # Example bond-difference restraint: e.g. r(C1–Cl2) − r(Cl0–C1) for the Cl⁻ + CH₃Cl → ClCH₃ + Cl⁻  reaction
+  restraints=[{'type':'bond_difference', 'indices': [1,2,0,1], 'target': 0, 'force_constant':500.0}]
 
 The RestraintTheory object can used on it's own as a Theory object (where the energy and gradient contributions come solely from defined resetraints),
 or can be combined with other objects in a hybrid WrapTheory object (see :doc:`module_Hybrid_Theory`).
