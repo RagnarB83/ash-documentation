@@ -11,13 +11,20 @@ The speed of these methods is 100-1000 x compared to regular DFT.
 The methods are available in the general xTB program, see `xTB <https://xtb-docs.readthedocs.io>`_  but development of the methods has mostly moved to the `tblite <https://tblite.readthedocs.io/en/latest/>`_  library.
 More recently, a new method, g-xTB, has been described that gives much more accurate energies, much closer to regular DFT:
 `g-xTB preprint <https://chemrxiv.org/engage/chemrxiv/article-details/685434533ba0887c335fc974>`_
-However, analytical gradients are not yet available for g-xTB.
+Analytical gradients have very recently become available for g-xTB !
 
 ASH features interfaces to xtB methods in a few different ways. All of them are documented here as they have different pros and cons:
 
 - tbliteTheory: Interface to the tblite library (recommended for speed).
 - xTBTheory: Interface to the general xTB program (file-based or library-based). QM/MM electrostatic embedding support.
-- gxTBTheory: Basic interface to the gxtb binary that allows using the accuracy gxtb method (preliminary implementation).
+  Also allows g-xTB computations with gradient.
+
+**NEW**
+g-xTB with analytical gradient has become available.
+See  `g-xTB Github repository <https://github.com/grimme-lab/g-xtb>`_ 
+To use g-xTB in ASH, download the special xTB-6.7.1 version with g-xTB (see Releases page on repository).
+Then use xTBTheory interface in ASH with xtbmethod="gxtb" 
+
 
 ######################################################
 **tbliteTheory:**
@@ -111,25 +118,6 @@ ASH features an interface to the tblite library that is recommended in general, 
   MolecularDynamics(theory=tblitetheory, fragment=frag, simulation_steps=100)
 
 ######################################################
-**gxTBTheory:**
-######################################################
-
-The g-xTB method is available as a preliminary implementation in the gxtb binary, 
-see `g-xTB Github repository <https://github.com/grimme-lab/g-xtb>`_ .
-As this implementation features only a numerical gradient, 
-geometry optimizations (or MD) will be slow and will suffer from some numerical noise.
-A future implementation is expected in the tblite library that ASH will support once available.
-
-ASH features a very basic interface to the gxtb binary that allows for energies and slow geometry optimizations.
-
-.. code-block:: python
-
-  class gxTBTheory(Theory):
-      def __init__(self, printlevel=2, numcores=1):
-
-No QM/MM is supported in gxTBTheory yet as pointcharge-support is not available in the gxtb program. For xTB-based QM/MM, see xTBTheory class below.
-
-######################################################
 **xTBTheory:**
 ######################################################
 
@@ -160,7 +148,7 @@ xTBTheory can be used for QM/MM and ONIOM embedding etc.
    * - ``xtbmethod``
      - string
      - 'GFN1'
-     - The xTB Hamiltonian to use. Options: 'GFN2', 'GFN1', 'GFN0', 'GFNFF', 'IPEA'
+     - The xTB Hamiltonian to use. Options: 'GXTB', 'GFN2', 'GFN1', 'GFN0', 'GFNFF', 'IPEA'
    * - ``runmode``
      - string
      - inputfile
@@ -226,7 +214,8 @@ runmode='library' on the other hand requires the installation of the xtb-python 
 Examples
 -------------------------
 
-To use either interface is quite simple, when an xTB object is created, the xtbmethod keyword is used to select xTB method: "GFN2", "GFN1" for the GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
+To use either interface is quite simple, when an xTB object is created, the xtbmethod keyword is used to select xTB method
+The options are "GXTB", "GFN2", "GFN1" for the GXTB, GFN2-xTB and GFN1-xTB Hamiltonians, respectively.
 The optional runmode argument is also available: runmode='library' or runmode='inputfile'. Default runmode: "inputfile"
 
 
@@ -240,6 +229,21 @@ The optional runmode argument is also available: runmode='library' or runmode='i
     Singlepoint(theory=xTBcalc, fragment=HF_frag)
     #An Energy+Gradient calculation running on 8 cores
     Singlepoint(theory=xTBcalc, fragment=HF_frag, Grad=True)
+
+
+The newer g-xTB method in ASH is enabled by choosing *xtbmethod*='GXTB'.
+Make sure to have downloaded the special xTB-6.7.1 binary with g-xTB support.
+g-xTB can be used in ASH for all regular jobs (optimizations, MD, NEB etc.).
+Note that electrostatic embedding QM/MM with g-XTB will not yet work.
+
+
+.. code-block:: python
+
+    #Create fragment object from XYZ-file
+    frag=Fragment(xyzfile='hf.xyz', charge=0, mult=1)
+    xTBcalc = xTBTheory(xtbmethod='GXTB')
+
+    #
 
 -------------------------
 Parallelization
@@ -273,3 +277,29 @@ Example:
   MolecularDynamics(theory=theory, fragment=frag, simulation_time=50,
       traj_frequency=10, trajectory_file_option='DCD',
       force_periodic=True, periodic_cell_dimensions=periodic_cell_dimensions)
+
+
+
+
+
+######################################################
+**Deprecated: gxTBTheory:**
+######################################################
+
+The g-xTB method is available as a preliminary implementation in the gxtb binary, 
+see `g-xTB Github repository <https://github.com/grimme-lab/g-xtb>`_ .
+The older implementation (prior to 23 April 2026) featured only a numerical gradient, 
+geometry optimizations (or MD) were slow and suffered from some numerical noise.
+The new g-xTB implementation is inside a special xtb 6.7.1 binary (see Releases page on repository).
+
+ASH featured a very basic interface to the older gxtb binary that allows for energies using the older method and slow geometry optimizations.
+However, because the new implementation is now implemented in xTB, one should use 
+xTBTheory in ASH to do g-xTB computations from now on (later via tbliteTheory as well).
+gxTBTheory class will be deleted soon. 
+
+
+.. code-block:: python
+
+  class gxTBTheory(Theory):
+      def __init__(self, printlevel=2, numcores=1):
+
