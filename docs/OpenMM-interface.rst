@@ -333,37 +333,10 @@ Any OpenMMTheory object can used to create a QM/MM theory object. See :doc:`modu
 
 
 ######################################
-OpenMM built-in forcefield XML-files
+OpenMM and Forcefields 
 ######################################
 
-OpenMM has built-in various forcefields in XML format, for proteins, nucleic acids, solvents, ions etc.
-Inspecting these files can be helpful when creating your own XML-files for small molecules or when you want to know what parameters are available or what OpenMM actually is using.
-The OpenMM built-in Amber and CHARMM XML forcefield files are available in your environment and will be automatically found by ASH (if OpenMM was installed correctly) when you select e.g.:
-
-.. code-block:: python
-
-  OpenMMTheory(...,xmlfiles=["amber14/tip3p_standard.xml"])
-  OpenMMTheory(...,xmlfiles=["charmm36/water.xml"])
-  OpenMMTheory(...,xmlfiles=["charmm36.xml", "charmm36/water.xml"])
-  OpenMMTheory(...,xmlfiles=["amber14-all.xml", "implicit/obc2.xml", "gaff_ligand.xml"])
-
-All of these files and others can also be inspected on your system like this:
-
-.. code-block:: shell
-
-    # Go into OpenMM data directory within conda environment (make sure the environment is loaded)
-    cd $(dirname $(which test-openmm-platforms))/../lib/python3.11/site-packages/openmm/app/data/
-    ls
-    # Result:
-    DLPC.pdb              amber03.xml           amber99Test.xml       amoeba2013.xml        glycam-hydrogens.xml  spce.pdb              tip4pew.pdb
-    DLPE.pdb              amber03_obc.xml       amber99_obc.xml       amoeba2013_gk.xml     hydrogens.xml         spce.xml              tip4pew.xml
-    DMPC.pdb              amber10.xml           amber99sb.xml         amoeba2018.xml        iamoeba.xml           swm4ndp.pdb           tip4pfb.xml
-    DOPC.pdb              amber10_obc.xml       amber99sbildn.xml     amoeba2018_gk.xml     implicit              swm4ndp.xml           tip5p.pdb
-    DPPC.pdb              amber14               amber99sbnmr.xml      charmm36              opc.xml               test.pdb              tip5p.xml
-    POPC.pdb              amber14-all.xml       amberfb15.xml         charmm36.xml          opc3.xml              tip3p.pdb
-    POPE.pdb              amber96.xml           amoeba2009.xml        charmm_polar_2013.xml pdbNames.xml          tip3p.xml
-    absinth.xml           amber96_obc.xml       amoeba2009_gk.xml     charmm_polar_2019.xml residues.xml          tip3pfb.xml
-
+The availability of different forcefields is discussed more at :doc:`Force-fields`
 
 ######################################
 Executing OpenMM on the GPU
@@ -827,152 +800,8 @@ MD simulations with an implicit solvation model can have their advantages as the
 While the implicit solvation model is not as accurate as explicit solvation, it can be a good starting point for a system that is later simulated with explicit solvent.
 
 
-#######################################################
-Create forcefield for ligand / small molecule
-#######################################################
-
-Often one wants to perform a classical or QM/MM simulation of a small molecule in solution (either as part of a biomolecular system or on its own)
-but one lacks forcefield parameters to do so. One has typically 2 options for how to proceed in this case:
-
-- Create only a nonbonded forcefield (charges and Lennard-Jones parameters) for the small molecule.
-- Create a full forcefield for the small molecule (bonded and nonbonded parameters).
-
-The first option (nonbonded only) is sufficient if one primarily intends to perform QM/MM simulations where the molecule will always be in the QM-region.
-This may also be the only easy option if the molecule is inorganic (e.g. a metal complex) where forcefield parameterization is less straightforward. 
-The nonbonded forcefield can also be used in classical simulation if one makes sure the ligand is rigid (all bonds constrained, possibly angles and dihedrals as well).
-See next section below: **write_nonbonded_FF_for_ligand**
-
-The second option (full forcefield) is generally better and is required if one wants to perform classical MM simulations where the molecule is flexible.
-ASH features a function (**small_molecule_parameterizer**) that allows one to expedite this process with the help of the `openmm-forcefields <https://github.com/openmm/openmmforcefields>`_, 
-that provides a convenient way of getting forcefield parameters from the `GAFF <https://ambermd.org/antechamber/gaff.html>`_ and `OpenFF <https://openforcefield.org>`_ projects. 
-The limitation is that this option is primarily available for organic or drug-like molecules.
-Additionally these small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
-
-
-##############################################
-write_nonbonded_FF_for_ligand
-##############################################
-
-.. code-block:: python
-
-  def write_nonbonded_FF_for_ligand(fragment=None, charge=None, mult=None, coulomb14scale=1.0, lj14scale=1.0, 
-    ff_type="CHARMM", charge_model="CM5", theory=None, LJ_model="UFF", resname="LIG", numcores=1):
-
-
-ASH features a function (**write_nonbonded_FF_for_ligand**) that allows one to quickly create an OpenMM-style XML forcefield file for any ligand/molecule
-with only nonbonded parameters specified which can be sufficient for QM/MM simulations or classical simulations where the ligand/molecule is rigid (all bonds constrained).
-
-One can choose to derive the atom charges from either an xTB-calculation (using the xTB interface) or a DFT-calculation (ORCA interface).
-The charge_model options are: CM5 charges or DDEC3/DDEC6 charges (requires DDEC3/DDEC6).
-The Lennard-Jones parameters can either come from UFF (very crude: element-specific LJ parameters) or via DDEC3/DDEC6 population analysis.
-
-
-.. warning:: It is up to you the user to make sure that the nonbonded parameters from this procedure are sensible and compatible with other molecules present in your system (described by another forcefield).
-  You may have to change the parameters manually 
-
-*Example:*
-
-.. code-block:: text
-
-    from ash import *
-
-    frag=Fragment(xyzfile="ligand.xyz")
-
-    #Script to get nonbonded model parameters for a ligand
-    orcatheory=ORCATheory(orcasimpleinput="!r2scan ZORA ZORA-def2-TZVP tightscf CPCM", numcores=8)
-
-    write_nonbonded_FF_for_ligand(fragment=frag, resname="MCMtest", charge=0, mult=1,
-        coulomb14scale=1.0, lj14scale=1.0, charge_model="CM5_ORCA", theory=orcatheory, LJ_model="UFF", ff_type="CHARMM")
-
-
-**Options:**
-
-- charge_model: Options are 'CM5', 'xTB', 'DDEC3', 'DDEC6'
-- LJ_model: Options are 'UFF', 'DDEC3', 'DDEC6'
-- The ff_type keyword (options: 'CHARMM', 'AMBER', 'None'), writes the forcefield file so that it is compatible with the CHARMM, Amber biomolecular forcefields. Choose 'None' if not needed.
-- coulomb14scale and lj14scale parameters can be changed, depending on what other forcefield this ligand-forcefield will be combined with  (OpenMM requires compatibility)
-
-**NOTES**
-
-- Parameters will be derived for each atom in the XYZ-file. Symmetry is currently not incorporated and this means that very 
-  similar atoms in the structure will have their own charge/LJ parameters. Since this is not always desired, the user
-  should take care to combine and symmetrize the parameters in the XML-file manually.
-- For a ligand bound to the protein, special care must be taken. Charges are best derived from a ligand structure with all metal ions
-  coordinated (e.g. including an amino acid side chain) but then the calculation will contain those extra atoms.
-  This requires manual tweaking of the final charges (make sure that the sum of atom charges add up to the correct total charge).
-- DDEC3/DDEC6: Both atom charges and LJ parameters can be determined from a DFT-calculation and a DDEC3/DDEC6 population analysis using the Chargemodel. This options has not been well tested and requires external programs (Chargemol and mol2aim)
-
-
-##############################################
-small_molecule_parameterizer
-##############################################
-
-.. code-block:: python
-
-  def small_molecule_parameterizer(charge=None, xyzfile=None, pdbfile=None, molfile=None, sdffile=None, 
-                                  smiles_string=None, resname="LIG", forcefield_option='GAFF', 
-                                  gaffversion='gaff-2.11', openff_file="openff-2.0.0.offxml",
-                                  expected_coul14=0.8333333333333334, expected_lj14=0.5, allow_undefined_stereo=None):
-
-**small_molecule_parameterizer** allows you to quickly create an OpenMM XML forcefield file with bonded and nonbonded parameters for your molecule.
-You can choose between two general forcefields: `GAFF <https://ambermd.org/antechamber/gaff.html>`_  or `OpenFF <https://openforcefield.org>`_. 
-Different GAFF and OpenFF versions are also available. The limitation is that creating the small-molecule forcefield from these general forcefields can only be done for "organic" chemical elements (H,C,N,O,S,P,F,Cl,Br,I; also ions such as 
-Li+, Na+, K+, Rb+, F-, Cl-, Br-, and I-).
-These small-molecule forcefields are intended to be only used together with Amber biomolecular forcefields (if your system also includes protein/DNA).
-
-The program depends on a few Python libraries that have to be installed when prompted.
-It should be enough to install `openmmforcefields <https://github.com/openmm/openmmforcefields>`_ as it will automatically install: `openff-toolkit <https://github.com/openforcefield/openff-toolkit>`_ , `RDKit <https://github.com/rdkit/rdkit>`_, `parmed <https://github.com/ParmEd/ParmEd>`_.
-ASH will tell you which libraries are missing and how to install them when you try to use the function.
-Specifically we use the OpenFF toolkit to create a Molecule object (see `OpenFF Molecule <https://open-forcefield-toolkit.readthedocs.io/en/0.9.2/api/generated/openff.toolkit.topology.Molecule.html>`_ and `Molecule Cookbook <https://docs.openforcefield.org/projects/toolkit/en/stable/users/molecule_cookbook.html>`_) .
-
-**small_molecule_parameterizer** is very easy to use most of the time.
-You simply need to provide molecular structure information in the form of either an XYZ-file, PDB-file, a `SMILES string <https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system>`_ , MDL Mol-file or SDF-file.
-Additionally the total charge of the molecule needs to be specified.
-
-There are cases where parsing the molecular information from a coordinate-file fails and you may have to input a SMILES-string directly.
-See `Molecule Cookbook <https://docs.openforcefield.org/projects/toolkit/en/stable/users/molecule_cookbook.html>`_  and `SMILES tutorial: <http://hjkgrp.mit.edu/tutorials/2013-10-29-geometries-strings-smiles-and-openbabel>`_ . 
-
-
-*Example using OpenFF and XYZ-file*
-
-.. code-block:: python
-
-  from ash import *
-  #Creating forcefield for nitrate using OpenFF. Here providing xyz-file as input
-  small_molecule_parameterizer(forcefield_option="OpenFF", xyzfile="no3.xyz", charge=-1)
-
-The output is an XML-file that can then be used as input to **OpenMMTheory**, **OpenMM_Modeller** or **solvate_small_molecule** functions (see below).
-Additionally a PDB-file is written out for convenience (matches information in XML-file).
-
-*Example using GAFF and SMILES string*
-
-.. code-block:: python
-
-  from ash import *
-  #Creating forcefield for nitrate using GAFF. Here providing a SMILES string as input
-  small_molecule_parameterizer(forcefield_option="GAFF", smiles_string="[N+](=O)([O-])[O-]")
-  #Note: no PDB-file will be created in this case.
-
-
-.. warning:: The XML-file created by this function will contain bonded parameters and it is thus important that the topology of the molecule is available when using the XML-file
-  together with OpenMM. Otherwise, the pairing of molecule and small-molecule forcefield in the XML-file will not work. As OpenMM will typically get the topology from a PDB-file you must ensure 
-  to have a PDB-file that contains CONECT lines at the bottom of the PDB-file that describes the connectivity of the small molecule. A PDB-file with connectivity is automatically created if you read in an XYZ-file
-  to small_molecule_parameterizer above. You can also use the  **xyz_to_pdb_with_connectivity** function.
-
-
-The following error can sometimes occur: 
-
-.. code-block:: text
-
-  ValueError: Final molecular charge does not match input; could not find valid bond ordering
-
-This means that RDKit failed to understand the bonds in the molecule. Often this occurs if the charge of the molecule is wrong.
-
-
-See also :doc:`protein_ligand_binding` for a demonstration on using the **small_molecule_parameterizer** for setting up a protein-ligand complex.
-
 ######################################
-Small molecule solvation
+Small molecule explicit solvation
 ######################################
 
 ASH features functions to aid in preparing systems consisting of a small molecule in solvent.

@@ -167,10 +167,9 @@ A potential drawback of this approach is that the HL (and LL) calculation of reg
 For systems with strong polarization effects between regions this could results in some artifacts. 
 A pragmatic solution is to increase the size of region1 to include more of the environment and reduce this effect.
 
-*Electrostatic embedding*
+* Electrostatic embedding *
 
-The :math:`E^{HL}_{1} - E^{LL}_{1}` terms in 2-layer ONIOM can be viewed as a high-level correction to the low-level description of the whole system ( the :math:`E^{LL}_{12}` term).
-As discussed above this correction is calculated without the environment present which could result in artifacts.
+The :math:`E^{HL}_{1} - E^{LL}_{1}` terms in 2-layer ONIOM can be viewed as a high-level correction to the low-level description of the whole system ( the :math:`E^{LL}_{12}` term). As discussed above this correction is calculated without the environment present which could result in artifacts.
 It is possible to include electrostatic embedding in the ONIOM calculation to allow for some region polarization effects to be present during the calculation of the correction.
 This requires MM pointcharges to be defined for the full system, regardless of whether the LL theory is an MM-theory or not.
 To use electrostatic embedding within ONIOM in ASH, one sets *embedding*='elstat' and additionally the charges of the whole system have to be specified.
@@ -179,8 +178,7 @@ ASH allows 2 ways to define these charges:
 - By specifying a list of atomic charges for the full system: *full_pointcharges* keyword. Requires the charges to be defined manually.
 - If LL is MM: By taking the charges from the MM-theory used (happens automatically if the LL theory is an OpenMMTHeory or NonBondedTheory object)
 - If LL is QM: By having the charges automatically calculated by the low-level QMTheory object during the full system calculation.
-   This option is only available for an ORCATheory object or an xTBTheory object. For an ORCATheory object, one can choose between Hirshfeld or CM5 charges by specifying 
-   the  *chargemodel* keyword.
+   This option is only available for an ORCATheory object or an xTBTheory object. For an ORCATheory object, one can choose between Hirshfeld or CM5 charges by specifying the  *chargemodel* keyword.
 
 
 TODO: Add details about 3-layer ONIOM.

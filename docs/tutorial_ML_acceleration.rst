@@ -152,10 +152,10 @@ A Nudged elastic band (NEB) calculation minimizes a band of interconnected struc
 and product structures.
 An NEB calculation has the advantages of actually giving a minimum energy path between structures, of which the highest energy point
 will correspond closely to the actual saddlepoint. The climbing-image variant of NEB (CI-NEB) is the most commonly employed NEB variant,
- which is often capable even of accurately locating the saddlepoint. The use of energy-weighted springs in the algorithm implemented in ASH (and in ORCA),
- is particularly useful for molecular reactions. By increasing the number of images, the path becomes more and more accurate
- and can describe even a complex reaction process with multiple intermediates and saddlepoints. Because the images are independent during each step,
- they can be run in parallel.
+which is often capable even of accurately locating the saddlepoint. The use of energy-weighted springs in the algorithm implemented in ASH (and in ORCA),
+is particularly useful for molecular reactions. By increasing the number of images, the path becomes more and more accurate
+and can describe even a complex reaction process with multiple intermediates and saddlepoints. Because the images are independent during each step,
+they can be run in parallel.
  
 The disadvantage of NEB for the purpose of locating a single saddlepoint,
  is the need to compute many structures (images, 6-10 is a common choice) in each optimization step,

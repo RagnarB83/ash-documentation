@@ -297,7 +297,7 @@ It optimizes only in Cartesian coordinates (not internal coordinates) and may th
 However, it has the advantages of very low overhead (it avoids the overhead of internal coordinate transformations) 
 and can be very fast for small systems and scans with many points.
 It uses soft constraints instead of hard constraints but this can be perfectly sufficient and the accuracy is tunable
- by modifying the force constants involved.
+by modifying the force constants involved.
 
 Using Cart_optimizer in *calc_surface* with default options:
 

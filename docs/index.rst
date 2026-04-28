@@ -91,6 +91,7 @@ Try it out in a Google Colab notebook: `ASH in Google Colab <https://colab.resea
 
    MM-interfaces
    OpenMM-interface
+   Force-fields
    module_Hybrid_Theory
    module_QM-MM
    module_ONIOM

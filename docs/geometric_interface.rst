@@ -310,7 +310,6 @@ Format of the constraint file (*Warning: geomeTRIC counts from 1 (unlike ASH).*)
     $scan
     dihedral 4 2 3 5 0.0 180.0 19
 
-
 Finally it should be noted that the default constraint algorithm in geomeTRIC enforces constraints in a special way `as documented <https://geometric.readthedocs.io/en/latest/constraints.html#enforcing-constraint-satisfaction>`_.
 The exact constraints are not fully imposed until late in the optimization.
 This behaviour can be controlled by enforcing a particular threshold when constraints are fully enforced.

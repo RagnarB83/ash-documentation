@@ -205,7 +205,7 @@ The *rij* Boolean keyword controls whether the **ridft** or **dscf** executable 
 ASH in this case automatically creates the control-file. The options in the control-file created by ASH can be modified somewhat by
 keywords: *gridsize*, *scfconv*, *symmetry*, *rij*, *mp2*, *scfiterlimit*, *maxcor* and *ricore*.
 
-**Simple basic dispersion-corrected DFT example **
+** Simple basic dispersion-corrected DFT example **
 
 Grimme-type dispersion corrections can be employed via the *dispersion* keyword.
 Choose:

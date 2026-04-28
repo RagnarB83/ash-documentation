@@ -230,11 +230,10 @@ The optional runmode argument is also available: runmode='library' or runmode='i
     #An Energy+Gradient calculation running on 8 cores
     Singlepoint(theory=xTBcalc, fragment=HF_frag, Grad=True)
 
+The newer g-xTB method in ASH is enabled by choosing *xtbmethod*='GXTB'.Make sure to have downloaded the special xTB-6.7.1 binary with g-xTB support.
+g-xTB can be used in ASH for all regular jobs (optimizations, MD, NEB etc.). Note that electrostatic embedding QM/MM with g-XTB will not yet work.
 
-The newer g-xTB method in ASH is enabled by choosing *xtbmethod*='GXTB'.
-Make sure to have downloaded the special xTB-6.7.1 binary with g-xTB support.
-g-xTB can be used in ASH for all regular jobs (optimizations, MD, NEB etc.).
-Note that electrostatic embedding QM/MM with g-XTB will not yet work.
+
 
 
 .. code-block:: python
