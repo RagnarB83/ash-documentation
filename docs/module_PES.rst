@@ -1,9 +1,10 @@
 PES: PhotoElectron/PhotoEmission Spectrum
 =================================================
 
-Workflow to calculate photoelectron/photoemission spectra of molecules using either TDDFT, CASSCF, MRCI or EOM-IP-CCSD state energies combined
-with a Dyson-orbital norm approach for intensities.
+Workflow to calculate photoelectron/photoemission spectra of molecules using a few different approaches: TDDFT, OODFT, CASSCF, MRCI or EOM-IP-CCSD state energies.
+Currently only ORCA is supported as QM-code. A Dyson-orbital norm approach via Wfoverlap program is used for intensities.
 
+- The OODFT workflow performs SCF calculations of all states utilizing the OODFT/deltaSCF approach as implemented in ORCA:
 - The TDDFT workflow combines an SCF-calculation of the initial state and an SCF+TDDFT calculation of the first ionized state (of each ionized-state multiplicity) to get the full ionization energy spectrum for each spin multiplicity. Dyson orbital norms are then calculated as approximate intensities for both SCF-type and TDDFT-type states by parsing theORCA TDDFT output files.
 - The CASSCF workflow performs a CASSCF calculation of the initial state and the uses the initial-state orbitals in a CAS-CI calculation of the ionized states of both spin multiplicities. Both regular CASSCF and ICE-CASSCF in ORCA is possible.
 - The MRCI workflow is similar to the CASSCF workflow but on top of the CASSCF orbital optimization of the initial state an MRCI calculation is performed and for the ionized state the initial-state orbitals are used as before. For CASSCF and MRCI, determinant-printing of the wavefunction is requested (printed in the output) which is parsed by the code and fed to the Wfoverlap program.
@@ -13,7 +14,7 @@ with a Dyson-orbital norm approach for intensities.
 Notes:
 
 - ORCA is the only supported QM-code for now.
-- Requires `Wfoverlap <https://sharc-md.org/?page_id=309>`_ program to calculate Dyson orbital norms via determinant-based wavefunctions.
+- Intensities require the `Wfoverlap <https://sharc-md.org/?page_id=309>`_ program to calculate Dyson orbital norms via determinant-based wavefunctions.
 - Plotting option requires installation of Matplotlib.
 
 
@@ -30,6 +31,27 @@ libraries is in your LD_LIBRARY_PATH.
 
 ######################################################
 PhotoElectron function
+######################################################
+
+.. code-block:: python
+
+    def PhotoElectron(theory=None, fragment=None, method=None, vibrational_option=None, trajectory=None,
+                            numcores=1, memory=40000,label=None,
+                            Initialstate_charge=None, Initialstate_mult=None,
+                            Ionizedstate_charge=None, Ionizedstate_mult=None, numionstates=5,
+                            initialorbitalfiles=None, densities='None', densgridvalue=40,
+                            deltaSCF_ionize=False, deltaSCF_PMOM=False, deltaSCFkeyword=None,
+                            tda=True,brokensym=False, HSmult=None, atomstoflip=None, check_stability=True,
+                            CAS_Initial=None, CAS_Final = None,
+                            CASCI_Final=False,
+                            MRCI_CASCI_Final=False, MRCI_SOC=False,
+                            btPNO=False, DLPNO=False, no_shakeup=False, virt_offset=0,
+                            path_wfoverlap=None, tprintwfvalue=1e-5, noDyson=False,
+                            OODFT_CC=False)
+
+
+######################################################
+How to use
 ######################################################
 
 The PhotoElectron function takes the following keyword arguments:
@@ -84,22 +106,51 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
 - read in a previously converged orbital file. Provide a "orca-input.gbw" file in the same dir as the inputfile (and make sure it gets copied to scratch).
 - For CASSCF: switch to orbstep DIIS and switchstep DIIS to preserve the chosen active space. See FeS2 example below.
 
-**TDDFT**
+**OODFT example **
+
+For OODFT the method keyword should be set to "OODFT" and an ORCATheory object
+should be provided that defines functional and basis set at the very least. ASH will handle the OODFT calculations.
 
 .. code-block:: python
 
     from ash import *
+
+    # Define an ORCATheory object that defines functional and basis set and potentially relativistic settings, SCF convergence aids etc.
+    ORCAcalc = ORCATheory(orcasimpleinput="! B3LYP def2-SVP tightscf", numcores=1)
+
+    #Calling PhotoElectron
+    IPs, dysonnorms = PhotoElectron(method="OODFT", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
+                              Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
+                                path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
+
+**TDDFT example**
+
+For TDDFT the method keyword should be set to "TDDFT" and an ORCATheory object
+should be provided that defines functional and basis set at the very least. ASH will handle the TDDFT calculations.
+
+.. code-block:: python
+
+    from ash import *
+
+    # Define an ORCATheory object that defines functional and basis set and potentially relativistic settings, SCF convergence aids etc.
+    ORCAcalc = ORCATheory(orcasimpleinput="! B3LYP def2-SVP tightscf", numcores=1)
 
     #Calling PhotoElectron to get IPs, dysonnorms
     IPs, dysonnorms = PhotoElectron(method="TDDFT", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
                               Ionizedstate_charge=1, Ionizedstate_mult=[5,7], numionstates=[11,6],
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
-**CASSCF**
+**CASSCF example**
+
+For CASSCF the method keyword should be set to "CASSCF" and an ORCATheory object should be provided that defines basis set at the very least. 
+ASH will handle the CASSCF calculations. The active space additionally needs to be defined via the CAS_Initial and CAS_Final keywords (but not in the ORCATheory object).
 
 .. code-block:: python
 
     from ash import *
+
+    # Define an ORCATheory object that defines basis set and potentially relativistic settings, SCF convergence aids etc.
+    ORCAcalc = ORCATheory(orcasimpleinput="! def2-SVP tightscf", numcores=1)
 
     #Calling PhotoElectron to get IPs, dysonnorms
     IPs, dysonnorms = PhotoElectron(method="CASSCF", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
@@ -107,11 +158,17 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
                               CAS=True, CAS_Initial=(17,11), CAS_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
-**MRCI**
+**MRCI example**
+
+For MRCI the method keyword should be set to "MRCI" and an ORCATheory object should be provided that defines basis set at the very least. 
+ASH will handle the MRCI calculations. The active space needs to be defined via the MRCI_Initial and MRCI_Final keywords (but not in the ORCATheory object).
 
 .. code-block:: python
 
     from ash import *
+
+    # Define an ORCATheory object that defines basis set and potentially relativistic settings, SCF convergence aids etc.
+    ORCAcalc = ORCATheory(orcasimpleinput="! def2-SVP tightscf", numcores=1)
 
     #Calling PhotoElectron to get IPs, dysonnorms
     IPs, dysonnorms = PhotoElectron(method="MRCI", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
@@ -119,11 +176,17 @@ To make sure that the SCF calculations (in TDDFT or IP-EOM-CCSD jobs) or CASSCF 
                               MRCI=True, MRCI_Initial=(17,11), MRCI_Final = (16,11),
                                 path_wfoverlap="/home/bjornsson/sharc-master/bin/wfoverlap.x" )
 
-**IP-EOM-CCSD**
+**IP-EOM-CCSD example**
+
+For IP-EOM-CCSD the method keyword should be set to "EOM" and an ORCATheory object should be provided that defines basis set at the very least. 
+ASH will handle the IP-EOM-CCSD calculations. Dyson norms are approximate here, i.e. the dominant coefficient of the singles eigenvector.
 
 .. code-block:: python
 
     from ash import *
+
+    # Define an ORCATheory object that defines basis set and potentially relativistic settings, SCF convergence aids etc.
+    ORCAcalc = ORCATheory(orcasimpleinput="! def2-SVP tightscf", numcores=1)
 
     #Calling PhotoElectron to get IPs, dysonnorms
     IPs, dysonnorms = PhotoElectron(method="EOM", theory=ORCAcalc, fragment=mncl2, Initialstate_charge=0, Initialstate_mult=6,
@@ -167,7 +230,7 @@ Note: The plotting part (requires Matplotlib)  that creates the final image file
 
 
 ######################################################
-Example: TDDFT on H\ :sub:`2`\ O
+Full Example: TDDFT on H\ :sub:`2`\ O
 ######################################################
 
 .. code-block:: python
@@ -204,7 +267,7 @@ Example: TDDFT on H\ :sub:`2`\ O
 
 
 ##########################################################################################################
-Example: FeS\ :sub:`2` :sup:`-`\  : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI
+Full Example: FeS\ :sub:`2` :sup:`-`\  : TDDFT vs. IP-EOM-CCSD vs. CASSCF vs. MRCI
 ##########################################################################################################
 This example of the FeS\ :sub:`2` :sup:`-`\ - anion accounts for multiple Finalstate spin-multiplicities as we go from:
 
