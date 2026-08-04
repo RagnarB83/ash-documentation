@@ -176,7 +176,7 @@ Here we define a list of dictionaries that define the desired Reaction-Coordinat
   # Defining RCs via list of dictionaries:
   RC_list=[{'type': 'dihedral',  'indices': [[0,1,2,3]], 'range': [-180, 180, 10]},
             {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}
-            {'type': 'bond',  'indices': [[1,0]], 'range': [1.1, 1.5, 10]}])
+            {'type': 'bond',  'indices': [[1,0]], 'range': [1.1, 1.5, 0.1]}])
 
 This general syntax allows any number of RCs to be defined, meaning we can define 1D, 2D, 3D surface scans and even beyond that.
 

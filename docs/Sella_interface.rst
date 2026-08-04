@@ -7,12 +7,16 @@ This is accomplished via an in iterative partial Hessian diagonalization algorit
 While this requires a good saddlepoint guess (e.g. from NEB, scan etc.) no Hessian input is required,
 since an adaptive partial Hessian is determined during the job.
 
+The Sella library also features an implementation of the intrinsic reaction coordinate (IRC) algorithm, which can be used to follow the reaction path downhill from a saddlepoint
+using the Sella iterative Hessian approach.
 
 The Sella program can be be found on the Github repository: https://github.com/zadorlab/sella
 
 The algorithm used by Sella is described in:
 https://pubs.acs.org/doi/10.1021/acs.jctc.9b00869
 https://pubs.acs.org/doi/10.1021/acs.jctc.2c00395
+
+Don't forget to cite the Sella papers if you use the Sella library in your work.
 
 ################################
 Installation
@@ -139,9 +143,10 @@ The main options to consider exploring are:
 - the *gamma* parameter (default 0.03 in ASH) is the convergence criterion for the iterative eigensolver. A smaller value will lead to a more accurate Hessian at the cost of more iterative diagonalization steps, which may, however, lead to a more robust and quicker optimization.
 - the *eta* parameter (default 1e-4 Angstrom) controls the step size for the iterative diagonalization.
 
-During testing we found that converging the saddlepoint a bit more tightly (*convergence_gmax*=1e-4 compared to *convergence_gmax*=3e-4 like in geomeTRICOptimizer) is a bit more robust.
+During testing we found that converging the saddlepoint a bit more tightly (*convergence_gmax* = 1e-4 compared to *convergence_gmax* = 3e-4 like in geomeTRICOptimizer) is a bit more robust.
 Additionally the default value for *gamma* in ASH is smaller (0.03) than the default values in Sella (0.4). 
-Overall we observe robust optimizations and quicker convergence, but will obviously be system-dependent and the user should feel free to explore alternative values.
+Overall we observe robust optimizations and quicker convergence with these settings, but this will obviously be system-dependent 
+and the user should feel free to explore alternative values.
 
 For information on the algorithmic details, see the `Sella wiki <https://github.com/zadorlab/sella/wiki/Hyperparameters>`_ 
 
@@ -156,12 +161,42 @@ For information on the algorithmic details, see the `Sella wiki <https://github.
 
 
 
+############################################
+SellaIRC function
+############################################
+
+The *SellaIRC* function allows running IRC calculations in ASH using the IRC implementation in the Sella library.
+
+
+.. code-block:: python
+
+  def SellaIRC(theory=None, fragment=None, charge=None, mult=None, printlevel=2, NumGrad=False,
+                    convergence_gmax=1e-4, maxiter=150, result_write_to_disk=False,
+                    constraints=None, actatoms=None, frozenatoms=None,
+                    gamma=0.03, eta=1e-4, IRC_dx=0.1):
+
+
+To start an IRC job, one simply calls the *SellaIRC* function with an ASH Theory and Fragment object
+where the geometry should of course correspond to a saddlepoint. 
+The Hessian used to determine the IRC direction is determined iteratively during the IRC run, so no Hessian input is required.
+
+
+.. code-block:: python
+
+  from ash import *
+
+  frag=Fragment(xyzfile="Saddlepoint-OptTS.xyz", charge=0, mult=1)
+  theory = xTBTheory()
+
+  SellaIRC(theory=theory, fragment=frag, convergence_gmax=3e-4,
+      maxiter=150, gamma=0.03, eta=1e-4, IRC_dx=0.05)
+
 
 ############################################
 SellaOptimizer_class 
 ############################################
 
-The *SellaOptimizer* function is a wrapper around the SellaOptimizer_class.
+The *SellaOptimizer* and the *SellaIRC* functions are actually just simple function wrappers around the SellaOptimizer_class.
 For more flexibility one can also use the SellaOptimizer_class.
 
 .. code-block:: python
@@ -176,9 +211,12 @@ Example:
 .. code-block:: python
 
     # Create Sellaoptimizer object
-    sellaobj = SellaOptimizer_class(convergence_gmax=3e-4, maxiter=150, gamma=0.4)
+    sellaobj = SellaoptimizerClass(convergence_gmax=3e-4, maxiter=150, gamma=0.4)
 
     # Run optimization with an input theory and fragment
     sellaobj.run(theory=ORCAcalc, fragment=frag)
+
+    # or if IRC:
+    result = sellaobj.IRCrun(theory=theory, fragment=fragment, charge=charge, mult=mult)
 
 

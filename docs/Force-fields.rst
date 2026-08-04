@@ -125,7 +125,7 @@ and the PDB topology which must match.
 
 Most common reasons for OpenMM not matching topology and forcefield are:
 
-- **M**issing atoms:** if the residue definition in the XML-file is missing e.g. an H-atom present in PDB-file or other way around.
+- **Missing atoms:** if the residue definition in the XML-file is missing e.g. an H-atom present in PDB-file or other way around.
 - **Missing CONECT lines in PDB-file:** If residue definition contains bond-information (e.g. <Bond atomName1="O_1" atomName2="H_1"/>)  then CONECT lines must be present in PDB-file. It is easiest to use the frag.write_pdbfile_openmm() approach above to get this right.
 - **Wrong CONECT lines in PDB-file:** If you define a purely nonbonded forcefield in XML-file (i.e. no <Bond> lines) then no CONECT lines should be present in PDB-file. Make sure <Bond> lines in XML-file and CONECT lines in PDB-file match in terms of connectivity.
 - **Missing element information:** PDB-file usually has to  contain an element column in order to match correctly.
