@@ -22,7 +22,7 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
   class CP2KTheory:
       def __init__(self, cp2kdir=None, cp2k_bin_name=None, filename='cp2k', printlevel=2, basis_dict=None, potential_dict=None, label="CP2K",
                   periodic=False, periodic_type='XYZ', qm_periodic_type=None, 
-                  xtb_periodic=False, xtb_type='GFN2', xtb_tblite=False,
+                  xtb_type='GFN2', xtb_tblite=False,
                   user_input_dft=None, vdwpotential=None,
                   cell_dimensions=None, cell_vectors=None,
                   qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
@@ -134,10 +134,6 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
      - Boolean
      - False
      - Whether to use the tblite library for xTB calculations instead of built-in xTB. Only valid if basis_method='XTB'.
-   * - ``xtb_periodic``
-     - Boolean
-     - False
-     - Whether to use periodic boundary conditions for xTB calculations. Only valid if basis_method='XTB'. 
    * - ``user_input_dft``
      - string
      - None
@@ -342,7 +338,7 @@ Do note that xTB functionality in CP2K is undergoing changes.
     # GFN1-xTB built-in example
     cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1')
     # GFN1-xTB built-in example with periodicity
-    cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1', xtb_periodic=True)
+    cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN1', periodic=True)
     # GFN2-xTB tblite example
     cp2k_object = CP2KTheory(basis_method='XTB', xtb_type='GFN2', xtb_tblite=True)
 
