@@ -553,6 +553,23 @@ with the GEEP procedure of CP2K. It is thus possible to turn it off with the *di
 
 
 ################################################################################
+Using Skala in CP2K
+################################################################################
+
+CP2K features a Skala implementation via the GauXC library. To use one must have installed or compiled CP2K with GauXC support.
+
+Next, to use the Skala functional in CP2K one needs to set the *functional* keyword to 'SKALA' 
+and provide a Skala parameter file via the *path_to_gauxc_model* keyword.
+
+.. code-block:: python
+
+    qm = CP2KTheory(cp2k_bin_name="cp2k.ssmp", basis_dict=basis_dict, potential_dict=potential_dict,
+                functional='SKALA', path_to_gauxc_model='path/to/model.fun')
+
+The model file needs to be pre-downloaded from Hugging Face: e.g. https://huggingface.co/microsoft/skala-1.1
+
+
+################################################################################
 Examples
 ################################################################################
 
