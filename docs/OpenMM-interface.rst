@@ -470,6 +470,68 @@ Example:
     #Sometimes the procedure fails for small molecules unless you specify that solute_anchor=True
     MDtraj_imagetraj("output_traj.dcd","final_MDfrag_laststep.pdb", solute_anchor=True)
 
+
+##############################################################
+Running MD simulations using ASH THeories with OpenMM directly
+##############################################################
+
+Normally ASH MD simulations (that use OpenMM MD routines)are best executed via the ASH syntax, via the wrappers **MolecularDynamics** or **OpenMM_MD** etc.
+
+It is also possible to run MD simulations using OpenMM directly (i.e. by using the OpenMM Python API) while still using ASH Theories.
+This can be accomplished in newer versions of OpenMM that contain `PythonForce <https://docs.openmm.org/latest/api-python/generated/openmm.openmm.PythonForce.html>`_
+
+This approach may be preferred if more manual control of OpenMM routines is required.
+However, the use of PythonForce is likely to be a bit slower.
+
+.. code-block:: python
+
+  from ash import *
+  import openmm
+
+  # ----------------------------- #
+  # ASH syntax:
+  # ----------------------------- #
+  # ASH SYSTEM
+  frag = Fragment(databasefile="h2o")
+
+  # ASH Theory
+  theory = xTBTheory(xtbmethod="GFN2-xTB")
+
+  # ----------------------------- #
+  # OpenMM syntax:
+  # ----------------------------- #
+  # ASH PythonForce: Simple interface between OpenMM and ASH
+  def compute(state):
+      pos = state.getPositions(asNumpy=True).value_in_unit(openmm.unit.angstroms)
+      e, g = theory.run(current_coords=pos, elems=frag.elems, 
+                        Grad=True, charge=frag.charge, mult=frag.mult)
+      energy = e*2625.49962
+      force = -g * 2625.49962 / 0.052917721092
+      return energy,force
+
+
+  # Create an OpenMM System with particles
+  system = openmm.System()
+  for atom_mass in frag.masses:
+      system.addParticle(atom_mass)
+
+  # Initialize the PythonForce and add it to the system
+  python_force = openmm.PythonForce(compute)
+  system.addForce(python_force)
+
+  # Set up an Integrator and Context to run a simulation
+  integrator = openmm.VerletIntegrator(0.001)  # 1 fs time step
+  context = openmm.Context(system, integrator)
+
+  # Set initial positions for the particles in the system
+  initial_positions = 0.1*frag.coords * openmm.unit.nanometers
+  context.setPositions(initial_positions)
+
+  # Run simulation
+  integrator.step(10)
+  final_state = context.getState(getPositions=True)
+
+
 ######################################
 PBC box equilibration via NPT 
 ######################################

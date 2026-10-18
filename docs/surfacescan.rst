@@ -64,7 +64,7 @@ it is strongly advised to instead use the :doc:`neb` for this purpose.
    * - ``RC1_type/RC2_type``
      - string
      - None
-     - Old syntax: String indicating the type of reaction coordinate (either RC1 or RC2). Option: 'bond', 'angle', 'dihedral'
+     - Old syntax: String indicating the type of reaction coordinate (either RC1 or RC2). Option: 'bond', 'bond_difference', 'angle', 'dihedral'
    * - ``RC1_range/RC2_range``
      - list of floats
      - None
@@ -175,8 +175,9 @@ Here we define a list of dictionaries that define the desired Reaction-Coordinat
 
   # Defining RCs via list of dictionaries:
   RC_list=[{'type': 'dihedral',  'indices': [[0,1,2,3]], 'range': [-180, 180, 10]},
-            {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]}
-            {'type': 'bond',  'indices': [[1,0]], 'range': [1.1, 1.5, 0.1]}])
+            {'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 100, -10]},
+            {'type': 'bond',  'indices': [[1,0]], 'range': [1.1, 1.5, 0.1]}],
+            {'type': 'bond_difference',  'indices': [[1,0,2,3]], 'range': [1.1, 1.5, 0.1]}])
 
 This general syntax allows any number of RCs to be defined, meaning we can define 1D, 2D, 3D surface scans and even beyond that.
 
@@ -185,7 +186,7 @@ This general syntax allows any number of RCs to be defined, meaning we can defin
 The older syntax is only available for either 1 or 2 reaction coordinates.
 One specifies RC1_type, RC1_range and RC1_indices (and also RC2 versions if 2 reaction coordinates are wanted).
 
-- The RC1_type/RC2_type keyword can be: 'bond', 'angle' or 'dihedral' .
+- The RC1_type/RC2_type keyword can be: 'bond', 'bond_difference', 'angle' or 'dihedral' .
 - The RC1_indices/RC2_indices keyword defines the atom indices for the bond/angle/dihedral. Note: ASH counts from zero.
 - The RC1_range/RC2_range keyword species the start coordinate, end coordinate and the stepsize (Å units for bonds, ° for angles/dihedrals).
 
@@ -210,7 +211,7 @@ Here scanning an angle (defined by atom indices 1,0,2 and scanning from 180° to
     results = calc_surface(fragment=frag, theory=ORCAcalc, scantype='Unrelaxed', 
           resultfile='surface_results.txt', 
           runmode='serial', RC_list=[{'type': 'angle',  'indices': [[1,0,2]], 'range': [180, 110, -10]}],
-          keepoutputfiles=True, surfacedictionary = results.surfacepoints
+          keepoutputfiles=True)
 
 **2D scan:**
 

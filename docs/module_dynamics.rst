@@ -659,6 +659,61 @@ To restart an MD-simulation you do:
 
 The state-XML file can be used for starting an MD-simulation with specific user-specified velocities.
 
+
+######################################################
+Making custom MD workflows
+######################################################
+
+One can write custom MD simulation workflows in ASH where e.g. simulation parameters are systematically 
+modified during the simulation. This can be useful for implementing e.g. simulated annealing or other workflows where one wants to run a series of MD simulations with different parameters.
+For such workflows it can be more useful to use the **OpenMM_MDclass** instead of the **MolecularDynamics** function, as this allows more flexibility in controlling the simulation
+and allows continuing a simulation from a previous simulation (keeps same trajectory file).
+
+Example below shows how the temperature of a simulation can be systematically changed during a series of MD simulations, i.e. a simple simulated annealing workflow.
+
+
+.. code-block:: python
+
+  from ash import *
+  
+  #Frag
+  NH3 = Fragment(databasefile="NH3")
+  
+  #Theory
+  theory = tbliteTheory(method="GFN2-xTB")
+  
+  # Create MD object to be used
+  mdobj = OpenMM_MDclass(theory=theory, fragment=NH3,
+              timestep=0.001, traj_frequency=10)
+  
+  #Temperatures and simtime for each temps
+  temps=[300,10,100,1000] #K
+  simtimes=[1.0,5.0, 6.0,10.0] #ps
+  
+  # LOOP over temps and sim-step times
+  for i,(temp,simtime) in enumerate(zip(temps,simtimes)):
+      print("="*70)
+      print(f"Running temp={temp} for {simtime} ps")
+      print("="*70)
+      # First MD: no restart
+      if i == 0:
+          restart=False
+      else:
+          restart=True
+  
+      #updating temp
+      mdobj.temperature=temp
+      # Run MD for specific temp for specific time
+      mdobj.run(simulation_time=simtime, restart=restart)
+  
+  #
+  mdobj.finalize_simulation()
+  print()
+ 
+
+
+
+
 ######################################################
 mdtraj interface
 ######################################################

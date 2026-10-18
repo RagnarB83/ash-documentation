@@ -130,8 +130,15 @@ Most common reasons for OpenMM not matching topology and forcefield are:
 - **Wrong CONECT lines in PDB-file:** If you define a purely nonbonded forcefield in XML-file (i.e. no <Bond> lines) then no CONECT lines should be present in PDB-file. Make sure <Bond> lines in XML-file and CONECT lines in PDB-file match in terms of connectivity.
 - **Missing element information:** PDB-file usually has to  contain an element column in order to match correctly.
 
+Note that CONECT lines are not needed for simple water solvent when using a simpleforcefield (e.g. TIP3P). 
+However, a valid residue name (HOH or WAT) and specific atom names (O, H1, H2) must be present in file.
+Example of a correct PDB-file for TIP3P water:
 
+.. code-block:: text
 
+  ATOM    112  O   WAT     1      10.961   8.465  29.544  1.00  0.00
+  ATOM    113  H1  WAT     1      10.234   8.055  30.015  1.00  0.00
+  ATOM    114  H2  WAT     1      11.706   8.493  30.146  1.00  0.00
 
 ################################################################################################
 OpenMM built-in forcefields

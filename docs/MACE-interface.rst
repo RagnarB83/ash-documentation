@@ -164,7 +164,7 @@ Pre-trained MACE models can either be previously trained models by yourself or a
 If you simply want to load a MACE model in MACETheory, for the purpose of using it as a Theory object to run calculations,
 you can either load the model via file (*model_file* keyword) or by name in case of a foundational model (*model_name* keyword).
 For option *model_name* the model is looked up inside the mace-torch library and automatically downloaded.
-Sometimes it may be necessary also to specify a subtype (*model_name_head*) or a specific head in the case of multi-head models (*model_name_head*).
+Sometimes it may be necessary also to specify a subtype (*model_name_subtype*) or a specific head in the case of multi-head models (*model_name_head*).
 
 For information on available foundational models, see:
 
