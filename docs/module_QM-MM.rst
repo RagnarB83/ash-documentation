@@ -262,8 +262,12 @@ QM/MM typically comes in 2 flavours: mechanical embedding and electrostatic embe
 
 Mechanical embedding is the simplest QM/MM coupling scheme where the  :math:`E_{elstat}` term is calculated at the MM-level as a classical Coulomb term of pointcharge interactions between the QM and MM regions.
 Choose *embedding* = 'mechanical' when defining the QMMMTheory object to use mechanical embedding.
-Mechanical embedding requires pointcharges to be defined for each atom inside the QM-region which can introduce problem if the QM-region contains exotic entities such as metal complexes or clusters, and the QM-region atom charge definitions will requires some care.
+Mechanical embedding requires pointcharges to be defined for each atom inside the QM-region which can introduce problems if the QM-region contains exotic entities such as metal complexes or clusters, and the QM-region atom charge definitions will require some care.
 The main drawback of mechanical embedding is that the QM-energy of the QM-region (:math:`E_{QM}`) is calculated entirely without any environment present. For systems with strong polarization effects between regions this can be a major drawback.
+Normally, mechanical embedding QM/MM would utilize fixed pointcharges for the QM-region, usually from a forcefield (or user-specified). Interfaces to some QM-programs in ASH support automatic updating of the QM-region pointcharges during the QM/MM calculation.
+This would give geometry-dependent QM-region pointcharges.
+If the *update_QMregion_charges* keyword is set to True in the QMMMTheory object then QMMMTheory will try to update the QM-region pointcharges during the QM/MM calculation. 
+This is only supported for some interfaces currently (xTBTheory, tbliteTheory) and may have to be enabled separately.
 
 .. image:: figures/ash_mech_vs_elstat_embedding.png
    :align: center
@@ -365,8 +369,8 @@ This method is the default in ASH when electrostatic embedding is chosen.
 
 The charge of the MM1 atom is set to 0.0 and is shifted towards the MM2 atoms. Effectively, the original charge-value of the MM1 is divided by the number of MM2 atoms bonded to the MM1 atom and each
 MM2 atom receives a fraction of the original MM1 charge. This charge-shifting has the effect of avoiding the overpolarization that would have occured in the QM1-L and MM1 region while maintaining the overall charge of the system.
-The drawback, however, is that the MM1-MM2 dipole is no longer correct which is why a dipole correction is also applied. The dipole correction adds extra pointcharges around the MM2 atom to compensate. 
-In ASH the dipole correction is applied automatically by default but can be turned off ( dipole_correction=False).
+The drawback, however, is that the MM1-MM2 dipole is no longer correct which is why a dipole correction is typically also applied (*dipole_correction* keyword). The dipole correction adds extra pointcharges around the MM2 atom to compensate. 
+In ASH the dipole correction is applied automatically by default but can be turned off ( *dipole_correction*=False).
 
 **RCD: Redistributed charge and Dipole scheme**
 

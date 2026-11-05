@@ -472,7 +472,7 @@ Example:
 
 
 ##############################################################
-Running MD simulations using ASH THeories with OpenMM directly
+Running MD simulations using ASH Theories with OpenMM directly
 ##############################################################
 
 Normally ASH MD simulations (that use OpenMM MD routines)are best executed via the ASH syntax, via the wrappers **MolecularDynamics** or **OpenMM_MD** etc.

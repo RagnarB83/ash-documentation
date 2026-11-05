@@ -29,16 +29,20 @@ suitable for training machine-learning interaction potentials or Δ-learning cor
 .. code-block:: python
 
     #  Function to create ML training data given XYZ-files and 2 ASH theories
-    def create_ML_training_data(xyz_dir=None, dcd_trajectory=None, xyz_trajectory=None, num_snapshots=None, random_snapshots=True,
-                                    dcd_pdb_topology=None, nth_frame_in_traj=1,
-                                theory_1=None, theory_2=None, charge=0, mult=1, Grad=True, runmode="serial", numcores=1):
+    def create_ML_training_data(xyz_dir=None, dcd_trajectory=None, xyz_trajectory=None, xyz_files=None, 
+                                num_snapshots=None, random_snapshots=True, dcd_pdb_topology=None, 
+                                nth_frame_in_traj=1, printlevel=2,
+                                theory_1=None, theory_2=None, 
+                                charge=0, mult=1, readcharge_mult_from_xyz=False,
+                                Grad=True, runmode="serial", numcores=1,
+                                energies_atoms_dict=None, random_seed_set=None):
 
 One needs to give as input a set of molecular geometries, which can be a directory with XYZ-files (*xyz_dir* keyword),
 a multi-geometry XYZ trajectory file (*xyz_trajectory* keyword, file should contain multiple XYZ geometries in Xmol format) or 
 a DCD-trajectory (*dcd_trajectory*, requiring *dcd_pdb_topology* to be specified as well).
 The number of snapshots (geometries) can be specified (*num_snapshots*), in which only those number of snapshots will be used from the input XYZtraj/XYZdir/DCDtraj.
 The number of snapshots can be randomized or not (*random_snapshots*, defaults to False).
-Charge and multiplicity of the molecule should be provided (*charge* and *mult* keywords).
+Charge and multiplicity of the molecule should be provided (*charge* and *mult* keywords) or alternatively read from the XYZ files (*readcharge_mult_from_xyz*).
 For training a potential using both energy and gradient data, set *Grad* to True (default), this is generally preferable (more accurate training). For energy-only training, set *Grad* to False. 
 
 Theory levels should be provided via keywords *theory_1* and *theory_2*. Any ASHTheory object is in principle suitable.
