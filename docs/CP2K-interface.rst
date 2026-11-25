@@ -21,18 +21,23 @@ Furthermore the QM/MM capabilities within ASH and the flexible forcefield suppor
     
   class CP2KTheory:
       def __init__(self, cp2kdir=None, cp2k_bin_name=None, filename='cp2k', printlevel=2, basis_dict=None, potential_dict=None, label="CP2K",
-                  periodic=False, periodic_type='XYZ', qm_periodic_type=None, 
+                  periodic=False, periodic_type='XYZ', qm_periodic_type=None, stress_tensor=True, stress_tensor_algo="DIAGONAL_ANALYTICAL",
                   xtb_type='GFN2', xtb_tblite=False,
                   user_input_dft=None, vdwpotential=None,
                   cell_dimensions=None, cell_vectors=None,
                   qm_cell_dims=None, qm_cell_shift_par=6.0, wavelet_scf_type=40,
                   functional=None, psolver='wavelet', potential_file='POTENTIAL', basis_file='BASIS',
-                  basis_method='GAPW', ngrids=4, cutoff=250, rel_cutoff=60,
+                  basis_method='GAPW', ngrids=4, xc_finer_grid=False,
+                  cutoff=250, rel_cutoff=60,
+                  kpoint_settings=None, 
                   method='QUICKSTEP', numcores=1, parallelization='OMP', mixed_mpi_procs=None, mixed_omp_threads=None,
-                  center_coords=True, scf_maxiter=50, outer_scf_maxiter=10, scf_convergence=1e-6, eps_default=1e-10,
-                  coupling='GAUSSIAN', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None,
+                  center_coords=False, scf_maxiter=50, outer_scf_maxiter=10, scf_convergence=1e-6, eps_default=1e-10,
+                  tblite_mixer_iterations=None,
+                  QMMM_centering=None, coupling='GAUSS', GEEP_num_gauss=6, MM_radius_scaling=1, mm_radii=None,
+                  spherical_cutoff1=None, spherical_cutoff2=None,
                   OT=True, OT_minimizer='DIIS', OT_preconditioner='FULL_ALL',
-                  OT_linesearch='3PNT', outer_SCF=True, outer_SCF_optimizer='SD', OT_energy_gap=0.08):
+                  OT_linesearch='3PNT', outer_SCF=True, outer_SCF_optimizer='SD', OT_energy_gap=0.08,
+                  path_to_gauxc_model=None)
 
 .. list-table::
    :widths: 15 15 15 60

@@ -66,7 +66,7 @@ ONIOMTheory
                  embedding="mechanical", full_pointcharges=None, chargemodel="CM5", dipole_correction=False,
                  fullregion_charge=None, fullregion_mult=None, fragment=None, label=None, 
                  chargeboundary_method="shift", excludeboundaryatomlist=None,
-                 linkatom_method='ratio', linkatom_simple_distance=None, linkatom_forceproj_method="adv",
+                 linkatom_method='ratio', linkatom_simple_distance=None,
                  linkatom_ratio=0.723, printlevel=2, numcores=1):
 
 **ONIOMTheory** options:
@@ -83,7 +83,7 @@ ONIOMTheory
      - list
      - None
      - | Required: A list of ASH Theory objects to use in n-layer ONIOM.
-   * - ``theories_N``
+   * - ``regions_N``
      - list of lists
      - None
      - | Required: A list of lists of atom indices defining the 2 or 3 regions.
@@ -136,10 +136,6 @@ ONIOMTheory
      - float
      - 0.723
      - | For linkatom_method='ratio', what ratio to use. Default is 0.723.
-   * - ``linkatom_forceproj_method``
-     - string
-     - 'adv'
-     - | What linkatom force projection method to use. Options: 'adv', 'lever'
    * - ``printlevel``
      - integer
      - 2
@@ -194,7 +190,7 @@ We use the linkatom strategy where a hydrogen linkatom is used to cap the dangli
 of the :math:`E^{HL}_{1} - E^{LL}_{1}` terms in 2-layer ONIOM.
 
 See (see :doc:`module_QM-MM`) for discussion about the linkatom-strategy as it works the same in QMMMTheory and ONIOMTheory,
-with the same options available: *linkatom_method*, *linkatom_simple_distance*, *linkatom_ratio*, *linkatom_forceproj_method*.
+with the same options available: *linkatom_method*, *linkatom_simple_distance*, *linkatom_ratio* .
 
 When mechanical embedding is used, with or without linkatoms, the description of the boundary between regions is fairly straightforward.
 The linkatoms are present during the QM-calculations of region 1 (2-layer ONIOM) but are invisible to LL-theory calculation of the full-system.

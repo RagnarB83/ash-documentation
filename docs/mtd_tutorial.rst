@@ -96,9 +96,11 @@ The 100 ps simulation is qualitatively correct but breaks symmetry a little bit 
 To reduce the sampling error, we could continue to increase the simulation time beyond 100 ps.
 However, an even better approach is to utilize multi-walker metadynamics (see :doc:`Biased-sampling` for more information). 
 By simply running multiple metadynamics simulations (each simulation being a walker) with a shared
-biasdirectory, the different walkers will more quickly sample the free-energy surface. Multiple walkers is more efficient as we can e.g. use 10 CPU cores to run 10
-metadynamics simulations for a tenfold improvement in sampling. This is more efficient than using the CPU cores to speed-up the speed of the Hamiltonian in each timestep 
-(i.e. speeding up xTB by its own parallelization). Multiple-walker metadynamics only requires one to launch multiple ASH metadynamics jobs where the biasdirectory variable points to a shared, globally available biasdirectory.
+biasdirectory, the different walkers will more quickly sample the free-energy surface. 
+Multiple walkers is more efficient as we can e.g. use 10 CPU cores to run 10
+metadynamics simulations for a tenfold improvement in sampling. 
+This is much more efficient than using the CPU cores to speed-up the speed of the Hamiltonian in each timestep 
+(in fact xTB typically does not speed-up at all for small systems). Multiple-walker metadynamics only requires one to launch multiple ASH metadynamics jobs where the biasdirectory variable points to a shared, globally available biasdirectory.
 As shown in the figure below we get a much improved sampling error by running 10 walkers instead of 1 walker (each simulation being 10 ps).
 
 .. image:: figures/MTD_1-vs-10-walkers.png

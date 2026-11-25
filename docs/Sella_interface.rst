@@ -3,12 +3,14 @@ Sella Optimizer
 
 ASH features an interface to the Sella saddlepoint optimization program,
 which features a novel approach for optimizing saddlepoints.
-This is accomplished via an in iterative partial Hessian diagonalization algorithm.
+This is accomplished via an iterative partial Hessian diagonalization algorithm.
 While this requires a good saddlepoint guess (e.g. from NEB, scan etc.) no Hessian input is required,
 since an adaptive partial Hessian is determined during the job.
 
 The Sella library also features an implementation of the intrinsic reaction coordinate (IRC) algorithm, which can be used to follow the reaction path downhill from a saddlepoint
 using the Sella iterative Hessian approach.
+
+Sella can also be used for a regular minimization.
 
 The Sella program can be be found on the Github repository: https://github.com/zadorlab/sella
 
@@ -41,9 +43,9 @@ To use, Sella must first have been installed.
 .. code-block:: python
 
   def SellaOptimizer(theory=None, fragment=None, charge=None, mult=None, printlevel=2, NumGrad=False,
-                    convergence_gmax=1e-4, maxiter=150, result_write_to_disk=False,
-                    constraints=None, actatoms=None, frozenatoms=None,
-                    gamma=0.03, eta=1e-4):
+                   convergence_gmax=1e-4, maxiter=150, result_write_to_disk=False, TSOpt=True,
+                   constraints=None, actatoms=None, frozenatoms=None,
+                   gamma=0.03, eta=1e-4)
 
 .. list-table::
    :widths: 15 15 15 60
@@ -77,6 +79,10 @@ To use, Sella must first have been installed.
      - Boolean
      - False
      - Whether to write optimization results to disk.
+   * - ``TSOpt``
+     - Boolean
+     - True
+     - Whether to do TS-optimization (default is True) or regular minimization (TSOpt=False).
    * - ``gamma``
      - float
      - 0.03
@@ -137,6 +143,28 @@ Examples
 The use of the **SellaOptimizer** function is straightforward.
 Typically one just need to provide an ASH Theory and Fragment object.
 
+--------------------
+Sella minimization
+--------------------
+
+While Sella is primarily useful for TS-optimizations, minimizations can also be performed.
+In this case the *TSOpt* keyword, should typically be set to False (to avoid the otherwise expensive iterative Hessian build-up). By default *TSOpt* = True (consistent with the Sella library).
+
+.. code-block:: python
+
+    from ash import *
+
+    frag=Fragment(xyzfile="tsguess.xyz", charge=0, mult=1) #Fragment object creation
+    ORCAcalc = ORCATheory(orcasimpleinput="! BP86 def2-SVP  tightscf") #ORCATheory object creation
+
+    SellaOptimizer(theory=ORCAcalc, fragment=frag, TSOpt=False)
+
+
+-------------------------
+Sella TS-optimization
+-------------------------
+
+
 The main options to consider exploring are:
 
 - the convergence criterion (*convergence_gmax*). Converging the saddlepoint more tightly than in a standard optimization can be a good idea. 
@@ -171,9 +199,9 @@ The *SellaIRC* function allows running IRC calculations in ASH using the IRC imp
 .. code-block:: python
 
   def SellaIRC(theory=None, fragment=None, charge=None, mult=None, printlevel=2, NumGrad=False,
-                    convergence_gmax=1e-4, maxiter=150, result_write_to_disk=False,
-                    constraints=None, actatoms=None, frozenatoms=None,
-                    gamma=0.03, eta=1e-4, IRC_dx=0.1):
+                   convergence_gmax=1e-4, maxiter=150, result_write_to_disk=False,
+                   constraints=None, actatoms=None, frozenatoms=None,
+                   gamma=0.03, eta=1e-4, IRC_dx=0.1)
 
 
 To start an IRC job, one simply calls the *SellaIRC* function with an ASH Theory and Fragment object

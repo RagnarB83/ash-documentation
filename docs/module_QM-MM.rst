@@ -40,7 +40,7 @@ QMMMTheory class
                   unusualboundary=False, openmm_externalforce=False, TruncatedPC=False, TruncPCRadius=55, TruncatedPC_recalc_iter=50,
                   qm_charge=None, qm_mult=None, chargeboundary_method="shift",
                   dipole_correction=True, linkatom_method='simple', linkatom_simple_distance=None,
-                  linkatom_forceproj_method="adv", linkatom_ratio=0.723):
+                  linkatom_ratio=0.723):
 
 **QMMMTheory** options:
 
@@ -151,10 +151,6 @@ QMMMTheory class
      - float
      - 0.723
      - | For linkatom_method='ratio', what ratio to use. Default is 0.723.
-   * - ``linkatom_forceproj_method``
-     - string
-     - 'adv'
-     - | What linkatom force projection method to use. Options: 'adv', 'lever'
 
 
 Dummy example showing how to combine a QMTheory and MMTheory object into a QMMMTheory object:
@@ -317,10 +313,9 @@ An alternative *linkatom_method* option is *linkatom_method* = 'ratio' which cal
 
 The *linkatom_ratio* is by default 0.723 but can be changed (*linkatom_ratio* keyword).
 
-Finally, during a QM/MM gradient calculation there will be a gradient/force calculated on the (fictious) linkatom. This force is projected onto the QM1 and MM1 atoms to give the correct gradient for the QM/MM system.
-Two different forceprojections are available in ASH, controlled by the *linkatom_forceproj_method* keyword. The default is *linkatom_forceproj_method* = 'adv' 
-which is an advanced projection of the linkatom force onto the QM and MM atoms while the alternative is *linkatom_forceproj_method* = 'lever' utilizes the simple lever rule to determine how the force should be projected onto QM1 and MM1.
-Both approaches give similar results.
+Finally, during a QM/MM gradient calculation there will be a gradient/force calculated on the (fictious) linkatom. 
+This force is projected onto the QM1 and MM1 atoms to give the correct gradient for the QM/MM system, depending on the linkatom_method used.
+
 
 Overall, the recommended way of using link atoms is to define the QM-MM boundary for two carbon atoms that are as non-polar as possible.
 In the CHARMM forcefield one should additionally make sure that one does not make a QM-MM boundary through a charge-group (check topology file).

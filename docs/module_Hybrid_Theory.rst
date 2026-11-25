@@ -91,7 +91,7 @@ then these job-types will automatically work with a **WrapTheory** object.
                     theory_operators=None, skip_openmmtheory_run=False,
                     periodic=False, periodic_cell_vectors=None, periodic_cell_dimensions=None,
                     use_linkatoms=True,
-                    linkatom_method='ratio', linkatom_simple_distance=None, linkatom_forceproj_method="adv",
+                    linkatom_method='ratio', linkatom_simple_distance=None, 
                     linkatom_ratio=0.723, linkatom_type='H', linkatom_conn_scale=1.0, linkatom_conn_tolerance=0.4):
 
         def run(self, current_coords=None, current_MM_coords=None, MMcharges=None, qm_elems=None, mm_elems=None,
@@ -189,7 +189,7 @@ Linkatoms in WrapTheory can be controlled by the following keywords:
 .. code-block:: python
 
     use_linkatoms=True,
-    linkatom_method='ratio', linkatom_simple_distance=None, linkatom_forceproj_method="adv",
+    linkatom_method='ratio', linkatom_simple_distance=None, 
     linkatom_ratio=0.723, linkatom_type='H', linkatom_conn_scale=1.0, linkatom_conn_tolerance=0.4
 
 See :doc:`module_QM-MM` and :doc:`module_ONIOM` for more information on linkatoms in ASH.
@@ -333,10 +333,6 @@ In order to avoid double-counting of the QM-region we have to subtract the QM-me
 This can all be accomplished using WrapTheory by utilizing *theory_operators=['+','+','-']* and 
 *theory1_atoms*, *theory2_atoms* and *theory3_atoms* keywords.
 
-.. note:: The region of atoms specified by *theory2_atoms* and *theory3_atoms* should be whole molecules in general.
-    If this region-definition crosses a covalent boundary then **WrapTheory** may not be the most suitable hybrid theory
-    and better to use **ONIOMTheory** instead where linkatoms are automatically applied for covalent boundaries.
-
 
 .. code-block:: python
 
@@ -417,10 +413,109 @@ The above code would be equivalent to the following QMMMTheory definition.
                         qm_charge=-2, qm_mult=11, unusualboundary=True, linkatom_method="ratio")
 
 
-*Defining mechanical embedding QM/MM via WrapTheory*
-
-
 
 ######################################################
 FractTheory
 ######################################################
+
+FractTheory is a special hybrid theory that allows linear interpolation of 2 states (or potential energy surfaces).
+The 2 states can differ by electron-count (redox; defined by different charge and multiplicities) or theory-level (defined by 2 input Theory objects).
+During a run, both states are then calculated, and a linear interpolation (using a specified *eta* parameter)
+of the energy and the gradient is performed.
+
+.. math::
+
+    H(\eta) = (1-\eta) H_{A} + \eta H_{B}
+
+
+.. code-block:: python
+
+    class FractTheory:
+        def __init__(self, theory=None, theory2=None, eta=None, chargeA=None, chargeB=None,
+                    multA=None, multB=None, DMinterpol=False,
+                    resultfile="fract_theory_gaps.txt", dirA="stateA", dirB="stateB",
+                    copy_patterns=None):
+
+FractTheory was created for the purpose of allowing thermodynamic integration of redox processes 
+and this is why charge and multiplicity of both states should be specified (*chargeA*, *chargeB*, *multA*, *multB*).
+In this case, for each run (a single MD-step e.g.) we compute the energy and gradient of the current geometry of the system using *chargeA* and *multA* on one hand and *chargeB* and *multB*
+on the other. The interpolated energy and gradient is then defined and is returned:
+
+.. math::
+
+    E_{\eta} = (1-\eta) E_{A} + \eta E_{B}
+
+    G_{\eta} = (1-\eta) G_{A} + \eta G_{B}
+
+This feature when combined with a MolecularDynamics run, then allows a thermodynamic integration of a redox process. 
+
+In principle FractTheory is flexible also to go beyond redox,  allowing e.g. interpolation between 2 different Theory-levels (e.g. DFT-levels).
+In this case, we have to define 2 Theory objects (*theory* and *theory2* keywords) and we then specify *chargeA* and *chargeB* to be the same (and same for *multA* and *multB*).
+Note that FractTheory does not allow the 2 states to differ by atom composition.
+
+
+*Example: thermodynamic integration of the NH3 ionization process*
+
+In this simple example we define a simple NH3 molecule, and tbliteTheory object defining the GFN2-xTB method,
+and performing thermodynamic integration over electron number.
+
+.. math::
+
+    \Delta A = \int_0^1 \langle E_B - E_A \rangle_\eta d\eta
+
+
+For this purpose we define a FractTheory object, pointing to the tbliteTheory object; as this Theory can be used to compute both neutral NH3 and cationic NH3,
+we only need to specify a single Theory object in this case.
+We then define the specifics of the 2 redox states by the *chargeA*, *chargeB*, *multA*, *multB* keywords.
+
+Each run of the FractTheory will output an interpolated energy and gradient for the fractionally charged system depending on the 
+value of *eta*. The *eta* parameter can be defined initially when creating the FractTheory object and can also be modified later.
+
+A simple thermodynamic integration can be performed by running an MD simulation using the FractTheory object, 
+looping over different *eta* values (updating *eta* in each loop-iteration).
+This is shown below. 
+Note that it would be more efficient to split up the job into multiple eta-windows and run multiple independent simulations.
+
+.. code-block:: python
+
+    from ash import *
+
+    NH3 = Fragment(databasefile="NH3")
+
+    #Theories
+    qmtheory = tbliteTheory(method="GFN2-xTB")
+    fracttheory = FractTheory(theory=qmtheory, eta=None, chargeA=0, multA=1,
+        chargeB=1, multB=2)
+
+    etas=[0.0, 0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+
+    # LOOP over ETAs
+    VIPs=[]
+    for eta in etas:
+        # Updating eta in FractTheory
+        fracttheory.eta=eta
+        # Running MD using FractTheory with specific eta
+        MolecularDynamics(theory=fracttheory, fragment=NH3,
+                timestep=0.001, simulation_time=1, traj_frequency=1)
+
+        # Grab energy-gaps from file created by FractTheory
+        energies_per_eta = np.loadtxt("fract_theory_gaps.txt")
+        energies=energies_per_eta[:,1]
+        # Taking average and appending to list
+        E_ave = float(np.mean(energies))
+        VIPs.append(E_ave)
+
+    print()
+    print("VIPs:", VIPs)
+    # Thermodynamic integration via trapezoidal rule
+    deltaA_trapz = np.trapezoid(VIPs, etas)
+    # TI via Simpson rule
+    from scipy import integrate
+    deltaA_simp = integrate.simpson(y=VIPs, x=etas)
+    # LRA (i.e. doing endpoints only)
+    deltaA_LRA=0.5*(VIPs[0]+VIPs[-1])
+
+    # Print TI results vs. LRA
+    print(f"deltaA (TI-Trapz):   {deltaA_trapz*27.211} eV ")
+    print(f"deltaA (TI-Simpson): {deltaA_simp*27.211} eV ")
+    print(f"deltaA (LRA):        {deltaA_LRA*27.211} eV ")

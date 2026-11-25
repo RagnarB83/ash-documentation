@@ -102,7 +102,7 @@ Examples
 
     #Multi-line inputstring to define the main NWChem options
     #No geometry-input or TASK line should be provided here (handled by ASH)
-    input_string=""""
+    input_string="""
     basis spherical 
       o library aug-cc-pvdz
       h library cc-pvdz
@@ -115,7 +115,7 @@ Examples
     scf
       thresh 1e-10
     end
-    """"
+    """
 
     nwchem = NWChemTheory(method='dft', nwcheminput=input_string, numcores=numcores)
 
@@ -135,7 +135,7 @@ Examples
 
     #Multi-line inputstring to define the main NWChem options
     #No geometry-input or TASK line should be provided here (handled by ASH)
-    input_string=""""
+    input_string="""
     basis spherical 
       o library aug-cc-pvdz
       h library cc-pvdz
@@ -150,7 +150,7 @@ Examples
       eomsol 2
     end
 
-    """"
+    """
 
     nwchem = NWChemTheory(method='tce', tce=True, nwcheminput=input_string, numcores=numcores)
 
